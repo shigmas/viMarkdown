@@ -213,7 +213,7 @@
 0211 ◎ C 12/29 12/29 0.0008│ToDo│MarkdownViewer::setMarkdown(QDocument*) 実装
 0212 ◎ C 12/29 12/29 0.0008│ToDo│setMarkdown()：見出し行対応
 0213 ◎ C 12/29 12/29 0.0008│ToDo│setMarkdown()：本文は左右揃えに
-0214 ● C 12/29             │ToDo│setMarkdown()：h1 見出しは中央揃えに
+0214 ◎ C 12/29 12/29 0.0008│ToDo│setMarkdown()：h1 見出しは中央揃えに
 0215 ● C 12/29             │ToDo│
 0216 ● C 12/29             │ToDo│
 0217 ● C 12/29             │ToDo│

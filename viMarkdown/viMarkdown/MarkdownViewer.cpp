@@ -59,6 +59,8 @@ void MarkdownViewer::do_heading(QTextCursor& cursor, QString buf) {
 	//QTextBlock block = cursor.block();
 	QTextBlockFormat format;
 	format.setHeadingLevel(h); // Hx（見出しレベルx）に設定
+	if( h == 1 )
+		format.setAlignment(Qt::AlignCenter);
 	cursor.mergeBlockFormat(format);
 
 	QTextCharFormat charFormat;
