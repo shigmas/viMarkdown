@@ -21,6 +21,14 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 	const QString mdtext = doc->toPlainText();
 #if 1
 	this->clear();
+    QTextFrame *root = this->document()->rootFrame();
+    QTextFrameFormat rformat = root->frameFormat();
+    rformat.setTopMargin(20);
+    rformat.setBottomMargin(20);
+    rformat.setLeftMargin(20);
+    rformat.setRightMargin(20);
+    root->setFrameFormat(rformat);
+
 	QTextCursor cursor(this->document());
 	cursor.movePosition(QTextCursor::Start);
 	QStringList lst = mdtext.split(u'\n');
