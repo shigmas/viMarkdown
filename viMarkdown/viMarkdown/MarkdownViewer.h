@@ -1,13 +1,15 @@
 ﻿#pragma once
 #include "C:\Qt\6.10.0\msvc2022_64\include\QtWidgets\qtextedit.h"
-class HtmlViewer : public QTextEdit
+class MarkdownViewer : public QTextEdit
 {
 	Q_OBJECT 
 
 public:
-    HtmlViewer(QWidget* parent = nullptr) : QTextEdit(parent)
+    MarkdownViewer(QWidget* parent = nullptr) : QTextEdit(parent)
     {
     }
+public:
+    void	setMarkdown(class QTextDocument*);
 
 signals:
     // クリックされたブロック番号を通知するシグナル

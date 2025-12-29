@@ -49,7 +49,7 @@
     <ClCompile Include="MarkdownEditor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HtmlViewer.cpp">
+    <ClCompile Include="MarkdownViewer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -70,7 +70,7 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="HtmlViewer.h">
+    <QtMoc Include="MarkdownViewer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="MarkdownEditor.h">

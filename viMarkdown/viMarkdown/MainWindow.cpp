@@ -23,7 +23,7 @@
 #include "MainWindow.h"
 #include "DocWidget.h"
 #include "MarkdownEditor.h"
-#include "HtmlViewer.h"
+#include "MarkdownViewer.h"
 
 using namespace std;
 
@@ -232,24 +232,25 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
 	//QTextEdit *mdEditor = new QTextEdit(splitter);
 	mdEditor->setPlaceholderText("ここにMarkdownを入力\n# タイトル\n## 大見出し\n- リスト\n1. 連番\n本文...");
-	HtmlViewer *previewer = docWidget->m_previewer = new HtmlViewer(splitter);
-	previewer->setReadOnly(true); // プレビューなので読み取り専用にする
-	previewer->setPlaceholderText("プレビュー画面");
-	connect(previewer, &HtmlViewer::lineClicked, this, &MainWindow::onHtmlViewerLineClicked);
+	MarkdownViewer *markdownViewer = docWidget->m_markdownViewer = new MarkdownViewer(splitter);
+	//##markdownViewer->setReadOnly(true); // プレビューなので読み取り専用にする
+	markdownViewer->setPlaceholderText("プレビュー画面");
+	connect(markdownViewer, &MarkdownViewer::lineClicked, this, &MainWindow::onMarkdownViewerLineClicked);
 	splitter->addWidget(mdEditor);
-	splitter->addWidget(previewer);
+	splitter->addWidget(markdownViewer);
 	splitter->setSizes(QList<int>() << 500 << 500);
 	QVBoxLayout *layout = new QVBoxLayout(docWidget);
 	layout->addWidget(splitter);
 	layout->setContentsMargins(0, 0, 0, 0); // 余白をなくして端まで広げる
 
 	connect(mdEditor, &MarkdownEditor::textChanged, this, &MainWindow::onMDTextChanged);
-	//connect(mdEditor, &HtmlViewer::textChanged, this, &MainWindow::onMDTextChanged);
+	//connect(mdEditor, &MarkdownViewer::textChanged, this, &MainWindow::onMDTextChanged);
 
 	return docWidget;
 }
-void MainWindow::onHtmlViewerLineClicked(int bln) {
-	qDebug() << "MainWindow::onHtmlViewerLineClicked(" << bln << ")";
+void MainWindow::onMarkdownViewerLineClicked(int bln) {
+	qDebug() << "MainWindow::onMarkdownViewerLineClicked(" << bln << ")";
+	statusBar()->showMessage(QString("html block num = %1").arg(bln));
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	auto table = docWidget->m_htmlComvertor.getBlockNumTohtmlLineNum();
@@ -475,7 +476,7 @@ void MainWindow::onAction_ExportAsPDF() {
     printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setOutputFileName(fileName);
 
-    docWidget->m_previewer->print(&printer);
+    docWidget->m_markdownViewer->print(&printer);
 }
 void MainWindow::onAction_Close() {
 	qDebug() << "MainWindow::onAction_Close()";
@@ -828,10 +829,11 @@ void MainWindow::onTreeItemActivated(QTreeWidgetItem *current, int) {
 	mdEditor->setFocus();
 }
 void MainWindow::updatePreview() {
+#if 0
 	DocWidget *docWidget = getCurDocWidget();
 	qDebug() << "docWidget = " << docWidget;
 	MarkdownEditor *mdEditor = docWidget->m_mdEditor;
-	HtmlViewer* textEdit = docWidget->m_previewer;
+	MarkdownViewer* textEdit = docWidget->m_markdownViewer;
 	QScrollBar *vScrollBar = textEdit->verticalScrollBar();
 	int currentPos = vScrollBar->value();
 	const QString &htmlText = docWidget->m_htmlComvertor.getHtmlText();
@@ -841,6 +843,7 @@ void MainWindow::updatePreview() {
 	} else
 		textEdit->setPlainText(htmlText);
 	vScrollBar->setValue(currentPos);
+#endif
 }
 QTreeWidgetItem* MainWindow::findTopLevelItemByFullPath(const QString& title, const QString fullPath) {
 	QTreeWidget *treeWidget = ui->treeWidget;
@@ -907,8 +910,12 @@ void MainWindow::onMDTextChanged() {
 	qDebug() << "docWidget = " << docWidget;
 	MarkdownEditor *mdEditor = docWidget->m_mdEditor;
 	//m_plainText = mdEditor->toPlainText();
+#if 1
+	docWidget->m_markdownViewer->setMarkdown(mdEditor->document());
+#else
 	auto &htmlComvertor = docWidget->m_htmlComvertor;
 	htmlComvertor.convert(mdEditor->document());
+#endif
 #if 0
 	const vector<char>& blockType = htmlComvertor.getBlockType();
 	QTextCursor cursor(mdEditor->document()); 

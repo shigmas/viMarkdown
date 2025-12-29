@@ -15,6 +15,7 @@ const QString hdrtxt =
 "<head>\n"
 "<meta charset=\"UTF-8\">\n"
 "<style>\n"
+"    p { text-align: justify; }\n"
 "    blockquote {\n"
 "        border-left: 10px solid blue;\n"
 "        background-color: #ffffe0;\n"
@@ -139,28 +140,24 @@ bool MarkdownToHtmlConvertor::isTableHyphenLine(const QString& lnStr) {
 void MarkdownToHtmlConvertor::open_ul(int lvl) {
 	while( m_curUlLevel < lvl ) {
 		m_htmlText += "<ul>\n";
-		++m_htmlLn;
 		++m_curUlLevel;
 	}
 }
 void MarkdownToHtmlConvertor::close_ul(int lvl) {
 	while( m_curUlLevel > lvl) {
 		m_htmlText += "</ul>\n";
-		++m_htmlLn;
 		--m_curUlLevel;
 	}
 }
 void MarkdownToHtmlConvertor::open_ol(int lvl) {
 	while( m_curOlLevel < lvl ) {
 		m_htmlText += "<ol>\n";
-		++m_htmlLn;
 		++m_curOlLevel;
 	}
 }
 void MarkdownToHtmlConvertor::close_ol(int lvl) {
 	while( m_curOlLevel > lvl) {
 		m_htmlText += "</ol>\n";
-		++m_htmlLn;
 		--m_curOlLevel;
 	}
 }
@@ -391,7 +388,7 @@ void MarkdownToHtmlConvertor::do_code(const QString& lnStr) {
 		++m_htmlLn;
 	}
 	m_htmlText += "</pre></code>\n";
-	++m_htmlLn;
+	//++m_htmlLn;
 	++m_ln;
 }
 bool isHeadingUnderline(const QString &txt) {
@@ -451,11 +448,11 @@ void MarkdownToHtmlConvertor::do_paragraph(const QString& lnStr) {
 		++m_ln;
 	} else {
 		m_htmlText += parceInline(lnStr);
-		if( lnStr.endsWith("  ") )
+		if( lnStr.endsWith("  ") ) {
 			m_htmlText += "<br/>\n";
-		else
+			++m_htmlLn;
+		} else
 			m_htmlText += "\n";
 	}
-	++m_htmlLn;
 	++m_ln;
 }

@@ -207,6 +207,16 @@
 0205 ● C 12/27             │ToDo│印刷機能
 0206 ◎ C 12/28 12/28 0.0008│ToDo│File > export > PDF：PDFファイル生成
 0207 ● C 12/28             │ToDo│File > export > HTML
-0208 ● C 12/28             │ToDo│
-0209 ● C 12/28             │ToDo│
-0210 ● C 12/28             │ToDo│
+0208 ● C 12/28             │ToDo│**xyz** の xyz を選択し Edit > Inline > Bold の場合はボールド解除
+0209 ● C 12/29             │ToDo│HTML, Source メニュー・ツールバーアイコン削除
+0210 ◎ C 12/29 12/29 0.0008│ToDo│HtmlViewer → MarkdownViewer にリネーム
+0211 ◎ C 12/29 12/29 0.0008│ToDo│MarkdownViewer::setMarkdown(QDocument*) 実装
+0212 ● C 12/29             │ToDo│
+0213 ● C 12/29             │ToDo│
+0214 ● C 12/29             │ToDo│
+0215 ● C 12/29             │ToDo│
+0216 ● C 12/29             │ToDo│
+0217 ● C 12/29             │ToDo│
+0218 ● C 12/29             │ToDo│
+0219 ● C 12/29             │ToDo│
+0220 ● C 12/29             │ToDo│
