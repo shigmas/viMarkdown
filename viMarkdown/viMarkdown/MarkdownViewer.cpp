@@ -27,6 +27,9 @@ void MarkdownViewer::do_body(QTextCursor& cursor) {
 	cursor.insertBlock();
 	m_bodyText.clear();
 }
+
+static QRegularExpression re_list(R"(^ *[-\*+] )");
+
 void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 	QString mdtext = doc->toPlainText();
 #if 1
@@ -51,7 +54,7 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 		if( buf.startsWith('#') ) {
 			do_body(cursor);
 			do_heading(cursor, buf);
-		} else if( buf.startsWith("- ") ) {
+		} else if( re_list.match(buf).hasMatch() ) {
 			do_body(cursor);
 			do_list(cursor, buf);
 		} else {
@@ -172,9 +175,9 @@ void MarkdownViewer::do_list(QTextCursor& cursor, QString buf) {
 			buf += u'\n' + m_lst[m_ln];
 		}
 	} else {
-		static QRegularExpression re(R"(^( *)- )");
+		//static QRegularExpression re(R"(^( *)- )");
 		while( ++m_ln < m_lst.size() ) {
-			if( !re.match(m_lst[m_ln]).hasMatch() ) break;
+			if( !re_list.match(m_lst[m_ln]).hasMatch() ) break;
 			if( re_checkbox.match(m_lst[m_ln]).hasMatch() ) break;
 			buf += u'\n' + m_lst[m_ln];
 		}
