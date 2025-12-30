@@ -52,12 +52,16 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	        const QString mtxt = text.mid(n);
 	        if( mtxt.startsWith("- [ ] ") )
 				atxt += "- [ ] ";
-	        else if( mtxt.startsWith("- [x] ") || mtxt.startsWith("- [X] ") )
+	        else if( mtxt.startsWith("- [x] ") )
 				atxt += "- [x] ";
+	        else if( mtxt.startsWith("- [X] ") )
+				atxt += "- [X] ";
 	        else if( mtxt.startsWith("- ") )
 				atxt += "- ";
 	        else if( re.match(mtxt).hasMatch())
 				atxt += "1. ";
+	        else if( mtxt.startsWith("> ") )
+				atxt += "> ";
 	        cursor.insertText("\n" + atxt);
 	        // カーソル位置を画面内に維持
 	        this->ensureCursorVisible();
