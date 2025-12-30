@@ -20,5 +20,11 @@ protected:
     void mousePressEvent(QMouseEvent *e) override;    // マウスクリックイベントをオーバーライド
 
     void	do_heading(QTextCursor&, QString buf);
+    void	do_list(QTextCursor&, QString buf);
+
+private:
+    int		m_nSpaces
+
+;
 };
 

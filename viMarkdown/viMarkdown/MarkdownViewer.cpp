@@ -18,7 +18,7 @@ void MarkdownViewer::mousePressEvent(QMouseEvent *e)
     QTextEdit::mousePressEvent(e);
 }
 void MarkdownViewer::setMarkdown(QTextDocument *doc) {
-	const QString mdtext = doc->toPlainText();
+	QString mdtext = doc->toPlainText();
 #if 1
 	this->clear();
     QTextFrame *root = this->document()->rootFrame();
@@ -28,32 +28,76 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
     rformat.setLeftMargin(20);
     rformat.setRightMargin(20);
     root->setFrameFormat(rformat);
-
+#if 1
 	QTextCursor cursor(this->document());
 	cursor.movePosition(QTextCursor::Start);
 	QStringList lst = mdtext.split(u'\n');
 	for(int ln = 0; ln < lst.size(); ++ln) {
 		QString buf = lst[ln];
+		m_nSpaces = 0;
+		while( m_nSpaces < buf.size() && buf[m_nSpaces] == u' ' ) ++m_nSpaces;
+		if( m_nSpaces > 0 ) buf = buf.mid(m_nSpaces);
 		if( buf.startsWith('#') ) {
 			do_heading(cursor, buf);
 		} else {
-			cursor.insertText(buf);
-			QTextBlockFormat format;
-			format.setAlignment(Qt::AlignJustify);
-			cursor.mergeBlockFormat(format);
-			QTextCharFormat charFormat;
-			charFormat.setFontPointSize(12);
-			//charFormat.clearProperty(QTextFormat::FontWeight);
-		    charFormat.setFontWeight(QFont::Normal);
-		    cursor.select(QTextCursor::BlockUnderCursor);
-		    cursor.mergeCharFormat(charFormat);
-		    cursor.clearSelection();
 		}
-		cursor.insertBlock();
+	}
+#else
+    bool inList = false;
+	QTextCursor cursor(this->document());
+	cursor.movePosition(QTextCursor::Start);
+	QStringList lst = mdtext.split(u'\n');
+	for(int ln = 0; ln < lst.size(); ++ln) {
+		QString buf = lst[ln];
+		m_nSpaces = 0;
+		while( m_nSpaces < buf.size() && buf[m_nSpaces] == u' ' ) ++m_nSpaces;
+		if( m_nSpaces > 0 ) buf = buf.mid(m_nSpaces);
+		if( buf.startsWith("- ") ) {
+			do_list(cursor, buf);
+			inList = true;
+		} else {
+			if( inList ) {
+				cursor.insertBlock();
+				inList = false;
+			}
+			QTextBlockFormat plainBlockFormat; 
+		    cursor.setBlockFormat(plainBlockFormat);
+			if( buf.startsWith('#') ) {
+				do_heading(cursor, buf);
+			} else {
+				cursor.insertText(buf);
+				QTextBlockFormat format;
+				format.setAlignment(Qt::AlignJustify);
+				format.setIndent(0);
+				cursor.mergeBlockFormat(format);
+				QTextCharFormat charFormat;
+				charFormat.setFontPointSize(12);
+			    charFormat.setFontWeight(QFont::Normal);
+			    cursor.select(QTextCursor::BlockUnderCursor);
+			    cursor.mergeCharFormat(charFormat);
+			    cursor.clearSelection();
+			}
+			cursor.insertBlock();
+		}
 	}
 	qDebug() << "blockCount() = " << this->document()->blockCount();
+#endif
 #else
-	setPlainText(mdtext);
+	document()->setMarkdown(mdtext);
+	for (QTextBlock block = doc->begin(); block.isValid(); block = block.next()) {
+        
+        QTextBlockFormat format = block.blockFormat();
+
+        if (format.headingLevel() == 0) {
+            format.setAlignment(Qt::AlignJustify);
+            QTextCursor cursor(block);
+            cursor.setBlockFormat(format);
+        } else if(format.headingLevel() == 1) {
+            format.setAlignment(Qt::AlignCenter);
+            QTextCursor cursor(block);
+            cursor.setBlockFormat(format);
+        }
+    }
 #endif
 }
 int h_font_size[] = {12, 25, 21, 18, 16, 14, 12};
@@ -63,12 +107,27 @@ void MarkdownViewer::do_heading(QTextCursor& cursor, QString buf) {
 	while( i < buf.size() && buf[i] == '#' ) ++i;
 	int h = std::min(6, i);		//	[1, 6]
 	while( i < buf.size() && buf[i] == ' ' ) ++i;
+#if 1
+	cursor.insertMarkdown(buf);
+	if( h == 1 ) {
+		QTextBlockFormat blockFormat;
+		blockFormat.setAlignment(Qt::AlignCenter);
+		cursor.mergeBlockFormat(blockFormat);
+	}
+	cursor.insertBlock();			//	新規ブロック
+	QTextBlockFormat blockFormat0;
+	blockFormat0.setHeadingLevel(0); // 見出し設定を解除
+	cursor.setBlockFormat(blockFormat0);
+	// 4. 文字書式のリセット（フォントサイズや太字設定を解除）
+	cursor.setCharFormat(QTextCharFormat()); // 空のフォーマットをセットすることでデフォルトに戻る
+#else
 	cursor.insertText(buf.mid(i));
 	//QTextBlock block = cursor.block();
 	QTextBlockFormat format;
 	format.setHeadingLevel(h); // Hx（見出しレベルx）に設定
 	if( h == 1 )
 		format.setAlignment(Qt::AlignCenter);
+	format.setIndent(0);
 	cursor.mergeBlockFormat(format);
 
 	QTextCharFormat charFormat;
@@ -77,4 +136,34 @@ void MarkdownViewer::do_heading(QTextCursor& cursor, QString buf) {
     cursor.select(QTextCursor::BlockUnderCursor);
     cursor.mergeCharFormat(charFormat);
     cursor.clearSelection();
+#endif
+}
+void MarkdownViewer::do_list(QTextCursor& cursor, QString buf) {
+	//if (!cursor.atBlockStart()) cursor.insertBlock();
+	buf = buf.mid(2);		//	remove "- "
+	QTextBlockFormat blockFormat;
+	blockFormat.setIndent(m_nSpaces/2);
+	QTextListFormat listFormat;
+	if( buf.startsWith("[ ] ") || buf.startsWith("[x] ") || buf.startsWith("[X] ") ) {
+		bool uc = buf[1] == u' ';
+	    blockFormat.setMarker(uc ? QTextBlockFormat::MarkerType::Unchecked
+	    							: QTextBlockFormat::MarkerType::Checked);
+	    cursor.setBlockFormat(blockFormat);	    // 現在のブロック（行）に適用
+		buf = buf.mid(3);		//	remove "[ ]"
+	} else {
+	    listFormat.setStyle(QTextListFormat::ListDisc); // これが中黒 (●)、他にも ListCircle (○), ListSquare (■), ListDecimal (1, 2...)
+	}
+    cursor.insertList(listFormat);
+    cursor.insertText(buf);
+	//cursor.insertText("・ " + buf.mid(2));
+	QTextCharFormat charFormat;
+	charFormat.setFontPointSize(12);
+    charFormat.setFontWeight(QFont::Normal);
+    cursor.select(QTextCursor::BlockUnderCursor);
+    cursor.mergeCharFormat(charFormat);
+    cursor.clearSelection();
+
+	//QTextBlockFormat format;
+	//cursor.mergeBlockFormat(blockformat);
+
 }

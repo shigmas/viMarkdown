@@ -215,8 +215,8 @@
 0213 ◎ C 12/29 12/29 0.0008│ToDo│setMarkdown()：本文は左右揃えに
 0214 ◎ C 12/29 12/29 0.0008│ToDo│setMarkdown()：h1 見出しは中央揃えに
 0215 ◎ C 12/29 12/29 0.0008│ToDo│setMarkdown()：上下左右余白設定
-0216 ● C 12/29             │ToDo│
-0217 ● C 12/29             │ToDo│
-0218 ● C 12/29             │ToDo│
+0216 ● C 12/29             │ToDo│setMarkdown()：リスト（"- "）サポート
+0217 ● C 12/29             │ToDo│setMarkdown()：2個以上の行末空白によるソフト？改行
+0218 ◎ C 12/29 12/30 0.0008│ToDo│setMarkdown()：ブロック自前構築をやめ、insertMarkdown() を利用
 0219 ● C 12/29             │ToDo│
 0220 ● C 12/29             │ToDo│

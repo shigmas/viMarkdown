@@ -233,7 +233,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	//QTextEdit *mdEditor = new QTextEdit(splitter);
 	mdEditor->setPlaceholderText("ここにMarkdownを入力\n# タイトル\n## 大見出し\n- リスト\n1. 連番\n本文...");
 	MarkdownViewer *markdownViewer = docWidget->m_markdownViewer = new MarkdownViewer(splitter);
-	//##markdownViewer->setReadOnly(true); // プレビューなので読み取り専用にする
+	markdownViewer->setReadOnly(true); // プレビューなので読み取り専用にする
 	markdownViewer->setPlaceholderText("プレビュー画面");
 	connect(markdownViewer, &MarkdownViewer::lineClicked, this, &MainWindow::onMarkdownViewerLineClicked);
 	splitter->addWidget(mdEditor);
