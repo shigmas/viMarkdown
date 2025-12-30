@@ -22,6 +22,7 @@ protected:
     void	do_body(QTextCursor&);
     void	do_heading(QTextCursor&, QString buf);
     void	do_list(QTextCursor&, QString buf);
+    void	do_quote(QTextCursor&, QString buf);
 
 private:
     int		m_ln;

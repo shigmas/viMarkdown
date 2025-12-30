@@ -57,6 +57,9 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 		} else if( re_list.match(buf).hasMatch() ) {
 			do_body(cursor);
 			do_list(cursor, buf);
+		} else if( buf.startsWith("> ") ) {
+			do_body(cursor);
+			do_quote(cursor, buf);
 		} else {
 			if( buf.isEmpty() ) {		//	空行
 				m_bodyText += u'\n';
@@ -166,6 +169,30 @@ void MarkdownViewer::do_heading(QTextCursor& cursor, QString buf) {
     cursor.mergeCharFormat(charFormat);
     cursor.clearSelection();
 #endif
+}
+void MarkdownViewer::do_quote(QTextCursor& cursor, QString buf) {
+	buf = buf.mid(2);
+	while( ++m_ln < m_lst.size() ) {
+		if( !m_lst[m_ln].startsWith("> ") ) break;
+		buf += u"  \n" + m_lst[m_ln].mid(2);
+	}
+	//cursor.insertMarkdown(buf);
+	// 1. フレームの書式を設定
+	QTextFrameFormat frameFormat;
+	frameFormat.setBackground(QColor("#f0f8ff")); // 薄い青
+	frameFormat.setMargin(0);                     // 外側の余白
+	frameFormat.setPadding(10);                   // 内側の余白（文字と端の隙間）
+	frameFormat.setBorder(0);                     // 枠線はなし
+	// 2. フレームを挿入（この中にカーソルが入る）
+	cursor.insertFrame(frameFormat);
+	// 3. フレームの中で Markdown を挿入
+	cursor.insertText(buf);
+	cursor.movePosition(QTextCursor::End);
+	this->setTextCursor(cursor);
+	cursor.insertBlock();
+	QTextBlockFormat blockFormat;
+	cursor.setBlockFormat(blockFormat);
+	--m_ln;
 }
 void MarkdownViewer::do_list(QTextCursor& cursor, QString buf) {
 	static QRegularExpression re_checkbox(R"(^( *)- \[[ xX\] )");
