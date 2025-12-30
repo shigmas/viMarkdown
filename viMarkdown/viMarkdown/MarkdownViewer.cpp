@@ -17,18 +17,28 @@ void MarkdownViewer::mousePressEvent(QMouseEvent *e)
 	}
     QTextEdit::mousePressEvent(e);
 }
+void MarkdownViewer::do_body(QTextCursor& cursor) {
+	if( m_bodyText.isEmpty() ) return;
+	QTextBlockFormat blockFormat;
+	blockFormat.setAlignment(Qt::AlignJustify); // 左右両端揃え
+	cursor.mergeBlockFormat(blockFormat);
+	cursor.insertMarkdown(m_bodyText);
+	cursor.insertBlock();
+	m_bodyText.clear();
+}
 void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 	QString mdtext = doc->toPlainText();
 #if 1
 	this->clear();
     QTextFrame *root = this->document()->rootFrame();
     QTextFrameFormat rformat = root->frameFormat();
-    rformat.setTopMargin(20);
-    rformat.setBottomMargin(20);
-    rformat.setLeftMargin(20);
-    rformat.setRightMargin(20);
+    rformat.setTopMargin(9);
+    rformat.setBottomMargin(9);
+    rformat.setLeftMargin(9);
+    rformat.setRightMargin(9);
     root->setFrameFormat(rformat);
 #if 1
+    m_bodyText.clear();
 	QTextCursor cursor(this->document());
 	cursor.movePosition(QTextCursor::Start);
 	QStringList lst = mdtext.split(u'\n');
@@ -38,10 +48,22 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 		while( m_nSpaces < buf.size() && buf[m_nSpaces] == u' ' ) ++m_nSpaces;
 		if( m_nSpaces > 0 ) buf = buf.mid(m_nSpaces);
 		if( buf.startsWith('#') ) {
+			do_body(cursor);
 			do_heading(cursor, buf);
 		} else {
+			if( buf.isEmpty() ) {		//	空行
+				m_bodyText += u'\n';
+				do_body(cursor);
+				//cursor.insertMarkdown("\n");
+			} else {
+				if( buf.endsWith("  ") )
+					m_bodyText += buf + u'\n';
+				else
+					m_bodyText += buf + u' ';
+			}
 		}
 	}
+	do_body(cursor);
 #else
     bool inList = false;
 	QTextCursor cursor(this->document());

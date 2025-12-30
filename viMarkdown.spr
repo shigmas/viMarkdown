@@ -217,6 +217,16 @@
 0215 ◎ C 12/29 12/29 0.0008│ToDo│setMarkdown()：上下左右余白設定
 0216 ● C 12/29             │ToDo│setMarkdown()：リスト（"- "）サポート
 0217 ● C 12/29             │ToDo│setMarkdown()：2個以上の行末空白によるソフト？改行
-0218 ◎ C 12/29 12/30 0.0008│ToDo│setMarkdown()：ブロック自前構築をやめ、insertMarkdown() を利用
-0219 ● C 12/29             │ToDo│
-0220 ● C 12/29             │ToDo│
+0218 ◎ C 12/30 12/30 0.0008│ToDo│setMarkdown()：ブロック自前構築をやめ、insertMarkdown() を利用
+0219 ◎ C 12/30 12/30 0.0008│問題│hoge 改行 fuga が１行にならない
+0220 ● C 12/30             │ToDo│
+0221 ● C 12/30             │ToDo│
+0222 ● C 12/30             │ToDo│
+0223 ● C 12/30             │ToDo│
+0224 ● C 12/30             │ToDo│
+0225 ● C 12/30             │ToDo│
+0226 ● C 12/30             │ToDo│
+0227 ● C 12/30             │ToDo│
+0228 ● C 12/30             │ToDo│
+0229 ● C 12/30             │ToDo│
+0230 ● C 12/30             │ToDo│
