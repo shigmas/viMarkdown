@@ -165,10 +165,19 @@ void MarkdownViewer::do_heading(QTextCursor& cursor, QString buf) {
 #endif
 }
 void MarkdownViewer::do_list(QTextCursor& cursor, QString buf) {
-	static QRegularExpression re(R"(^( *)- )");
-	while( ++m_ln < m_lst.size() ) {
-		if( !re.match(m_lst[m_ln]).hasMatch() ) break;
-		buf += u'\n' + m_lst[m_ln];
+	static QRegularExpression re_checkbox(R"(^( *)- \[[ xX\] )");
+	if( re_checkbox.match(buf).hasMatch() ) {
+		while( ++m_ln < m_lst.size() ) {
+			if( !re_checkbox.match(m_lst[m_ln]).hasMatch() ) break;
+			buf += u'\n' + m_lst[m_ln];
+		}
+	} else {
+		static QRegularExpression re(R"(^( *)- )");
+		while( ++m_ln < m_lst.size() ) {
+			if( !re.match(m_lst[m_ln]).hasMatch() ) break;
+			if( re_checkbox.match(m_lst[m_ln]).hasMatch() ) break;
+			buf += u'\n' + m_lst[m_ln];
+		}
 	}
 	cursor.insertMarkdown(buf);
 	cursor.insertBlock();
