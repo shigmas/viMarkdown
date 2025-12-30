@@ -1,5 +1,6 @@
 ﻿#include <QTextDocument>
 #include <QTextBlock>
+#include <QRegularExpression>
 #include "MarkdownViewer.h"
 
 void MarkdownViewer::mousePressEvent(QMouseEvent *e)
@@ -41,15 +42,18 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
     m_bodyText.clear();
 	QTextCursor cursor(this->document());
 	cursor.movePosition(QTextCursor::Start);
-	QStringList lst = mdtext.split(u'\n');
-	for(int ln = 0; ln < lst.size(); ++ln) {
-		QString buf = lst[ln];
+	m_lst = mdtext.split(u'\n');
+	for(m_ln = 0; m_ln < m_lst.size(); ++m_ln) {
+		QString buf = m_lst[m_ln];
 		m_nSpaces = 0;
 		while( m_nSpaces < buf.size() && buf[m_nSpaces] == u' ' ) ++m_nSpaces;
 		if( m_nSpaces > 0 ) buf = buf.mid(m_nSpaces);
 		if( buf.startsWith('#') ) {
 			do_body(cursor);
 			do_heading(cursor, buf);
+		} else if( buf.startsWith("- ") ) {
+			do_body(cursor);
+			do_list(cursor, buf);
 		} else {
 			if( buf.isEmpty() ) {		//	空行
 				m_bodyText += u'\n';
@@ -161,6 +165,17 @@ void MarkdownViewer::do_heading(QTextCursor& cursor, QString buf) {
 #endif
 }
 void MarkdownViewer::do_list(QTextCursor& cursor, QString buf) {
+	static QRegularExpression re(R"(^( *)- )");
+	while( ++m_ln < m_lst.size() ) {
+		if( !re.match(m_lst[m_ln]).hasMatch() ) break;
+		buf += u'\n' + m_lst[m_ln];
+	}
+	cursor.insertMarkdown(buf);
+	cursor.insertBlock();
+	QTextBlockFormat blockFormat;
+	cursor.setBlockFormat(blockFormat);
+	--m_ln;
+#if 0
 	//if (!cursor.atBlockStart()) cursor.insertBlock();
 	buf = buf.mid(2);		//	remove "- "
 	QTextBlockFormat blockFormat;
@@ -187,5 +202,5 @@ void MarkdownViewer::do_list(QTextCursor& cursor, QString buf) {
 
 	//QTextBlockFormat format;
 	//cursor.mergeBlockFormat(blockformat);
-
+#endif
 }

@@ -24,9 +24,9 @@ protected:
     void	do_list(QTextCursor&, QString buf);
 
 private:
+    int		m_ln;
     int		m_nSpaces;
     QString	m_bodyText;
-
-;
+	QStringList	m_lst;
 };
 
