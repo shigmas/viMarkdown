@@ -86,8 +86,6 @@
     <property name="title">
      <string>&amp;View</string>
     </property>
-    <addaction name="action_HTML"/>
-    <addaction name="action_Source"/>
     <addaction name="separator"/>
     <addaction name="action_OutlineBar"/>
     <addaction name="action_FocusOutline"/>
@@ -179,8 +177,6 @@
    <addaction name="action_Italic"/>
    <addaction name="action_Strikethrough"/>
    <addaction name="separator"/>
-   <addaction name="action_HTML"/>
-   <addaction name="action_Source"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="outlineBar">

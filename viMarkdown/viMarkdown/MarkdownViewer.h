@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <vector>
 #include <QTextCursor>
 #include "C:\Qt\6.10.0\msvc2022_64\include\QtWidgets\qtextedit.h"
 class MarkdownViewer : public QTextEdit
@@ -11,6 +12,8 @@ public:
     }
 public:
     void	setMarkdown(class QTextDocument*);
+    const QStringList&	getHeadings() const { return m_headingList; }
+    const std::vector<int>&	getHeadingsLineNum() const { return m_headingLineNum; }
 
 signals:
     // クリックされたブロック番号を通知するシグナル
@@ -29,5 +32,7 @@ private:
     int		m_nSpaces;
     QString	m_bodyText;
 	QStringList	m_lst;
+	QStringList	m_headingList;		//	見出しレベル（1～9）＋見出し文字列
+	std::vector<int>	m_headingLineNum;	//	各見出し行 行番号（0 org.）
 };
 

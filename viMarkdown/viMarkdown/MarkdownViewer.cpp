@@ -31,6 +31,8 @@ void MarkdownViewer::do_body(QTextCursor& cursor) {
 static QRegularExpression re_list(R"(^ *[-\*+] )");
 
 void MarkdownViewer::setMarkdown(QTextDocument *doc) {
+	m_headingList.clear();
+	m_headingLineNum.clear();
 	QString mdtext = doc->toPlainText();
 #if 1
 	this->clear();
@@ -111,6 +113,9 @@ void MarkdownViewer::do_heading(QTextCursor& cursor, QString buf) {
 	cursor.setBlockFormat(blockFormat0);
 	// 4. 文字書式のリセット（フォントサイズや太字設定を解除）
 	cursor.setCharFormat(QTextCharFormat()); // 空のフォーマットをセットすることでデフォルトに戻る
+
+	m_headingList.push_back(QChar(u'0'+h) + buf.mid(i-1));
+	m_headingLineNum.push_back(m_ln);
 }
 void MarkdownViewer::do_quote(QTextCursor& cursor, QString buf) {
 	buf = buf.mid(2);

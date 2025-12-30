@@ -870,14 +870,14 @@ void expandAllChildren(QTreeWidgetItem *item) {
 void MainWindow::updateOutlineTree() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
+	//	現文書に対応するトップレベルアイテムへのポインタ取得
 	QTreeWidgetItem* item0 = findTopLevelItemByFullPath(docWidget->m_title, docWidget->m_fullPath);
 	if( item0 == nullptr ) return;
 	qDeleteAll(item0->takeChildren());
-	vector<QTreeWidgetItem*> parents(10, nullptr);
+	vector<QTreeWidgetItem*> parents(10, nullptr);		//	各レベルごとの親アイテムリスト
 	parents[0] = item0;
-	auto htmlComvertor = docWidget->m_htmlComvertor;
-	const QStringList &lst = htmlComvertor.getHeadings();
-	const vector<int>& hLineNum = htmlComvertor.getHeadingsLineNum();
+	const QStringList &lst = docWidget->m_markdownViewer->getHeadings();
+	const vector<int>& hLineNum = docWidget->m_markdownViewer->getHeadingsLineNum();
 	for(int i = 0; i != lst.size(); ++i) {
 		QTreeWidgetItem *item2 = new QTreeWidgetItem();
 		//bool ok;
@@ -892,7 +892,6 @@ void MainWindow::updateOutlineTree() {
 		parents[val] = item2;
 		while( ++val < 10 ) parents[val] = nullptr;
 	}
-	//item0->setExpanded(true);
 	expandAllChildren(item0);
 }
 void MainWindow::onModificationChanged(bool b) {
