@@ -250,10 +250,19 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 }
 void MainWindow::onMarkdownViewerLineClicked(int bln) {
 	qDebug() << "MainWindow::onMarkdownViewerLineClicked(" << bln << ")";
-#if 0
-	statusBar()->showMessage(QString("html block num = %1").arg(bln));
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
+	QTextBlock block = docWidget->m_mdEditor->document()->findBlockByNumber(bln);
+	if (!block.isValid()) return;
+	QTextCursor cursor(block);
+	QString text = block.text();
+	int ix = text.indexOf("- [");
+	if( ix < 0 ) return;
+	cursor.setPosition(block.position() + ix + 3);
+	cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+	cursor.insertText(text[ix+3] == u' ' ? "x" : " ");
+#if 0
+	statusBar()->showMessage(QString("html block num = %1").arg(bln));
 	auto table = docWidget->m_htmlComvertor.getBlockNumTohtmlLineNum();
 	for(int i = 0; i < table.size(); ++i) {
 		if( table[i] >= bln ) {
@@ -912,7 +921,9 @@ void MainWindow::onMDTextChanged() {
 	MarkdownEditor *mdEditor = docWidget->m_mdEditor;
 	//m_plainText = mdEditor->toPlainText();
 #if 1
+	int scrollPos = docWidget->m_markdownViewer->verticalScrollBar()->value();
 	docWidget->m_markdownViewer->setMarkdown(mdEditor->document());
+	docWidget->m_markdownViewer->verticalScrollBar()->setValue(scrollPos);
 #else
 	auto &htmlComvertor = docWidget->m_htmlComvertor;
 	htmlComvertor.convert(mdEditor->document());
