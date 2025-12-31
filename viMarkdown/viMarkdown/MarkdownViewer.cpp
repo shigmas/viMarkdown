@@ -214,7 +214,7 @@ void MarkdownViewer::do_code(QTextCursor& cursor) {
 	cursor.insertFrame(frameFormat);
 
 	QTextCharFormat codeCharFormat;
-    codeCharFormat.setFontFamilies({"Courier", "Courier New", "monospace"});
+    codeCharFormat.setFontFamilies({"MS Gothic", "MS UI Gothic", "Osaka-mono", "monospace"});
     codeCharFormat.setFontFixedPitch(true); // 等幅フォントであることを明示
     codeCharFormat.setFontPointSize(10);    // 必要に応じてサイズを調整
 	// 3. フレームの中で Markdown を挿入
