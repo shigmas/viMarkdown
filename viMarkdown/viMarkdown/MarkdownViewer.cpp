@@ -117,7 +117,7 @@ void MarkdownViewer::do_heading(QTextCursor& cursor, QString buf) {
 	do_heading_sub(cursor, buf.mid(i - 1), h);
 }
 void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h) {
-	cursor.insertMarkdown(buf);
+	cursor.insertMarkdown(QString(h, u'#') + u' ' + buf);
 	if( h == 1 ) {
 		QTextBlockFormat blockFormat;
 		blockFormat.setAlignment(Qt::AlignCenter);
