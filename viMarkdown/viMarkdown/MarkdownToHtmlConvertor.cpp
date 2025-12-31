@@ -391,7 +391,7 @@ void MarkdownToHtmlConvertor::do_code(const QString& lnStr) {
 	//++m_htmlLn;
 	++m_ln;
 }
-bool isHeadingUnderline(const QString &txt) {
+bool isUnderlineHeading(const QString &txt) {
 	static QRegularExpression re(R"(^(=+|-+)$)");
 	return re.match(txt).hasMatch();
 }
@@ -435,7 +435,7 @@ void MarkdownToHtmlConvertor::do_paragraph(const QString& lnStr) {
 		m_htmlText += "<p>";
 		m_isParagraphOpen = false;
 	}
-	if( !lnStr.isEmpty() && m_ln+1 < m_lst.size() && isHeadingUnderline(m_lst[m_ln+1]) ) {	//	見出し行
+	if( !lnStr.isEmpty() && m_ln+1 < m_lst.size() && isUnderlineHeading(m_lst[m_ln+1]) ) {	//	見出し行
 		m_blockType[m_ln] = '#';
 		if( m_lst[m_ln+1][0] == '=' ) {
 			if( !m_headingUnderline1 ) {

@@ -3,7 +3,7 @@
 #include <QRegularExpression>
 #include "MarkdownViewer.h"
 
-bool isHeadingUnderline(const QString& txt);
+bool isUnderlineHeading(const QString& txt);
 
 void MarkdownViewer::mousePressEvent(QMouseEvent *e)
 {
@@ -64,6 +64,9 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 				m_bodyList += QString(u'\n');
 				//cursor.insertMarkdown("\n");
 			} else {
+				if( isUnderlineHeading(buf) ) {
+					if( do_underlineHeading(cursor, buf) ) continue;	//	アンダーライン見出しだった場合
+				}
 				if( buf.endsWith("  ") )
 					m_bodyList += buf + u'\n';
 				else
@@ -90,6 +93,20 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
     }
 #endif
 }
+bool MarkdownViewer::do_underlineHeading(QTextCursor& cursor, QString buf) {
+	if( m_bodyList.isEmpty() || m_bodyList.back() == "" ) return false;
+	int h = 3;
+	if( buf[0] == u'=' ) {
+		if( cursor.blockNumber() == 0 )
+			h = 1;
+		else
+			h = 2;
+	}
+	buf = m_bodyList.back();
+	m_bodyList.pop_back();
+	do_heading_sub(cursor, buf, h);
+	return true;
+}
 int h_font_size[] = {12, 25, 21, 18, 16, 14, 12};
 
 void MarkdownViewer::do_heading(QTextCursor& cursor, QString buf) {
@@ -97,6 +114,9 @@ void MarkdownViewer::do_heading(QTextCursor& cursor, QString buf) {
 	while( i < buf.size() && buf[i] == '#' ) ++i;
 	int h = std::min(6, i);		//	[1, 6]
 	while( i < buf.size() && buf[i] == ' ' ) ++i;
+	do_heading_sub(cursor, buf.mid(i - 1), h);
+}
+void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h) {
 	cursor.insertMarkdown(buf);
 	if( h == 1 ) {
 		QTextBlockFormat blockFormat;
@@ -111,7 +131,7 @@ void MarkdownViewer::do_heading(QTextCursor& cursor, QString buf) {
 	// 4. 文字書式のリセット（フォントサイズや太字設定を解除）
 	cursor.setCharFormat(QTextCharFormat()); // 空のフォーマットをセットすることでデフォルトに戻る
 
-	m_headingList.push_back(QChar(u'0'+h) + buf.mid(i-1));
+	m_headingList.push_back(QChar(u'0'+h) + buf);
 	m_headingLineNum.push_back(m_ln);
 }
 void MarkdownViewer::do_quote(QTextCursor& cursor, QString buf) {

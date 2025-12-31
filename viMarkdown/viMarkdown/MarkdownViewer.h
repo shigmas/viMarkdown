@@ -23,7 +23,9 @@ protected:
     void mousePressEvent(QMouseEvent *e) override;    // マウスクリックイベントをオーバーライド
 
     void	do_body(QTextCursor&);
+    bool	do_underlineHeading(QTextCursor&, QString buf);
     void	do_heading(QTextCursor&, QString buf);
+    void	do_heading_sub(QTextCursor&, QString buf, int h);
     void	do_list(QTextCursor&, QString buf);
     void	do_quote(QTextCursor&, QString buf);
 
