@@ -917,7 +917,7 @@ void MainWindow::onMDTextChanged() {
 	if( m_ignore_changed ) return;
 	m_ignore_changed = true;
 	DocWidget *docWidget = getCurDocWidget();
-	qDebug() << "docWidget = " << docWidget;
+	//qDebug() << "docWidget = " << docWidget;
 	MarkdownEditor *mdEditor = docWidget->m_mdEditor;
 	//m_plainText = mdEditor->toPlainText();
 #if 1

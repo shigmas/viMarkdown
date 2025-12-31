@@ -107,6 +107,9 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 		} else if( buf.startsWith("> ") ) {
 			do_body(cursor);
 			do_quote(cursor, buf);
+		} else if( buf.startsWith("```") ) {
+			do_body(cursor);
+			do_code(cursor);
 		} else if( isTableLine(buf) && m_ln + 1 < m_lst.size() && isTableHyphenLine(m_lst[m_ln+1]) ) {
 			do_table(cursor);
 		} else {
@@ -194,6 +197,34 @@ void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h) {
 
 	m_headingList.push_back(QChar(u'0'+h) + buf);
 	m_headingLineNum.push_back(m_ln);
+}
+void MarkdownViewer::do_code(QTextCursor& cursor) {
+	QString buf;
+	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
+		if( !buf.isEmpty() ) buf += "\n";
+		buf += m_lst[m_ln];
+	}
+	// 1. フレームの書式を設定
+	QTextFrameFormat frameFormat;
+	frameFormat.setBackground(QColor("#fffff0")); // 薄い黄色
+	frameFormat.setMargin(0);                     // 外側の余白
+	frameFormat.setPadding(10);                   // 内側の余白（文字と端の隙間）
+	frameFormat.setBorder(0);                     // 枠線はなし
+	// 2. フレームを挿入（この中にカーソルが入る）
+	cursor.insertFrame(frameFormat);
+
+	QTextCharFormat codeCharFormat;
+    codeCharFormat.setFontFamilies({"Courier", "Courier New", "monospace"});
+    codeCharFormat.setFontFixedPitch(true); // 等幅フォントであることを明示
+    codeCharFormat.setFontPointSize(10);    // 必要に応じてサイズを調整
+	// 3. フレームの中で Markdown を挿入
+	cursor.insertText(buf, codeCharFormat);
+	cursor.movePosition(QTextCursor::End);
+	this->setTextCursor(cursor);
+	cursor.insertBlock();
+	QTextBlockFormat blockFormat;
+	cursor.setBlockFormat(blockFormat);
+	//--m_ln;
 }
 void MarkdownViewer::do_quote(QTextCursor& cursor, QString buf) {
 	buf = buf.mid(2);

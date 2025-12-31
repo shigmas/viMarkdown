@@ -31,6 +31,7 @@ protected:
     void	do_heading_sub(QTextCursor&, QString buf, int h);
     void	do_list(QTextCursor&, QString buf);
     void	do_quote(QTextCursor&, QString buf);
+    void	do_code(QTextCursor&);
 
 private:
     int		m_ln;
