@@ -6,15 +6,9 @@
 void MarkdownViewer::mousePressEvent(QMouseEvent *e)
 {
 	if (e->button() == Qt::LeftButton) {
-	    // 1. クリックされた位置のカーソルオブジェクトを取得
-	    // viewport()->mapFromGlobal(e->globalPos()) ではなく e->pos() でOKです
 	    QTextCursor cursor = cursorForPosition(e->pos());
-
-	    // 2. その位置のブロック番号を取得（0ベース）
-	    int blockNumber = cursor.blockNumber();
-
-	    // 3. シグナルを発行
-	    emit lineClicked(blockNumber);
+	    //int blockNumber = cursor.blockNumber();
+	    emit lineClicked(cursor.block().userState());
 	}
     QTextEdit::mousePressEvent(e);
 }
@@ -142,11 +136,16 @@ void MarkdownViewer::do_quote(QTextCursor& cursor, QString buf) {
 	--m_ln;
 }
 void MarkdownViewer::do_list(QTextCursor& cursor, QString buf) {
-	static QRegularExpression re_checkbox(R"(^( *)- \[[ xX\] )");
-	if( re_checkbox.match(buf).hasMatch() ) {
+	static QRegularExpression re_checkbox(R"(^( *)- \[[ xX]\] )");
+	int pos = cursor.position();
+	int n_item = 1;
+	int ln = m_ln;
+	bool is_checkbox = re_checkbox.match(buf).hasMatch();
+	if( is_checkbox ) {
 		while( ++m_ln < m_lst.size() ) {
 			if( !re_checkbox.match(m_lst[m_ln]).hasMatch() ) break;
 			buf += u'\n' + m_lst[m_ln];
+			++n_item;
 		}
 	} else {
 		//static QRegularExpression re(R"(^( *)- )");
@@ -156,7 +155,21 @@ void MarkdownViewer::do_list(QTextCursor& cursor, QString buf) {
 			buf += u'\n' + m_lst[m_ln];
 		}
 	}
+	int startPos = cursor.position();
 	cursor.insertMarkdown(buf);
+	QTextBlock firstBlock = document()->findBlock(startPos);
+	if (firstBlock.isValid() && firstBlock.text().isEmpty()) {
+	    // ブロックが空なら削除する（バックスペース的な処理）
+	    QTextCursor helper(firstBlock);
+	    helper.deleteChar(); 
+	}
+	if( is_checkbox ) {
+		QTextBlock block = document()->findBlock(pos);
+		for(int i = 0; i < n_item; ++i) {
+			block.setUserState(ln++);
+			block = block.next();
+		}
+	}
 	cursor.insertBlock();
 	QTextBlockFormat blockFormat;
 	cursor.setBlockFormat(blockFormat);

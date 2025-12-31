@@ -250,6 +250,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 }
 void MainWindow::onMarkdownViewerLineClicked(int bln) {
 	qDebug() << "MainWindow::onMarkdownViewerLineClicked(" << bln << ")";
+#if 0
 	statusBar()->showMessage(QString("html block num = %1").arg(bln));
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
@@ -259,6 +260,7 @@ void MainWindow::onMarkdownViewerLineClicked(int bln) {
 			return;
 		}
 	}
+#endif
 }
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 {
