@@ -30,7 +30,8 @@ protected:
 private:
     int		m_ln;
     int		m_nSpaces;
-    QString	m_bodyText;
+    //QString	m_bodyText;
+    QStringList	m_bodyList;
 	QStringList	m_lst;
 	QStringList	m_headingList;		//	見出しレベル（1～9）＋見出し文字列
 	std::vector<int>	m_headingLineNum;	//	各見出し行 行番号（0 org.）

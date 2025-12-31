@@ -3,6 +3,8 @@
 #include <QRegularExpression>
 #include "MarkdownViewer.h"
 
+bool isHeadingUnderline(const QString& txt);
+
 void MarkdownViewer::mousePressEvent(QMouseEvent *e)
 {
 	if (e->button() == Qt::LeftButton) {
@@ -13,13 +15,14 @@ void MarkdownViewer::mousePressEvent(QMouseEvent *e)
     QTextEdit::mousePressEvent(e);
 }
 void MarkdownViewer::do_body(QTextCursor& cursor) {
-	if( m_bodyText.isEmpty() ) return;
-	cursor.insertMarkdown(m_bodyText);
+	if( m_bodyList.isEmpty() ) return;
+	for(auto txt: m_bodyList)
+		cursor.insertMarkdown(txt);
 	QTextBlockFormat blockFormat;
 	blockFormat.setAlignment(Qt::AlignJustify); // 左右両端揃え
 	cursor.mergeBlockFormat(blockFormat);
 	cursor.insertBlock();
-	m_bodyText.clear();
+	m_bodyList.clear();
 }
 
 static QRegularExpression re_list(R"(^ *[-\*+] )");
@@ -37,7 +40,7 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
     rformat.setLeftMargin(9);
     rformat.setRightMargin(9);
     root->setFrameFormat(rformat);
-    m_bodyText.clear();
+    m_bodyList.clear();
 	QTextCursor cursor(this->document());
 	cursor.movePosition(QTextCursor::Start);
 	m_lst = mdtext.split(u'\n');
@@ -58,13 +61,13 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 		} else {
 			if( buf.isEmpty() ) {		//	空行
 				do_body(cursor);
-				m_bodyText += u'\n';
+				m_bodyList += QString(u'\n');
 				//cursor.insertMarkdown("\n");
 			} else {
 				if( buf.endsWith("  ") )
-					m_bodyText += buf + u'\n';
+					m_bodyList += buf + u'\n';
 				else
-					m_bodyText += buf + u' ';
+					m_bodyList += buf + u' ';
 			}
 		}
 	}
