@@ -21,8 +21,11 @@ signals:
 
 protected:
     void mousePressEvent(QMouseEvent *e) override;    // マウスクリックイベントをオーバーライド
+    bool	isTableLine(const QString&);
+    bool	isTableHyphenLine(const QString&);
 
     void	do_body(QTextCursor&);
+    void	do_table(QTextCursor&);
     bool	do_underlineHeading(QTextCursor&, QString buf);
     void	do_heading(QTextCursor&, QString buf);
     void	do_heading_sub(QTextCursor&, QString buf, int h);
@@ -37,5 +40,7 @@ private:
 	QStringList	m_lst;
 	QStringList	m_headingList;		//	見出しレベル（1～9）＋見出し文字列
 	std::vector<int>	m_headingLineNum;	//	各見出し行 行番号（0 org.）
+	QList<QStringView>	m_tableTokens;
+	std::vector<char>	m_tableAlign;		//	各カラムの水平方向アライメント
 };
 

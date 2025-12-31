@@ -1,9 +1,56 @@
-﻿#include <QTextDocument>
+﻿#include <vector>
+#include <QTextDocument>
 #include <QTextBlock>
 #include <QRegularExpression>
 #include "MarkdownViewer.h"
 
+using namespace std;
+
+enum {
+	ALIGHN_LEFT = 1, ALIGHN_RIGHT = 2, ALIGHN_CENTER = ALIGHN_LEFT| ALIGHN_RIGHT,
+};
+
 bool isUnderlineHeading(const QString& txt);
+bool MarkdownViewer::isTableLine(const QString& lnStr) {
+	QStringView sv(lnStr);
+	m_tableTokens.clear();
+	int ix = 0;
+	while( ix < sv.size() && sv[ix] == u' ' ) ++ix;		//	空白スキップ
+	if (ix < sv.size() && sv[ix] == u'|') ++ix;			//	先頭の '|' スキップ
+	while( ix < sv.size() ) {
+		int ix0 = ix;
+		while( ix < sv.size() && sv[ix] != u'|' ) {		//	'|' までループ
+			if( ix+1 < sv.size() && sv[ix] == u'\\' ) ix += 2;
+			else ++ix;
+		}
+		m_tableTokens.push_back(sv.mid(ix0, ix-ix0));
+		++ix;			//	'|' スキップ
+	}
+	return m_tableTokens.size() > 1;
+}
+bool MarkdownViewer::isTableHyphenLine(const QString& lnStr) {
+	m_tableAlign.clear();
+	QStringView sv(lnStr);
+	int ix = 0;
+	while( ix < sv.size() && sv[ix] == u' ' ) ++ix;		//	空白スキップ
+	if (ix < sv.size() && sv[ix] == u'|') ++ix;			//	先頭の '|' スキップ
+	while( ix < sv.size() ) {
+		char aln = 0;
+		while( ix < sv.size() && sv[ix] == u' ' ) ++ix;		//	空白スキップ
+		if( ix < sv.size() && sv[ix] == u':' ) aln = ALIGHN_LEFT;
+		while( ix < sv.size() && sv[ix] != u'|' ) {		//	次の'|' までループ
+			if( ix+1 < sv.size() && sv[ix] == u'\\' ) ix += 2;
+			else ++ix;
+		}
+		int i = ix - 1;
+		while( i >= 0 && sv[i] == u' ' ) --i;		//	空白スキップ
+		if( i >= 0 && sv[i] == u':' )
+			aln |= ALIGHN_RIGHT;
+		m_tableAlign.push_back(aln);
+		++ix;
+	}
+	return m_tableAlign.size() > 1;
+}
 
 void MarkdownViewer::mousePressEvent(QMouseEvent *e)
 {
@@ -31,6 +78,8 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 	m_headingList.clear();
 	m_headingLineNum.clear();
 	QString mdtext = doc->toPlainText();
+	QList<QStringView> tableTokens;
+	vector<char> tableAlign;
 #if 1
 	this->clear();
     QTextFrame *root = this->document()->rootFrame();
@@ -58,6 +107,8 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 		} else if( buf.startsWith("> ") ) {
 			do_body(cursor);
 			do_quote(cursor, buf);
+		} else if( isTableLine(buf) && m_ln + 1 < m_lst.size() && isTableHyphenLine(m_lst[m_ln+1]) ) {
+			do_table(cursor);
 		} else {
 			if( buf.isEmpty() ) {		//	空行
 				do_body(cursor);
@@ -92,6 +143,16 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
         }
     }
 #endif
+}
+void MarkdownViewer::do_table(QTextCursor& cursor) {
+	QString buf = m_lst[m_ln] + "\n" + m_lst[m_ln+1] + "\n";
+	m_ln += 2;
+	while( m_ln < m_lst.size() && isTableLine(m_lst[m_ln]) ) {
+		buf += m_lst[m_ln++] + "\n";
+	}
+	cursor.insertMarkdown(buf);
+	cursor.insertBlock();
+	--m_ln;
 }
 bool MarkdownViewer::do_underlineHeading(QTextCursor& cursor, QString buf) {
 	if( m_bodyList.isEmpty() || m_bodyList.back() == "" ) return false;
