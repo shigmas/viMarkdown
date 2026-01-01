@@ -220,13 +220,14 @@ void MainWindow::updateHTMLModeCheck() {
 DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPath) {
 	//auto containerWidget = new QWidget;
 	auto *docWidget = new DocWidget(title, fullPath);
-	docWidget->setStyleSheet("font-size: 12pt; line-height: 200%;");
+	//docWidget->setStyleSheet("font-size: 12pt; line-height: 200%;");
 	QSplitter *splitter = new QSplitter(Qt::Horizontal, docWidget);
 	MarkdownEditor *mdEditor = docWidget->m_mdEditor = new MarkdownEditor(splitter);
 	QFont font("MS Gothic");
 	//QFont font("Consolas");
 	font.setFixedPitch(true); // 明示的に固定幅として扱う設定
 	mdEditor->setFont(font);
+	mdEditor->setStyleSheet("font-size: 12pt;");
 	mdEditor->setUndoRedoEnabled(true);
 	connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onMdEditCurPosChanged);
 	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
@@ -235,6 +236,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	MarkdownViewer *markdownViewer = docWidget->m_markdownViewer = new MarkdownViewer(splitter);
 	//##markdownViewer->setReadOnly(true); // プレビューなので読み取り専用にする
 	markdownViewer->setPlaceholderText("プレビュー画面");
+	markdownViewer->setStyleSheet("font-size: 12pt;");
 	connect(markdownViewer, &MarkdownViewer::lineClicked, this, &MainWindow::onMarkdownViewerLineClicked);
 	splitter->addWidget(mdEditor);
 	splitter->addWidget(markdownViewer);

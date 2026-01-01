@@ -168,7 +168,7 @@ bool MarkdownViewer::do_underlineHeading(QTextCursor& cursor, QString buf) {
 	}
 	buf = m_bodyList.back();
 	m_bodyList.pop_back();
-	do_heading_sub(cursor, buf, h);
+	do_heading_sub(cursor, buf, h, m_ln-1);
 	return true;
 }
 int h_font_size[] = {12, 25, 21, 18, 16, 14, 12};
@@ -178,9 +178,9 @@ void MarkdownViewer::do_heading(QTextCursor& cursor, QString buf) {
 	while( i < buf.size() && buf[i] == '#' ) ++i;
 	int h = std::min(6, i);		//	[1, 6]
 	while( i < buf.size() && buf[i] == ' ' ) ++i;
-	do_heading_sub(cursor, buf.mid(i - 1), h);
+	do_heading_sub(cursor, buf.mid(i - 1), h, m_ln);
 }
-void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h) {
+void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int ln) {
 	cursor.insertMarkdown(QString(h, u'#') + u' ' + buf);
 	if( h == 1 ) {
 		QTextBlockFormat blockFormat;
@@ -196,7 +196,7 @@ void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h) {
 	cursor.setCharFormat(QTextCharFormat()); // 空のフォーマットをセットすることでデフォルトに戻る
 
 	m_headingList.push_back(QChar(u'0'+h) + buf);
-	m_headingLineNum.push_back(m_ln);
+	m_headingLineNum.push_back(ln);
 }
 void MarkdownViewer::do_code(QTextCursor& cursor) {
 	QString buf;
