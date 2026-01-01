@@ -128,7 +128,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_Indent, &QAction::triggered, this, &MainWindow::onAction_Indent);
 	connect(ui->action_UnIndent, &QAction::triggered, this, &MainWindow::onAction_UnIndent);
 	connect(ui->action_Undo, &QAction::triggered, this, &MainWindow::onAction_Undo);
-	//connect(ui->action_Redo, &QAction::triggered, this, &MainWindow::onAction_Redo);
+	connect(ui->action_Redo, &QAction::triggered, this, &MainWindow::onAction_Redo);
 	connect(ui->action_SelectAll, &QAction::triggered, this, &MainWindow::onAction_SelectAll);
 	connect(ui->action_Bold, &QAction::triggered, this, &MainWindow::onAction_Bold);
 	connect(ui->action_Italic, &QAction::triggered, this, &MainWindow::onAction_Italic);
@@ -768,6 +768,9 @@ void MainWindow::onAction_Undo() {
 	docWidget->m_mdEditor->undo();
 }
 void MainWindow::onAction_Redo() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	docWidget->m_mdEditor->redo();
 }
 void MainWindow::onAction_SelectAll() {
 	DocWidget *docWidget = getCurDocWidget();
