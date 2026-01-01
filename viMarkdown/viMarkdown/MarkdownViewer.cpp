@@ -66,11 +66,6 @@ void MarkdownViewer::do_body(QTextCursor& cursor) {
 	QString buf;
 	for(auto txt: m_bodyList) {
 		buf += txt + "\n";
-		//cursor.insertMarkdown(txt + "\n");
-		//if( txt.endsWith("  ") )
-		//	cursor.insertMarkdown(txt + "\n");
-		//else
-		//	cursor.insertMarkdown(txt + "\n");
 	}
 	cursor.insertMarkdown(buf);
 	QTextBlockFormat blockFormat;
@@ -122,8 +117,11 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 			do_table(cursor);
 		} else {
 			if( buf.isEmpty() ) {		//	空行
-				do_body(cursor);
-				m_bodyList += QString();
+				if( m_bodyList.isEmpty() ) {
+					cursor.insertBlock();
+				} else
+					m_bodyList += "  \n";	//	強制改行
+				//do_body(cursor);
 				//cursor.insertMarkdown("\n");
 			} else {
 				if( isUnderlineHeading(buf) ) {
