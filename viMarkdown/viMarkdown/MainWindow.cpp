@@ -482,7 +482,9 @@ void MainWindow::do_save(bool fDialog) {
 void MainWindow::onAction_ExportAsPDF() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	QString fileName = QFileDialog::getSaveFileName(this, "export as PDF", "", "PDF Files (*.pdf)");
+	QString title;
+	if( !docWidget->m_fullPath.isEmpty() ) title = docWidget->m_title;
+	QString fileName = QFileDialog::getSaveFileName(this, "export as PDF", title, "PDF Files (*.pdf)");
     if (fileName.isEmpty()) return;
 
     QPrinter printer(QPrinter::HighResolution);
