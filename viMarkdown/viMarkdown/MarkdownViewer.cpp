@@ -214,9 +214,22 @@ void MarkdownViewer::do_code(QTextCursor& cursor) {
 	cursor.insertFrame(frameFormat);
 
 	QTextCharFormat codeCharFormat;
+#if 0
     codeCharFormat.setFontFamilies({"MS Gothic", "MS UI Gothic", "Osaka-mono", "monospace"});
     codeCharFormat.setFontFixedPitch(true); // 等幅フォントであることを明示
     codeCharFormat.setFontPointSize(10);    // 必要に応じてサイズを調整
+#else
+    QFont font;
+	// 2. フォントの基本属性を設定
+	font.setFamilies({"MS Gothic", "MS UI Gothic", "Osaka-mono", "monospace"});
+	font.setFixedPitch(true);
+	font.setPointSizeF(10); // 精密な計算のために setPointSize より setPointSizeF がおすすめ
+	// 3. レタースペーシング（文字間隔）を設定
+	// 100% よりわずかに小さくすることで、PDF出力時の隙間を埋めます
+	font.setLetterSpacing(QFont::PercentageSpacing, 99.5);
+	// 4. 設定済みの QFont を QTextCharFormat に適用
+	codeCharFormat.setFont(font);
+#endif
 	// 3. フレームの中で Markdown を挿入
 	cursor.insertText(buf, codeCharFormat);
 	cursor.movePosition(QTextCursor::End);

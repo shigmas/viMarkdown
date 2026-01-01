@@ -44,7 +44,9 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {
 		QTextCursor cursor = this->textCursor();
         QTextBlock currentBlock = cursor.block();
-        if( cursor.position() != currentBlock.position()) {		//	行頭にいる場合は無視
+        if( (e->modifiers() & Qt::ShiftModifier) == 0 &&		//	Shift + Enter でない
+        	cursor.position() != currentBlock.position())		//	行頭にいない場合
+        {
 	        QString text = currentBlock.text();
 	        int n = 0;
 	        while( n < text.length() && text[n].isSpace() ) ++n;
