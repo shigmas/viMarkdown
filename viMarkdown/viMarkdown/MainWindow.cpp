@@ -897,7 +897,7 @@ void MainWindow::updateOutlineTree() {
 		//int val = lst[i].toInt(&ok, 10);
 		int val = lst[i][0].unicode() - '0';
 		item2->setIcon(0, QIcon(":/MainWindow/images/small_square_48.png"));
-		item2->setText(0, lst[i].mid(2));
+		item2->setText(0, lst[i].mid(1));
 		item2->setData(0, Qt::UserRole, hLineNum[i]);
 		int k = val - 1;
 		while( parents[k] == nullptr ) --k;
