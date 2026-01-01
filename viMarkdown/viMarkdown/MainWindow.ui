@@ -117,6 +117,7 @@
     <addaction name="action_Cut"/>
     <addaction name="action_Copy"/>
     <addaction name="action_Paste"/>
+    <addaction name="action_SelectAll"/>
     <addaction name="separator"/>
     <addaction name="menublock"/>
     <addaction name="menuinline"/>
@@ -549,6 +550,14 @@
   <action name="action_AsPDF">
    <property name="text">
     <string>As &amp;PDF</string>
+   </property>
+  </action>
+  <action name="action_SelectAll">
+   <property name="text">
+    <string>Select&amp;All</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
    </property>
   </action>
  </widget>

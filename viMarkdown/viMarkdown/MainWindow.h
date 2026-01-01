@@ -60,6 +60,7 @@ protected:
     void	onAction_Close();
     void	onAction_Undo();
     void	onAction_Redo();
+    void	onAction_SelectAll();
     void	onAction_Bold();
     void	onAction_Italic();
     void	onAction_Strikethrough();

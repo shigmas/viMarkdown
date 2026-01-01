@@ -129,6 +129,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_UnIndent, &QAction::triggered, this, &MainWindow::onAction_UnIndent);
 	connect(ui->action_Undo, &QAction::triggered, this, &MainWindow::onAction_Undo);
 	//connect(ui->action_Redo, &QAction::triggered, this, &MainWindow::onAction_Redo);
+	connect(ui->action_SelectAll, &QAction::triggered, this, &MainWindow::onAction_SelectAll);
 	connect(ui->action_Bold, &QAction::triggered, this, &MainWindow::onAction_Bold);
 	connect(ui->action_Italic, &QAction::triggered, this, &MainWindow::onAction_Italic);
 	connect(ui->action_Strikethrough, &QAction::triggered, this, &MainWindow::onAction_Strikethrough);
@@ -767,6 +768,11 @@ void MainWindow::onAction_Undo() {
 	docWidget->m_mdEditor->undo();
 }
 void MainWindow::onAction_Redo() {
+}
+void MainWindow::onAction_SelectAll() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	docWidget->m_mdEditor->selectAll();
 }
 void MainWindow::onAction_Bold() {
 	insertInline("**");

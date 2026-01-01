@@ -141,7 +141,7 @@
 0139 ◎ C 12/21 12/22 0.0002│ToDo│MainWindow::m_plainText, m_htmlText：削除 or DocWidget に移動
 0140 ◎ C 12/22 12/22 0.0002│ToDo│MarkdownToHtmlConvertor::convert()：引数でマークダウンテキストを指定可能に
 0141 ◎ C 12/22 12/22 0.0002│問題│プレビューにフォーマットされた文章が表示されない
-0142 ● C 12/22             │ToDo│QTextDocument::setMarkdown(const QString &markdown, ...) を試してみる
+0142 ◎ C 12/22             │ToDo│QTextDocument::setMarkdown(const QString &markdown, ...) を試してみる
 0143 ◎ C 12/22 12/22 0.0002│ToDo│チェックボックス：<input disabled="" type="checkbox"> を出力？→ 表示されないので却下
 0144 ◎ C 12/23 12/23 0.0003│ToDo│Edit > inline > CheckBox 処理
 0145 ◎ C 12/23 12/23 0.0003│ToDo│ファイル系アクション：画面左ツールバーに配置
@@ -162,7 +162,7 @@
 0160 ◎ C 12/23 12/23 0.0004│ToDo│Cut, Copy, Paste：ショートカットキー表示
 0161 ◎ C 12/23 12/23 0.0004│ToDo│MarkdownToHtmlConvertor::convert()：複数行パースを可能に
 0162 ◎ C 12/23 12/25 0.0006│ToDo│ステータスバーに MdEditor 内のカーソル位置表示
-0163 ● C 12/23             │ToDo│Edit > SelectAll アクション追加
+0163 ◎ C 12/23 01/01 0.1001│ToDo│Edit > SelectAll アクション追加
 0164 ◎ C 12/23 12/26 0.0006│ToDo│MarkdownToHtmlConvertor.convert()：マークダウンテキストではなく、QTextDocument を受け取る？
 0165 ● C 12/24             │ToDo│MarkdownToHtmlConvertor.convert() > list 処理："- " が続くかぎり関数内で処理
 0166 ◎ C 12/24 12/24 0.0004│ToDo│code ブロックをとりあえずサポート
