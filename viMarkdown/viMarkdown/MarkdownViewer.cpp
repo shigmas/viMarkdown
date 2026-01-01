@@ -63,8 +63,16 @@ void MarkdownViewer::mousePressEvent(QMouseEvent *e)
 }
 void MarkdownViewer::do_body(QTextCursor& cursor) {
 	if( m_bodyList.isEmpty() ) return;
-	for(auto txt: m_bodyList)
-		cursor.insertMarkdown(txt);
+	QString buf;
+	for(auto txt: m_bodyList) {
+		buf += txt + "\n";
+		//cursor.insertMarkdown(txt + "\n");
+		//if( txt.endsWith("  ") )
+		//	cursor.insertMarkdown(txt + "\n");
+		//else
+		//	cursor.insertMarkdown(txt + "\n");
+	}
+	cursor.insertMarkdown(buf);
 	QTextBlockFormat blockFormat;
 	blockFormat.setAlignment(Qt::AlignJustify); // 左右両端揃え
 	cursor.mergeBlockFormat(blockFormat);
@@ -115,16 +123,17 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 		} else {
 			if( buf.isEmpty() ) {		//	空行
 				do_body(cursor);
-				m_bodyList += QString(u'\n');
+				m_bodyList += QString();
 				//cursor.insertMarkdown("\n");
 			} else {
 				if( isUnderlineHeading(buf) ) {
 					if( do_underlineHeading(cursor, buf) ) continue;	//	アンダーライン見出しだった場合
 				}
-				if( buf.endsWith("  ") )
-					m_bodyList += buf + u'\n';
-				else
-					m_bodyList += buf + u' ';
+				m_bodyList += buf;
+				//if( buf.endsWith("  ") )
+				//	m_bodyList += buf + u'\n';
+				//else
+				//	m_bodyList += buf + u' ';
 			}
 		}
 	}
