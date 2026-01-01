@@ -80,6 +80,7 @@ static QRegularExpression re_list(R"(^ *[-\*+] )");
 void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 	m_headingList.clear();
 	m_headingLineNum.clear();
+	m_headingBlockNum.clear();
 	QString mdtext = doc->toPlainText();
 	QList<QStringView> tableTokens;
 	vector<char> tableAlign;
@@ -195,6 +196,7 @@ void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int
 		cursor.mergeBlockFormat(blockFormat);
 	}
 	cursor.setCharFormat(QTextCharFormat());
+	m_headingBlockNum.push_back(cursor.blockNumber());
 	cursor.insertBlock();			//	新規ブロック
 	QTextBlockFormat blockFormat0;
 	blockFormat0.setHeadingLevel(0); // 見出し設定を解除

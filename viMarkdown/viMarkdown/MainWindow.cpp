@@ -249,6 +249,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(mdEditor, &MarkdownEditor::textChanged, this, &MainWindow::onMDTextChanged);
 	//connect(mdEditor, &MarkdownViewer::textChanged, this, &MainWindow::onMDTextChanged);
 
+	docWidget->setModified(false);
 	return docWidget;
 }
 void MainWindow::onMarkdownViewerLineClicked(int bln) {
@@ -920,6 +921,7 @@ void MainWindow::updateOutlineTree() {
 }
 void MainWindow::onModificationChanged(bool b) {
 	DocWidget *docWidget = getCurDocWidget();
+	if (docWidget == nullptr) return;
 	QString title = docWidget->m_title;
 	if( b ) title += " *";
 	ui->tabWidget->setTabText(ui->tabWidget->currentIndex(), title);
@@ -974,7 +976,8 @@ void MainWindow::onMDTextChanged() {
 void MainWindow::onMdEditCurPosChanged() {
 	MarkdownEditor *mdEditor = (MarkdownEditor*)sender();
 	QTextCursor cursor = mdEditor->textCursor();
-	//int bnum = cursor.blockNumber();
+	int bnum = cursor.blockNumber();
+	
 	//QString mess = QString("cursor.blockNumber = %1").arg(bnum);
 	//mess += QString(", preview.blockNumber() = %1").arg(cursor.blockNumber());
 	//statusBar()->showMessage(mess);
@@ -986,7 +989,6 @@ void MainWindow::onMdEditCurPosChanged() {
 		QString mess = QString("html line = %1").arg(v[cursor.blockNumber()]);
 		statusBar()->showMessage(mess);
 	}
-
 }
 void MainWindow::onAction_About() {
 	qDebug() << "MainWindow::onAction_About()";

@@ -14,6 +14,7 @@ public:
     void	setMarkdown(class QTextDocument*);
     const QStringList&	getHeadings() const { return m_headingList; }
     const std::vector<int>&	getHeadingsLineNum() const { return m_headingLineNum; }
+    const std::vector<int>&	getHeadingsBlockNum() const { return m_headingBlockNum; }
 
 signals:
     // クリックされたブロック番号を通知するシグナル
@@ -40,7 +41,8 @@ private:
     QStringList	m_bodyList;
 	QStringList	m_lst;
 	QStringList	m_headingList;		//	見出しレベル（1～9）＋見出し文字列
-	std::vector<int>	m_headingLineNum;	//	各見出し行 行番号（0 org.）
+	std::vector<int>	m_headingLineNum;	//	各見出し行 行番号（0 org.）in マークダウンソース
+	std::vector<int>	m_headingBlockNum;	//	各見出し行 ブロック番号（0 org.）in マークダウンビュー
 	QList<QStringView>	m_tableTokens;
 	std::vector<char>	m_tableAlign;		//	各カラムの水平方向アライメント
 };
