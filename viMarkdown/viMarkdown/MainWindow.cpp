@@ -122,6 +122,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_SaveAs, &QAction::triggered, this, &MainWindow::onAction_SaveAs);
 	connect(ui->action_AsPDF, &QAction::triggered, this, &MainWindow::onAction_ExportAsPDF);
 	connect(ui->action_Close, &QAction::triggered, this, &MainWindow::onAction_Close);
+	connect(ui->action_Print, &QAction::triggered, this, &MainWindow::onAction_Print);
 	connect(ui->action_List, &QAction::triggered, this, &MainWindow::onAction_List);
 	connect(ui->action_NumList, &QAction::triggered, this, &MainWindow::onAction_NumList);
 	connect(ui->action_Checkbox, &QAction::triggered, this, &MainWindow::onAction_Checkbox);
@@ -528,6 +529,16 @@ void MainWindow::onAction_Close() {
 		//ui->treeWidget->removeItemWidget(top);
 		delete top;			//	TreeWidget から top アイテム以下をすべて削除
 	}
+}
+void MainWindow::onAction_Print() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	QPrinter printer(QPrinter::HighResolution);
+    QPrintDialog dialog(&printer, this);
+    dialog.setWindowTitle("print Markdown");
+    if (dialog.exec() == QDialog::Accepted) {
+        docWidget->m_markdownViewer->print(&printer);
+    }
 }
 bool isCheckbox(const QString txt, int s) {
 	return txt[s] == '[' && (txt[s+1] == ' ' || txt[s+1] == 'x' || txt[s+1] == 'X') && txt[s+2] == ']' && txt[s+3] == ' ';

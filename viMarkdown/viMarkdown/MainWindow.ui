@@ -79,6 +79,7 @@
     <addaction name="action_Close"/>
     <addaction name="menu_RecentFiles"/>
     <addaction name="menu_FavoriteFile"/>
+    <addaction name="action_Print"/>
     <addaction name="separator"/>
     <addaction name="action_Exit"/>
    </widget>
@@ -561,6 +562,18 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="action_Print">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/print_48.png</normaloff>:/MainWindow/images/print_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Print</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
    </property>
   </action>
  </widget>

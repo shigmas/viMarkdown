@@ -223,6 +223,7 @@ void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int
 
 	m_headingList.push_back(QChar(u'0'+h) + buf);
 	m_headingLineNum.push_back(ln);
+	m_nEmptyLines = 0;
 }
 void MarkdownViewer::do_code(QTextCursor& cursor) {
 	QString buf;
@@ -264,6 +265,7 @@ void MarkdownViewer::do_code(QTextCursor& cursor) {
 	QTextBlockFormat blockFormat;
 	cursor.setBlockFormat(blockFormat);
 	//--m_ln;
+	m_nEmptyLines = 0;
 }
 void MarkdownViewer::do_quote(QTextCursor& cursor, QString buf) {
 	buf = buf.mid(2);
@@ -288,6 +290,7 @@ void MarkdownViewer::do_quote(QTextCursor& cursor, QString buf) {
 	QTextBlockFormat blockFormat;
 	cursor.setBlockFormat(blockFormat);
 	--m_ln;
+	m_nEmptyLines = 0;
 }
 void MarkdownViewer::do_list(QTextCursor& cursor, QString buf) {
 	if( m_nEmptyLines >= 1 )
@@ -330,32 +333,5 @@ void MarkdownViewer::do_list(QTextCursor& cursor, QString buf) {
 	QTextBlockFormat blockFormat;
 	cursor.setBlockFormat(blockFormat);
 	--m_ln;
-#if 0
-	//if (!cursor.atBlockStart()) cursor.insertBlock();
-	buf = buf.mid(2);		//	remove "- "
-	QTextBlockFormat blockFormat;
-	blockFormat.setIndent(m_nSpaces/2);
-	QTextListFormat listFormat;
-	if( buf.startsWith("[ ] ") || buf.startsWith("[x] ") || buf.startsWith("[X] ") ) {
-		bool uc = buf[1] == u' ';
-	    blockFormat.setMarker(uc ? QTextBlockFormat::MarkerType::Unchecked
-	    							: QTextBlockFormat::MarkerType::Checked);
-	    cursor.setBlockFormat(blockFormat);	    // 現在のブロック（行）に適用
-		buf = buf.mid(3);		//	remove "[ ]"
-	} else {
-	    listFormat.setStyle(QTextListFormat::ListDisc); // これが中黒 (●)、他にも ListCircle (○), ListSquare (■), ListDecimal (1, 2...)
-	}
-    cursor.insertList(listFormat);
-    cursor.insertText(buf);
-	//cursor.insertText("・ " + buf.mid(2));
-	QTextCharFormat charFormat;
-	charFormat.setFontPointSize(12);
-    charFormat.setFontWeight(QFont::Normal);
-    cursor.select(QTextCursor::BlockUnderCursor);
-    cursor.mergeCharFormat(charFormat);
-    cursor.clearSelection();
-
-	//QTextBlockFormat format;
-	//cursor.mergeBlockFormat(blockformat);
-#endif
+	m_nEmptyLines = 0;
 }
