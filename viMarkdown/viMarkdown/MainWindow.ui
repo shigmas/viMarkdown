@@ -125,6 +125,7 @@
     <addaction name="action_Indent"/>
     <addaction name="action_UnIndent"/>
     <addaction name="separator"/>
+    <addaction name="action_Keisen"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -179,6 +180,7 @@
    <addaction name="action_Italic"/>
    <addaction name="action_Strikethrough"/>
    <addaction name="separator"/>
+   <addaction name="action_Keisen"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="outlineBar">
@@ -574,6 +576,21 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="action_Keisen">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/keisen_48.png</normaloff>:/MainWindow/images/keisen_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Keisen</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F5</string>
    </property>
   </action>
  </widget>

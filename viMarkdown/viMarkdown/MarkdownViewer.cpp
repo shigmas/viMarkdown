@@ -194,7 +194,7 @@ bool MarkdownViewer::do_underlineHeading(QTextCursor& cursor, QString buf) {
 	do_heading_sub(cursor, buf, h, m_ln-1);
 	return true;
 }
-int h_font_size[] = {12, 25, 21, 18, 16, 14, 12};
+int h_font_size[] = {12, 26*4, 22*4, 18, 16, 14, 12};		//	body, h1, h2, h3 ... h6
 
 void MarkdownViewer::do_heading(QTextCursor& cursor, QString buf) {
 	int i = 1;
@@ -206,12 +206,22 @@ void MarkdownViewer::do_heading(QTextCursor& cursor, QString buf) {
 void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int ln) {
 	if( m_nEmptyLines >= 1 )
 		cursor.insertBlock();			//	新規ブロック
-	cursor.insertMarkdown(QString(h, u'#') + u' ' + buf);
+	//cursor.insertBlock();			//	新規ブロック
+	cursor.insertMarkdown(QString(h, u'#') + u' ' + buf + "\n");
 	if( h == 1 ) {
 		QTextBlockFormat blockFormat;
 		blockFormat.setAlignment(Qt::AlignCenter);
 		cursor.mergeBlockFormat(blockFormat);
 	}
+#if 0		//	うまくいかない
+	QTextCharFormat charFormat;
+	charFormat.setFontPointSize(h_font_size[h]);
+	cursor.select(QTextCursor::BlockUnderCursor);
+	cursor.mergeCharFormat(charFormat);
+	cursor.clearSelection();
+	this->setTextCursor(cursor);
+#endif
+
 	cursor.setCharFormat(QTextCharFormat());
 	m_headingBlockNum.push_back(cursor.blockNumber());
 	cursor.insertBlock();			//	新規ブロック

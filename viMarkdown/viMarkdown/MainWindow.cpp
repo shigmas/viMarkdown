@@ -225,6 +225,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	//docWidget->setStyleSheet("font-size: 12pt; line-height: 200%;");
 	QSplitter *splitter = new QSplitter(Qt::Horizontal, docWidget);
 	MarkdownEditor *mdEditor = docWidget->m_mdEditor = new MarkdownEditor(splitter);
+	//mdEditor->setLineWrapMode(QPlainTextEdit::NoWrap);		//	折り返しモード OFF
 	QFont font("MS Gothic");
 	//QFont font("Consolas");
 	font.setFixedPitch(true); // 明示的に固定幅として扱う設定
