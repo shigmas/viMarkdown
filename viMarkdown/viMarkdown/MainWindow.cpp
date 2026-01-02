@@ -456,6 +456,8 @@ void MainWindow::do_save(bool fDialog) {
 						"Save File",		 // ダイアログのタイトル
 						title,
 						"markdown (*.md)"  // ファイルフィルタ
+						,nullptr // 選択されたフィルタを保存する変数（不要なら nullptr）
+		                ,QFileDialog::DontUseNativeDialog
 					);
 		if( fullPath.isEmpty() ) return;
 		docWidget->m_fullPath = fullPath;
