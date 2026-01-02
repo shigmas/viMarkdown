@@ -65,13 +65,27 @@ void MarkdownViewer::do_body(QTextCursor& cursor) {
 	if( m_bodyList.isEmpty() ) return;
 	QString buf;
 	for(auto txt: m_bodyList) {
-		buf += txt + "\n";
+		if( txt.isEmpty() ) {		//	空行の場合
+			++m_nEmptyLines;
+			cursor.insertMarkdown(buf);
+			QTextBlockFormat blockFormat;
+			blockFormat.setAlignment(Qt::AlignJustify); // 左右両端揃え
+			cursor.mergeBlockFormat(blockFormat);
+			cursor.insertBlock();
+			buf.clear();
+		} else {
+			buf += txt + "\n";
+			m_nEmptyLines = 0;
+		}
 	}
-	cursor.insertMarkdown(buf);
-	QTextBlockFormat blockFormat;
-	blockFormat.setAlignment(Qt::AlignJustify); // 左右両端揃え
-	cursor.mergeBlockFormat(blockFormat);
-	cursor.insertBlock();
+	if( !buf.isEmpty() ) {
+		cursor.insertMarkdown(buf);
+		QTextBlockFormat blockFormat;
+		blockFormat.setAlignment(Qt::AlignJustify); // 左右両端揃え
+		cursor.mergeBlockFormat(blockFormat);
+		cursor.insertBlock();
+		m_nEmptyLines = 0;
+	}
 	m_bodyList.clear();
 }
 
@@ -118,10 +132,11 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 			do_table(cursor);
 		} else {
 			if( buf.isEmpty() ) {		//	空行
-				if( m_bodyList.isEmpty() ) {
-					cursor.insertBlock();
-				} else
-					m_bodyList += "  \n";	//	強制改行
+				m_bodyList += buf;
+				//if( m_bodyList.isEmpty() ) {
+				//	cursor.insertBlock();
+				//} else
+				//	m_bodyList += "  ";	//	強制改行
 				//do_body(cursor);
 				//cursor.insertMarkdown("\n");
 			} else {
@@ -189,6 +204,8 @@ void MarkdownViewer::do_heading(QTextCursor& cursor, QString buf) {
 	do_heading_sub(cursor, buf.mid(i - 1), h, m_ln);
 }
 void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int ln) {
+	if( m_nEmptyLines >= 1 )
+		cursor.insertBlock();			//	新規ブロック
 	cursor.insertMarkdown(QString(h, u'#') + u' ' + buf);
 	if( h == 1 ) {
 		QTextBlockFormat blockFormat;
@@ -273,6 +290,8 @@ void MarkdownViewer::do_quote(QTextCursor& cursor, QString buf) {
 	--m_ln;
 }
 void MarkdownViewer::do_list(QTextCursor& cursor, QString buf) {
+	if( m_nEmptyLines >= 1 )
+		cursor.insertBlock();			//	新規ブロック
 	static QRegularExpression re_checkbox(R"(^( *)- \[[ xX]\] )");
 	int pos = cursor.position();
 	int n_item = 1;

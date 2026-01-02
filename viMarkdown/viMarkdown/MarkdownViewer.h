@@ -37,6 +37,7 @@ protected:
 private:
     int		m_ln;
     int		m_nSpaces;
+    int		m_nEmptyLines = 0;		//	本文最後の空行数
     //QString	m_bodyText;
     QStringList	m_bodyList;
 	QStringList	m_lst;
