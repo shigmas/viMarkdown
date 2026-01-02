@@ -442,14 +442,19 @@ void MainWindow::do_save(bool fDialog) {
 	int ix = ui->tabWidget->currentIndex();
 	if( ix < 0 ) return;
 	DocWidget *docWidget = (DocWidget*)ui->tabWidget->widget(ix);
+	if( docWidget == nullptr ) return;
 	QString fullPath = docWidget->m_fullPath;
 	if( fDialog || fullPath.isEmpty() ) {		//	強制ダイアログ || フルパスを持っていない場合
 		QString oldFullPath = fullPath;
 		QString oldTitle = docWidget->m_title;
+		QString path = QDir::currentPath();	  // カレントディレクトリ
+		QString title = docWidget->getTitle();
+		if( !title.isEmpty() )
+			path += "/" + title;
 		fullPath = QFileDialog::getSaveFileName(
 						this,				   // 親ウィジェット（メインウィンドウがあれば this）
 						"Save File",		 // ダイアログのタイトル
-						QDir::currentPath(),		  // 初期ディレクトリ
+						title,
 						"markdown (*.md)"  // ファイルフィルタ
 					);
 		if( fullPath.isEmpty() ) return;

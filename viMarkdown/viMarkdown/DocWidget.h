@@ -14,6 +14,7 @@ public:
 
 	bool	isModified() const;
 	void	setModified(bool);
+	QString	getTitle() const;
 
 public:
 	//bool	m_modified = false;		//	編集＆未保存状態
