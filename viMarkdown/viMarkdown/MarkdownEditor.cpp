@@ -46,7 +46,9 @@ MarkdownEditor::MarkdownEditor(QWidget *parent) : QPlainTextEdit(parent)
 #endif
 }
 void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
+	//static QRegularExpression re(R"(^\d[\.\)] )");
 	static QRegularExpression re(R"(^\d\. )");
+	static QRegularExpression re2(R"(^\d\) )");
 	if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {
 		QTextCursor cursor = this->textCursor();
         QTextBlock currentBlock = cursor.block();
@@ -68,11 +70,18 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 				atxt += "- ";
 	        else if( re.match(mtxt).hasMatch())
 				atxt += "1. ";
+	        else if( re2.match(mtxt).hasMatch())
+				atxt += "1) ";
 	        else if( mtxt.startsWith("> ") )
 				atxt += "> ";
-	        cursor.insertText("\n" + atxt);
+	        //cursor.insertText("\n" + atxt);
+	        QPlainTextEdit::keyPressEvent(e);		//	改行挿入
+	        cursor.insertText(atxt);
 	        // カーソル位置を画面内に維持
 	        this->ensureCursorVisible();
+			return;
+        } else {
+	        cursor.insertText("\n");
 			return;
         }
 	} else if (e->key() == Qt::Key_Tab ) {
