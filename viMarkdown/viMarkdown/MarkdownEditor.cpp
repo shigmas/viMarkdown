@@ -75,6 +75,9 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	        this->ensureCursorVisible();
 			return;
         }
+	} else if (e->key() == Qt::Key_Tab ) {
+		emit tab_pressed();
+		return;
 	}
     QPlainTextEdit::keyPressEvent(e);	// Enter 以外のキーは通常通りの処理
 }

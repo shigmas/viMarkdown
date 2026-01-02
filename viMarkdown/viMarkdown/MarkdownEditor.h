@@ -16,6 +16,10 @@ public:
 	//	this->scrollToTop(cursor.blockNumber());
 	//}
 	int getVisualLineNumber(const QTextCursor &cursor) const;
+
+signals:
+    void tab_pressed();
+
 protected:
     void keyPressEvent(QKeyEvent *e) override;
 

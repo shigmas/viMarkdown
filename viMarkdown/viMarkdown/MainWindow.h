@@ -47,6 +47,7 @@ protected:
     void	onTreeCurrentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
     void	onTreeItemActivated(QTreeWidgetItem *current, int);
     void	onMdEditCurPosChanged();
+    void	onMdEditTabPressed();
     void	onFileChanged(const QString&);
     void	onModificationChanged(bool);
     void	onSearchCBActivated();

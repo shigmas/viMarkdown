@@ -355,6 +355,9 @@
    <property name="text">
     <string>Inden&amp;t</string>
    </property>
+   <property name="shortcut">
+    <string>Tab</string>
+   </property>
   </action>
   <action name="action_UnIndent">
    <property name="icon">
@@ -366,7 +369,7 @@
     <string>u&amp;nIndent</string>
    </property>
    <property name="shortcut">
-    <string>Backtab</string>
+    <string>Shift+Tab</string>
    </property>
   </action>
   <action name="action_OutlineBar">

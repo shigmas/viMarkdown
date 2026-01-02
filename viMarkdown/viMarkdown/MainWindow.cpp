@@ -231,6 +231,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	mdEditor->setStyleSheet("font-size: 12pt;");
 	mdEditor->setUndoRedoEnabled(true);
 	connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onMdEditCurPosChanged);
+	connect(mdEditor, &MarkdownEditor::tab_pressed, this, &MainWindow::onMdEditTabPressed);
 	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
 	//QTextEdit *mdEditor = new QTextEdit(splitter);
 	mdEditor->setPlaceholderText("ここにMarkdownを入力\n# タイトル\n## 大見出し\n- リスト\n1. 連番\n本文...");
@@ -972,6 +973,9 @@ void MainWindow::onMDTextChanged() {
 	}
 #endif
 	m_ignore_changed = false;
+}
+void MainWindow::onMdEditTabPressed() {
+	onAction_Indent();
 }
 void MainWindow::onMdEditCurPosChanged() {
 	MarkdownEditor *mdEditor = (MarkdownEditor*)sender();
