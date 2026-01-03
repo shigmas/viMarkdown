@@ -3,12 +3,18 @@
 #include <QTextBlock>
 #include <QRegularExpression>
 #include "MarkdownViewer.h"
+#include "MainWindow.h"
 
 using namespace std;
 
 enum {
 	ALIGHN_LEFT = 1, ALIGHN_RIGHT = 2, ALIGHN_CENTER = ALIGHN_LEFT| ALIGHN_RIGHT,
 };
+
+MarkdownViewer::MarkdownViewer(const MainWindow *mainWindow, QWidget* parent)
+	: m_mainWindow(mainWindow), QTextEdit(parent)
+{
+}
 
 bool isUnderlineHeading(const QString& txt);
 bool MarkdownViewer::isTableLine(const QString& lnStr) {

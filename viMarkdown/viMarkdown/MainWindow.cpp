@@ -224,7 +224,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	auto *docWidget = new DocWidget(title, fullPath);
 	//docWidget->setStyleSheet("font-size: 12pt; line-height: 200%;");
 	QSplitter *splitter = new QSplitter(Qt::Horizontal, docWidget);
-	MarkdownEditor *mdEditor = docWidget->m_mdEditor = new MarkdownEditor(splitter);
+	MarkdownEditor *mdEditor = docWidget->m_mdEditor = new MarkdownEditor(this, splitter);
 	//mdEditor->setLineWrapMode(QPlainTextEdit::NoWrap);		//	折り返しモード OFF
 	QFont font("MS Gothic");
 	//QFont font("Consolas");
@@ -237,7 +237,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
 	//QTextEdit *mdEditor = new QTextEdit(splitter);
 	mdEditor->setPlaceholderText("ここにMarkdownを入力\n# タイトル\n## 大見出し\n- リスト\n1. 連番\n本文...");
-	MarkdownViewer *markdownViewer = docWidget->m_markdownViewer = new MarkdownViewer(splitter);
+	MarkdownViewer *markdownViewer = docWidget->m_markdownViewer = new MarkdownViewer(this, splitter);
 	//##markdownViewer->setReadOnly(true); // プレビューなので読み取り専用にする
 	markdownViewer->setPlaceholderText("プレビュー画面");
 	markdownViewer->setStyleSheet("font-size: 12pt;");

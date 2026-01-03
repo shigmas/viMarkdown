@@ -268,5 +268,15 @@
 0266 ● C 01/03            │問題│印刷ダイアログにプレビューが表示されない
 0267 ● C 01/03            │ToDo│罫線モード：Ctrl + →：とりあえず─→ 入力
 0268 ◎ C 01/03 01/03 01003│ToDo│Edit > Keisen 罫線モード ON/OFF（Shift + F5）
-0269 ● C 01/03            │ToDo│
-0270 ● C 01/03            │ToDo│
+0269 ● C 01/03            │ToDo│MainWindow：罫線モード状態かどうかを保持
+0270 ◎ C 01/03 01/03 01003│ToDo│MarkdownEditor, MarkdownViewer：MainWindow への const バックポインタ保持
+0271 ● C 01/03            │ToDo│
+0272 ● C 01/03            │ToDo│
+0273 ● C 01/03            │ToDo│
+0274 ● C 01/03            │ToDo│
+0275 ● C 01/03            │ToDo│
+0276 ● C 01/03            │ToDo│
+0277 ● C 01/03            │ToDo│
+0278 ● C 01/03            │ToDo│
+0279 ● C 01/03            │ToDo│
+0280 ● C 01/03            │ToDo│

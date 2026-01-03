@@ -4,6 +4,7 @@
 #include <QSyntaxHighlighter>
 #include <QRegularExpression>
 #include "MarkdownEditor.h"
+#include "MainWindow.h"
 
 class MarkdownHighlighter : public QSyntaxHighlighter {
 public:
@@ -35,7 +36,8 @@ private:
     QRegularExpression boldRegex;
 };
 //----------------------------------------------------------------------
-MarkdownEditor::MarkdownEditor(QWidget *parent) : QPlainTextEdit(parent)
+MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
+	: m_mainWindow(mainWindow), QPlainTextEdit(parent)
 {
 	m_highlighter = new MarkdownHighlighter(this->document());
 #if 1

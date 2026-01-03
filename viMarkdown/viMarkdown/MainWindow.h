@@ -19,6 +19,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    bool	isKeisenMode() const { return m_keisenMode; }
+
 protected:
     void	setup_connections();
     void	read_settings();
@@ -93,6 +95,7 @@ private:
     bool	m_opening_file = false;
     bool	m_ignore_changed = false;
     bool	m_htmlMode = true;
+    bool	m_keisenMode = false;
     int		m_tab_number = 0;
     //QString	m_plainText;
     //QString	m_htmlText;

@@ -2,11 +2,13 @@
 #include <QScrollBar>
 #include "C:\Qt\6.10.0\msvc2022_64\include\QtWidgets\qplaintextedit.h"
 
+class MainWindow;
+
 class MarkdownEditor : public QPlainTextEdit
 {
 	Q_OBJECT
 public:
-	MarkdownEditor(QWidget *parent = nullptr);
+	MarkdownEditor(const MainWindow* mainWindow, QWidget *parent = nullptr);
 public:
 	void	scrollToTop(int lineNum) {		//	lineNum: 0 org.
 		verticalScrollBar()->setValue(lineNum);
@@ -25,5 +27,7 @@ protected:
 
 private:
     class MarkdownHighlighter *m_highlighter;
+
+    const MainWindow *m_mainWindow = nullptr;
 };
 

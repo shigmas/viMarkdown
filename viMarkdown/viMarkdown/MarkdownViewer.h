@@ -2,14 +2,16 @@
 #include <vector>
 #include <QTextCursor>
 #include "C:\Qt\6.10.0\msvc2022_64\include\QtWidgets\qtextedit.h"
+
+class MainWindow;
+
 class MarkdownViewer : public QTextEdit
 {
 	Q_OBJECT 
 
 public:
-    MarkdownViewer(QWidget* parent = nullptr) : QTextEdit(parent)
-    {
-    }
+    MarkdownViewer(const MainWindow*, QWidget* parent = nullptr);
+
 public:
     void	setMarkdown(class QTextDocument*);
     const QStringList&	getHeadings() const { return m_headingList; }
@@ -46,5 +48,7 @@ private:
 	std::vector<int>	m_headingBlockNum;	//	各見出し行 ブロック番号（0 org.）in マークダウンビュー
 	QList<QStringView>	m_tableTokens;
 	std::vector<char>	m_tableAlign;		//	各カラムの水平方向アライメント
+
+    const MainWindow *m_mainWindow = nullptr;
 };
 
