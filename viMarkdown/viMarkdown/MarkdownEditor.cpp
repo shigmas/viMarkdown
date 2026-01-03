@@ -91,11 +91,23 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 		return;
 	} else if( m_mainWindow->isKeisenMode() ) {
 		if (e->key() == Qt::Key_Right && (e->modifiers() & Qt::ControlModifier) != 0 ) {
-			//qDebug() << "Ctrl + →";
-			QTextCursor cursor = this->textCursor();
+			if( !cursor.atBlockEnd() )
+				cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, 1);
+			if (!cursor.atBlockEnd())
+				cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, 1);
 			cursor.insertText("─→");
 			cursor.movePosition(QTextCursor::Left);
-			//cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, 2);
+			setTextCursor(cursor);
+			return;
+		} else if (e->key() == Qt::Key_Left && (e->modifiers() & Qt::ControlModifier) != 0 ) {
+			if( !cursor.atBlockEnd() )
+				cursor.movePosition(QTextCursor::Right);
+			if( !cursor.atBlockStart() )
+				cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, 1);
+			if( !cursor.atBlockStart() )
+				cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, 1);
+			cursor.insertText("←─");
+			cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, 2);
 			setTextCursor(cursor);
 			return;
 		}
