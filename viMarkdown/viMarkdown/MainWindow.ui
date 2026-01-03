@@ -125,7 +125,7 @@
     <addaction name="action_Indent"/>
     <addaction name="action_UnIndent"/>
     <addaction name="separator"/>
-    <addaction name="action_Keisen"/>
+    <addaction name="action_KeisenMode"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -180,7 +180,7 @@
    <addaction name="action_Italic"/>
    <addaction name="action_Strikethrough"/>
    <addaction name="separator"/>
-   <addaction name="action_Keisen"/>
+   <addaction name="action_KeisenMode"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="outlineBar">
@@ -578,7 +578,7 @@
     <string>Ctrl+P</string>
    </property>
   </action>
-  <action name="action_Keisen">
+  <action name="action_KeisenMode">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -587,7 +587,10 @@
      <normaloff>:/MainWindow/images/keisen_48.png</normaloff>:/MainWindow/images/keisen_48.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Keisen</string>
+    <string>&amp;KeisenMode</string>
+   </property>
+   <property name="toolTip">
+    <string>Keisen Mode</string>
    </property>
    <property name="shortcut">
     <string>Shift+F5</string>

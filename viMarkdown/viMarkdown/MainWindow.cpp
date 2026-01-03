@@ -138,6 +138,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_ForwardAgain, &QAction::triggered, this, &MainWindow::onAction_ForwardAgain);
 	connect(ui->action_BackwardAgain, &QAction::triggered, this, &MainWindow::onAction_BackwardAgain);
 	connect(ui->action_FindWord, &QAction::triggered, this, &MainWindow::onAction_FindWord);
+	connect(ui->action_KeisenMode, &QAction::toggled, this, &MainWindow::onAction_KeisenMode);
 	connect(ui->action_HTML, &QAction::toggled, this, &MainWindow::onAction_HTML);
 	connect(ui->action_Source, &QAction::toggled, this, &MainWindow::onAction_Source);
 	connect(ui->action_OutlineBar, &QAction::toggled, this, &MainWindow::onAction_OutlineBar);
@@ -806,6 +807,9 @@ void MainWindow::onAction_Italic() {
 }
 void MainWindow::onAction_Strikethrough() {
 	insertInline("~~");
+}
+void MainWindow::onAction_KeisenMode(bool checked) {
+	m_keisenMode = checked;
 }
 void MainWindow::onAction_HTML(bool checked) {
 	//if( m_htmlMode ) return;
