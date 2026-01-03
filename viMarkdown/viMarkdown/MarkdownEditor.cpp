@@ -108,6 +108,16 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 }
 void MarkdownEditor::do_keisen_up() {
 	QTextCursor cursor = this->textCursor();
+	if( !cursor.atBlockEnd() )
+		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+	cursor.insertText("│");
+	cursor.movePosition(QTextCursor::Left);
+	cursor.movePosition(QTextCursor::Up);
+	if( !cursor.atBlockEnd() )
+		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+	cursor.insertText("↑");
+	cursor.movePosition(QTextCursor::Left);
+	setTextCursor(cursor);
 }
 void MarkdownEditor::do_keisen_down() {
 	QTextCursor cursor = this->textCursor();
