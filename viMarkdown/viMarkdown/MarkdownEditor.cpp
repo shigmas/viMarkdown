@@ -106,13 +106,28 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	}
     QPlainTextEdit::keyPressEvent(e);	// Enter 以外のキーは通常通りの処理
 }
+int getVisualColumn(QTextCursor cursor, QPlainTextEdit *editor) {
+    // 1. 行頭から現在のカーソル位置までのテキストを取得
+    QString text = cursor.block().text().left(cursor.positionInBlock());
+    // 2. フォントの計測準備
+    QFontMetrics fm(editor->font());
+    // 3. 半角文字（例: 'A'）1文字分の幅を取得
+    int halfWidth = fm.horizontalAdvance("A"); 
+    // 4. 行頭からカーソルまでの全テキストの幅を取得
+    int fullWidth = fm.horizontalAdvance(text);
+    // 5. 割り算で「半角何文字分か」を出す
+    return fullWidth / halfWidth;
+}
 void MarkdownEditor::do_keisen_up() {
 	QTextCursor cursor = this->textCursor();
 	if( !cursor.atBlockEnd() )
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 	cursor.insertText("│");
 	cursor.movePosition(QTextCursor::Left);
+	int vc = getVisualColumn(cursor, this);
 	cursor.movePosition(QTextCursor::Up);
+	int vc2 = getVisualColumn(cursor, this);
+	if( vc2 < vc ) cursor.insertText(QString(vc-vc2, u' '));
 	if( !cursor.atBlockEnd() )
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 	cursor.insertText("↑");
@@ -125,7 +140,10 @@ void MarkdownEditor::do_keisen_down() {
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 	cursor.insertText("│");
 	cursor.movePosition(QTextCursor::Left);
+	int vc = getVisualColumn(cursor, this);
 	cursor.movePosition(QTextCursor::Down);
+	int vc2 = getVisualColumn(cursor, this);
+	if( vc2 < vc ) cursor.insertText(QString(vc-vc2, u' '));
 	if( !cursor.atBlockEnd() )
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 	cursor.insertText("↓");
