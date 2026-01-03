@@ -24,6 +24,10 @@ signals:
 
 protected:
     void keyPressEvent(QKeyEvent *e) override;
+    void	do_keisen_left();
+    void	do_keisen_right();
+    void	do_keisen_up();
+    void	do_keisen_down();
 
 private:
     class MarkdownHighlighter *m_highlighter;

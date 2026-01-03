@@ -89,30 +89,61 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	} else if (e->key() == Qt::Key_Tab ) {
 		emit tab_pressed();
 		return;
-	} else if( m_mainWindow->isKeisenMode() ) {
-		if (e->key() == Qt::Key_Right && (e->modifiers() & Qt::ControlModifier) != 0 ) {
-			if( !cursor.atBlockEnd() )
-				cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, 1);
-			if (!cursor.atBlockEnd())
-				cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, 1);
-			cursor.insertText("─→");
-			cursor.movePosition(QTextCursor::Left);
-			setTextCursor(cursor);
+	} else if( m_mainWindow->isKeisenMode() && (e->modifiers() & Qt::ControlModifier) != 0 ) {
+		if (e->key() == Qt::Key_Right ) {
+			do_keisen_right();
 			return;
-		} else if (e->key() == Qt::Key_Left && (e->modifiers() & Qt::ControlModifier) != 0 ) {
-			if( !cursor.atBlockEnd() )
-				cursor.movePosition(QTextCursor::Right);
-			if( !cursor.atBlockStart() )
-				cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, 1);
-			if( !cursor.atBlockStart() )
-				cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, 1);
-			cursor.insertText("←─");
-			cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, 2);
-			setTextCursor(cursor);
+		} else if (e->key() == Qt::Key_Left) {
+			do_keisen_left();
+			return;
+		} else if (e->key() == Qt::Key_Up) {
+			do_keisen_up();
+			return;
+		} else if (e->key() == Qt::Key_Down) {
+			do_keisen_down();
 			return;
 		}
 	}
     QPlainTextEdit::keyPressEvent(e);	// Enter 以外のキーは通常通りの処理
+}
+void MarkdownEditor::do_keisen_up() {
+	QTextCursor cursor = this->textCursor();
+}
+void MarkdownEditor::do_keisen_down() {
+	QTextCursor cursor = this->textCursor();
+	if( !cursor.atBlockEnd() )
+		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+	cursor.insertText("│");
+	cursor.movePosition(QTextCursor::Left);
+	cursor.movePosition(QTextCursor::Down);
+	if( !cursor.atBlockEnd() )
+		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+	cursor.insertText("↓");
+	cursor.movePosition(QTextCursor::Left);
+	setTextCursor(cursor);
+}
+void MarkdownEditor::do_keisen_left() {
+	QTextCursor cursor = this->textCursor();
+	if( cursor.atBlockStart() ) return;				//	行頭にいる場合は無視
+	if( !cursor.atBlockEnd() )
+		cursor.movePosition(QTextCursor::Right);
+	if( !cursor.atBlockStart() )
+		cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, 1);
+	if( !cursor.atBlockStart() )
+		cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, 1);
+	cursor.insertText("←─");
+	cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, 2);
+	setTextCursor(cursor);
+}
+void MarkdownEditor::do_keisen_right() {
+	QTextCursor cursor = this->textCursor();
+	if( !cursor.atBlockEnd() )
+		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, 1);
+	if (!cursor.atBlockEnd())
+		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, 1);
+	cursor.insertText("─→");
+	cursor.movePosition(QTextCursor::Left);
+	setTextCursor(cursor);
 }
 //void MarkdownEditor::scrollToTop(int ln) {		//	ln: 0 org.
 //}
