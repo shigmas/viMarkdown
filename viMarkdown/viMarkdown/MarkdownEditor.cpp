@@ -51,8 +51,8 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	//static QRegularExpression re(R"(^\d[\.\)] )");
 	static QRegularExpression re(R"(^\d\. )");
 	static QRegularExpression re2(R"(^\d\) )");
+	QTextCursor cursor = this->textCursor();
 	if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {
-		QTextCursor cursor = this->textCursor();
         QTextBlock currentBlock = cursor.block();
         if( (e->modifiers() & Qt::ShiftModifier) == 0 &&		//	Shift + Enter でない
         	cursor.position() != currentBlock.position())		//	行頭にいない場合
@@ -89,6 +89,16 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	} else if (e->key() == Qt::Key_Tab ) {
 		emit tab_pressed();
 		return;
+	} else if( m_mainWindow->isKeisenMode() ) {
+		if (e->key() == Qt::Key_Right && (e->modifiers() & Qt::ControlModifier) != 0 ) {
+			//qDebug() << "Ctrl + →";
+			QTextCursor cursor = this->textCursor();
+			cursor.insertText("─→");
+			cursor.movePosition(QTextCursor::Left);
+			//cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, 2);
+			setTextCursor(cursor);
+			return;
+		}
 	}
     QPlainTextEdit::keyPressEvent(e);	// Enter 以外のキーは通常通りの処理
 }
