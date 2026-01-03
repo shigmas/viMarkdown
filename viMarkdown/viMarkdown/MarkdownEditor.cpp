@@ -158,12 +158,13 @@ void MarkdownEditor::do_keisen_down() {
 void MarkdownEditor::do_keisen_left() {
 	QTextCursor cursor = this->textCursor();
 	if( cursor.atBlockStart() ) return;				//	行頭にいる場合は無視
+	int vc = getVisualColumn(cursor, this);
 	if( !cursor.atBlockEnd() )
 		cursor.movePosition(QTextCursor::Right);
-	if( !cursor.atBlockStart() )
+	while( !cursor.atBlockStart() && getVisualColumn(cursor, this) > vc - 2 )
 		cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, 1);
-	if( !cursor.atBlockStart() )
-		cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, 1);
+	//if( !cursor.atBlockStart() )
+	//	cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, 1);
 	cursor.insertText("←─");
 	cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, 2);
 	setTextCursor(cursor);
