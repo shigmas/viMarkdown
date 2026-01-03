@@ -128,7 +128,7 @@ void MarkdownEditor::do_keisen_up() {
 	cursor.movePosition(QTextCursor::Up);
 	int vc2 = getVisualColumn(cursor, this);
 	if( vc2 < vc ) cursor.insertText(QString(vc-vc2, u' '));
-	if( !cursor.atBlockEnd() )
+	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc + 2 )
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 	cursor.insertText("↑");
 	cursor.movePosition(QTextCursor::Left);
@@ -149,7 +149,7 @@ void MarkdownEditor::do_keisen_down() {
 	cursor.movePosition(QTextCursor::Down);
 	int vc2 = getVisualColumn(cursor, this);
 	if( vc2 < vc ) cursor.insertText(QString(vc-vc2, u' '));
-	if( !cursor.atBlockEnd() )
+	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc + 2 )
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 	cursor.insertText("↓");
 	cursor.movePosition(QTextCursor::Left);
@@ -163,8 +163,6 @@ void MarkdownEditor::do_keisen_left() {
 		cursor.movePosition(QTextCursor::Right);
 	while( !cursor.atBlockStart() && getVisualColumn(cursor, this) > vc - 2 )
 		cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, 1);
-	//if( !cursor.atBlockStart() )
-	//	cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, 1);
 	cursor.insertText("←─");
 	cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, 2);
 	setTextCursor(cursor);
