@@ -136,6 +136,11 @@ void MarkdownEditor::do_keisen_up() {
 }
 void MarkdownEditor::do_keisen_down() {
 	QTextCursor cursor = this->textCursor();
+	if (cursor.block() == cursor.document()->lastBlock()) {		//	カーソルが最終行にいる場合
+		QTextCursor tempCursor(document());
+	    tempCursor.movePosition(QTextCursor::End);
+	    tempCursor.insertBlock();
+	}
 	if( !cursor.atBlockEnd() )
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 	cursor.insertText("│");
