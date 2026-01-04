@@ -185,7 +185,7 @@ QString getLeftSrcString(const QString txt) {
 	return "─";
 }
 QString getLeftDsrString(const QString txt) {
-	if( txt == "─" ) return "─";
+	if( txt.startsWith("─") ) return "─";
 	return "←";
 }
 void MarkdownEditor::do_keisen_left() {
@@ -196,11 +196,11 @@ void MarkdownEditor::do_keisen_left() {
 	if( !cursor.atBlockEnd() ) {
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 		src = getLeftSrcString(cursor.selectedText());
-		cursor.clearSelection();
+		cursor.clearSelection();	//	選択解除、カーソル位置は　movePosition() 後の位置、つまり選択末尾
 	}
 	while( !cursor.atBlockStart() && getVisualColumn(cursor, this) > vc - 2 )
 		cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor);
-	cursor.insertText(getLeftDsrString(cursor.selectedText()+src));
+	cursor.insertText(getLeftDsrString(cursor.selectedText())+src);
 	cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, 2);
 	setTextCursor(cursor);
 }
