@@ -32,5 +32,6 @@
         <file>images/search_word_48.png</file>
         <file>images/print_48.png</file>
         <file>images/keisen_48.png</file>
+        <file>images/format_heading_48.png</file>
     </qresource>
 </RCC>
