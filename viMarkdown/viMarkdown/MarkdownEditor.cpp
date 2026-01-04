@@ -125,20 +125,27 @@ int getVisualColumn(QTextCursor cursor, QPlainTextEdit *editor) {
 //
 QString getUpSrcString(const QString txt, int ix) {
 	if( ix < txt.size() ) {
-		if( txt[ix] == u'←' ) return "└";
-		if( txt[ix] == u'→' ) return "┘";
-		if( txt[ix] == u'─' ) return "┴";
-		if( txt[ix] == u'┐' ) return "┤";
-		if( txt[ix] == u'┌' ) return "├";
-		if( txt[ix] == u'┬' ) return "┼";
+		if( txt[ix] == u'←' || txt[ix] == u'└' ) return "└";
+		if( txt[ix] == u'→' || txt[ix] == u'┘' ) return "┘";
+		if( txt[ix] == u'─' || txt[ix] == u'┴' ) return "┴";
+		if( txt[ix] == u'┐' || txt[ix] == u'┤' ) return "┤";
+		if( txt[ix] == u'┌' || txt[ix] == u'├' ) return "├";
+		if( txt[ix] == u'┬' || txt[ix] == u'┼' ) return "┼";
 	}
 	return "│";
 }
 QString getUpDstString(const QString txt, int ix) {
 	if( ix < txt.size() ) {
-		if( txt[ix] == u'│' ) return "│";
+		if( txt[ix] == u'│' || txt[ix] == u'┐' || txt[ix] == u'┌' || 
+			txt[ix] == u'┬' || txt[ix] == u'├' || txt[ix] == u'┤'|| txt[ix] == u'┼' )
+		{
+			return txt[ix];
+		}
+		if( txt[ix] == u'┘' ) return "┤";
+		if( txt[ix] == u'└' ) return "├";
+		if( txt[ix] == u'┴' ) return "┼";
 		if( txt[ix] == u'─' ) {
-			if( ix > 0 && (txt[ix-1] == u'─' || txt[ix-1] == u'←') )		//	undone: ┬ 等対応
+			if( ix > 0 && (txt[ix-1] == u'─' || txt[ix-1] == u'←') )
 				return "┬";
 			else
 				return "┌";
@@ -164,24 +171,32 @@ void MarkdownEditor::do_keisen_up() {
 	cursor.movePosition(QTextCursor::Left);
 	setTextCursor(cursor);
 }
-//
-//┌┬┐┌─→
-//├┼┤│
-//└┴┘↓
-//
 QString getDownSrcString(const QString txt, int ix) {
 	if( ix < txt.size() ) {
-		if( txt[ix] == u'→' ) return "┐";
-		if( txt[ix] == u'←' ) return "┌";
-		if( txt[ix] == u'─' ) return "┬";
-		if( txt[ix] == u'┴' ) return "┼";
+		if( txt[ix] == u'→' || txt[ix] == u'┐' ) return "┐";
+		if( txt[ix] == u'←' || txt[ix] == u'┌' ) return "┌";
+		if( txt[ix] == u'─' || txt[ix] == u'┬' ) return "┬";
+		if( txt[ix] == u'┘' || txt[ix] == u'┤' ) return "┤";
+		if( txt[ix] == u'└' || txt[ix] == u'├' ) return "├";
+		if( txt[ix] == u'┴' || txt[ix] == u'┼' ) return "┼";
 	}
 	return "│";
 }
+//┌┬┐┌─→
+//├┼┤│
+//└┴┘↓
 QString getDownDstString(const QString txt, int ix) {
 	if( ix < txt.size() ) {
-		if( txt[ix] == u'│' ) return "│";
+		if( txt[ix] == u'│' || txt[ix] == u'┘' || txt[ix] == u'└' || 
+			/*txt[ix] == u'┬' ||*/ txt[ix] == u'├' || txt[ix] == u'┤'|| txt[ix] == u'┼' )
+		{
+			return txt[ix];
+		}
 		if( txt[ix] == u'─' ) return "┴";
+		if( txt[ix] == u'┐' ) return "┤";
+		if( txt[ix] == u'┌' ) return "├";
+		if( txt[ix] == u'┴' ) return "┼";		//	undone: この下も参照？
+		if( txt[ix] == u'┬' ) return "┼";
 	}
 	return "↓";
 }
@@ -201,31 +216,38 @@ void MarkdownEditor::do_keisen_down() {
 	cursor.movePosition(QTextCursor::Down);
 	int vc2 = getVisualColumn(cursor, this);
 	if( vc2 < vc ) cursor.insertText(QString(vc-vc2, u' '));		//	カーソル位置まで空白挿入
+	ix = cursor.positionInBlock();
 	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc + 2 )
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-	QString dst = getDownDstString(cursor.block().text(), cursor.positionInBlock());
+	QString dst = getDownDstString(cursor.block().text(), ix);
 	cursor.insertText(dst);
 	cursor.movePosition(QTextCursor::Left);
 	setTextCursor(cursor);
 }
-//
-//┌┬┐┌─→
-//├┼┤│
-//└┴┘↓
-//
 QString getLeftSrcString(const QString txt, int ix) {
 	if( ix < txt.size() ) {
-		if( txt[ix] == u'↓' ) return "┘";
-		if( txt[ix] == u'↑' ) return "┐";
-		if( txt[ix] == u'│' ) return "┤";
-		if( txt[ix] == u'├' ) return "┼";
+		if( txt[ix] == u'↓' || txt[ix] == u'┘' ) return "┘";
+		if( txt[ix] == u'↑' || txt[ix] == u'┐' ) return "┐";
+		if( txt[ix] == u'│' || txt[ix] == u'┤' ) return "┤";
+		if( txt[ix] == u'└' || txt[ix] == u'┴' ) return "┴";
+		if( txt[ix] == u'┌' || txt[ix] == u'┬' ) return "┬";
+		if( txt[ix] == u'├' || txt[ix] == u'┼' ) return "┼";
 	}
 	return "─";
 }
+//┌┬┐┌─→
+//├┼┤│
+//└┴┘↓
 QString getLeftDstString(const QString txt, int ix) {
 	if( ix < txt.size() ) {
-		if( txt[ix] == u'─' ) return " ─";
-		if( txt[ix] == u'│' ) return "├";
+		if( txt[ix] == u'─' || txt[ix] == u'┌' || txt[ix] == u'┼')
+			return txt[ix];
+		if( txt[ix] == u'│' || txt[ix] == u'├' ) return "├";
+		if( txt[ix] == u'↑' || txt[ix] == u'└' ) return "└";
+		if( txt[ix] == u'↓' || txt[ix] == u'┌' ) return "┌";
+		if( txt[ix] == u'┘' || txt[ix] == u'┴' ) return "┴";
+		if( txt[ix] == u'┐' || txt[ix] == u'┬' ) return "┬";
+		if( txt[ix] == u'┤' ) return "┼";
 	}
 	return "←";
 }
@@ -242,7 +264,8 @@ void MarkdownEditor::do_keisen_left() {
 	}
 	while( !cursor.atBlockStart() && getVisualColumn(cursor, this) > vc - 2 )
 		cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor);
-	cursor.insertText(getLeftDstString(cursor.block().text(), cursor.positionInBlock())+src);
+	QString dst = getLeftDstString(cursor.block().text(), cursor.positionInBlock());
+	cursor.insertText(dst+src);
 	cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, 2);
 	setTextCursor(cursor);
 }
@@ -253,21 +276,25 @@ void MarkdownEditor::do_keisen_left() {
 //
 QString getRightSrcString(const QString txt, int ix) {
 	if( ix < txt.size() ) {
-		if( txt[ix] == u'↑' ) return "┌";
-		if( txt[ix] == u'↓' ) return "└";
-		if( txt[ix] == u'│' ) return "├";
-		if( txt[ix] == u'┐' ) return "┬";
-		if( txt[ix] == u'┌' ) return "┌";
-		if( txt[ix] == u'┤' ) return "┼";
+		if( txt[ix] == u'↑' || txt[ix] == u'┌' ) return "┌";
+		if( txt[ix] == u'↓' || txt[ix] == u'└' ) return "└";
+		if( txt[ix] == u'│' || txt[ix] == u'├' ) return "├";
+		if( txt[ix] == u'┘' || txt[ix] == u'┴' ) return "┴";
+		if( txt[ix] == u'┐' || txt[ix] == u'┬' ) return "┬";
+		if( txt[ix] == u'┤' || txt[ix] == u'┼' ) return "┼";
 	}
 	return "─";
 }
 QString getRightDstString(const QString txt, int ix) {
 	if( ix < txt.size() ) {
-		if( txt[ix] == u'─' ) return "─";		//	undone: 罫線の上下左右連結情報を参照するように
-		if( txt[ix] == u'│' ) return "┤";
-		if( txt[ix] == u'┐' ) return "┐";
-		if( txt[ix] == u'┬' ) return "┬";
+		if( txt[ix] == u'─' || txt[ix] == u'┐' || txt[ix] == u'┼')
+			return txt[ix];
+		if( txt[ix] == u'│' || txt[ix] == u'┤' ) return "┤";
+		if( txt[ix] == u'↑' || txt[ix] == u'┐' ) return "┐";
+		if( txt[ix] == u'↓' || txt[ix] == u'┘' ) return "┘";
+		if( txt[ix] == u'└' || txt[ix] == u'┴' ) return "┴";
+		if( txt[ix] == u'┌' || txt[ix] == u'┬' ) return "┬";
+		if( txt[ix] == u'├' ) return "┼";
 	}
 	return "→";
 }
