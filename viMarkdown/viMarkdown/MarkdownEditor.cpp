@@ -207,7 +207,7 @@ void MarkdownEditor::do_keisen_left() {
 	if( !cursor.atBlockEnd() ) {
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 		src = getLeftSrcString(cursor.selectedText());
-		cursor.clearSelection();	//	選択解除、カーソル位置は　movePosition() 後の位置、つまり選択末尾
+		cursor.clearSelection();	//	選択解除、カーソル位置は movePosition() 後の位置、つまり選択末尾
 	}
 	while( !cursor.atBlockStart() && getVisualColumn(cursor, this) > vc - 2 )
 		cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor);
