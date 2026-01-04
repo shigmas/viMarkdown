@@ -119,20 +119,25 @@ int getVisualColumn(QTextCursor cursor, QPlainTextEdit *editor) {
     return fullWidth / halfWidth;
 }
 //
-//┌─┐
-//│  │
-//└─┘
+//┌┬┐┌─→
+//├┼┤│
+//└┴┘↓
 //
-QString getUpString(const QString txt) {
+QString getUpSrcString(const QString txt) {
 	if( txt == "←" ) return "└";
 	if( txt == "→" ) return "┘";
 	return "│";
+}
+QString getUpDstString(const QString txt) {
+	if( txt == "│" ) return "│";
+	if( txt == "─" ) return "┌";		//	undone: さらに左も "─" の場合対応
+	return "↑";
 }
 void MarkdownEditor::do_keisen_up() {
 	QTextCursor cursor = this->textCursor();
 	if( !cursor.atBlockEnd() )
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-	cursor.insertText(getUpString(cursor.selectedText()));
+	cursor.insertText(getUpSrcString(cursor.selectedText()));
 	cursor.movePosition(QTextCursor::Left);
 	int vc = getVisualColumn(cursor, this);
 	cursor.movePosition(QTextCursor::Up);
@@ -140,14 +145,18 @@ void MarkdownEditor::do_keisen_up() {
 	if( vc2 < vc ) cursor.insertText(QString(vc-vc2, u' '));
 	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc + 2 )
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-	cursor.insertText("↑");
+	cursor.insertText(getUpDstString(cursor.selectedText()));
 	cursor.movePosition(QTextCursor::Left);
 	setTextCursor(cursor);
 }
-QString getDownString(const QString txt) {
+QString getDownSrcString(const QString txt) {
 	if( txt == "→" ) return "┐";
 	if( txt == "←" ) return "┌";
 	return "│";
+}
+QString getDownDstString(const QString txt) {
+	if( txt == "│" ) return "│";
+	return "↓";
 }
 void MarkdownEditor::do_keisen_down() {
 	QTextCursor cursor = this->textCursor();
@@ -158,7 +167,7 @@ void MarkdownEditor::do_keisen_down() {
 	}
 	if( !cursor.atBlockEnd() )
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-	cursor.insertText(getDownString(cursor.selectedText()));
+	cursor.insertText(getDownSrcString(cursor.selectedText()));
 	cursor.movePosition(QTextCursor::Left);
 	int vc = getVisualColumn(cursor, this);
 	cursor.movePosition(QTextCursor::Down);
@@ -166,46 +175,60 @@ void MarkdownEditor::do_keisen_down() {
 	if( vc2 < vc ) cursor.insertText(QString(vc-vc2, u' '));
 	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc + 2 )
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-	cursor.insertText("↓");
+	cursor.insertText(getDownDstString(cursor.selectedText()));
 	cursor.movePosition(QTextCursor::Left);
 	setTextCursor(cursor);
 }
-QString getLeftString(const QString txt) {
+QString getLeftSrcString(const QString txt) {
 	if( txt == "↓" ) return "┘";
 	if( txt == "↑" ) return "┐";
 	return "─";
+}
+QString getLeftDsrString(const QString txt) {
+	if( txt == "─" ) return "─";
+	return "←";
 }
 void MarkdownEditor::do_keisen_left() {
 	QTextCursor cursor = this->textCursor();
 	if( cursor.atBlockStart() ) return;				//	行頭にいる場合は無視
 	int vc = getVisualColumn(cursor, this);
-	QString str;
+	QString src;
 	if( !cursor.atBlockEnd() ) {
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-		str = getLeftString(cursor.selectedText());
+		src = getLeftSrcString(cursor.selectedText());
 		cursor.clearSelection();
 	}
 	while( !cursor.atBlockStart() && getVisualColumn(cursor, this) > vc - 2 )
 		cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor);
-	cursor.insertText("←"+str);
+	cursor.insertText(getLeftDsrString(cursor.selectedText()+src));
 	cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, 2);
 	setTextCursor(cursor);
 }
-QString getRightString(const QString txt) {
+QString getRightSrcString(const QString txt) {
 	if( txt == "↑" ) return "┌";
 	if( txt == "↓" ) return "└";
+	if( txt == "┐" ) return "┬";
+	if( txt == "┌" ) return "┌";
 	return "─";
+}
+QString getRightDstString(const QString txt) {
+	if( txt == "─" ) return "─";
+	if( txt == "┐" ) return "┐";
+	return "→";
 }
 void MarkdownEditor::do_keisen_right() {
 	QTextCursor cursor = this->textCursor();
 	QString str = "─";
 	if( !cursor.atBlockEnd() ) {
-		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, 1);
-		str = getRightString(cursor.selectedText());
+		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+		str = getRightSrcString(cursor.selectedText());
 	}
-	if (!cursor.atBlockEnd())
-		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, 1);
-	cursor.insertText(str + "→");
+	QString str2 = "→";
+	if (!cursor.atBlockEnd()) {
+		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+		str2 = getRightDstString(cursor.selectedText().right(1));
+	}
+	cursor.insertText(str + str2);
 	cursor.movePosition(QTextCursor::Left);
 	setTextCursor(cursor);
 }
