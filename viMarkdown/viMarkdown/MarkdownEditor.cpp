@@ -131,7 +131,8 @@ QString getUpSrcString(const QString txt) {
 }
 QString getUpDstString(const QString txt) {
 	if( txt == "│" ) return "│";
-	if( txt == "─" ) return "┌";		//	undone: さらに左も "─" の場合対応
+	if( txt == "─" ) return "┬";
+	//if( txt == "─" ) return "┌";		//	undone: さらに左も "─" の場合対応
 	return "↑";
 }
 void MarkdownEditor::do_keisen_up() {
@@ -158,6 +159,7 @@ QString getDownSrcString(const QString txt) {
 }
 QString getDownDstString(const QString txt) {
 	if( txt == "│" ) return "│";
+	if( txt == "─" ) return "┴";
 	return "↓";
 }
 void MarkdownEditor::do_keisen_down() {
@@ -194,6 +196,7 @@ QString getLeftSrcString(const QString txt) {
 }
 QString getLeftDsrString(const QString txt) {
 	if( txt.startsWith("─") ) return "─";
+	if( txt == "│" ) return "├";
 	return "←";
 }
 void MarkdownEditor::do_keisen_left() {
@@ -222,6 +225,7 @@ QString getRightSrcString(const QString txt) {
 }
 QString getRightDstString(const QString txt) {
 	if( txt == "─" ) return "─";
+	if( txt == "│" ) return "┤";
 	if( txt == "┐" ) return "┐";
 	return "→";
 }
