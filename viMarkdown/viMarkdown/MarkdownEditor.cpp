@@ -123,10 +123,12 @@ int getVisualColumn(QTextCursor cursor, QPlainTextEdit *editor) {
 //├┼┤│
 //└┴┘↓
 //
-QString getUpSrcString(const QString txt) {
-	if( txt == "←" ) return "└";
-	if( txt == "→" ) return "┘";
-	if( txt == "─" ) return "┴";
+QString getUpSrcString(const QString txt, int ix) {
+	if( ix < txt.size() ) {
+		if( txt[ix] == u'←' ) return "└";
+		if( txt[ix] == u'→' ) return "┘";
+		if( txt[ix] == u'─' ) return "┴";
+	}
 	return "│";
 }
 QString getUpDstString(const QString txt, int ix) {
@@ -145,7 +147,7 @@ void MarkdownEditor::do_keisen_up() {
 	QTextCursor cursor = this->textCursor();
 	if( !cursor.atBlockEnd() )
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-	cursor.insertText(getUpSrcString(cursor.selectedText()));
+	cursor.insertText(getUpSrcString(cursor.block().text(), cursor.positionInBlock()));
 	cursor.movePosition(QTextCursor::Left);
 	int vc = getVisualColumn(cursor, this);
 	cursor.movePosition(QTextCursor::Up);
@@ -163,10 +165,12 @@ void MarkdownEditor::do_keisen_up() {
 //├┼┤│
 //└┴┘↓
 //
-QString getDownSrcString(const QString txt) {
-	if( txt == "→" ) return "┐";
-	if( txt == "←" ) return "┌";
-	if( txt == "─" ) return "┬";
+QString getDownSrcString(const QString txt, int ix) {
+	if( ix < txt.size() ) {
+		if( txt[ix] == u'→' ) return "┐";
+		if( txt[ix] == u'←' ) return "┌";
+		if( txt[ix] == u'─' ) return "┬";
+	}
 	return "│";
 }
 QString getDownDstString(const QString txt, int ix) {
@@ -183,9 +187,10 @@ void MarkdownEditor::do_keisen_down() {
 	    tempCursor.movePosition(QTextCursor::End);
 	    tempCursor.insertBlock();		//	新規行作成
 	}
+	int ix = cursor.positionInBlock();
 	if( !cursor.atBlockEnd() )
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-	cursor.insertText(getDownSrcString(cursor.selectedText()));
+	cursor.insertText(getDownSrcString(cursor.block().text(), ix));
 	cursor.movePosition(QTextCursor::Left);
 	int vc = getVisualColumn(cursor, this);
 	cursor.movePosition(QTextCursor::Down);
@@ -202,25 +207,29 @@ void MarkdownEditor::do_keisen_down() {
 //├┼┤│
 //└┴┘↓
 //
-QString getLeftSrcString(const QString txt) {
-	if( txt == "↓" ) return "┘";
-	if( txt == "↑" ) return "┐";
-	if( txt == "│" ) return "┤";
+QString getLeftSrcString(const QString txt, int ix) {
+	if( ix < txt.size() ) {
+		if( txt[ix] == u'↓' ) return "┘";
+		if( txt[ix] == u'↑' ) return "┐";
+		if( txt[ix] == u'│' ) return "┤";
+	}
 	return "─";
 }
 QString getLeftDstString(const QString txt, int ix) {
-	if( txt[ix] == u'─' ) return " ─";
-	if( txt[ix] == u'│' ) return "├";
+	if( ix < txt.size() ) {
+		if( txt[ix] == u'─' ) return " ─";
+		if( txt[ix] == u'│' ) return "├";
+	}
 	return "←";
 }
 void MarkdownEditor::do_keisen_left() {
 	QTextCursor cursor = this->textCursor();
 	if( cursor.atBlockStart() ) return;				//	行頭にいる場合は無視
 	int vc = getVisualColumn(cursor, this);
-	QString src;
+	QString src = "─";
 	if( !cursor.atBlockEnd() ) {
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-		src = getLeftSrcString(cursor.selectedText());
+		src = getLeftSrcString(cursor.block().text(), cursor.positionInBlock());
 		cursor.clearSelection();	//	選択解除、カーソル位置は movePosition() 後の位置、つまり選択末尾
 	}
 	while( !cursor.atBlockStart() && getVisualColumn(cursor, this) > vc - 2 )
@@ -234,27 +243,32 @@ void MarkdownEditor::do_keisen_left() {
 //├┼┤│
 //└┴┘↓
 //
-QString getRightSrcString(const QString txt) {
-	if( txt == "↑" ) return "┌";
-	if( txt == "↓" ) return "└";
-	if( txt == "│" ) return "├";
-	if( txt == "┐" ) return "┬";
-	if( txt == "┌" ) return "┌";
+QString getRightSrcString(const QString txt, int ix) {
+	if( ix < txt.size() ) {
+		if( txt[ix] == u'↑' ) return "┌";
+		if( txt[ix] == u'↓' ) return "└";
+		if( txt[ix] == u'│' ) return "├";
+		if( txt[ix] == u'┐' ) return "┬";
+		if( txt[ix] == u'┌' ) return "┌";
+	}
 	return "─";
 }
 QString getRightDstString(const QString txt, int ix) {
-	if( txt[ix] == u'─' ) return "─";		//	undone: 罫線の上下左右連結情報を参照するように
-	if( txt[ix] == u'│' ) return "┤";
-	if( txt[ix] == u'┐' ) return "┐";
-	if( txt[ix] == u'┬' ) return "┬";
+	if( ix < txt.size() ) {
+		if( txt[ix] == u'─' ) return "─";		//	undone: 罫線の上下左右連結情報を参照するように
+		if( txt[ix] == u'│' ) return "┤";
+		if( txt[ix] == u'┐' ) return "┐";
+		if( txt[ix] == u'┬' ) return "┬";
+	}
 	return "→";
 }
 void MarkdownEditor::do_keisen_right() {
 	QTextCursor cursor = this->textCursor();
 	QString str = "─";
+	int ix = cursor.positionInBlock();
 	if( !cursor.atBlockEnd() ) {
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-		str = getRightSrcString(cursor.selectedText());
+		str = getRightSrcString(cursor.block().text(), ix);
 	}
 	QString str2 = "→";
 	if (!cursor.atBlockEnd()) {
