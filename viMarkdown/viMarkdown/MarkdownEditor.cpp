@@ -126,6 +126,7 @@ int getVisualColumn(QTextCursor cursor, QPlainTextEdit *editor) {
 QString getUpSrcString(const QString txt) {
 	if( txt == "←" ) return "└";
 	if( txt == "→" ) return "┘";
+	if( txt == "─" ) return "┴";
 	return "│";
 }
 QString getUpDstString(const QString txt) {
@@ -152,6 +153,7 @@ void MarkdownEditor::do_keisen_up() {
 QString getDownSrcString(const QString txt) {
 	if( txt == "→" ) return "┐";
 	if( txt == "←" ) return "┌";
+	if( txt == "─" ) return "┬";
 	return "│";
 }
 QString getDownDstString(const QString txt) {
@@ -179,9 +181,15 @@ void MarkdownEditor::do_keisen_down() {
 	cursor.movePosition(QTextCursor::Left);
 	setTextCursor(cursor);
 }
+//
+//┌┬┐┌─→
+//├┼┤│
+//└┴┘↓
+//
 QString getLeftSrcString(const QString txt) {
 	if( txt == "↓" ) return "┘";
 	if( txt == "↑" ) return "┐";
+	if( txt == "│" ) return "┤";
 	return "─";
 }
 QString getLeftDsrString(const QString txt) {
@@ -207,6 +215,7 @@ void MarkdownEditor::do_keisen_left() {
 QString getRightSrcString(const QString txt) {
 	if( txt == "↑" ) return "┌";
 	if( txt == "↓" ) return "└";
+	if( txt == "│" ) return "├";
 	if( txt == "┐" ) return "┬";
 	if( txt == "┌" ) return "┌";
 	return "─";
