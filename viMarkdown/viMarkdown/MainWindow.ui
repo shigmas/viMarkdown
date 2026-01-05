@@ -113,6 +113,14 @@
      <addaction name="action_Checkbox"/>
      <addaction name="action_Heading"/>
     </widget>
+    <widget class="QMenu" name="menu_format">
+     <property name="title">
+      <string>&amp;format</string>
+     </property>
+     <addaction name="action_AlignLeft"/>
+     <addaction name="action_AlignCenter"/>
+     <addaction name="action_AlignRight"/>
+    </widget>
     <addaction name="action_Undo"/>
     <addaction name="action_Redo"/>
     <addaction name="separator"/>
@@ -123,6 +131,7 @@
     <addaction name="separator"/>
     <addaction name="menublock"/>
     <addaction name="menuinline"/>
+    <addaction name="menu_format"/>
     <addaction name="action_Indent"/>
     <addaction name="action_UnIndent"/>
     <addaction name="separator"/>
@@ -171,8 +180,6 @@
    <addaction name="separator"/>
    <addaction name="action_Undo"/>
    <addaction name="action_Redo"/>
-   <addaction name="action_Indent"/>
-   <addaction name="action_UnIndent"/>
    <addaction name="separator"/>
    <addaction name="action_List"/>
    <addaction name="action_NumList"/>
@@ -182,7 +189,13 @@
    <addaction name="action_Italic"/>
    <addaction name="action_Strikethrough"/>
    <addaction name="separator"/>
+   <addaction name="action_Indent"/>
+   <addaction name="action_UnIndent"/>
+   <addaction name="action_AlignLeft"/>
+   <addaction name="action_AlignCenter"/>
+   <addaction name="action_AlignRight"/>
    <addaction name="action_KeisenMode"/>
+   <addaction name="separator"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="outlineBar">
@@ -605,6 +618,42 @@
    </property>
    <property name="text">
     <string>&amp;Heading</string>
+   </property>
+  </action>
+  <action name="action_AlignLeft">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/format_align_left_48.png</normaloff>:/MainWindow/images/format_align_left_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>Align&amp;Left</string>
+   </property>
+   <property name="toolTip">
+    <string>AlignLeft</string>
+   </property>
+  </action>
+  <action name="action_AlignCenter">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/format_align_center_48.png</normaloff>:/MainWindow/images/format_align_center_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>Align&amp;Center</string>
+   </property>
+   <property name="toolTip">
+    <string>AlignCenter</string>
+   </property>
+  </action>
+  <action name="action_AlignRight">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/format_align_right_48.png</normaloff>:/MainWindow/images/format_align_right_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>Align&amp;Right</string>
+   </property>
+   <property name="toolTip">
+    <string>AlignRight</string>
    </property>
   </action>
  </widget>

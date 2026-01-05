@@ -65,6 +65,7 @@ protected:
     void	onAction_Undo();
     void	onAction_Redo();
     void	onAction_SelectAll();
+    void	onAction_Heading();
     void	onAction_Bold();
     void	onAction_Italic();
     void	onAction_Strikethrough();
@@ -73,6 +74,9 @@ protected:
     void	onAction_Checkbox();
     void	onAction_Indent();
     void	onAction_UnIndent();
+    void	onAction_AlignLeft();
+    void	onAction_AlignCenter();
+    void	onAction_AlignRight();
     void	onAction_Find();
     void	onAction_ForwardAgain();
     void	onAction_BackwardAgain();

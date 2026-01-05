@@ -131,6 +131,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_Undo, &QAction::triggered, this, &MainWindow::onAction_Undo);
 	connect(ui->action_Redo, &QAction::triggered, this, &MainWindow::onAction_Redo);
 	connect(ui->action_SelectAll, &QAction::triggered, this, &MainWindow::onAction_SelectAll);
+	connect(ui->action_Heading, &QAction::triggered, this, &MainWindow::onAction_Heading);
 	connect(ui->action_Bold, &QAction::triggered, this, &MainWindow::onAction_Bold);
 	connect(ui->action_Italic, &QAction::triggered, this, &MainWindow::onAction_Italic);
 	connect(ui->action_Strikethrough, &QAction::triggered, this, &MainWindow::onAction_Strikethrough);
@@ -802,6 +803,28 @@ void MainWindow::onAction_SelectAll() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	docWidget->m_mdEditor->selectAll();
+}
+void MainWindow::onAction_Heading() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	QTextCursor cursor = docWidget->m_mdEditor->textCursor();
+	const QString buf = cursor.block().text();
+	cursor.movePosition(QTextCursor::StartOfBlock);
+	if( !buf.startsWith("#") ) {	//	ヘッダ行でない場合
+		cursor.insertText("# ");
+	} else {
+		int h = 0;
+		while( ++h < buf.size() && buf[h] == '#' ) {}
+		if( h < 6 ) {
+			cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, h);
+			cursor.insertText("#");
+		} else {
+			while( h < buf.size() && buf[h] == ' ' ) ++h;
+			cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, h);
+			cursor.deleteChar();
+		}
+	}
+	docWidget->m_mdEditor->setTextCursor(cursor);
 }
 void MainWindow::onAction_Bold() {
 	insertInline("**");

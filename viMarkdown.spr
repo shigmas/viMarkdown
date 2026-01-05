@@ -286,7 +286,7 @@
 0284 ◎ C 01/04 01/05 01004│ToDo│action_Heading 追加
 0285 ◎ C 01/04 01/05 01004│ToDo│getXxxDstString() 引数を const QString text, int ix に変更
 0286 ◎ C 01/05 01/05 01004│ToDo│MarkdownEditor：プレースホルダに表の説明を追加
-0287 ● C 01/05            │ToDo│action_Heading triggered：# → ## → ... ###### → 無し → # ...
+0287 ◎ C 01/05 01/05 01005│ToDo│action_Heading triggered：# → ## → ... ###### → 無し → # ...
 0288 ● C 01/05            │ToDo│Ctrl + ↓：``` 行にぶち当たった場合は、空行生成
 0289 ◎ C 01/05 01/05 01004│ToDo│getXxxSrcString() 引数を const QString text, int ix に変更
 0290 ● C 01/05            │ToDo│上下罫線描画：全角の途中に移動した場合対応
