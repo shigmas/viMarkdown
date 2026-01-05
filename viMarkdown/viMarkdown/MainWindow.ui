@@ -136,6 +136,7 @@
     <addaction name="action_UnIndent"/>
     <addaction name="separator"/>
     <addaction name="action_KeisenMode"/>
+    <addaction name="actionTickness"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -654,6 +655,11 @@
    </property>
    <property name="toolTip">
     <string>AlignRight</string>
+   </property>
+  </action>
+  <action name="actionTickness">
+   <property name="text">
+    <string>Tickness</string>
    </property>
   </action>
  </widget>

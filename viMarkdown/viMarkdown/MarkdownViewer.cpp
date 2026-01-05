@@ -58,14 +58,14 @@ bool MarkdownViewer::isTableHyphenLine(const QString& lnStr) {
 	return m_tableAlign.size() > 1;
 }
 
-void MarkdownViewer::mousePressEvent(QMouseEvent *e)
+void MarkdownViewer::mouseReleaseEvent(QMouseEvent *e)
 {
 	if (e->button() == Qt::LeftButton) {
 	    QTextCursor cursor = cursorForPosition(e->pos());
 	    //int blockNumber = cursor.blockNumber();
 	    emit lineClicked(cursor.block().userState());
 	}
-    QTextEdit::mousePressEvent(e);
+    QTextEdit::mouseReleaseEvent(e);
 }
 void MarkdownViewer::do_body(QTextCursor& cursor) {
 	if( m_bodyList.isEmpty() ) return;
