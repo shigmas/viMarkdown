@@ -204,7 +204,8 @@ void MarkdownEditor::do_keisen_up(bool erase) {
 	// 2. 上の行へ移動し、表示列(vc0)に正確に合わせる
 	cursor.movePosition(QTextCursor::Up);
 	cursor.movePosition(QTextCursor::StartOfBlock); // 行頭から辿るのが全角混じりでも最も確実
-	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc0 ) cursor.movePosition(QTextCursor::Right);
+	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc0 )
+		cursor.movePosition(QTextCursor::Right);
 	
 	// 足りなければスペース補完（これで確実に vc0 に到達する）
 	int currentVc = getVisualColumn(cursor, this);
@@ -212,7 +213,8 @@ void MarkdownEditor::do_keisen_up(bool erase) {
 
 	// 3. 移動先の置換
 	ix = cursor.positionInBlock();
-	if( !cursor.atBlockEnd() ) cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor); // 1文字だけ選択
+	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc0 + 2)
+		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor); // 1文字だけ選択
 	cursor.insertText(getUpDstString(erase, cursor.block().text(), ix));	
 	while( getVisualColumn(cursor, this) > vc0 )
 		cursor.movePosition(QTextCursor::Left);
