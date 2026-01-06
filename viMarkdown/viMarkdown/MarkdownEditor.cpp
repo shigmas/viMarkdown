@@ -175,19 +175,27 @@ QString getUpDstString(const QString txt, int ix) {
 void MarkdownEditor::do_keisen_up() {
 	QTextCursor cursor = this->textCursor();
 	cursor.beginEditBlock();
+	int vc0 = getVisualColumn(cursor, this); // 開始位置の表示列(VC)を保存
 	int ix = cursor.positionInBlock();
-	if( !cursor.atBlockEnd() )
-		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+
+// 1. 移動元（現在地）の置換
+	if( !cursor.atBlockEnd() ) cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 	cursor.insertText(getUpSrcString(cursor.block().text(), ix));
 	cursor.movePosition(QTextCursor::Left);
-	int vc = getVisualColumn(cursor, this);
+
+	// 2. 上の行へ移動し、表示列(vc0)に正確に合わせる
 	cursor.movePosition(QTextCursor::Up);
+	cursor.movePosition(QTextCursor::StartOfBlock); // 行頭から辿るのが全角混じりでも最も確実
+	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc0 ) cursor.movePosition(QTextCursor::Right);
+	
+	// 足りなければスペース補完（これで確実に vc0 に到達する）
+	int currentVc = getVisualColumn(cursor, this);
+	if( currentVc < vc0 ) cursor.insertText(QString(vc0 - currentVc, u' '));
+
+	// 3. 移動先の置換
 	ix = cursor.positionInBlock();
-	int vc2 = getVisualColumn(cursor, this);
-	if( vc2 < vc ) cursor.insertText(QString(vc-vc2, u' '));
-	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc + 2 )
-		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-	cursor.insertText(getUpDstString(cursor.block().text(), ix));
+	if( !cursor.atBlockEnd() ) cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor); // 1文字だけ選択
+	cursor.insertText(getUpDstString(cursor.block().text(), ix));	
 	cursor.movePosition(QTextCursor::Left);
 	cursor.endEditBlock();
 	setTextCursor(cursor);
@@ -229,25 +237,39 @@ QString getDownDstString(const QString txt, int ix) {
 void MarkdownEditor::do_keisen_down() {
 	QTextCursor cursor = this->textCursor();
 	cursor.beginEditBlock();
+	int vc = getVisualColumn(cursor, this);
+	int ix = cursor.positionInBlock();
+
 	if (cursor.block() == cursor.document()->lastBlock()) {		//	カーソルが最終行にいる場合
 		QTextCursor tempCursor(document());
 	    tempCursor.movePosition(QTextCursor::End);
 	    tempCursor.insertBlock();		//	新規行作成
 	}
-	int ix = cursor.positionInBlock();
-	if( !cursor.atBlockEnd() )
-		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+// 1. 移動元（現在地）の置換
+	if( !cursor.atBlockEnd() ) cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 	cursor.insertText(getDownSrcString(cursor.block().text(), ix));
 	cursor.movePosition(QTextCursor::Left);
-	int vc = getVisualColumn(cursor, this);
-	cursor.movePosition(QTextCursor::Down);
-	int vc2 = getVisualColumn(cursor, this);
-	if( vc2 < vc ) cursor.insertText(QString(vc-vc2, u' '));		//	カーソル位置まで空白挿入
-	ix = cursor.positionInBlock();
-	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc + 2 )
-		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-	QString dst = getDownDstString(cursor.block().text(), ix);
-	cursor.insertText(dst);
+
+
+	// 2. 下の行の準備（なければ作成）
+	if (cursor.block() == cursor.document()->lastBlock()) {
+		cursor.movePosition(QTextCursor::EndOfBlock);
+		cursor.insertBlock(); // これでカーソル自体が新行へ移動する
+	} else {
+		cursor.movePosition(QTextCursor::Down);
+	}
+
+	// 3. 表示列(vc)に正確に合わせる
+	cursor.movePosition(QTextCursor::StartOfBlock);
+	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc ) cursor.movePosition(QTextCursor::Right);
+	int curVc = getVisualColumn(cursor, this);
+	if( curVc < vc ) cursor.insertText(QString(vc - curVc, u' ')); // 足りない分を補完
+
+	// 4. 移動先（下）の置換
+	ix = cursor.positionInBlock(); // 位置が確定してからインデックス取得
+	if( !cursor.atBlockEnd() ) cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+	cursor.insertText(getDownDstString(cursor.block().text(), ix));
+
 	cursor.movePosition(QTextCursor::Left);
 	cursor.endEditBlock();
 	setTextCursor(cursor);
