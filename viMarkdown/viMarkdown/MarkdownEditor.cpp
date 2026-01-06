@@ -143,10 +143,15 @@ QString getUpSrcString(const QString txt, int ix) {
 	if( ix < txt.size() ) {
 		if( txt[ix] == u'←' || txt[ix] == u'└' ) return "└";
 		if( txt[ix] == u'→' || txt[ix] == u'┘' ) return "┘";
-		if( txt[ix] == u'─' || txt[ix] == u'┴' ) return "┴";
+		if( txt[ix] == u'┴' ) return "┴";
 		if( txt[ix] == u'┐' || txt[ix] == u'┤' ) return "┤";
 		if( txt[ix] == u'┌' || txt[ix] == u'├' ) return "├";
 		if( txt[ix] == u'┬' || txt[ix] == u'┼' ) return "┼";
+		if( txt[ix] == u'─' )
+			if( ix < 2 )		//	undone: 左に文字がある場合
+				return "└";
+			else
+				return "┴";
 	}
 	return "│";
 }
@@ -191,10 +196,15 @@ QString getDownSrcString(const QString txt, int ix) {
 	if( ix < txt.size() ) {
 		if( txt[ix] == u'→' || txt[ix] == u'┐' ) return "┐";
 		if( txt[ix] == u'←' || txt[ix] == u'┌' ) return "┌";
-		if( txt[ix] == u'─' || txt[ix] == u'┬' ) return "┬";
+		if( txt[ix] == u'┬' ) return "┬";
 		if( txt[ix] == u'┘' || txt[ix] == u'┤' ) return "┤";
 		if( txt[ix] == u'└' || txt[ix] == u'├' ) return "├";
 		if( txt[ix] == u'┴' || txt[ix] == u'┼' ) return "┼";
+		if( txt[ix] == u'─' )
+			if( ix < 2 )		//	undone: 左に文字がある場合
+				return "┌";
+			else
+				return "┬";
 	}
 	return "│";
 }
