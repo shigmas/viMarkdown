@@ -186,6 +186,7 @@ QString getUpDstString(bool erase, const QString txt, int ix) {
 }
 void MarkdownEditor::do_keisen_up(bool erase) {
 	QTextCursor cursor = this->textCursor();
+	if( cursor.blockNumber() == 0 ) return;		//	１行目では実行不可
 	cursor.beginEditBlock();
 	int vc0 = getVisualColumn(cursor, this); // 開始位置の表示列(VC)を保存
 	int ix = cursor.positionInBlock();
@@ -288,7 +289,7 @@ void MarkdownEditor::do_keisen_down(bool erase) {
 		QTextCursor tempCursor(document());
 	    tempCursor.movePosition(QTextCursor::End);
 	    tempCursor.insertBlock();							//	新規行作成
-		cursor.movePosition(QTextCursor::Up);				//	新規行作成で下に移動したカーソルを元の位置に戻す
+		cursor.movePosition(QTextCursor::Left);				//	新規行作成で下に移動したカーソルを元の位置に戻す
 	}
 	// 1. 移動元（現在地）の置換
 	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc0 + 2 ) 
