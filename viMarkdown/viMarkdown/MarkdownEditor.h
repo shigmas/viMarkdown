@@ -24,14 +24,14 @@ signals:
 
 protected:
     void	keyPressEvent(QKeyEvent *e) override;
-    void	do_keisen_left();
-    void	do_keisen_right();
-    void	do_keisen_up();
-    void	do_keisen_down();
-    void	do_keisen_left_erase();
-    void	do_keisen_right_erase();
-    void	do_keisen_up_erase();
-    void	do_keisen_down_erase();
+    void	do_keisen_left(bool erase = false);
+    void	do_keisen_right(bool erase = false);
+    void	do_keisen_up(bool erase = false);
+    void	do_keisen_down(bool erase = false);
+    //void	do_keisen_left_erase();
+    //void	do_keisen_right_erase();
+    //void	do_keisen_up_erase();
+    //void	do_keisen_down_erase();
 
 private:
     class MarkdownHighlighter *m_highlighter;
