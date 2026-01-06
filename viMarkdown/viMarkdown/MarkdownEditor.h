@@ -21,6 +21,7 @@ public:
 
 signals:
     void tab_pressed();
+    void esc_pressed();
 
 protected:
     void	keyPressEvent(QKeyEvent *e) override;

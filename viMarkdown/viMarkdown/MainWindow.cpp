@@ -236,6 +236,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	mdEditor->setUndoRedoEnabled(true);
 	connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onMdEditCurPosChanged);
 	connect(mdEditor, &MarkdownEditor::tab_pressed, this, &MainWindow::onMdEditTabPressed);
+	connect(mdEditor, &MarkdownEditor::esc_pressed, this, &MainWindow::onMdEditEscPressed);
 	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
 	//QTextEdit *mdEditor = new QTextEdit(splitter);
 	mdEditor->setPlaceholderText("ここにMarkdownを入力\n"
@@ -1026,6 +1027,9 @@ void MainWindow::onMDTextChanged() {
 }
 void MainWindow::onMdEditTabPressed() {
 	onAction_Indent();
+}
+void MainWindow::onMdEditEscPressed() {
+	ui->action_KeisenMode->setChecked(false);
 }
 void MainWindow::onMdEditCurPosChanged() {
 	MarkdownEditor *mdEditor = (MarkdownEditor*)sender();

@@ -89,6 +89,9 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	} else if (e->key() == Qt::Key_Tab ) {
 		emit tab_pressed();
 		return;
+	} else if (e->key() == Qt::Key_Escape ) {
+		emit esc_pressed();
+		return;
 	} else if( m_mainWindow->isKeisenMode() ) {
 		bool erase = (e->modifiers() & Qt::ShiftModifier) != 0;
 		if( (e->modifiers() & Qt::ControlModifier) != 0 || erase ) {
@@ -286,10 +289,11 @@ void MarkdownEditor::do_keisen_down(bool erase) {
 	int ix = cursor.positionInBlock();
 
 	if (cursor.block() == cursor.document()->lastBlock()) {		//	カーソルが最終行にいる場合
-		QTextCursor tempCursor(document());
-	    tempCursor.movePosition(QTextCursor::End);
-	    tempCursor.insertBlock();							//	新規行作成
-		cursor.movePosition(QTextCursor::Left);				//	新規行作成で下に移動したカーソルを元の位置に戻す
+	    cursor.movePosition(QTextCursor::End);
+	    cursor.insertBlock();							//	新規行作成
+		cursor.movePosition(QTextCursor::Left);			//	新規行作成で下に移動したカーソルを元の行に戻す
+		while( getVisualColumn(cursor, this) > vc0 )
+			cursor.movePosition(QTextCursor::Left);
 	}
 	// 1. 移動元（現在地）の置換
 	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc0 + 2 ) 
@@ -454,7 +458,7 @@ void MarkdownEditor::do_keisen_right(bool erase) {
 		int vc = getVisualColumn(cursor, this);
 		do {
 			cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-		} while( getVisualColumn(cursor, this) < vc + 2);
+		} while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc + 2);
 		str2 = getRightDstString(erase, cursor.block().text(), ix);
 	}
 	cursor.insertText(str + str2);
