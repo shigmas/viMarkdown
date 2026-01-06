@@ -287,12 +287,14 @@ void MarkdownEditor::do_keisen_down(bool erase) {
 	if (cursor.block() == cursor.document()->lastBlock()) {		//	カーソルが最終行にいる場合
 		QTextCursor tempCursor(document());
 	    tempCursor.movePosition(QTextCursor::End);
-	    tempCursor.insertBlock();		//	新規行作成
+	    tempCursor.insertBlock();							//	新規行作成
+		cursor.movePosition(QTextCursor::Up);				//	新規行作成で下に移動したカーソルを元の位置に戻す
 	}
 	// 1. 移動元（現在地）の置換
 	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc0 + 2 ) 
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-	cursor.insertText(getDownSrcString(erase, cursor.block().text(), ix));
+	QString src = getDownSrcString(erase, cursor.block().text(), ix);
+	cursor.insertText(src);
 	cursor.movePosition(QTextCursor::Left);
 
 
