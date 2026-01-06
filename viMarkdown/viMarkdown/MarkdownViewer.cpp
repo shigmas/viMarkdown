@@ -69,6 +69,7 @@ void MarkdownViewer::mouseReleaseEvent(QMouseEvent *e)
 }
 void MarkdownViewer::do_body(QTextCursor& cursor) {
 	if( m_bodyList.isEmpty() ) return;
+	m_hasBody = false;
 	QString buf;
 	for(auto txt: m_bodyList) {
 		if( txt.isEmpty() ) {		//	空行の場合
@@ -81,6 +82,7 @@ void MarkdownViewer::do_body(QTextCursor& cursor) {
 			buf.clear();
 		} else {
 			buf += txt + "\n";
+			m_hasBody = true;
 			m_nEmptyLines = 0;
 		}
 	}
@@ -90,6 +92,7 @@ void MarkdownViewer::do_body(QTextCursor& cursor) {
 		blockFormat.setAlignment(Qt::AlignJustify); // 左右両端揃え
 		cursor.mergeBlockFormat(blockFormat);
 		cursor.insertBlock();
+		m_hasBody = true;
 		m_nEmptyLines = 0;
 	}
 	m_bodyList.clear();
@@ -117,6 +120,7 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 	QTextCursor cursor(this->document());
 	cursor.movePosition(QTextCursor::Start);
 	m_lst = mdtext.split(u'\n');
+	m_nEmptyLines = 0;
 	for(m_ln = 0; m_ln < m_lst.size(); ++m_ln) {
 		QString buf = m_lst[m_ln];
 		m_nSpaces = 0;
@@ -210,8 +214,10 @@ void MarkdownViewer::do_heading(QTextCursor& cursor, QString buf) {
 	do_heading_sub(cursor, buf.mid(i - 1), h, m_ln);
 }
 void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int ln) {
-	if( m_nEmptyLines >= 1 )
-		cursor.insertBlock();			//	新規ブロック
+	//## このロジックがあると、見出し＋空行＋見出し で空行が２つ生成されてしまう
+	//## だが、無いと 本文＋空行＋見出し の時、空行が生成されない
+	//##if( m_nEmptyLines >= 1 )
+	//##	cursor.insertBlock();			//	新規ブロック
 	//cursor.insertBlock();			//	新規ブロック
 	cursor.insertMarkdown(QString(h, u'#') + u' ' + buf + "\n");
 	if( h == 1 ) {
