@@ -94,7 +94,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 		return;
 	} else if( m_mainWindow->isKeisenMode() ) {
 		bool erase = (e->modifiers() & Qt::ShiftModifier) != 0;
-		if( (e->modifiers() & Qt::ControlModifier) != 0 || erase ) {
+		if( (e->modifiers() & Qt::ControlModifier) != 0 /*|| erase*/ ) {
 			if (e->key() == Qt::Key_Right ) {
 				do_keisen_right(erase);
 				return;
