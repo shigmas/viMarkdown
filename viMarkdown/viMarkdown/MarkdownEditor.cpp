@@ -174,6 +174,7 @@ QString getUpDstString(const QString txt, int ix) {
 }
 void MarkdownEditor::do_keisen_up() {
 	QTextCursor cursor = this->textCursor();
+	cursor.beginEditBlock();
 	int ix = cursor.positionInBlock();
 	if( !cursor.atBlockEnd() )
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
@@ -188,6 +189,7 @@ void MarkdownEditor::do_keisen_up() {
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 	cursor.insertText(getUpDstString(cursor.block().text(), ix));
 	cursor.movePosition(QTextCursor::Left);
+	cursor.endEditBlock();
 	setTextCursor(cursor);
 }
 QString getDownSrcString(const QString txt, int ix) {
@@ -226,6 +228,7 @@ QString getDownDstString(const QString txt, int ix) {
 }
 void MarkdownEditor::do_keisen_down() {
 	QTextCursor cursor = this->textCursor();
+	cursor.beginEditBlock();
 	if (cursor.block() == cursor.document()->lastBlock()) {		//	カーソルが最終行にいる場合
 		QTextCursor tempCursor(document());
 	    tempCursor.movePosition(QTextCursor::End);
@@ -246,6 +249,7 @@ void MarkdownEditor::do_keisen_down() {
 	QString dst = getDownDstString(cursor.block().text(), ix);
 	cursor.insertText(dst);
 	cursor.movePosition(QTextCursor::Left);
+	cursor.endEditBlock();
 	setTextCursor(cursor);
 }
 QString getLeftSrcString(const QString txt, int ix) {
@@ -461,6 +465,7 @@ QString getUpDstString_erase(const QString txt, int ix) {
 }
 void MarkdownEditor::do_keisen_up_erase() {
 	QTextCursor cursor = this->textCursor();
+	cursor.beginEditBlock();
 	int vc0 = getVisualColumn(cursor, this);
 	int ix = cursor.positionInBlock();
 	if( !cursor.atBlockEnd() )
@@ -477,6 +482,7 @@ void MarkdownEditor::do_keisen_up_erase() {
 	cursor.insertText(getUpDstString_erase(cursor.block().text(), ix));
 	while( getVisualColumn(cursor, this) > vc0 )
 		cursor.movePosition(QTextCursor::Left);
+	cursor.endEditBlock();
 	setTextCursor(cursor);
 }
 QString getDownSrcString_erase(const QString txt, int ix) {
@@ -511,6 +517,7 @@ QString getDownDstString_erase(const QString txt, int ix) {
 }
 void MarkdownEditor::do_keisen_down_erase() {
 	QTextCursor cursor = this->textCursor();
+	cursor.beginEditBlock();
 	int vc0 = getVisualColumn(cursor, this);
 	if (cursor.block() == cursor.document()->lastBlock()) {		//	カーソルが最終行にいる場合
 		QTextCursor tempCursor(document());
@@ -533,6 +540,7 @@ void MarkdownEditor::do_keisen_down_erase() {
 	cursor.insertText(dst);
 	while( getVisualColumn(cursor, this) > vc0 )
 		cursor.movePosition(QTextCursor::Left);
+	cursor.endEditBlock();
 	setTextCursor(cursor);
 }
 //void MarkdownEditor::scrollToTop(int ln) {		//	ln: 0 org.
