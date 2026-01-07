@@ -171,6 +171,11 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 		return;
 	} else if (e->key() == Qt::Key_Escape ) {
 		emit esc_pressed();
+		QTextCursor cursor = this->textCursor();
+		if (cursor.hasSelection()) {
+			cursor.clearSelection();
+			setTextCursor(cursor);
+		}
 		return;
 	} else if( m_mainWindow->isKeisenMode() ) {
 		bool erase = (e->modifiers() & Qt::ShiftModifier) != 0;
