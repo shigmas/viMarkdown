@@ -18,6 +18,7 @@ public:
 	//	this->scrollToTop(cursor.blockNumber());
 	//}
 	int getVisualLineNumber(const QTextCursor &cursor) const;
+	void	onAlignCenter();
 
 signals:
     void tab_pressed();

@@ -135,6 +135,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_Bold, &QAction::triggered, this, &MainWindow::onAction_Bold);
 	connect(ui->action_Italic, &QAction::triggered, this, &MainWindow::onAction_Italic);
 	connect(ui->action_Strikethrough, &QAction::triggered, this, &MainWindow::onAction_Strikethrough);
+	connect(ui->action_AlignCenter, &QAction::triggered, this, &MainWindow::onAction_AlignCenter);
 	connect(ui->action_Find, &QAction::triggered, this, &MainWindow::onAction_Find);
 	connect(ui->action_ForwardAgain, &QAction::triggered, this, &MainWindow::onAction_ForwardAgain);
 	connect(ui->action_BackwardAgain, &QAction::triggered, this, &MainWindow::onAction_BackwardAgain);
@@ -239,7 +240,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(mdEditor, &MarkdownEditor::esc_pressed, this, &MainWindow::onMdEditEscPressed);
 	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
 	//QTextEdit *mdEditor = new QTextEdit(splitter);
-	mdEditor->setPlaceholderText("ここにMarkdownを入力\n"
+	mdEditor->setPlaceholderText("\nここにMarkdownを入力\n"
 									"\nマークダウン書式：\n# タイトル\n## 大見出し\n"
 									"本文...（空行：段落区切り）\n行末に半角スペース2つ：強制改行\n"
 									"- リスト\n1. 連番\n"
@@ -835,6 +836,11 @@ void MainWindow::onAction_Italic() {
 }
 void MainWindow::onAction_Strikethrough() {
 	insertInline("~~");
+}
+void MainWindow::onAction_AlignCenter() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	docWidget->m_mdEditor->onAlignCenter();
 }
 void MainWindow::onAction_KeisenMode(bool checked) {
 	m_keisenMode = checked;

@@ -85,6 +85,9 @@ static const unsigned short boxTable[KEISEN_CODE_END - KEISEN_CODE_BEGIN] = {
     /* 6D-7F (丸角・斜め・終端・混合細太直線) -> None */
     None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None
 };
+bool isKeisenChar(QChar ch) {
+	return ch.unicode() >= KEISEN_CODE_BEGIN && ch.unicode() < KEISEN_CODE_END;
+}
 
 class MarkdownHighlighter : public QSyntaxHighlighter {
 public:
@@ -754,6 +757,56 @@ void MarkdownEditor::do_keisen_down_erase() {
 void MarkdownEditor::scrollToTop(const QTextCursor &cursor) {
 	int visualLineNum = getVisualLineNumber(cursor);
     this->scrollToTop(visualLineNum);
+}
+int findKeisen(QTextCursor& cursor) {
+	const QString &text = cursor.block().text();
+	int ix = cursor.positionInBlock();
+	while( ix < text.size() ) {
+		if( isKeisenChar(text[ix]) )
+			return ix;
+		++ix;
+	}
+	return -1;
+}
+int rfindKeisen(QTextCursor& cursor) {
+	const QString &text = cursor.block().text();
+	int ix = cursor.positionInBlock();
+	while( --ix >= 0 ) {
+		if( isKeisenChar(text[ix]) )
+			return ix;
+	}
+	return -1;
+}
+void MarkdownEditor::onAlignCenter() {
+	qDebug() << "MarkdownEditor::onAlignCenter()";
+	QTextCursor cursor = textCursor();
+	if( cursor.hasSelection() ) return;		//	選択状態の場合は無視
+	int ix1 = rfindKeisen(cursor);			//	左側罫線（ブロック先頭からの）位置 ix 
+	qDebug() << "ix1 = " << ix1;
+	if( ix1 < 0 ) return;
+	int ix2 = findKeisen(cursor);			//	右側罫線（ブロック先頭からの）位置 ix 
+	qDebug() << "ix2 = " << ix1;
+	if( ix2 < 0 ) return;
+	const QString &text = cursor.block().text();
+	int ix = ix1 + 1;
+	while( text[ix] == u' ' ) ++ix;
+	if( ix == ix2 ) return;		//	文字が無い場合
+	int bix = ix;				//	文字先頭位置
+	int nspc1 = ix - ix1 - 1;
+	ix = ix2 - 1;
+	while( text[ix] == u' ' ) --ix;
+	int len = ix - bix + 1;
+	int nspc2 = ix2 - ix - 1;
+	int sum = nspc1 + nspc2;
+	int n1 = sum / 2;
+	int n2 = sum - n1;
+	QString nt = QString(n1, u' ') + text.mid(bix, len) + QString(n2, u' ');
+	qDebug() << "'" + nt + "'";
+	int ix0 = cursor.block().position();
+	cursor.setPosition(ix0 + ix1 + 1);
+	cursor.setPosition(ix0 + ix2, QTextCursor::KeepAnchor);
+	cursor.insertText(nt);
+	setTextCursor(cursor);
 }
 int MarkdownEditor::getVisualLineNumber(const QTextCursor &cursor) const {
 	int visualLineNum = 0;
