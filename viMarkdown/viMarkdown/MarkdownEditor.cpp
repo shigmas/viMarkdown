@@ -6,6 +6,85 @@
 #include "MarkdownEditor.h"
 #include "MainWindow.h"
 
+const int KEISEN_CODE_BEGIN = 0x2500;
+const int KEISEN_CODE_END = 0x2580;			//	0x257f まで有効
+
+enum KeisenDir {		//	罫線各文字の連結方向＆罫線種フラグ
+    None  = 0x00,
+    Up    = 0x01,
+    Down  = 0x02,
+    Left  = 0x04,
+    Right = 0x08,
+    Thick = 4,			//	太罫線
+    ThickUp    = Up << Thick,
+    ThickDown  = Down << Thick,
+    ThickLeft  = Left << Thick,
+    ThickRight = Right << Thick,
+    DblLine = 8,		//	二重線
+    DblUp    = Up << DblLine,
+    DblDown  = Down << DblLine,
+    DblLeft  = Left << DblLine,
+    DblRight = Right << DblLine,
+};
+static const unsigned short boxTable[KEISEN_CODE_END - KEISEN_CODE_BEGIN] = {
+	/* 00-03 ─ ━ │ ┃ */
+    Left|Right, ThickLeft|ThickRight, Up|Down, ThickUp|ThickDown,
+    /* 04-0B (破線・点線系) -> None */
+    None, None, None, None, None, None, None, None,
+    /* 0C-0F ┌ ┍ ┎ ┏ */
+    Down|Right, Down|ThickRight, ThickDown|Right, ThickDown|ThickRight,
+    /* 10-13 ┐ ┑ ┒ ┓ */
+    Down|Left, Down|ThickLeft, ThickDown|Left, ThickDown|ThickLeft,
+    /* 14-17 └ ┕ ┖ ┗ */
+    Up|Right, Up|ThickRight, ThickUp|Right, ThickUp|ThickRight,
+    /* 18-1B ┘ ┙ ┚ ┛ */
+    Up|Left, Up|ThickLeft, ThickUp|Left, ThickUp|ThickLeft,
+    /* 1C-1F ├ ┝ ┞ ┟ */
+    Up|Down|Right, Up|Down|ThickRight, ThickUp|Down|Right, Up|ThickDown|Right,
+    /* 20-23 ┠ ┡ ┢ ┣ */
+    ThickUp|Down|Right, ThickUp|ThickDown|Right, ThickUp|Down|ThickRight, ThickUp|ThickDown|Right,
+    /* 24-27 ┤ ┥ ┦ ┧ */
+    Up|Down|Left, Up|Down|ThickLeft, ThickUp|Down|Left, Up|ThickDown|Left,
+    /* 28-2B ┨ ┩ ┪ ┫ */
+    ThickUp|Down|Left, ThickUp|ThickDown|Left, ThickUp|Down|ThickLeft, ThickUp|ThickDown|Left,
+    /* 2C-2F ┬ ┭ ┮ ┯ */
+    Down|Left|Right, Down|Left|ThickRight, Down|ThickLeft|Right, Down|ThickLeft|ThickRight,
+    /* 30-33 ┰ ┱ ┲ ┳ */
+    ThickDown|Left|Right, ThickDown|Left|ThickRight, ThickDown|ThickLeft|Right, ThickDown|ThickLeft|ThickRight,
+    /* 34-37 ┴ ┵ ┶ ┷ */
+    Up|Left|Right, Up|Left|ThickRight, Up|ThickLeft|Right, Up|ThickLeft|ThickRight,
+    /* 38-3B ┸ ┹ ┺ ┻ */
+    ThickUp|Left|Right, ThickUp|Left|ThickRight, ThickUp|ThickLeft|Right, ThickUp|ThickLeft|ThickRight,
+    /* 3C-3F ┼ ┽ ┾ ┿ */
+    Up|Down|Left|Right, Up|Down|Left|ThickRight, Up|Down|ThickLeft|Right, Up|Down|ThickLeft|ThickRight,
+    /* 40-43 ╀ ╁ ╂ ╃ */
+    ThickUp|Down|Left|Right, Up|ThickDown|Left|Right, Up|Down|ThickLeft|ThickRight, ThickUp|Down|Left|ThickRight,
+    /* 44-47 ╄ ╅ ╆ ╇ */
+    ThickUp|Down|ThickLeft|Right, Up|ThickDown|Left|ThickRight, Up|ThickDown|ThickLeft|Right, ThickUp|ThickDown|Left|Right,
+    /* 48-4B ╈ ╉ ╊ ╋ */
+    ThickUp|ThickDown|Left|ThickRight, ThickUp|Down|ThickLeft|ThickRight, Up|ThickDown|ThickLeft|ThickRight, ThickUp|ThickDown|ThickLeft|ThickRight,
+    /* 4C-4F (破線太) -> None */
+    None, None, None, None,
+    /* 50-53 ═ ║ ╒ ╓ (ここから二重線) */
+    DblLeft|DblRight, DblUp|DblDown, DblDown|DblRight, DblDown|DblRight,
+    /* 54-57 ╔ ╕ ╖ ╗ */
+    DblDown|DblRight, DblDown|DblLeft, DblDown|DblLeft, DblDown|DblLeft,
+    /* 58-5B ╘ ╙ ╚ ╛ */
+    DblUp|DblRight, DblUp|DblRight, DblUp|DblRight, DblUp|DblLeft,
+    /* 5C-5F ╜ ╝ ╞ ╟ */
+    DblUp|DblLeft, DblUp|DblLeft, DblUp|DblDown|DblRight, DblUp|DblDown|DblRight,
+    /* 60-63 ╠ ╡ ╢ ╣ */
+    DblUp|DblDown|DblRight, DblUp|DblDown|DblLeft, DblUp|DblDown|DblLeft, DblUp|DblDown|DblLeft,
+    /* 64-67 ╤ ╥ ╦ ╧ */
+    DblDown|DblLeft|DblRight, DblDown|DblLeft|DblRight, DblDown|DblLeft|DblRight, DblUp|DblLeft|DblRight,
+    /* 68-6B ╨ ╩ ╪ ╫ */
+    DblUp|DblLeft|DblRight, DblUp|DblLeft|DblRight, DblUp|DblDown|DblLeft|DblRight, DblUp|DblDown|DblLeft|DblRight,
+    /* 6C ╬ */
+    DblUp|DblDown|DblLeft|DblRight,
+    /* 6D-7F (丸角・斜め・終端・混合細太直線) -> None */
+    None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None
+};
+
 class MarkdownHighlighter : public QSyntaxHighlighter {
 public:
     MarkdownHighlighter(QTextDocument *parent) : QSyntaxHighlighter(parent)
