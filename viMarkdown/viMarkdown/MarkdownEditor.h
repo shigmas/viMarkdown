@@ -2,6 +2,8 @@
 #include <QScrollBar>
 #include "C:\Qt\6.10.0\msvc2022_64\include\QtWidgets\qplaintextedit.h"
 
+enum class Align { Left, Center, Right };
+
 class MainWindow;
 
 class MarkdownEditor : public QPlainTextEdit
@@ -18,7 +20,9 @@ public:
 	//	this->scrollToTop(cursor.blockNumber());
 	//}
 	int getVisualLineNumber(const QTextCursor &cursor) const;
+	void	onAlignLeft();
 	void	onAlignCenter();
+	void	onAlignRight();
 
 signals:
     void tab_pressed();
@@ -32,10 +36,7 @@ protected:
     void	do_keisen_right(bool erase = false);
     void	do_keisen_up(bool erase = false);
     void	do_keisen_down(bool erase = false);
-    //void	do_keisen_left_erase();
-    //void	do_keisen_right_erase();
-    //void	do_keisen_up_erase();
-    //void	do_keisen_down_erase();
+	void	applyAlignment(Align align);
 
 private:
     class MarkdownHighlighter *m_highlighter;

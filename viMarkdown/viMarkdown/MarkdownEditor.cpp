@@ -777,6 +777,62 @@ int rfindKeisen(QTextCursor& cursor) {
 	}
 	return -1;
 }
+void MarkdownEditor::onAlignLeft()   { applyAlignment(Align::Left); }
+void MarkdownEditor::onAlignCenter() { applyAlignment(Align::Center); }
+void MarkdownEditor::onAlignRight()  { applyAlignment(Align::Right); }
+
+void MarkdownEditor::applyAlignment(Align align) {
+    QTextCursor cursor = textCursor();
+    if (cursor.hasSelection()) return;
+
+    int ix1 = rfindKeisen(cursor); // 左側位置
+    int ix2 = findKeisen(cursor);  // 右側位置
+    if (ix1 < 0 || ix2 < 0 || ix1 >= ix2) return;
+
+    QString lineText = cursor.block().text();
+    // 罫線の間の文字列を抽出 (ix1+1 から ix2 までの範囲)
+    int cellWidth = ix2 - ix1 - 1;
+    QString cellText = lineText.mid(ix1 + 1, cellWidth);
+    
+    // 前後の空白を除去して中身のテキストだけを取り出す
+    QString content = cellText.trimmed();
+    if (content.isEmpty()) return; // 空なら何もしない
+
+    int contentLen = content.length();
+    int totalSpaces = cellWidth - contentLen;
+    if (totalSpaces < 0) return; // セル幅より文字が長い場合はガード
+
+    // 各アラインメントに応じた左側の空白数を計算
+    int leftSpaces = 0;
+    switch (align) {
+        case Align::Left:
+            leftSpaces = 0;
+            break;
+        case Align::Center:
+            leftSpaces = totalSpaces / 2;
+            break;
+        case Align::Right:
+            leftSpaces = totalSpaces;
+            break;
+    }
+    int rightSpaces = totalSpaces - leftSpaces;
+
+    // 新しいセル内文字列の組み立て
+    QString newText = QString(leftSpaces, u' ') + content + QString(rightSpaces, u' ');
+
+    // 置換処理
+    int blockPos = cursor.block().position();
+    cursor.setPosition(blockPos + ix1 + 1);
+    cursor.setPosition(blockPos + ix2, QTextCursor::KeepAnchor);
+    
+    // 変更がある場合のみ実行（ちらつき防止）
+    if (cursor.selectedText() != newText) {
+        cursor.insertText(newText);
+        cursor.setPosition(blockPos + ix2 - rightSpaces);
+        setTextCursor(cursor);
+    }
+}
+#if 0
 void MarkdownEditor::onAlignCenter() {
 	qDebug() << "MarkdownEditor::onAlignCenter()";
 	QTextCursor cursor = textCursor();
@@ -808,6 +864,7 @@ void MarkdownEditor::onAlignCenter() {
 	cursor.insertText(nt);
 	setTextCursor(cursor);
 }
+#endif
 int MarkdownEditor::getVisualLineNumber(const QTextCursor &cursor) const {
 	int visualLineNum = 0;
     QTextBlock targetBlock = cursor.block();

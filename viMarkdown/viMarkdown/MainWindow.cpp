@@ -135,7 +135,9 @@ void MainWindow::setup_connections() {
 	connect(ui->action_Bold, &QAction::triggered, this, &MainWindow::onAction_Bold);
 	connect(ui->action_Italic, &QAction::triggered, this, &MainWindow::onAction_Italic);
 	connect(ui->action_Strikethrough, &QAction::triggered, this, &MainWindow::onAction_Strikethrough);
+	connect(ui->action_AlignLeft, &QAction::triggered, this, &MainWindow::onAction_AlignLeft);
 	connect(ui->action_AlignCenter, &QAction::triggered, this, &MainWindow::onAction_AlignCenter);
+	connect(ui->action_AlignRight, &QAction::triggered, this, &MainWindow::onAction_AlignRight);
 	connect(ui->action_Find, &QAction::triggered, this, &MainWindow::onAction_Find);
 	connect(ui->action_ForwardAgain, &QAction::triggered, this, &MainWindow::onAction_ForwardAgain);
 	connect(ui->action_BackwardAgain, &QAction::triggered, this, &MainWindow::onAction_BackwardAgain);
@@ -841,6 +843,16 @@ void MainWindow::onAction_AlignCenter() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	docWidget->m_mdEditor->onAlignCenter();
+}
+void MainWindow::onAction_AlignLeft() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	docWidget->m_mdEditor->onAlignLeft();
+}
+void MainWindow::onAction_AlignRight() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	docWidget->m_mdEditor->onAlignRight();
 }
 void MainWindow::onAction_KeisenMode(bool checked) {
 	m_keisenMode = checked;
