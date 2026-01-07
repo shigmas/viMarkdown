@@ -25,6 +25,8 @@ signals:
 
 protected:
     void	keyPressEvent(QKeyEvent *e) override;
+    void	paintEvent(QPaintEvent *e) override;
+
     void	do_keisen_left(bool erase = false);
     void	do_keisen_right(bool erase = false);
     void	do_keisen_up(bool erase = false);

@@ -2,6 +2,7 @@
 #include <QTextCursor>
 #include <QTextBlock>
 #include <QSyntaxHighlighter>
+#include <QPainter>
 #include <QRegularExpression>
 #include "MarkdownEditor.h"
 #include "MainWindow.h"
@@ -769,4 +770,30 @@ int MarkdownEditor::getVisualLineNumber(const QTextCursor &cursor) const {
     int lineInBlock = targetBlock.layout()->lineForTextPosition(relativePos).lineNumber();
 
     return visualLineNum + lineInBlock;
+}
+void MarkdownEditor::paintEvent(QPaintEvent *e) {
+	QPlainTextEdit::paintEvent(e); // 先にテキストを普通に描画
+    QPainter p(viewport());
+    p.setPen(QColor(0, 120, 215, 80)); // 薄い青色（透過度 80）
+
+    QFontMetrics fm(this->font());
+    int zWidth = fm.horizontalAdvance("□"); 
+
+    for (QTextBlock b = firstVisibleBlock(); b.isValid(); b = b.next()) {
+        QRectF r = blockBoundingRect(b).translated(contentOffset());
+        if (r.top() > viewport()->height()) break; // 画面外なら終了
+        
+        QString s = b.text();
+        for (int i = 0; i < s.size(); ++i) {
+            if (s[i] == u'　') { // 全角空白を見つけたら
+                // その文字の描画座標を取得
+                QTextCursor cursor(b);
+                cursor.setPosition(b.position() + i);
+                QRect cr = cursorRect(cursor);
+                cr.setWidth(zWidth);
+                // 1ピクセル内側に「□」を描画
+                p.drawRect(cr.adjusted(1, 1, -2, -2));
+            }
+        }
+    }
 }
