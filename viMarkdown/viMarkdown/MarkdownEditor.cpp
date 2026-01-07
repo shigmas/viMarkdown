@@ -776,6 +776,18 @@ int MarkdownEditor::getVisualLineNumber(const QTextCursor &cursor) const {
 
     return visualLineNum + lineInBlock;
 }
+void drawLeftArrow(QPainter &p, QRect r) {
+    // 枠に対して少し余白を持たせる
+    int x_end = r.right() - 2;
+    int x_start = r.left() + 2;
+    int y_mid = r.center().y();
+    int headSize = r.height() / 4; // 矢印の頭の大きさ
+    // 軸（横線）
+    p.drawLine(x_start, y_mid, x_end, y_mid);
+    // 矢印の頭（＜の部分）
+    p.drawLine(x_start, y_mid, x_start + headSize, y_mid - headSize);
+    p.drawLine(x_start, y_mid, x_start + headSize, y_mid + headSize);
+}
 void MarkdownEditor::paintEvent(QPaintEvent *e) {
 	QPlainTextEdit::paintEvent(e); // 先にテキストを普通に描画
     QPainter p(viewport());
@@ -787,7 +799,12 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
     for (QTextBlock b = firstVisibleBlock(); b.isValid(); b = b.next()) {
         QRectF r = blockBoundingRect(b).translated(contentOffset());
         if (r.top() > viewport()->height()) break; // 画面外なら終了
-        
+		// --- 改行マーク（←）の描画 ---
+        QTextCursor cursor(b);
+        cursor.movePosition(QTextCursor::EndOfBlock);
+        QRect cr = cursorRect(cursor);
+        cr.setWidth(zWidth);
+        drawLeftArrow(p, cr);        
         QString s = b.text();
         for (int i = 0; i < s.size(); ++i) {
             if (s[i] == u'　') { // 全角空白を見つけたら
