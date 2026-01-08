@@ -1,21 +1,15 @@
-MIT License
+Source Available
 
-Copyright (c) 2025 Nobuhide Tsuda
+Copyright (c) 2025-2026 Nobuhide Tsuda
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+「本ソフトウェア（ver 0.3 以降）は、以下の条件で利用可能です。
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+1. 個人利用、教育・学習目的、学生による利用は無料です。
+2. 業務・商用目的で継続的に利用される場合は、ライセンス料（2,000円程度？）の支払いが必要です。
+3. ソースコードの閲覧・改変は自由ですが、改変したものを商用として再配布することは禁止します。」
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+"This software (ver. 0.3 and later) may be used under the following conditions.
+
+1. Personal use, educational/learning purposes, and student use are free of charge.
+2. For ongoing use for business/commercial purposes, a license fee (approximately 2,000 yen) must be paid.
+3. You are free to view and modify the source code, but commercial redistribution of modified versions is prohibited."
