@@ -341,7 +341,7 @@
 0339 ● C 01/09            │問題│Edit > Block > CheckList：入力された "- [ ] " が選択状態になってしまう
 0340 ● C 01/09            │ToDo│Ctrl + Tab：次のタブ
 0341 ● C 01/09            │ToDo│Ctrl + Shift + Tab：前のタブ
-0342 ● C 01/09            │ToDo│
+0342 ◎ C 01/09 01/09 01007│ToDo│File > Export > AsHTML は 0.3 以降に延期、File > Export から削除しておく
 0343 ● C 01/09            │ToDo│
 0344 ● C 01/09            │ToDo│
 0345 ● C 01/09            │ToDo│

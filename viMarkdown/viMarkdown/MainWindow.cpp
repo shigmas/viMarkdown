@@ -33,7 +33,6 @@ MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
 	, ui(new Ui::MainWindowClass())
 {
-	setWindowTitle("viMarkdown ver 0.001");
 	ui->setupUi(this);
 	insertSearchComboBox();
 	updateHTMLModeCheck();		//	HTML or Source チェック状態に
