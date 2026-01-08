@@ -27,6 +27,8 @@
 
 using namespace std;
 
+const int N_RECENT_FILES = 10 + 26;
+
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
 	, ui(new Ui::MainWindowClass())
@@ -330,8 +332,12 @@ void MainWindow::onAboutToShow_RecentFiles() {
 	QSettings settings;
 	QStringList recentFilePaths = settings.value("recentFilePaths").toStringList();
 	int k = 0;
+	QString key;
 	for(const QString &fullPath : recentFilePaths) {
-		auto key = QString::number(k = (k+1) % 10);
+		if (++k <= 10)
+			key = QString::number(k % 10);
+		else
+			key = QChar(u'A' + k - 11);
 		QAction *act = ui->menu_RecentFiles->addAction("&" + key + " " + fullPath);
 		connect(act, &QAction::triggered, this, [this, fullPath]() {
 			QString pathArg = fullPath;
@@ -399,7 +405,7 @@ void MainWindow::addToRecentFiles(const QString& fullPath) {
 	while( (ix = recentFilePaths.indexOf(fullPath)) >= 0 )
 		recentFilePaths.removeAt(ix);
 	recentFilePaths.push_front(fullPath);
-	while( recentFilePaths.size() > 10 ) recentFilePaths.pop_back();
+	while( recentFilePaths.size() > N_RECENT_FILES ) recentFilePaths.pop_back();
 	settings.setValue("recentFilePaths", recentFilePaths);
 }
 void MainWindow::do_load(const QString& fullPath) {
