@@ -426,6 +426,18 @@ void MainWindow::do_load(const QString& fullPath) {
 	docWidget->m_mdEditor->setPlainText(content);
 	docWidget->setModified(false);
 	ui->tabWidget->setTabText(tix, docWidget->m_title);
+	close_empty_doc();
+}
+void MainWindow::close_empty_doc() {
+	for(int ix = 0; ix < ui->tabWidget->count(); ++ix) {
+		DocWidget *docWidget = (DocWidget*)ui->tabWidget->widget(ix);
+		if( docWidget != nullptr && docWidget->m_fullPath.isEmpty() && !docWidget->isModified()) {
+			if( docWidget->m_mdEditor->toPlainText().isEmpty() ) {
+				ui->tabWidget->removeTab(ix);		//	空の無名ドキュメントを削除
+				--ix;
+			}
+		}
+	}
 }
 void MainWindow::do_open(const QString& fullPath) {
 	int tix = tabIndexOf("", fullPath);
@@ -449,6 +461,7 @@ void MainWindow::do_open(const QString& fullPath) {
 	m_opening_file = false;
 
 	addToRecentFiles(fullPath);
+	close_empty_doc();
 }
 void MainWindow::onAction_Save() {
 	do_save();
