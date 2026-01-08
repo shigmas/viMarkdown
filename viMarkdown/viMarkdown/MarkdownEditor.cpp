@@ -129,6 +129,11 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
     format.setLineHeight(150, QTextBlockFormat::ProportionalHeight); // 1.5倍
     cursor.setBlockFormat(format);
 #endif
+	connect(document(), &QTextDocument::contentsChange, this, &MarkdownEditor::onContentsChanged);
+}
+void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int charsAdded) {
+	qDebug() << "MarkdownEditor::onContentsChanged()";
+	qDebug() << "pos = " << position << ", removed = " << charsRemoved << ", added = " << charsAdded;
 }
 void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	//static QRegularExpression re(R"(^\d[\.\)] )");
@@ -890,7 +895,7 @@ void drawLeftArrow(QPainter &p, QRect r) {
     // 枠に対して少し余白を持たせる
     int x_end = r.right() - 2;
     int x_start = r.left() + 2;
-    int y_mid = r.center().y();
+    int y_mid = r.center().y()+2;
     int headSize = r.height() / 4; // 矢印の頭の大きさ
     // 軸（横線）
     p.drawLine(x_start, y_mid, x_end, y_mid);
@@ -898,10 +903,43 @@ void drawLeftArrow(QPainter &p, QRect r) {
     p.drawLine(x_start, y_mid, x_start + headSize, y_mid - headSize);
     p.drawLine(x_start, y_mid, x_start + headSize, y_mid + headSize);
 }
+void drawEOF(QPainter &p, QRect r) {
+    int x = r.left() + 2;
+    int y_mid = r.center().y() + 2;
+    int h = r.height() / 4; // 基本サイズ
+    int y_top = y_mid - h;
+    int y_bot = y_mid + h;
+    int char_w = h * 1.2;   // 1文字の幅
+    int gap = 2;            // 文字間隔
+
+    // --- E の描画 (4本) ---
+    p.drawLine(x, y_top, x, y_bot);
+    p.drawLine(x, y_top, x + char_w, y_top);
+    p.drawLine(x, y_mid, x + char_w - 1, y_mid);
+    p.drawLine(x, y_bot, x + char_w, y_bot);
+
+    x += char_w + gap;
+
+    // --- o の描画 (4本: 小さな四角) ---
+    // o は少し低めに配置すると「EoF」らしく見えます
+    int yo_top = y_mid; 
+    p.drawLine(x, yo_top, x + char_w, yo_top);
+    p.drawLine(x, y_bot, x + char_w, y_bot);
+    p.drawLine(x, yo_top, x, y_bot);
+    p.drawLine(x + char_w, yo_top, x + char_w, y_bot);
+
+    x += char_w + gap;
+
+    // --- F の描画 (3本) ---
+    p.drawLine(x, y_top, x, y_bot);
+    p.drawLine(x, y_top, x + char_w, y_top);
+    p.drawLine(x, y_mid, x + char_w - 1, y_mid);
+}
 void MarkdownEditor::paintEvent(QPaintEvent *e) {
 	QPlainTextEdit::paintEvent(e); // 先にテキストを普通に描画
     QPainter p(viewport());
-    p.setPen(QColor(0, 120, 215, 80)); // 薄い青色（透過度 80）
+    //p.setPen(QColor(0, 120, 215, 80)); // 薄い青色（透過度 80）
+    p.setPen(QColor(100, 160, 220, 0xc0));
 
     QFontMetrics fm(this->font());
     int zWidth = fm.horizontalAdvance("□"); 
@@ -914,7 +952,10 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
         cursor.movePosition(QTextCursor::EndOfBlock);
         QRect cr = cursorRect(cursor);
         cr.setWidth(zWidth);
-        drawLeftArrow(p, cr);        
+        if( b != document()->lastBlock() )
+	        drawLeftArrow(p, cr);        
+        else
+        	drawEOF(p, cr);
         QString s = b.text();
         for (int i = 0; i < s.size(); ++i) {
             if (s[i] == u'　') { // 全角空白を見つけたら

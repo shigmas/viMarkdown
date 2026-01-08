@@ -31,6 +31,7 @@ signals:
 protected:
     void	keyPressEvent(QKeyEvent *e) override;
     void	paintEvent(QPaintEvent *e) override;
+    void	onContentsChanged(int position, int charsRemoved, int charsAdded);
 
     void	do_keisen_left(bool erase = false);
     void	do_keisen_right(bool erase = false);
