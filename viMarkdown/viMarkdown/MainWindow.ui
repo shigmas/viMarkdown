@@ -249,7 +249,7 @@
   <action name="action_Close">
    <property name="icon">
     <iconset resource="MainWindow.qrc">
-     <normaloff>:/MainWindow/images/tab_close_48.png</normaloff>:/MainWindow/images/tab_close_48.png</iconset>
+     <normaloff>:/MainWindow/images/close_48.png</normaloff>:/MainWindow/images/close_48.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Close</string>
