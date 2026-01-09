@@ -150,17 +150,17 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	        while( n < text.length() && text[n].isSpace() ) ++n;
 	        QString atxt = text.left(n);
 	        const QString mtxt = text.mid(n);
-	        if( mtxt.startsWith("- [ ] ") )
+	        if( mtxt == "- " || mtxt == "- [ ] " || mtxt == "- [x] " || mtxt == "- [X] " ) {
+	        	cursor.movePosition(QTextCursor::StartOfBlock);
+	        	cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+	        	cursor.deleteChar();
+	        } else if( mtxt.startsWith("- [ ] ") )
 				atxt += "- [ ] ";
 	        else if( mtxt.startsWith("- [x] ") )
 				atxt += "- [x] ";
 	        else if( mtxt.startsWith("- [X] ") )
 				atxt += "- [X] ";
-	        else if( mtxt == "- " ) {				//	"- " だけの場合は、リストモード終了
-	        	cursor.movePosition(QTextCursor::StartOfBlock);
-	        	cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
-	        	cursor.deleteChar();
-	        } else if( mtxt.startsWith("- ") )
+	        else if( mtxt.startsWith("- ") )
 				atxt += "- ";
 	        else if( re.match(mtxt).hasMatch())
 				atxt += "1. ";
