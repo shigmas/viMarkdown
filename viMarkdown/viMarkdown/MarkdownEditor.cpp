@@ -129,6 +129,10 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
 	format.setLineHeight(150, QTextBlockFormat::ProportionalHeight); // 1.5倍
 	cursor.setBlockFormat(format);
 #endif
+	QFontMetrics fm(font());
+	int lnAreaWidth = fm.horizontalAdvance('9') * 6;
+	setViewportMargins(lnAreaWidth, 0, 0, 0);
+
 	connect(document(), &QTextDocument::contentsChange, this, &MarkdownEditor::onContentsChanged);
 }
 void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int charsAdded) {

@@ -238,6 +238,9 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	mdEditor->setFont(font);
 	mdEditor->setStyleSheet("font-size: 12pt;");
 	mdEditor->setUndoRedoEnabled(true);
+	//QFontMetrics fm(mdEditor->font());
+	//int lnAreaWidth = fm.horizontalAdvance('9') * 8;
+	//mdEditor->setViewportMargins(lnAreaWidth, 0, 0, 0);
 	connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onMdEditCurPosChanged);
 	connect(mdEditor, &MarkdownEditor::tab_pressed, this, &MainWindow::onMdEditTabPressed);
 	connect(mdEditor, &MarkdownEditor::esc_pressed, this, &MainWindow::onMdEditEscPressed);
