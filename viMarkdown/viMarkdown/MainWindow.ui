@@ -191,10 +191,10 @@
    <addaction name="separator"/>
    <addaction name="action_Indent"/>
    <addaction name="action_UnIndent"/>
+   <addaction name="action_KeisenMode"/>
    <addaction name="action_AlignLeft"/>
    <addaction name="action_AlignCenter"/>
    <addaction name="action_AlignRight"/>
-   <addaction name="action_KeisenMode"/>
    <addaction name="separator"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -599,7 +599,8 @@
    </property>
    <property name="icon">
     <iconset resource="MainWindow.qrc">
-     <normaloff>:/MainWindow/images/keisen_48.png</normaloff>:/MainWindow/images/keisen_48.png</iconset>
+     <normaloff>:/MainWindow/images/table_edit_48.png</normaloff>
+     <normalon>:/MainWindow/images/table_edit_48.png</normalon>:/MainWindow/images/table_edit_48.png</iconset>
    </property>
    <property name="text">
     <string>&amp;KeisenMode</string>
