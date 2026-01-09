@@ -156,7 +156,11 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 				atxt += "- [x] ";
 	        else if( mtxt.startsWith("- [X] ") )
 				atxt += "- [X] ";
-	        else if( mtxt.startsWith("- ") )
+	        else if( mtxt == "- " ) {				//	"- " だけの場合は、リストモード終了
+	        	cursor.movePosition(QTextCursor::StartOfBlock);
+	        	cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+	        	cursor.deleteChar();
+	        } else if( mtxt.startsWith("- ") )
 				atxt += "- ";
 	        else if( re.match(mtxt).hasMatch())
 				atxt += "1. ";
@@ -166,7 +170,8 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 				atxt += "> ";
 	        //cursor.insertText("\n" + atxt);
 	        QPlainTextEdit::keyPressEvent(e);		//	改行挿入
-	        cursor.insertText(atxt);
+	        if( !atxt.isEmpty() )
+		        cursor.insertText(atxt);
 	        // カーソル位置を画面内に維持
 	        this->ensureCursorVisible();
 			return;
