@@ -11,79 +11,79 @@ const int KEISEN_CODE_BEGIN = 0x2500;
 const int KEISEN_CODE_END = 0x2580;			//	0x257f まで有効
 
 enum KeisenDir {		//	罫線各文字の連結方向＆罫線種フラグ
-    None  = 0x00,
-    Up    = 0x01,
-    Down  = 0x02,
-    Left  = 0x04,
-    Right = 0x08,
-    Thick = 4,			//	太罫線
-    ThickUp    = Up << Thick,
-    ThickDown  = Down << Thick,
-    ThickLeft  = Left << Thick,
-    ThickRight = Right << Thick,
-    DblLine = 8,		//	二重線
-    DblUp    = Up << DblLine,
-    DblDown  = Down << DblLine,
-    DblLeft  = Left << DblLine,
-    DblRight = Right << DblLine,
+	None  = 0x00,
+	Up	  = 0x01,
+	Down  = 0x02,
+	Left  = 0x04,
+	Right = 0x08,
+	Thick = 4,			//	太罫線
+	ThickUp    = Up << Thick,
+	ThickDown  = Down << Thick,
+	ThickLeft  = Left << Thick,
+	ThickRight = Right << Thick,
+	DblLine = 8,		//	二重線
+	DblUp	 = Up << DblLine,
+	DblDown  = Down << DblLine,
+	DblLeft  = Left << DblLine,
+	DblRight = Right << DblLine,
 };
 static const unsigned short boxTable[KEISEN_CODE_END - KEISEN_CODE_BEGIN] = {
 	/* 00-03 ─ ━ │ ┃ */
-    Left|Right, ThickLeft|ThickRight, Up|Down, ThickUp|ThickDown,
-    /* 04-0B (破線・点線系) -> None */
-    None, None, None, None, None, None, None, None,
-    /* 0C-0F ┌ ┍ ┎ ┏ */
-    Down|Right, Down|ThickRight, ThickDown|Right, ThickDown|ThickRight,
-    /* 10-13 ┐ ┑ ┒ ┓ */
-    Down|Left, Down|ThickLeft, ThickDown|Left, ThickDown|ThickLeft,
-    /* 14-17 └ ┕ ┖ ┗ */
-    Up|Right, Up|ThickRight, ThickUp|Right, ThickUp|ThickRight,
-    /* 18-1B ┘ ┙ ┚ ┛ */
-    Up|Left, Up|ThickLeft, ThickUp|Left, ThickUp|ThickLeft,
-    /* 1C-1F ├ ┝ ┞ ┟ */
-    Up|Down|Right, Up|Down|ThickRight, ThickUp|Down|Right, Up|ThickDown|Right,
-    /* 20-23 ┠ ┡ ┢ ┣ */
-    ThickUp|Down|Right, ThickUp|ThickDown|Right, ThickUp|Down|ThickRight, ThickUp|ThickDown|Right,
-    /* 24-27 ┤ ┥ ┦ ┧ */
-    Up|Down|Left, Up|Down|ThickLeft, ThickUp|Down|Left, Up|ThickDown|Left,
-    /* 28-2B ┨ ┩ ┪ ┫ */
-    ThickUp|Down|Left, ThickUp|ThickDown|Left, ThickUp|Down|ThickLeft, ThickUp|ThickDown|Left,
-    /* 2C-2F ┬ ┭ ┮ ┯ */
-    Down|Left|Right, Down|Left|ThickRight, Down|ThickLeft|Right, Down|ThickLeft|ThickRight,
-    /* 30-33 ┰ ┱ ┲ ┳ */
-    ThickDown|Left|Right, ThickDown|Left|ThickRight, ThickDown|ThickLeft|Right, ThickDown|ThickLeft|ThickRight,
-    /* 34-37 ┴ ┵ ┶ ┷ */
-    Up|Left|Right, Up|Left|ThickRight, Up|ThickLeft|Right, Up|ThickLeft|ThickRight,
-    /* 38-3B ┸ ┹ ┺ ┻ */
-    ThickUp|Left|Right, ThickUp|Left|ThickRight, ThickUp|ThickLeft|Right, ThickUp|ThickLeft|ThickRight,
-    /* 3C-3F ┼ ┽ ┾ ┿ */
-    Up|Down|Left|Right, Up|Down|Left|ThickRight, Up|Down|ThickLeft|Right, Up|Down|ThickLeft|ThickRight,
-    /* 40-43 ╀ ╁ ╂ ╃ */
-    ThickUp|Down|Left|Right, Up|ThickDown|Left|Right, Up|Down|ThickLeft|ThickRight, ThickUp|Down|Left|ThickRight,
-    /* 44-47 ╄ ╅ ╆ ╇ */
-    ThickUp|Down|ThickLeft|Right, Up|ThickDown|Left|ThickRight, Up|ThickDown|ThickLeft|Right, ThickUp|ThickDown|Left|Right,
-    /* 48-4B ╈ ╉ ╊ ╋ */
-    ThickUp|ThickDown|Left|ThickRight, ThickUp|Down|ThickLeft|ThickRight, Up|ThickDown|ThickLeft|ThickRight, ThickUp|ThickDown|ThickLeft|ThickRight,
-    /* 4C-4F (破線太) -> None */
-    None, None, None, None,
-    /* 50-53 ═ ║ ╒ ╓ (ここから二重線) */
-    DblLeft|DblRight, DblUp|DblDown, DblDown|DblRight, DblDown|DblRight,
-    /* 54-57 ╔ ╕ ╖ ╗ */
-    DblDown|DblRight, DblDown|DblLeft, DblDown|DblLeft, DblDown|DblLeft,
-    /* 58-5B ╘ ╙ ╚ ╛ */
-    DblUp|DblRight, DblUp|DblRight, DblUp|DblRight, DblUp|DblLeft,
-    /* 5C-5F ╜ ╝ ╞ ╟ */
-    DblUp|DblLeft, DblUp|DblLeft, DblUp|DblDown|DblRight, DblUp|DblDown|DblRight,
-    /* 60-63 ╠ ╡ ╢ ╣ */
-    DblUp|DblDown|DblRight, DblUp|DblDown|DblLeft, DblUp|DblDown|DblLeft, DblUp|DblDown|DblLeft,
-    /* 64-67 ╤ ╥ ╦ ╧ */
-    DblDown|DblLeft|DblRight, DblDown|DblLeft|DblRight, DblDown|DblLeft|DblRight, DblUp|DblLeft|DblRight,
-    /* 68-6B ╨ ╩ ╪ ╫ */
-    DblUp|DblLeft|DblRight, DblUp|DblLeft|DblRight, DblUp|DblDown|DblLeft|DblRight, DblUp|DblDown|DblLeft|DblRight,
-    /* 6C ╬ */
-    DblUp|DblDown|DblLeft|DblRight,
-    /* 6D-7F (丸角・斜め・終端・混合細太直線) -> None */
-    None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None
+	Left|Right, ThickLeft|ThickRight, Up|Down, ThickUp|ThickDown,
+	/* 04-0B (破線・点線系) -> None */
+	None, None, None, None, None, None, None, None,
+	/* 0C-0F ┌ ┍ ┎ ┏ */
+	Down|Right, Down|ThickRight, ThickDown|Right, ThickDown|ThickRight,
+	/* 10-13 ┐ ┑ ┒ ┓ */
+	Down|Left, Down|ThickLeft, ThickDown|Left, ThickDown|ThickLeft,
+	/* 14-17 └ ┕ ┖ ┗ */
+	Up|Right, Up|ThickRight, ThickUp|Right, ThickUp|ThickRight,
+	/* 18-1B ┘ ┙ ┚ ┛ */
+	Up|Left, Up|ThickLeft, ThickUp|Left, ThickUp|ThickLeft,
+	/* 1C-1F ├ ┝ ┞ ┟ */
+	Up|Down|Right, Up|Down|ThickRight, ThickUp|Down|Right, Up|ThickDown|Right,
+	/* 20-23 ┠ ┡ ┢ ┣ */
+	ThickUp|Down|Right, ThickUp|ThickDown|Right, ThickUp|Down|ThickRight, ThickUp|ThickDown|Right,
+	/* 24-27 ┤ ┥ ┦ ┧ */
+	Up|Down|Left, Up|Down|ThickLeft, ThickUp|Down|Left, Up|ThickDown|Left,
+	/* 28-2B ┨ ┩ ┪ ┫ */
+	ThickUp|Down|Left, ThickUp|ThickDown|Left, ThickUp|Down|ThickLeft, ThickUp|ThickDown|Left,
+	/* 2C-2F ┬ ┭ ┮ ┯ */
+	Down|Left|Right, Down|Left|ThickRight, Down|ThickLeft|Right, Down|ThickLeft|ThickRight,
+	/* 30-33 ┰ ┱ ┲ ┳ */
+	ThickDown|Left|Right, ThickDown|Left|ThickRight, ThickDown|ThickLeft|Right, ThickDown|ThickLeft|ThickRight,
+	/* 34-37 ┴ ┵ ┶ ┷ */
+	Up|Left|Right, Up|Left|ThickRight, Up|ThickLeft|Right, Up|ThickLeft|ThickRight,
+	/* 38-3B ┸ ┹ ┺ ┻ */
+	ThickUp|Left|Right, ThickUp|Left|ThickRight, ThickUp|ThickLeft|Right, ThickUp|ThickLeft|ThickRight,
+	/* 3C-3F ┼ ┽ ┾ ┿ */
+	Up|Down|Left|Right, Up|Down|Left|ThickRight, Up|Down|ThickLeft|Right, Up|Down|ThickLeft|ThickRight,
+	/* 40-43 ╀ ╁ ╂ ╃ */
+	ThickUp|Down|Left|Right, Up|ThickDown|Left|Right, Up|Down|ThickLeft|ThickRight, ThickUp|Down|Left|ThickRight,
+	/* 44-47 ╄ ╅ ╆ ╇ */
+	ThickUp|Down|ThickLeft|Right, Up|ThickDown|Left|ThickRight, Up|ThickDown|ThickLeft|Right, ThickUp|ThickDown|Left|Right,
+	/* 48-4B ╈ ╉ ╊ ╋ */
+	ThickUp|ThickDown|Left|ThickRight, ThickUp|Down|ThickLeft|ThickRight, Up|ThickDown|ThickLeft|ThickRight, ThickUp|ThickDown|ThickLeft|ThickRight,
+	/* 4C-4F (破線太) -> None */
+	None, None, None, None,
+	/* 50-53 ═ ║ ╒ ╓ (ここから二重線) */
+	DblLeft|DblRight, DblUp|DblDown, DblDown|DblRight, DblDown|DblRight,
+	/* 54-57 ╔ ╕ ╖ ╗ */
+	DblDown|DblRight, DblDown|DblLeft, DblDown|DblLeft, DblDown|DblLeft,
+	/* 58-5B ╘ ╙ ╚ ╛ */
+	DblUp|DblRight, DblUp|DblRight, DblUp|DblRight, DblUp|DblLeft,
+	/* 5C-5F ╜ ╝ ╞ ╟ */
+	DblUp|DblLeft, DblUp|DblLeft, DblUp|DblDown|DblRight, DblUp|DblDown|DblRight,
+	/* 60-63 ╠ ╡ ╢ ╣ */
+	DblUp|DblDown|DblRight, DblUp|DblDown|DblLeft, DblUp|DblDown|DblLeft, DblUp|DblDown|DblLeft,
+	/* 64-67 ╤ ╥ ╦ ╧ */
+	DblDown|DblLeft|DblRight, DblDown|DblLeft|DblRight, DblDown|DblLeft|DblRight, DblUp|DblLeft|DblRight,
+	/* 68-6B ╨ ╩ ╪ ╫ */
+	DblUp|DblLeft|DblRight, DblUp|DblLeft|DblRight, DblUp|DblDown|DblLeft|DblRight, DblUp|DblDown|DblLeft|DblRight,
+	/* 6C ╬ */
+	DblUp|DblDown|DblLeft|DblRight,
+	/* 6D-7F (丸角・斜め・終端・混合細太直線) -> None */
+	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None
 };
 bool isKeisenChar(QChar ch) {
 	return ch.unicode() >= KEISEN_CODE_BEGIN && ch.unicode() < KEISEN_CODE_END;
@@ -91,32 +91,32 @@ bool isKeisenChar(QChar ch) {
 
 class MarkdownHighlighter : public QSyntaxHighlighter {
 public:
-    MarkdownHighlighter(QTextDocument *parent) : QSyntaxHighlighter(parent)
-    {
-    	boldFormat.setFontWeight(QFont::Bold);
-    	boldRegex = QRegularExpression(R"(\*\*([^\*]+)\*\*)");
-    }
+	MarkdownHighlighter(QTextDocument *parent) : QSyntaxHighlighter(parent)
+	{
+		boldFormat.setFontWeight(QFont::Bold);
+		boldRegex = QRegularExpression(R"(\*\*([^\*]+)\*\*)");
+	}
 
 protected:
-    void highlightBlock(const QString &text) override {
-        if (text.startsWith("#")) {
-            QTextCharFormat fmt_darkred;
-            fmt_darkred.setForeground(QColor("darkred"));
-            setFormat(0, text.length(), fmt_darkred);
-        } else {
-            // デフォルトの色（黒）
-            setFormat(0, text.length(), QColor("black"));
-            auto it = boldRegex.globalMatch(text);
-	        while (it.hasNext()) {
-	            QRegularExpressionMatch match = it.next();
-	            // マッチした範囲（開始位置と長さ）にフォーマットを適用
-	            setFormat(match.capturedStart(), match.capturedLength(), boldFormat);
-	        }
-        }
-    }
+	void highlightBlock(const QString &text) override {
+		if (text.startsWith("#")) {
+			QTextCharFormat fmt_darkred;
+			fmt_darkred.setForeground(QColor("darkred"));
+			setFormat(0, text.length(), fmt_darkred);
+		} else {
+			// デフォルトの色（黒）
+			setFormat(0, text.length(), QColor("black"));
+			auto it = boldRegex.globalMatch(text);
+			while (it.hasNext()) {
+				QRegularExpressionMatch match = it.next();
+				// マッチした範囲（開始位置と長さ）にフォーマットを適用
+				setFormat(match.capturedStart(), match.capturedLength(), boldFormat);
+			}
+		}
+	}
 private:
-    QTextCharFormat boldFormat;
-    QRegularExpression boldRegex;
+	QTextCharFormat boldFormat;
+	QRegularExpression boldRegex;
 };
 //----------------------------------------------------------------------
 MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
@@ -125,9 +125,9 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
 	m_highlighter = new MarkdownHighlighter(this->document());
 #if 1
 	QTextCursor cursor = this->textCursor();
-    QTextBlockFormat format;
-    format.setLineHeight(150, QTextBlockFormat::ProportionalHeight); // 1.5倍
-    cursor.setBlockFormat(format);
+	QTextBlockFormat format;
+	format.setLineHeight(150, QTextBlockFormat::ProportionalHeight); // 1.5倍
+	cursor.setBlockFormat(format);
 #endif
 	connect(document(), &QTextDocument::contentsChange, this, &MarkdownEditor::onContentsChanged);
 }
@@ -141,44 +141,44 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	static QRegularExpression re2(R"(^\d\) )");
 	QTextCursor cursor = this->textCursor();
 	if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {
-        QTextBlock currentBlock = cursor.block();
-        if( (e->modifiers() & Qt::ShiftModifier) == 0 &&		//	Shift + Enter でない
-        	cursor.position() != currentBlock.position())		//	行頭にいない場合
-        {
-	        QString text = currentBlock.text();
-	        int n = 0;
-	        while( n < text.length() && text[n].isSpace() ) ++n;
-	        QString atxt = text.left(n);
-	        const QString mtxt = text.mid(n);
-	        if( mtxt == "- " || mtxt == "- [ ] " || mtxt == "- [x] " || mtxt == "- [X] " ) {
-	        	cursor.movePosition(QTextCursor::StartOfBlock);
-	        	cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
-	        	cursor.deleteChar();
-	        } else if( mtxt.startsWith("- [ ] ") )
+		QTextBlock currentBlock = cursor.block();
+		if( (e->modifiers() & Qt::ShiftModifier) == 0 &&		//	Shift + Enter でない
+			cursor.position() != currentBlock.position())		//	行頭にいない場合
+		{
+			QString text = currentBlock.text();
+			int n = 0;
+			while( n < text.length() && text[n].isSpace() ) ++n;
+			QString atxt = text.left(n);
+			const QString mtxt = text.mid(n);
+			if( mtxt == "- " || mtxt == "- [ ] " || mtxt == "- [x] " || mtxt == "- [X] " ) {
+				cursor.movePosition(QTextCursor::StartOfBlock);
+				cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+				cursor.deleteChar();
+			} else if( mtxt.startsWith("- [ ] ") )
 				atxt += "- [ ] ";
-	        else if( mtxt.startsWith("- [x] ") )
+			else if( mtxt.startsWith("- [x] ") )
 				atxt += "- [x] ";
-	        else if( mtxt.startsWith("- [X] ") )
+			else if( mtxt.startsWith("- [X] ") )
 				atxt += "- [X] ";
-	        else if( mtxt.startsWith("- ") )
+			else if( mtxt.startsWith("- ") )
 				atxt += "- ";
-	        else if( re.match(mtxt).hasMatch())
+			else if( re.match(mtxt).hasMatch())
 				atxt += "1. ";
-	        else if( re2.match(mtxt).hasMatch())
+			else if( re2.match(mtxt).hasMatch())
 				atxt += "1) ";
-	        else if( mtxt.startsWith("> ") )
+			else if( mtxt.startsWith("> ") )
 				atxt += "> ";
-	        //cursor.insertText("\n" + atxt);
-	        QPlainTextEdit::keyPressEvent(e);		//	改行挿入
-	        if( !atxt.isEmpty() )
-		        cursor.insertText(atxt);
-	        // カーソル位置を画面内に維持
-	        this->ensureCursorVisible();
+			//cursor.insertText("\n" + atxt);
+			QPlainTextEdit::keyPressEvent(e);		//	改行挿入
+			if( !atxt.isEmpty() )
+				cursor.insertText(atxt);
+			// カーソル位置を画面内に維持
+			this->ensureCursorVisible();
 			return;
-        } else {
-	        cursor.insertText("\n");
+		} else {
+			cursor.insertText("\n");
 			return;
-        }
+		}
 	} else if (e->key() == Qt::Key_Tab ) {
 		emit tab_pressed();
 		return;
@@ -208,19 +208,19 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 			}
 		}
 	}
-    QPlainTextEdit::keyPressEvent(e);	// Enter 以外のキーは通常通りの処理
+	QPlainTextEdit::keyPressEvent(e);	// Enter 以外のキーは通常通りの処理
 }
 int getVisualColumn(QTextCursor cursor, QPlainTextEdit *editor) {
-    // 1. 行頭から現在のカーソル位置までのテキストを取得
-    QString text = cursor.block().text().left(cursor.positionInBlock());
-    // 2. フォントの計測準備
-    QFontMetrics fm(editor->font());
-    // 3. 半角文字（例: 'A'）1文字分の幅を取得
-    int halfWidth = fm.horizontalAdvance("A"); 
-    // 4. 行頭からカーソルまでの全テキストの幅を取得
-    int fullWidth = fm.horizontalAdvance(text);
-    // 5. 割り算で「半角何文字分か」を出す
-    return fullWidth / halfWidth;
+	// 1. 行頭から現在のカーソル位置までのテキストを取得
+	QString text = cursor.block().text().left(cursor.positionInBlock());
+	// 2. フォントの計測準備
+	QFontMetrics fm(editor->font());
+	// 3. 半角文字（例: 'A'）1文字分の幅を取得
+	int halfWidth = fm.horizontalAdvance("A"); 
+	// 4. 行頭からカーソルまでの全テキストの幅を取得
+	int fullWidth = fm.horizontalAdvance(text);
+	// 5. 割り算で「半角何文字分か」を出す
+	return fullWidth / halfWidth;
 }
 QString getUpSrcString(bool erase, const QString txt, int ix) {
 	if( !erase ) {
@@ -246,7 +246,7 @@ QString getUpSrcString(bool erase, const QString txt, int ix) {
 				return "─";
 			if( txt[ix] == u'┼' ) return "┬";
 			if( txt[ix] == u'├' ) return "┌";
-	        if( txt[ix] == u'┤' ) return "┐";
+			if( txt[ix] == u'┤' ) return "┐";
 		}
 		return "  ";
 	}
@@ -279,8 +279,8 @@ QString getUpDstString(bool erase, const QString txt, int ix) {
 				return txt[ix];		//	変化無し
 			if( txt[ix] == u'┌' || txt[ix] == u'┐' || txt[ix] == u'├' ) return "─";
 			if( txt[ix] == u'┼' ) return "┴";
-	        if( txt[ix] == u'├' ) return "└";
-	        if( txt[ix] == u'┤' ) return "┘";
+			if( txt[ix] == u'├' ) return "└";
+			if( txt[ix] == u'┤' ) return "┘";
 		}
 		return "  ";
 	}
@@ -345,7 +345,7 @@ QString getDownSrcString(bool erase, const QString txt, int ix) {
 			if( txt[ix] == u'┼' ) return "┴";
 			if( txt[ix] == u'├' ) return "└";
 			if( txt[ix] == u'┤' ) return "┘";
-			if( txt[ix] == u'│' ) return "  ";
+			if( txt[ix] == u'│' ) return "	";
 		}
 		return "  ";
 	}
@@ -389,8 +389,8 @@ void MarkdownEditor::do_keisen_down(bool erase) {
 	int ix = cursor.positionInBlock();
 
 	if (cursor.block() == cursor.document()->lastBlock()) {		//	カーソルが最終行にいる場合
-	    cursor.movePosition(QTextCursor::End);
-	    cursor.insertBlock();							//	新規行作成
+		cursor.movePosition(QTextCursor::End);
+		cursor.insertBlock();							//	新規行作成
 		cursor.movePosition(QTextCursor::Left);			//	新規行作成で下に移動したカーソルを元の行に戻す
 		while( getVisualColumn(cursor, this) > vc0 )
 			cursor.movePosition(QTextCursor::Left);
@@ -663,7 +663,7 @@ QString getUpSrcString_erase(const QString txt, int ix) {
 			return "─";
 		if( txt[ix] == u'┼' ) return "┬";
 		if( txt[ix] == u'├' ) return "┌";
-        if( txt[ix] == u'┤' ) return "┐";
+		if( txt[ix] == u'┤' ) return "┐";
 	}
 	return "  ";
 }
@@ -676,8 +676,8 @@ QString getUpDstString_erase(const QString txt, int ix) {
 			return txt[ix];		//	変化無し
 		if( txt[ix] == u'┌' || txt[ix] == u'┐' || txt[ix] == u'├' ) return "─";
 		if( txt[ix] == u'┼' ) return "┴";
-        if( txt[ix] == u'├' ) return "└";
-        if( txt[ix] == u'┤' ) return "┘";
+		if( txt[ix] == u'├' ) return "└";
+		if( txt[ix] == u'┤' ) return "┘";
 	}
 	return "  ";
 }
@@ -713,7 +713,7 @@ QString getDownSrcString_erase(const QString txt, int ix) {
 		if( txt[ix] == u'┼' ) return "┴";
 		if( txt[ix] == u'├' ) return "└";
 		if( txt[ix] == u'┤' ) return "┘";
-		if( txt[ix] == u'│' ) return "  ";
+		if( txt[ix] == u'│' ) return "	";
 	}
 	return "  ";
 }
@@ -739,8 +739,8 @@ void MarkdownEditor::do_keisen_down_erase() {
 	int vc0 = getVisualColumn(cursor, this);
 	if (cursor.block() == cursor.document()->lastBlock()) {		//	カーソルが最終行にいる場合
 		QTextCursor tempCursor(document());
-	    tempCursor.movePosition(QTextCursor::End);
-	    tempCursor.insertBlock();		//	新規行作成
+		tempCursor.movePosition(QTextCursor::End);
+		tempCursor.insertBlock();		//	新規行作成
 	}
 	int ix = cursor.positionInBlock();
 	if( !cursor.atBlockEnd() )
@@ -766,7 +766,7 @@ void MarkdownEditor::do_keisen_down_erase() {
 //}
 void MarkdownEditor::scrollToTop(const QTextCursor &cursor) {
 	int visualLineNum = getVisualLineNumber(cursor);
-    this->scrollToTop(visualLineNum);
+	this->scrollToTop(visualLineNum);
 }
 int findKeisen(QTextCursor& cursor) {
 	const QString &text = cursor.block().text();
@@ -787,60 +787,60 @@ int rfindKeisen(QTextCursor& cursor) {
 	}
 	return -1;
 }
-void MarkdownEditor::onAlignLeft()   { applyAlignment(Align::Left); }
+void MarkdownEditor::onAlignLeft()	 { applyAlignment(Align::Left); }
 void MarkdownEditor::onAlignCenter() { applyAlignment(Align::Center); }
 void MarkdownEditor::onAlignRight()  { applyAlignment(Align::Right); }
 
 void MarkdownEditor::applyAlignment(Align align) {
-    QTextCursor cursor = textCursor();
-    if (cursor.hasSelection()) return;
+	QTextCursor cursor = textCursor();
+	if (cursor.hasSelection()) return;
 
-    int ix1 = rfindKeisen(cursor); // 左側位置
-    int ix2 = findKeisen(cursor);  // 右側位置
-    if (ix1 < 0 || ix2 < 0 || ix1 >= ix2) return;
+	int ix1 = rfindKeisen(cursor); // 左側位置
+	int ix2 = findKeisen(cursor);  // 右側位置
+	if (ix1 < 0 || ix2 < 0 || ix1 >= ix2) return;
 
-    QString lineText = cursor.block().text();
-    // 罫線の間の文字列を抽出 (ix1+1 から ix2 までの範囲)
-    int cellWidth = ix2 - ix1 - 1;
-    QString cellText = lineText.mid(ix1 + 1, cellWidth);
-    
-    // 前後の空白を除去して中身のテキストだけを取り出す
-    QString content = cellText.trimmed();
-    if (content.isEmpty()) return; // 空なら何もしない
+	QString lineText = cursor.block().text();
+	// 罫線の間の文字列を抽出 (ix1+1 から ix2 までの範囲)
+	int cellWidth = ix2 - ix1 - 1;
+	QString cellText = lineText.mid(ix1 + 1, cellWidth);
+	
+	// 前後の空白を除去して中身のテキストだけを取り出す
+	QString content = cellText.trimmed();
+	if (content.isEmpty()) return; // 空なら何もしない
 
-    int contentLen = content.length();
-    int totalSpaces = cellWidth - contentLen;
-    if (totalSpaces < 0) return; // セル幅より文字が長い場合はガード
+	int contentLen = content.length();
+	int totalSpaces = cellWidth - contentLen;
+	if (totalSpaces < 0) return; // セル幅より文字が長い場合はガード
 
-    // 各アラインメントに応じた左側の空白数を計算
-    int leftSpaces = 0;
-    switch (align) {
-        case Align::Left:
-            leftSpaces = 0;
-            break;
-        case Align::Center:
-            leftSpaces = totalSpaces / 2;
-            break;
-        case Align::Right:
-            leftSpaces = totalSpaces;
-            break;
-    }
-    int rightSpaces = totalSpaces - leftSpaces;
+	// 各アラインメントに応じた左側の空白数を計算
+	int leftSpaces = 0;
+	switch (align) {
+		case Align::Left:
+			leftSpaces = 0;
+			break;
+		case Align::Center:
+			leftSpaces = totalSpaces / 2;
+			break;
+		case Align::Right:
+			leftSpaces = totalSpaces;
+			break;
+	}
+	int rightSpaces = totalSpaces - leftSpaces;
 
-    // 新しいセル内文字列の組み立て
-    QString newText = QString(leftSpaces, u' ') + content + QString(rightSpaces, u' ');
+	// 新しいセル内文字列の組み立て
+	QString newText = QString(leftSpaces, u' ') + content + QString(rightSpaces, u' ');
 
-    // 置換処理
-    int blockPos = cursor.block().position();
-    cursor.setPosition(blockPos + ix1 + 1);
-    cursor.setPosition(blockPos + ix2, QTextCursor::KeepAnchor);
-    
-    // 変更がある場合のみ実行（ちらつき防止）
-    if (cursor.selectedText() != newText) {
-        cursor.insertText(newText);
-        cursor.setPosition(blockPos + ix2 - rightSpaces);
-        setTextCursor(cursor);
-    }
+	// 置換処理
+	int blockPos = cursor.block().position();
+	cursor.setPosition(blockPos + ix1 + 1);
+	cursor.setPosition(blockPos + ix2, QTextCursor::KeepAnchor);
+	
+	// 変更がある場合のみ実行（ちらつき防止）
+	if (cursor.selectedText() != newText) {
+		cursor.insertText(newText);
+		cursor.setPosition(blockPos + ix2 - rightSpaces);
+		setTextCursor(cursor);
+	}
 }
 #if 0
 void MarkdownEditor::onAlignCenter() {
@@ -877,101 +877,101 @@ void MarkdownEditor::onAlignCenter() {
 #endif
 int MarkdownEditor::getVisualLineNumber(const QTextCursor &cursor) const {
 	int visualLineNum = 0;
-    QTextBlock targetBlock = cursor.block();
+	QTextBlock targetBlock = cursor.block();
 
-    // 1. カーソルがあるブロックより前の全ブロックの表示行数を合計する
-    for (QTextBlock block = document()->begin(); block != targetBlock; block = block.next()) {
-        if (block.isValid()) {
-            // block.layout() から、そのブロックが何行に折り返されているかを取得
-            visualLineNum += block.layout()->lineCount();
-        }
-    }
+	// 1. カーソルがあるブロックより前の全ブロックの表示行数を合計する
+	for (QTextBlock block = document()->begin(); block != targetBlock; block = block.next()) {
+		if (block.isValid()) {
+			// block.layout() から、そのブロックが何行に折り返されているかを取得
+			visualLineNum += block.layout()->lineCount();
+		}
+	}
 
-    // 2. カーソルがある現在のブロック内で、カーソルが「何行目の折り返し」にいるかを取得
-    // cursor.positionInBlock() はブロック先頭からの文字数
-    int relativePos = cursor.position() - targetBlock.position();
-    
-    // layout()->lineForTextPosition(n) で、文字位置 n が含まれる QTextLine を取得できる
-    int lineInBlock = targetBlock.layout()->lineForTextPosition(relativePos).lineNumber();
+	// 2. カーソルがある現在のブロック内で、カーソルが「何行目の折り返し」にいるかを取得
+	// cursor.positionInBlock() はブロック先頭からの文字数
+	int relativePos = cursor.position() - targetBlock.position();
+	
+	// layout()->lineForTextPosition(n) で、文字位置 n が含まれる QTextLine を取得できる
+	int lineInBlock = targetBlock.layout()->lineForTextPosition(relativePos).lineNumber();
 
-    return visualLineNum + lineInBlock;
+	return visualLineNum + lineInBlock;
 }
 void drawLeftArrow(QPainter &p, QRect r) {
-    // 枠に対して少し余白を持たせる
-    int x_end = r.right() - 2;
-    int x_start = r.left() + 2;
-    int y_mid = r.center().y()+2;
-    int headSize = r.height() / 4; // 矢印の頭の大きさ
-    // 軸（横線）
-    p.drawLine(x_start, y_mid, x_end, y_mid);
-    // 矢印の頭（＜の部分）
-    p.drawLine(x_start, y_mid, x_start + headSize, y_mid - headSize);
-    p.drawLine(x_start, y_mid, x_start + headSize, y_mid + headSize);
+	// 枠に対して少し余白を持たせる
+	int x_end = r.right() - 2;
+	int x_start = r.left() + 2;
+	int y_mid = r.center().y()+2;
+	int headSize = r.height() / 4; // 矢印の頭の大きさ
+	// 軸（横線）
+	p.drawLine(x_start, y_mid, x_end, y_mid);
+	// 矢印の頭（＜の部分）
+	p.drawLine(x_start, y_mid, x_start + headSize, y_mid - headSize);
+	p.drawLine(x_start, y_mid, x_start + headSize, y_mid + headSize);
 }
 void drawEOF(QPainter &p, QRect r) {
-    int x = r.left() + 2;
-    int y_mid = r.center().y() + 2;
-    int h = r.height() / 4; // 基本サイズ
-    int y_top = y_mid - h;
-    int y_bot = y_mid + h;
-    int char_w = h * 1.2;   // 1文字の幅
-    int gap = 2;            // 文字間隔
+	int x = r.left() + 2;
+	int y_mid = r.center().y() + 2;
+	int h = r.height() / 4; // 基本サイズ
+	int y_top = y_mid - h;
+	int y_bot = y_mid + h;
+	int char_w = h * 1.2;	// 1文字の幅
+	int gap = 2;			// 文字間隔
 
-    // --- E の描画 (4本) ---
-    p.drawLine(x, y_top, x, y_bot);
-    p.drawLine(x, y_top, x + char_w, y_top);
-    p.drawLine(x, y_mid, x + char_w - 1, y_mid);
-    p.drawLine(x, y_bot, x + char_w, y_bot);
+	// --- E の描画 (4本) ---
+	p.drawLine(x, y_top, x, y_bot);
+	p.drawLine(x, y_top, x + char_w, y_top);
+	p.drawLine(x, y_mid, x + char_w - 1, y_mid);
+	p.drawLine(x, y_bot, x + char_w, y_bot);
 
-    x += char_w + gap;
+	x += char_w + gap;
 
-    // --- o の描画 (4本: 小さな四角) ---
-    // o は少し低めに配置すると「EoF」らしく見えます
-    int yo_top = y_mid; 
-    p.drawLine(x, yo_top, x + char_w, yo_top);
-    p.drawLine(x, y_bot, x + char_w, y_bot);
-    p.drawLine(x, yo_top, x, y_bot);
-    p.drawLine(x + char_w, yo_top, x + char_w, y_bot);
+	// --- o の描画 (4本: 小さな四角) ---
+	// o は少し低めに配置すると「EoF」らしく見えます
+	int yo_top = y_mid; 
+	p.drawLine(x, yo_top, x + char_w, yo_top);
+	p.drawLine(x, y_bot, x + char_w, y_bot);
+	p.drawLine(x, yo_top, x, y_bot);
+	p.drawLine(x + char_w, yo_top, x + char_w, y_bot);
 
-    x += char_w + gap;
+	x += char_w + gap;
 
-    // --- F の描画 (3本) ---
-    p.drawLine(x, y_top, x, y_bot);
-    p.drawLine(x, y_top, x + char_w, y_top);
-    p.drawLine(x, y_mid, x + char_w - 1, y_mid);
+	// --- F の描画 (3本) ---
+	p.drawLine(x, y_top, x, y_bot);
+	p.drawLine(x, y_top, x + char_w, y_top);
+	p.drawLine(x, y_mid, x + char_w - 1, y_mid);
 }
 void MarkdownEditor::paintEvent(QPaintEvent *e) {
 	QPlainTextEdit::paintEvent(e); // 先にテキストを普通に描画
-    QPainter p(viewport());
-    //p.setPen(QColor(0, 120, 215, 80)); // 薄い青色（透過度 80）
-    p.setPen(QColor(100, 160, 220, 0xc0));
+	QPainter p(viewport());
+	//p.setPen(QColor(0, 120, 215, 80)); // 薄い青色（透過度 80）
+	p.setPen(QColor(100, 160, 220, 0xc0));
 
-    QFontMetrics fm(this->font());
-    int zWidth = fm.horizontalAdvance("□"); 
+	QFontMetrics fm(this->font());
+	int zWidth = fm.horizontalAdvance("□"); 
 
-    for (QTextBlock b = firstVisibleBlock(); b.isValid(); b = b.next()) {
-        QRectF r = blockBoundingRect(b).translated(contentOffset());
-        if (r.top() > viewport()->height()) break; // 画面外なら終了
+	for (QTextBlock b = firstVisibleBlock(); b.isValid(); b = b.next()) {
+		QRectF r = blockBoundingRect(b).translated(contentOffset());
+		if (r.top() > viewport()->height()) break; // 画面外なら終了
 		// --- 改行マーク（←）の描画 ---
-        QTextCursor cursor(b);
-        cursor.movePosition(QTextCursor::EndOfBlock);
-        QRect cr = cursorRect(cursor);
-        cr.setWidth(zWidth);
-        if( b != document()->lastBlock() )
-	        drawLeftArrow(p, cr);        
-        else
-        	drawEOF(p, cr);
-        QString s = b.text();
-        for (int i = 0; i < s.size(); ++i) {
-            if (s[i] == u'　') { // 全角空白を見つけたら
-                // その文字の描画座標を取得
-                QTextCursor cursor(b);
-                cursor.setPosition(b.position() + i);
-                QRect cr = cursorRect(cursor);
-                cr.setWidth(zWidth);
-                // 1ピクセル内側に「□」を描画
-                p.drawRect(cr.adjusted(1, 1, -2, -2));
-            }
-        }
-    }
+		QTextCursor cursor(b);
+		cursor.movePosition(QTextCursor::EndOfBlock);
+		QRect cr = cursorRect(cursor);
+		cr.setWidth(zWidth);
+		if( b != document()->lastBlock() )
+			drawLeftArrow(p, cr);		 
+		else
+			drawEOF(p, cr);
+		QString s = b.text();
+		for (int i = 0; i < s.size(); ++i) {
+			if (s[i] == u'　') { // 全角空白を見つけたら
+				// その文字の描画座標を取得
+				QTextCursor cursor(b);
+				cursor.setPosition(b.position() + i);
+				QRect cr = cursorRect(cursor);
+				cr.setWidth(zWidth);
+				// 1ピクセル内側に「□」を描画
+				p.drawRect(cr.adjusted(1, 1, -2, -2));
+			}
+		}
+	}
 }

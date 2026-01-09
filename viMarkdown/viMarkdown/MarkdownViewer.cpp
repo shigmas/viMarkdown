@@ -243,7 +243,7 @@ void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int
 	// 4. 文字書式のリセット（フォントサイズや太字設定を解除）
 	cursor.setCharFormat(QTextCharFormat()); // 空のフォーマットをセットすることでデフォルトに戻る
 
-	m_headingList.push_back(QChar(u'0'+h) + buf);
+	m_headingList.push_back(QChar(u'0'+h) + buf.remove("^ +"));
 	m_headingLineNum.push_back(ln);
 	m_nEmptyLines = 0;
 }

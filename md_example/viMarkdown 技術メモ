@@ -1,5 +1,28 @@
 # viMarkdown 技術メモ
 
-## 変更情報利用
+## ■ 罫線保護処理
 
-- 
+- QTextDocument::contentsChange() シグナルを利用
+- 問題：削除された文字数情報しかなく、削除された文字が半角か全角だったのかわからない
+  - カーソル移動時にカーソル位置ブロックテキストを保存しておく
+
+
+## ■ QTextDocument::contentsChange() シグナル
+
+- テキストが編集されるとそのたびに、QDocument から contentsChange(int position, int charsRemoved, int charsAdded) シグナルが発行される
+  - position: 変更が起きた箇所
+  - charsRemoved: 削除された文字数
+  - charsAdded: 挿入された文字数
+- 新規ドキュメントで abc が（ペースト等で一度に）挿入された場合：
+  - contentsChange(0, 0, 3) が発行される
+- 直後に BackSpace で 'c' を消すと：
+  - contentsChange(2, 1, 0) が発行される
+- 「0a123」のaの直後でIMEにより「あ」を入力した場合：
+  - contentsChange(2, 4, 5) が発行される
+
+## ■ QPlainTexEdit の左に行番号表示
+
+- setViewportMargins(width, 0, 0, 0) を使用
+- 文字幅取得はfontMetrics() を使用
+  - charWidth = fontMetrics().horizontalAdvance('9');
+- フォントサイズが動的に変わる場合は、マージンの再計算が必要

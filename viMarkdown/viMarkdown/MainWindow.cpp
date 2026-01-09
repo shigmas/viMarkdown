@@ -997,7 +997,9 @@ void MainWindow::updateOutlineTree() {
 		//int val = lst[i].toInt(&ok, 10);
 		int val = lst[i][0].unicode() - '0';
 		item2->setIcon(0, QIcon(":/MainWindow/images/small_square_48.png"));
-		item2->setText(0, lst[i].mid(1));
+		item2->setText(0, lst[i].mid(1));	//	lst[i][0] は見出しレベル（'1'-'6'）
+		QString txt = lst[i].mid(1).remove(QRegularExpression("^ *[■●○◎★☆]\\s*"));
+		item2->setText(0, txt);
 		item2->setData(0, Qt::UserRole, hLineNum[i]);
 		int k = val - 1;
 		while( parents[k] == nullptr ) --k;
