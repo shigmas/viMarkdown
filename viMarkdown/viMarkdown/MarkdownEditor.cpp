@@ -157,10 +157,6 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
 
 	connect(document(), &QTextDocument::contentsChange, this, &MarkdownEditor::onContentsChanged);
 }
-void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int charsAdded) {
-	qDebug() << "MarkdownEditor::onContentsChanged()";
-	qDebug() << "pos = " << position << ", removed = " << charsRemoved << ", added = " << charsAdded;
-}
 void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	//static QRegularExpression re(R"(^\d[\.\)] )");
 	static QRegularExpression re(R"(^\d\. )");
@@ -868,39 +864,37 @@ void MarkdownEditor::applyAlignment(Align align) {
 		setTextCursor(cursor);
 	}
 }
-#if 0
-void MarkdownEditor::onAlignCenter() {
-	qDebug() << "MarkdownEditor::onAlignCenter()";
-	QTextCursor cursor = textCursor();
-	if( cursor.hasSelection() ) return;		//	選択状態の場合は無視
-	int ix1 = rfindKeisen(cursor);			//	左側罫線（ブロック先頭からの）位置 ix 
-	qDebug() << "ix1 = " << ix1;
-	if( ix1 < 0 ) return;
-	int ix2 = findKeisen(cursor);			//	右側罫線（ブロック先頭からの）位置 ix 
-	qDebug() << "ix2 = " << ix1;
-	if( ix2 < 0 ) return;
-	const QString &text = cursor.block().text();
-	int ix = ix1 + 1;
-	while( text[ix] == u' ' ) ++ix;
-	if( ix == ix2 ) return;		//	文字が無い場合
-	int bix = ix;				//	文字先頭位置
-	int nspc1 = ix - ix1 - 1;
-	ix = ix2 - 1;
-	while( text[ix] == u' ' ) --ix;
-	int len = ix - bix + 1;
-	int nspc2 = ix2 - ix - 1;
-	int sum = nspc1 + nspc2;
-	int n1 = sum / 2;
-	int n2 = sum - n1;
-	QString nt = QString(n1, u' ') + text.mid(bix, len) + QString(n2, u' ');
-	qDebug() << "'" + nt + "'";
-	int ix0 = cursor.block().position();
-	cursor.setPosition(ix0 + ix1 + 1);
-	cursor.setPosition(ix0 + ix2, QTextCursor::KeepAnchor);
-	cursor.insertText(nt);
-	setTextCursor(cursor);
+void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int charsAdded) {
+	if( m_processing ) return;
+	m_processing = true;
+	qDebug() << "MarkdownEditor::onContentsChanged()";
+	qDebug() << "pos = " << position << ", removed = " << charsRemoved << ", added = " << charsAdded;
+	QTextCursor cursor = this->textCursor();
+	int k = findKeisen(cursor);
+	if( k >= 0 ) {
+		const QString &text = cursor.block().text();
+		int cpos = cursor.position();
+		int bpos = position - cursor.positionInBlock();
+		if( charsRemoved == 0 ) {	//	文字列挿入のみの場合
+			int ns = 0;				//	罫線直前空白数
+			while( (k - ns - 1) > bpos && text[k-ns-1] == u' ' )
+				++ns;
+			if( ns > charsAdded ) {
+				cursor.setPosition(cursor.block().position() + k);		//	罫線位置
+				cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, charsAdded);
+				cursor.deleteChar();
+				cursor.setPosition(cpos);
+				setTextCursor(cursor);
+			}
+		} else if( charsAdded == 0 ) {	//	文字列削除のみの場合
+			cursor.setPosition(cursor.block().position() + k);		//	罫線位置
+			cursor.insertText(QString(charsRemoved, u' '));
+			cursor.setPosition(cpos);
+			setTextCursor(cursor);
+		}
+	}
+	m_processing = false;
 }
-#endif
 int MarkdownEditor::getVisualLineNumber(const QTextCursor &cursor) const {
 	int visualLineNum = 0;
 	QTextBlock targetBlock = cursor.block();

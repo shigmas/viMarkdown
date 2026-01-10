@@ -49,6 +49,7 @@ protected:
 	void	applyAlignment(Align align);
 
 private:
+	bool	m_processing = false;			//	罫線保護処理中
     class MarkdownHighlighter *m_highlighter;
 	class LnAreaWidget	*m_lnAreaWidget = nullptr;
     const MainWindow *m_mainWindow = nullptr;
