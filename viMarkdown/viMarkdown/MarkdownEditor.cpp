@@ -232,6 +232,12 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	}
 	QPlainTextEdit::keyPressEvent(e);	// Enter 以外のキーは通常通りの処理
 }
+int MarkdownEditor::nColumn(const QString &text) const {
+	QFontMetrics fm(font());
+	int halfWidth = fm.horizontalAdvance(u'9'); 
+	int fullWidth = fm.horizontalAdvance(text);
+	return fullWidth / halfWidth;
+}
 int getVisualColumn(QTextCursor cursor, QPlainTextEdit *editor) {
 	// 1. 行頭から現在のカーソル位置までのテキストを取得
 	QString text = cursor.block().text().left(cursor.positionInBlock());
@@ -874,14 +880,16 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 	if( k >= 0 ) {
 		const QString &text = cursor.block().text();
 		int cpos = cursor.position();
-		int bpos = position - cursor.positionInBlock();
+		int bpos = position - cursor.block().position();	//	ブロック先頭からの編集位置
+		const QString strAdded = text.mid(bpos, charsAdded);
+		int nc = nColumn(strAdded);
 		if( charsRemoved == 0 ) {	//	文字列挿入のみの場合
 			int ns = 0;				//	罫線直前空白数
 			while( (k - ns - 1) > bpos && text[k-ns-1] == u' ' )
 				++ns;
-			if( ns > charsAdded ) {
+			if( ns > nc ) {
 				cursor.setPosition(cursor.block().position() + k);		//	罫線位置
-				cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, charsAdded);
+				cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, nc);
 				cursor.deleteChar();
 				cursor.setPosition(cpos);
 				setTextCursor(cursor);

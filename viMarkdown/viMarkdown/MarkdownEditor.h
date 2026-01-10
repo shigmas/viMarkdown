@@ -41,6 +41,7 @@ protected:
 
     void	updateLnArea(const QRect &rect, int dy);
     void	onContentsChanged(int position, int charsRemoved, int charsAdded);
+    int		nColumn(const QString&) const;		//	表示カラム数を計算
 
     void	do_keisen_left(bool erase = false);
     void	do_keisen_right(bool erase = false);
