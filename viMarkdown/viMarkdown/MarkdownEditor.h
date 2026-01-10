@@ -39,6 +39,7 @@ protected:
     void	paintEvent(QPaintEvent *e) override;
     void	resizeEvent(QResizeEvent *event) override;
 
+    void	updateLnArea(const QRect &rect, int dy);
     void	onContentsChanged(int position, int charsRemoved, int charsAdded);
 
     void	do_keisen_left(bool erase = false);

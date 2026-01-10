@@ -153,6 +153,7 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
 	//int lnAreaWidth = fm.horizontalAdvance('9') * 6;
 	setViewportMargins(lnAreaWidth(), 0, 0, 0);
 	m_lnAreaWidget = new LnAreaWidget(this);
+	connect(this, &MarkdownEditor::updateRequest, this, &MarkdownEditor::updateLnArea);
 
 	connect(document(), &QTextDocument::contentsChange, this, &MarkdownEditor::onContentsChanged);
 }
@@ -999,6 +1000,12 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
 			}
 		}
 	}
+}
+void MarkdownEditor::updateLnArea(const QRect &rect, int dy) {
+	if (dy)
+        m_lnAreaWidget->scroll(0, dy);
+    else
+        m_lnAreaWidget->update(0, rect.y(), m_lnAreaWidget->width(), rect.height());
 }
 void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
 	QPainter painter(m_lnAreaWidget);
