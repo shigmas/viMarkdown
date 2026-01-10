@@ -904,12 +904,13 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 		cursor.setPosition(cursor.block().position() + k);		//	罫線位置
 		int d = ncAdded - ncRemoved;
 		if( d > 0 ) {			//	文字列幅が増えた場合
-			//	undone: 空欄があるかどうかチェック
-			cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, d);
-			cursor.deleteChar();
-			cursor.setPosition(cpos);
-			setTextCursor(cursor);
-		} else if( d < 0 ) {	//	文字列幅が減ったた場合
+			if( k > 0 && text[k-1] == u' ' ) {		//	空欄があるかどうかチェック
+				cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, d);
+				cursor.deleteChar();
+				cursor.setPosition(cpos);
+				setTextCursor(cursor);
+			}
+		} else if( d < 0 ) {	//	文字列幅が減った場合
 			cursor.insertText(QString(-d, u' '));
 			cursor.setPosition(cpos);
 			setTextCursor(cursor);
