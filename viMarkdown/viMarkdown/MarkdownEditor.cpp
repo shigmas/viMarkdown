@@ -7,6 +7,21 @@
 #include "MarkdownEditor.h"
 #include "MainWindow.h"
 
+class LnAreaWidget : public QWidget {
+public:
+	LnAreaWidget(QWidget *parent = nullptr) : QWidget(parent) {}
+
+protected:
+    void paintEvent(QPaintEvent *event) override {
+    	QPainter painter(this);
+    	QRect rc = event->rect();
+    	//rc.setWidth(rc.width());
+        painter.fillRect(rc, QColor("lightgray"));
+        MarkdownEditor *mdEditor = (MarkdownEditor*)parent();
+        mdEditor->lnAreaPaintEvent(event);
+    }
+};
+
 const int KEISEN_CODE_BEGIN = 0x2500;
 const int KEISEN_CODE_END = 0x2580;			//	0x257f まで有効
 
@@ -129,9 +144,15 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
 	format.setLineHeight(150, QTextBlockFormat::ProportionalHeight); // 1.5倍
 	cursor.setBlockFormat(format);
 #endif
-	QFontMetrics fm(font());
-	int lnAreaWidth = fm.horizontalAdvance('9') * 6;
-	setViewportMargins(lnAreaWidth, 0, 0, 0);
+	QFont font("MS Gothic");
+	//QFont font("Consolas");
+	font.setPointSize(12);		// 12ptに設定
+	font.setFixedPitch(true);	// 明示的に固定幅として扱う設定
+	this->setFont(font);
+	//QFontMetrics fm(font());
+	//int lnAreaWidth = fm.horizontalAdvance('9') * 6;
+	setViewportMargins(lnAreaWidth(), 0, 0, 0);
+	m_lnAreaWidget = new LnAreaWidget(this);
 
 	connect(document(), &QTextDocument::contentsChange, this, &MarkdownEditor::onContentsChanged);
 }
@@ -978,4 +999,38 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
 			}
 		}
 	}
+}
+void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
+	QPainter painter(m_lnAreaWidget);
+	// 現在表示されている最初のブロックを取得
+    QTextBlock block = firstVisibleBlock();
+    int blockNumber = block.blockNumber();
+    
+    // ブロックの表示上の位置（Y座標）を取得
+    int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
+    int bottom = top + (int) blockBoundingRect(block).height();
+    int charWidth = fontMetrics().horizontalAdvance('9');
+
+    // 画面内に見える範囲のブロックをループして描画
+    while (block.isValid() && top <= event->rect().bottom()) {
+        if (block.isVisible() && bottom >= event->rect().top()) {
+            QString number = QString::number(blockNumber + 1);
+            painter.setPen(Qt::black); // 文字色
+            
+            // 右詰めで描画するために幅を調整（右側に2ピクセルの余白）
+            painter.drawText(0, top, m_lnAreaWidget->width() - charWidth, fontMetrics().height(),
+                             Qt::AlignRight, number);
+        }
+
+        block = block.next();
+        top = bottom;
+        bottom = top + (int) blockBoundingRect(block).height();
+        ++blockNumber;
+    }
+}
+void MarkdownEditor::resizeEvent(QResizeEvent *event) {
+    QPlainTextEdit::resizeEvent(event);
+
+    QRect cr = contentsRect();
+    m_lnAreaWidget->setGeometry(QRect(cr.left(), cr.top(), lnAreaWidth(), cr.height()));
 }

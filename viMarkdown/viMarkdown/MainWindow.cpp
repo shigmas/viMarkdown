@@ -232,11 +232,12 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	QSplitter *splitter = new QSplitter(Qt::Horizontal, docWidget);
 	MarkdownEditor *mdEditor = docWidget->m_mdEditor = new MarkdownEditor(this, splitter);
 	//mdEditor->setLineWrapMode(QPlainTextEdit::NoWrap);		//	折り返しモード OFF
-	QFont font("MS Gothic");
+	//QFont font("MS Gothic");
 	//QFont font("Consolas");
-	font.setFixedPitch(true); // 明示的に固定幅として扱う設定
-	mdEditor->setFont(font);
-	mdEditor->setStyleSheet("font-size: 12pt;");
+	//font.setPointSize(12);		// 12ptに設定
+	//font.setFixedPitch(true);	// 明示的に固定幅として扱う設定
+	//mdEditor->setFont(font);
+	//mdEditor->setStyleSheet("font-size: 12pt;");
 	mdEditor->setUndoRedoEnabled(true);
 	//QFontMetrics fm(mdEditor->font());
 	//int lnAreaWidth = fm.horizontalAdvance('9') * 8;

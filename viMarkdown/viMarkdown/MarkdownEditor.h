@@ -4,6 +4,8 @@
 
 enum class Align { Left, Center, Right };
 
+const int LN_WIDTH = 6;
+
 class MainWindow;
 
 class MarkdownEditor : public QPlainTextEdit
@@ -15,6 +17,10 @@ public:
 	void	scrollToTop(int lineNum) {		//	lineNum: 0 org.
 		verticalScrollBar()->setValue(lineNum);
 	}
+	void	lnAreaPaintEvent(QPaintEvent *event);
+	int lnAreaWidth() {
+        return fontMetrics().horizontalAdvance('9') * LN_WIDTH;
+    }
 	void	scrollToTop(const QTextCursor &cursor);
 	//{
 	//	this->scrollToTop(cursor.blockNumber());
@@ -31,6 +37,8 @@ signals:
 protected:
     void	keyPressEvent(QKeyEvent *e) override;
     void	paintEvent(QPaintEvent *e) override;
+    void	resizeEvent(QResizeEvent *event) override;
+
     void	onContentsChanged(int position, int charsRemoved, int charsAdded);
 
     void	do_keisen_left(bool erase = false);
@@ -41,7 +49,7 @@ protected:
 
 private:
     class MarkdownHighlighter *m_highlighter;
-
+	class LnAreaWidget	*m_lnAreaWidget = nullptr;
     const MainWindow *m_mainWindow = nullptr;
 };
 
