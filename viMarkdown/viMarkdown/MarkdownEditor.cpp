@@ -884,27 +884,37 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 		const QString strAdded = text.mid(bpos, charsAdded);
 		int ncAdded = nColumn(strAdded);
 		int ncRemoved = nColumn(m_lastCurBlockText.mid(bpos, charsRemoved));
-		if( charsRemoved == 0 ) {	//	文字列挿入のみの場合
-			int ns = 0;				//	罫線直前空白数
-			while( (k - ns - 1) > bpos && text[k-ns-1] == u' ' )
-				++ns;
-			if( ns > ncAdded ) {
-				cursor.setPosition(cursor.block().position() + k);		//	罫線位置
-				cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, ncAdded);
-				cursor.deleteChar();
-				cursor.setPosition(cpos);
-				setTextCursor(cursor);
-			}
-		} else if( charsAdded == 0 ) {	//	文字列削除のみの場合
-			cursor.setPosition(cursor.block().position() + k);		//	罫線位置
-			cursor.insertText(QString(ncRemoved, u' '));
+		//if( charsRemoved == 0 ) {	//	文字列挿入のみの場合
+		//	int ns = 0;				//	罫線直前空白数
+		//	while( (k - ns - 1) > bpos && text[k-ns-1] == u' ' )
+		//		++ns;
+		//	if( ns > ncAdded ) {
+		//		cursor.setPosition(cursor.block().position() + k);		//	罫線位置
+		//		cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, ncAdded);
+		//		cursor.deleteChar();
+		//		cursor.setPosition(cpos);
+		//		setTextCursor(cursor);
+		//	}
+		//} else if( charsAdded == 0 ) {	//	文字列削除のみの場合
+		//	cursor.setPosition(cursor.block().position() + k);		//	罫線位置
+		//	cursor.insertText(QString(ncRemoved, u' '));
+		//	cursor.setPosition(cpos);
+		//	setTextCursor(cursor);
+		//} else {		//	削除・挿入があった場合
+		cursor.setPosition(cursor.block().position() + k);		//	罫線位置
+		int d = ncAdded - ncRemoved;
+		if( d > 0 ) {			//	文字列幅が増えた場合
+			//	undone: 空欄があるかどうかチェック
+			cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, d);
+			cursor.deleteChar();
 			cursor.setPosition(cpos);
 			setTextCursor(cursor);
-		} else {		//	削除・挿入があった場合
-			if( ncAdded > ncRemoved ) {
-			} else if( ncAdded < ncRemoved ) {
-			}
+		} else if( d < 0 ) {	//	文字列幅が減ったた場合
+			cursor.insertText(QString(-d, u' '));
+			cursor.setPosition(cpos);
+			setTextCursor(cursor);
 		}
+		//}
 	}
 	m_processing = false;
 }
