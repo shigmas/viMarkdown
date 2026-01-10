@@ -41,6 +41,7 @@ protected:
 
     void	updateLnArea(const QRect &rect, int dy);
     void	onContentsChanged(int position, int charsRemoved, int charsAdded);
+    void	onCurPosChanged();
     int		nColumn(const QString&) const;		//	表示カラム数を計算
 
     void	do_keisen_left(bool erase = false);
@@ -51,6 +52,7 @@ protected:
 
 private:
 	bool	m_processing = false;			//	罫線保護処理中
+	QString	m_lastCurBlockText;				//	事前のカーソルブロックテキスト
     class MarkdownHighlighter *m_highlighter;
 	class LnAreaWidget	*m_lnAreaWidget = nullptr;
     const MainWindow *m_mainWindow = nullptr;

@@ -154,7 +154,7 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
 	setViewportMargins(lnAreaWidth(), 0, 0, 0);
 	m_lnAreaWidget = new LnAreaWidget(this);
 	connect(this, &MarkdownEditor::updateRequest, this, &MarkdownEditor::updateLnArea);
-
+	connect(this, &MarkdownEditor::cursorPositionChanged, this, &MarkdownEditor::onCurPosChanged);
 	connect(document(), &QTextDocument::contentsChange, this, &MarkdownEditor::onContentsChanged);
 }
 void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
@@ -882,26 +882,35 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 		int cpos = cursor.position();
 		int bpos = position - cursor.block().position();	//	ブロック先頭からの編集位置
 		const QString strAdded = text.mid(bpos, charsAdded);
-		int nc = nColumn(strAdded);
+		int ncAdded = nColumn(strAdded);
+		int ncRemoved = nColumn(m_lastCurBlockText.mid(bpos, charsRemoved));
 		if( charsRemoved == 0 ) {	//	文字列挿入のみの場合
 			int ns = 0;				//	罫線直前空白数
 			while( (k - ns - 1) > bpos && text[k-ns-1] == u' ' )
 				++ns;
-			if( ns > nc ) {
+			if( ns > ncAdded ) {
 				cursor.setPosition(cursor.block().position() + k);		//	罫線位置
-				cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, nc);
+				cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, ncAdded);
 				cursor.deleteChar();
 				cursor.setPosition(cpos);
 				setTextCursor(cursor);
 			}
 		} else if( charsAdded == 0 ) {	//	文字列削除のみの場合
 			cursor.setPosition(cursor.block().position() + k);		//	罫線位置
-			cursor.insertText(QString(charsRemoved, u' '));
+			cursor.insertText(QString(ncRemoved, u' '));
 			cursor.setPosition(cpos);
 			setTextCursor(cursor);
+		} else {		//	削除・挿入があった場合
+			if( ncAdded > ncRemoved ) {
+			} else if( ncAdded < ncRemoved ) {
+			}
 		}
 	}
 	m_processing = false;
+}
+void MarkdownEditor::onCurPosChanged() {
+	QTextCursor cursor = this->textCursor();
+	m_lastCurBlockText = cursor.block().text();
 }
 int MarkdownEditor::getVisualLineNumber(const QTextCursor &cursor) const {
 	int visualLineNum = 0;
