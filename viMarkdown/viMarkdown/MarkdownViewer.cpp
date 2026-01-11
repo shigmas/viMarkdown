@@ -14,6 +14,7 @@ enum {
 MarkdownViewer::MarkdownViewer(const MainWindow *mainWindow, QWidget* parent)
 	: m_mainWindow(mainWindow), QTextEdit(parent)
 {
+	setFrameStyle(QFrame::NoFrame);
 }
 
 bool isUnderlineHeading(const QString& txt);
