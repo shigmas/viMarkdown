@@ -905,7 +905,8 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 		int d = ncAdded - ncRemoved;
 		if( d > 0 ) {			//	文字列幅が増えた場合
 			if( k > 0 && text[k-1] == u' ' ) {		//	空欄があるかどうかチェック
-				if( k > cursor.positionInBlock() ) {		//	罫線直前まで文字挿入した場合は罫線保護を行わない
+				//qDebug() << "k = " << k << ", cursor.positionInBlock() = " << cursor.positionInBlock();
+				if( k > cpos - cursor.block().position() ) {		//	罫線直前まで文字挿入した場合は罫線保護を行わない
 					cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, d);
 					cursor.deleteChar();
 					cursor.setPosition(cpos);
