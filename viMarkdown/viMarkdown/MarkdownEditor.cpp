@@ -883,7 +883,7 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 	qDebug() << "pos = " << position << ", removed = " << charsRemoved << ", added = " << charsAdded;
 	QTextCursor cursor = this->textCursor();
 	int k = findKeisen(cursor);
-	if( k >= 0 ) {
+	if( k >= 0 ) {		//	現カーソルの右側に罫線文字がある場合
 		const QString &text = cursor.block().text();		//	編集後ブロックテキスト
 		int cpos = cursor.position();
 		int bpos = position - cursor.block().position();	//	ブロック先頭からの編集位置
@@ -891,20 +891,15 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 		charsRemoved = qMin(charsRemoved, m_lastCurBlockText.size() - bpos);		//	行末を超えている場合対応
 		charsAdded = qMin(charsAdded, text.size() - bpos);		//	行末を超えている場合対応
 		int c = 0;
-		while( text[bpos+charsAdded-c-1] == m_lastCurBlockText[bpos+charsRemoved-c-1] )
+		while( charsAdded-c-1 > 0 && charsRemoved-c-1 > 0 &&
+			text[bpos+charsAdded-c-1] == m_lastCurBlockText[bpos+charsRemoved-c-1] )
+		{
 			++c;	//	末尾共通部分
+		}
 		charsRemoved -= c;
 		charsAdded -= c;
 		int ncAdded = nColumn(strAdded);
 		int ncRemoved = nColumn(m_lastCurBlockText.mid(bpos, charsRemoved));
-		//if( charsRemoved == 0 ) {	//	文字列挿入のみの場合
-		//	int ns = 0;				//	罫線直前空白数
-		//	while( (k - ns - 1) > bpos && text[k-ns-1] == u' ' )
-		//		++ns;
-		//	if( ns > ncAdded ) {
-		//	}
-		//} else if( charsAdded == 0 ) {	//	文字列削除のみの場合
-		//} else {		//	削除・挿入があった場合
 		cursor.setPosition(cursor.block().position() + k);		//	罫線位置
 		int d = ncAdded - ncRemoved;
 		if( d > 0 ) {			//	文字列幅が増えた場合
@@ -919,7 +914,6 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 			cursor.setPosition(cpos);
 			setTextCursor(cursor);
 		}
-		//}
 	}
 	m_processing = false;
 }
