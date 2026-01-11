@@ -156,8 +156,8 @@
      <string>&amp;Tool</string>
     </property>
     <addaction name="action_KeisenMode"/>
-    <addaction name="action_Thin"/>
-    <addaction name="action_Thick"/>
+    <addaction name="action_ThinKeisen"/>
+    <addaction name="action_ThickKeisen"/>
     <addaction name="action_OpenNext"/>
    </widget>
    <addaction name="menu_File"/>
@@ -201,8 +201,8 @@
    <addaction name="action_Indent"/>
    <addaction name="action_UnIndent"/>
    <addaction name="action_KeisenMode"/>
-   <addaction name="action_Thin"/>
-   <addaction name="action_Thick"/>
+   <addaction name="action_ThinKeisen"/>
+   <addaction name="action_ThickKeisen"/>
    <addaction name="action_AlignLeft"/>
    <addaction name="action_AlignCenter"/>
    <addaction name="action_AlignRight"/>
@@ -678,7 +678,7 @@
     <string>&amp;OpenNext</string>
    </property>
   </action>
-  <action name="action_Thin">
+  <action name="action_ThinKeisen">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -687,13 +687,13 @@
      <normaloff>:/MainWindow/images/thin_48.png</normaloff>:/MainWindow/images/thin_48.png</iconset>
    </property>
    <property name="text">
-    <string>Thin(&amp;F)</string>
+    <string>ThinKeisen(&amp;F)</string>
    </property>
    <property name="toolTip">
     <string>ThinKeisen</string>
    </property>
   </action>
-  <action name="action_Thick">
+  <action name="action_ThickKeisen">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -702,7 +702,7 @@
      <normaloff>:/MainWindow/images/thick_48.png</normaloff>:/MainWindow/images/thick_48.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Thick</string>
+    <string>&amp;ThickKeisen</string>
    </property>
    <property name="toolTip">
     <string>ThickKeisen</string>

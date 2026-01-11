@@ -20,6 +20,7 @@ public:
     ~MainWindow();
 
     bool	isKeisenMode() const { return m_keisenMode; }
+    bool	isThickKeisenMode() const { return m_thickKeisen; }
 
 protected:
     void	setup_connections();
@@ -33,6 +34,7 @@ protected:
     void	addTab(const QString& title, const QString fullPath = "", const QString txt = "");
     void	addTopItemToTreeWidget(const QString& title, const QString fullPath);
     void	updateHTMLModeCheck();
+    void	updateThinThickCheck();
     void	updatePreview();
     void	updateOutlineTree();
     void	insertInline(const QString&);
@@ -85,6 +87,8 @@ protected:
     void	onAction_BackwardAgain();
     void	onAction_FindWord();
     void	onAction_KeisenMode(bool);
+    void	onAction_ThinKeisen(bool);
+    void	onAction_ThickKeisen(bool);
     void	onAction_HTML(bool);
     void	onAction_Source(bool);
     void	onAction_OutlineBar(bool);
@@ -104,6 +108,7 @@ private:
     bool	m_ignore_changed = false;
     bool	m_htmlMode = true;
     bool	m_keisenMode = false;
+    bool	m_thickKeisen = false;		//	Thin or Thick
     int		m_tab_number = 0;
     //QString	m_plainText;
     //QString	m_htmlText;
