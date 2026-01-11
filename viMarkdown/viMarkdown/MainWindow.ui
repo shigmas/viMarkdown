@@ -679,6 +679,9 @@
    </property>
   </action>
   <action name="action_Thin">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="MainWindow.qrc">
      <normaloff>:/MainWindow/images/thin_48.png</normaloff>:/MainWindow/images/thin_48.png</iconset>
@@ -691,6 +694,9 @@
    </property>
   </action>
   <action name="action_Thick">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="MainWindow.qrc">
      <normaloff>:/MainWindow/images/thick_48.png</normaloff>:/MainWindow/images/thick_48.png</iconset>

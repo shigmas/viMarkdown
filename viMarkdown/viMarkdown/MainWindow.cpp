@@ -34,6 +34,15 @@ MainWindow::MainWindow(QWidget *parent)
 	, ui(new Ui::MainWindowClass())
 {
 	ui->setupUi(this);
+	ui->mainToolBar->setStyleSheet(
+	    "QToolButton:checked {"
+	    "   background-color: rgba(0, 120, 215, 60);" // 淡い青色（RGBAの最後が透明度 0-255）
+	    "   border: 1px solid #0078d7;"              // 少し濃い目の枠線で引き締める
+	    "   border-radius: 2px;"                     // 角を少し丸くするとモダンになります
+	    "}"
+	    "QToolButton:hover {"
+	    "   background-color: rgba(0, 120, 215, 30);" // マウスホバー時も淡く反応させる
+	    "}" );
 	insertSearchComboBox();
 	updateHTMLModeCheck();		//	HTML or Source チェック状態に
 	ui->action_OutlineBar->setChecked(true);	//	暫定的
