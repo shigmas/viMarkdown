@@ -887,6 +887,7 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 		const QString &text = cursor.block().text();		//	編集後ブロックテキスト
 		int cpos = cursor.position();
 		int bpos = position - cursor.block().position();	//	ブロック先頭からの編集位置
+		//int bpos = cursor.positionInBlock();				//	ブロック先頭からの現カーソル位置
 		const QString strAdded = text.mid(bpos, charsAdded);
 		charsRemoved = qMin(charsRemoved, m_lastCurBlockText.size() - bpos);		//	行末を超えている場合対応
 		charsAdded = qMin(charsAdded, text.size() - bpos);		//	行末を超えている場合対応
@@ -904,10 +905,12 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 		int d = ncAdded - ncRemoved;
 		if( d > 0 ) {			//	文字列幅が増えた場合
 			if( k > 0 && text[k-1] == u' ' ) {		//	空欄があるかどうかチェック
-				cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, d);
-				cursor.deleteChar();
-				cursor.setPosition(cpos);
-				setTextCursor(cursor);
+				if( k > cursor.positionInBlock() ) {		//	罫線直前まで文字挿入した場合は罫線保護を行わない
+					cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, d);
+					cursor.deleteChar();
+					cursor.setPosition(cpos);
+					setTextCursor(cursor);
+				}
 			}
 		} else if( d < 0 ) {	//	文字列幅が減った場合
 			if( k > bpos ) {	//	罫線直前を削除された場合は罫線保護を行わない

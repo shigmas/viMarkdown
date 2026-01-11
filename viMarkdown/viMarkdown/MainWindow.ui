@@ -134,7 +134,6 @@
     <addaction name="action_Indent"/>
     <addaction name="action_UnIndent"/>
     <addaction name="separator"/>
-    <addaction name="action_KeisenMode"/>
     <addaction name="actionTickness"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
@@ -152,10 +151,20 @@
     <addaction name="action_BackwardAgain"/>
     <addaction name="action_FindWord"/>
    </widget>
+   <widget class="QMenu" name="menu_Tool">
+    <property name="title">
+     <string>&amp;Tool</string>
+    </property>
+    <addaction name="action_KeisenMode"/>
+    <addaction name="action_Thin"/>
+    <addaction name="action_Thick"/>
+    <addaction name="action_OpenNext"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
    <addaction name="menu_Search"/>
    <addaction name="menu_View"/>
+   <addaction name="menu_Tool"/>
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QToolBar" name="fileToolBar">
@@ -192,6 +201,8 @@
    <addaction name="action_Indent"/>
    <addaction name="action_UnIndent"/>
    <addaction name="action_KeisenMode"/>
+   <addaction name="action_Thin"/>
+   <addaction name="action_Thick"/>
    <addaction name="action_AlignLeft"/>
    <addaction name="action_AlignCenter"/>
    <addaction name="action_AlignRight"/>
@@ -660,6 +671,35 @@
   <action name="actionTickness">
    <property name="text">
     <string>Tickness</string>
+   </property>
+  </action>
+  <action name="action_OpenNext">
+   <property name="text">
+    <string>&amp;OpenNext</string>
+   </property>
+  </action>
+  <action name="action_Thin">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/thin_48.png</normaloff>:/MainWindow/images/thin_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>Thin(&amp;F)</string>
+   </property>
+   <property name="toolTip">
+    <string>ThinKeisen</string>
+   </property>
+  </action>
+  <action name="action_Thick">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/thick_48.png</normaloff>:/MainWindow/images/thick_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Thick</string>
+   </property>
+   <property name="toolTip">
+    <string>ThickKeisen</string>
    </property>
   </action>
  </widget>

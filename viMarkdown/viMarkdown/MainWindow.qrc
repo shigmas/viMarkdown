@@ -38,5 +38,7 @@
         <file>images/format_align_right_48.png</file>
         <file>images/table_edit_48.png</file>
         <file>images/close_48.png</file>
+        <file>images/thick_48.png</file>
+        <file>images/thin_48.png</file>
     </qresource>
 </RCC>
