@@ -431,6 +431,12 @@ void MainWindow::do_load(const QString& fullPath) {
 	ui->tabWidget->setTabText(tix, docWidget->m_title);
 	close_empty_doc();
 }
+void MainWindow::removeTopLevelItem(DocWidget* docWidget) {
+	QTreeWidgetItem *top = findTopLevelItemByFullPath(docWidget->m_title, docWidget->m_fullPath);
+	if( top != nullptr ) {
+		delete top;			//	TreeWidget から top アイテム以下をすべて削除
+	}
+}
 void MainWindow::close_empty_doc() {
 	for(int ix = 0; ix < ui->tabWidget->count(); ++ix) {
 		DocWidget *docWidget = (DocWidget*)ui->tabWidget->widget(ix);
@@ -438,6 +444,7 @@ void MainWindow::close_empty_doc() {
 			if( docWidget->m_mdEditor->toPlainText().isEmpty() ) {
 				ui->tabWidget->removeTab(ix);		//	空の無名ドキュメントを削除
 				--ix;
+				removeTopLevelItem(docWidget);
 			}
 		}
 	}
@@ -557,11 +564,7 @@ void MainWindow::onAction_Close() {
 	int ix = ui->tabWidget->currentIndex();
 	if (ix >= 0)
 		ui->tabWidget->removeTab(ix);
-	QTreeWidgetItem *top = findTopLevelItemByFullPath(docWidget->m_title, docWidget->m_fullPath);
-	if( top != nullptr ) {
-		//ui->treeWidget->removeItemWidget(top);
-		delete top;			//	TreeWidget から top アイテム以下をすべて削除
-	}
+	removeTopLevelItem(docWidget);
 }
 void MainWindow::onAction_Print() {
 	DocWidget *docWidget = getCurDocWidget();

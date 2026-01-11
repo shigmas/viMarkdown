@@ -38,6 +38,7 @@ protected:
     void	keyPressEvent(QKeyEvent *e) override;
     void	paintEvent(QPaintEvent *e) override;
     void	resizeEvent(QResizeEvent *event) override;
+    void	inputMethodEvent(QInputMethodEvent *event) override;
 
     void	updateLnArea(const QRect &rect, int dy);
     void	onContentsChanged(int position, int charsRemoved, int charsAdded);
@@ -52,6 +53,7 @@ protected:
 
 private:
 	bool	m_processing = false;			//	罫線保護処理中
+	bool	m_isComposing = false;			// IME入力中フラグ
 	QString	m_lastCurBlockText;				//	事前のカーソルブロックテキスト
     class MarkdownHighlighter *m_highlighter;
 	class LnAreaWidget	*m_lnAreaWidget = nullptr;

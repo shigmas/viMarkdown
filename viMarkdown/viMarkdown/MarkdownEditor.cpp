@@ -4,6 +4,7 @@
 #include <QSyntaxHighlighter>
 #include <QPainter>
 #include <QRegularExpression>
+#include <QInputMethod>
 #include "MarkdownEditor.h"
 #include "MainWindow.h"
 
@@ -156,6 +157,10 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
 	connect(this, &MarkdownEditor::updateRequest, this, &MarkdownEditor::updateLnArea);
 	connect(this, &MarkdownEditor::cursorPositionChanged, this, &MarkdownEditor::onCurPosChanged);
 	connect(document(), &QTextDocument::contentsChange, this, &MarkdownEditor::onContentsChanged);
+}
+void MarkdownEditor::inputMethodEvent(QInputMethodEvent *event) {
+	m_isComposing = !event->preeditString().isEmpty();
+    QPlainTextEdit::inputMethodEvent(event);
 }
 void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	//static QRegularExpression re(R"(^\d[\.\)] )");
@@ -871,17 +876,25 @@ void MarkdownEditor::applyAlignment(Align align) {
 	}
 }
 void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int charsAdded) {
-	if( m_processing ) return;
+	if( m_processing || (charsRemoved == 0 && charsAdded == 0) ) return;
+	if (m_isComposing) return;		//	IME変換中
 	m_processing = true;
 	qDebug() << "MarkdownEditor::onContentsChanged()";
 	qDebug() << "pos = " << position << ", removed = " << charsRemoved << ", added = " << charsAdded;
 	QTextCursor cursor = this->textCursor();
 	int k = findKeisen(cursor);
 	if( k >= 0 ) {
-		const QString &text = cursor.block().text();
+		const QString &text = cursor.block().text();		//	編集後ブロックテキスト
 		int cpos = cursor.position();
 		int bpos = position - cursor.block().position();	//	ブロック先頭からの編集位置
 		const QString strAdded = text.mid(bpos, charsAdded);
+		charsRemoved = qMin(charsRemoved, m_lastCurBlockText.size() - bpos);		//	行末を超えている場合対応
+		charsAdded = qMin(charsAdded, text.size() - bpos);		//	行末を超えている場合対応
+		int c = 0;
+		while( text[bpos+charsAdded-c-1] == m_lastCurBlockText[bpos+charsRemoved-c-1] )
+			++c;	//	末尾共通部分
+		charsRemoved -= c;
+		charsAdded -= c;
 		int ncAdded = nColumn(strAdded);
 		int ncRemoved = nColumn(m_lastCurBlockText.mid(bpos, charsRemoved));
 		//if( charsRemoved == 0 ) {	//	文字列挿入のみの場合
@@ -889,17 +902,8 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 		//	while( (k - ns - 1) > bpos && text[k-ns-1] == u' ' )
 		//		++ns;
 		//	if( ns > ncAdded ) {
-		//		cursor.setPosition(cursor.block().position() + k);		//	罫線位置
-		//		cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, ncAdded);
-		//		cursor.deleteChar();
-		//		cursor.setPosition(cpos);
-		//		setTextCursor(cursor);
 		//	}
 		//} else if( charsAdded == 0 ) {	//	文字列削除のみの場合
-		//	cursor.setPosition(cursor.block().position() + k);		//	罫線位置
-		//	cursor.insertText(QString(ncRemoved, u' '));
-		//	cursor.setPosition(cpos);
-		//	setTextCursor(cursor);
 		//} else {		//	削除・挿入があった場合
 		cursor.setPosition(cursor.block().position() + k);		//	罫線位置
 		int d = ncAdded - ncRemoved;
