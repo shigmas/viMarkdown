@@ -1,5 +1,10 @@
 # viMarkdown 技術メモ
 
+## ■ 罫線ブロック
+
+- プレビューでは罫線ブロック内の罫線は綺麗につながるが、印刷・PDF出力では綺麗に繋がらない
+  - ```keisen, ``` ブロックを導入し、罫線テキストは空白に置き換え、罫線を QImage に描画し、QImage を QTextEdit に挿入する
+
 ## ■ 罫線保護処理
 
 - QTextDocument::contentsChange() シグナルを利用

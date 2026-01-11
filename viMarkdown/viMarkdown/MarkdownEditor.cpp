@@ -910,9 +910,11 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 				setTextCursor(cursor);
 			}
 		} else if( d < 0 ) {	//	文字列幅が減った場合
-			cursor.insertText(QString(-d, u' '));
-			cursor.setPosition(cpos);
-			setTextCursor(cursor);
+			if( k > bpos ) {	//	罫線直前を削除された場合は罫線保護を行わない
+				cursor.insertText(QString(-d, u' '));
+				cursor.setPosition(cpos);
+				setTextCursor(cursor);
+			}
 		}
 	}
 	m_processing = false;
