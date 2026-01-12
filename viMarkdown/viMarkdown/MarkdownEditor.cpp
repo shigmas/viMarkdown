@@ -558,9 +558,12 @@ QString getLeftSrcString(bool erase, bool thickKeisen, const QString txt, int ix
 			if( txt[ix] == u'↑' || txt[ix] == u'┐' || txt[ix] == u'┓' ) return thickKeisen ? "┓" : "┐";
 			if( txt[ix] == u'│' || txt[ix] == u'┤' || txt[ix] == u'┥' ) return thickKeisen ? "┥" : "┤";
 			if( txt[ix] == u'┃' || txt[ix] == u'┨' || txt[ix] == u'┫' ) return thickKeisen ? "┫" : "┨";
-			if( txt[ix] == u'└' || txt[ix] == u'┴' ) return "┴";
-			if( txt[ix] == u'┌' || txt[ix] == u'┬' ) return "┬";
-			//if( txt[ix] == u'├' || txt[ix] == u'┼' ) return "┼";
+			//if( txt[ix] == u'└' || txt[ix] == u'┴' ) return "┴";
+			//if( txt[ix] == u'┌' || txt[ix] == u'┬' ) return "┬";
+			if( txt[ix] == u'┘' || txt[ix] == u'┴' ) return thickKeisen ? "┷" : "┴";	//	上方向が細線
+			if( txt[ix] == u'┛' || txt[ix] == u'┸' ) return thickKeisen ? "┻" : "┸";	//	上方向が太線
+			if( txt[ix] == u'┐' || txt[ix] == u'┬' ) return thickKeisen ? "┯" : "┬";	//	下方向が細線
+			if( txt[ix] == u'┓' || txt[ix] == u'┰' ) return thickKeisen ? "┳" : "┰";	//	下方向が太線
 			if( txt[ix] == u'├' || txt[ix] == u'┝' || txt[ix] == u'┼' || txt[ix] == u'┿' )	//	上下が細線の場合
 				return thickKeisen ? "┿" : "┼";
 			if( txt[ix] == u'┠' || txt[ix] == u'┣' || txt[ix] == u'╂' || txt[ix] == u'╋' )	//	上下が太線の場合
