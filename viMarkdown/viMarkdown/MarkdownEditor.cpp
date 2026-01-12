@@ -318,8 +318,12 @@ QString getUpSrcString(bool erase, bool thickKeisen, const QString txt, int ix) 
 			if( txt[ix] == u'←' || txt[ix] == u'└' || txt[ix] == u'┗' ) return thickKeisen ? "┗" : "└";
 			if( txt[ix] == u'→' || txt[ix] == u'┘' || txt[ix] == u'┛' ) return thickKeisen ? "┛" : "┘";
 			if( txt[ix] == u'┴' ) return "┴";
-			if( txt[ix] == u'┐' || txt[ix] == u'┤' ) return "┤";
-			if( txt[ix] == u'┌' || txt[ix] == u'├' ) return "├";
+			if( txt[ix] == u'┐' /*|| txt[ix] == u'┤'*/ ) return "┤";
+			if( txt[ix] == u'┌' /*|| txt[ix] == u'├'*/ ) return "├";
+			if( txt[ix] == u'├' || txt[ix] == u'┠' ) return thickKeisen ? "┠" : "├";	//	右が細線
+			if( txt[ix] == u'┝' || txt[ix] == u'┣' ) return thickKeisen ? "┣" : "├";	//	右が太線
+			if( txt[ix] == u'┤' || txt[ix] == u'┨' ) return thickKeisen ? "┨" : "┨";	//	左が細線
+			if( txt[ix] == u'┥' || txt[ix] == u'┫' ) return thickKeisen ? "┫" : "┥";	//	左が太線
 			if( txt[ix] == u'┬' || txt[ix] == u'┰' || txt[ix] == u'┼' || txt[ix] == u'╂' )	//	左右が細線の場合
 				return thickKeisen ? "┿"  : "┼";
 			if( txt[ix] == u'┰' || txt[ix] == u'┳' || txt[ix] == u'╂' || txt[ix] == u'╋' )	//	左右が太細線の場合
@@ -351,22 +355,23 @@ QString getUpSrcString(bool erase, bool thickKeisen, const QString txt, int ix) 
 		return "  ";
 	}
 }
-//┌┰┐┌┰┐┏┯━┓┏┳━┓┌┬─┐
-//│┃││┃│┃│  ┃┃┃  ┃││  │
-//┝╋┥├╂┤┠┼─┨┣╋━┫┝┿━┥
-//│┃││┃│┃│  ┃┃┃  ┃││  │
-//└┸┘└┸┘┗┷━┛┗┻━┛└┴─┘
+//┌┰┐┌┰┐┏┯━┓┏┳━┓┌┬─┐┌┬┐
+//│┃││┃│┃│  ┃┃┃  ┃││  ││││
+//┝╋┥├╂┤┠┼─┨┣╋━┫┝┿━┥├┼┤
+//│┃││┃│┃│  ┃┃┃  ┃││  ││││
+//└┸┘└┸┘┗┷━┛┗┻━┛└┴─┘└┴┘
 QString getUpDstString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
-			if( txt[ix] == u'│' || txt[ix] == u'┃' || txt[ix] == u'┐' || txt[ix] == u'┌' || 
-				txt[ix] == u'┬' || txt[ix] == u'├' || txt[ix] == u'┤'|| txt[ix] == u'┼' )
-			{
+			if( txt[ix] == u'│' || txt[ix] == u'┃' || txt[ix] == u'┐' || txt[ix] == u'┌' )
 				return txt[ix];
-			}
 			if( txt[ix] == u'┘' ) return "┤";
 			if( txt[ix] == u'└' ) return "├";
 			if( txt[ix] == u'┴' ) return "┼";
+			if( txt[ix] == u'├' || txt[ix] == u'┠' ) return thickKeisen ? "┠" : "├";	//	右が細線
+			if( txt[ix] == u'┝' || txt[ix] == u'┣' ) return thickKeisen ? "┣" : "├";	//	右が太線
+			if( txt[ix] == u'┤' || txt[ix] == u'┨' ) return thickKeisen ? "┨" : "┨";	//	左が細線
+			if( txt[ix] == u'┥' || txt[ix] == u'┫' ) return thickKeisen ? "┫" : "┥";	//	左が太線
 			if( txt[ix] == u'─' ) {
 				if( ix > 0 && (txt[ix-1] == u'─' || txt[ix-1] == u'←') )
 					return "┬";
@@ -434,8 +439,12 @@ QString getDownSrcString(bool erase, bool thickKeisen, const QString txt, int ix
 			if( txt[ix] == u'←' || txt[ix] == u'┌' || txt[ix] == u'┏' ) return thickKeisen ? "┏" : "┌";
 			if( txt[ix] == u'┬' ) return thickKeisen ? "┰" : "┬";
 			if( txt[ix] == u'┸' ) return thickKeisen ? "╂" : "┼";
-			if( txt[ix] == u'┘' || txt[ix] == u'┤' ) return "┤";
-			if( txt[ix] == u'└' || txt[ix] == u'├' ) return "├";
+			if( txt[ix] == u'┘' /*|| txt[ix] == u'┤'*/ ) return "┤";
+			if( txt[ix] == u'└' /*|| txt[ix] == u'├'*/ ) return "├";
+			if( txt[ix] == u'├' || txt[ix] == u'┠' ) return thickKeisen ? "┠" : "├";	//	右が細線
+			if( txt[ix] == u'┝' || txt[ix] == u'┣' ) return thickKeisen ? "┣" : "├";	//	右が太線
+			if( txt[ix] == u'┤' || txt[ix] == u'┨' ) return thickKeisen ? "┨" : "┨";	//	左が細線
+			if( txt[ix] == u'┥' || txt[ix] == u'┫' ) return thickKeisen ? "┫" : "┥";	//	左が太線
 			if( txt[ix] == u'┴' || /*txt[ix] == u'┸' ||*/ txt[ix] == u'┼' || txt[ix] == u'╂' )	//	左右が細線の場合
 				return thickKeisen ? "┿" : "┼";
 			if( txt[ix] == u'┷' || txt[ix] == u'┻' || txt[ix] == u'╂' || txt[ix] == u'╋' )	//	左右が太細線の場合
@@ -469,19 +478,20 @@ QString getDownSrcString(bool erase, bool thickKeisen, const QString txt, int ix
 		return "  ";
 	}
 }
-//┌┰┐┌┰┐┏┯━┓┏┳━┓┌┬─┐
-//│┃││┃│┃│  ┃┃┃  ┃││  │
-//┝╋┥├╂┤┠┼─┨┣╋━┫┝┿━┥
-//│┃││┃│┃│  ┃┃┃  ┃││  │
-//└┸┘└┸┘┗┷━┛┗┻━┛└┴─┘
+//┌┰┐┌┰┐┏┯━┓┏┳━┓┌┬─┐┌┬─┐
+//│┃││┃│┃│  ┃┃┃  ┃││  │││  │
+//┝╋┥├╂┤┠┼─┨┣╋━┫┝┿━┥├┼─┤
+//│┃││┃│┃│  ┃┃┃  ┃││  │││  │
+//└┸┘└┸┘┗┷━┛┗┻━┛└┴─┘└┴─┘
 QString getDownDstString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
-			if( txt[ix] == u'│' || txt[ix] == u'┃' || txt[ix] == u'┘' || txt[ix] == u'└' || 
-				/*txt[ix] == u'┬' ||*/ txt[ix] == u'├' || txt[ix] == u'┤'|| txt[ix] == u'┼' )
-			{
+			if( txt[ix] == u'│' || txt[ix] == u'┃' || txt[ix] == u'┘' || txt[ix] == u'└' )
 				return txt[ix];
-			}
+			if( txt[ix] == u'├' || txt[ix] == u'┠' ) return thickKeisen ? "┠" : "├";	//	右が細線
+			if( txt[ix] == u'┝' || txt[ix] == u'┣' ) return thickKeisen ? "┣" : "├";	//	右が太線
+			if( txt[ix] == u'┤' || txt[ix] == u'┨' ) return thickKeisen ? "┨" : "┨";	//	左が細線
+			if( txt[ix] == u'┥' || txt[ix] == u'┫' ) return thickKeisen ? "┫" : "┥";	//	左が太線
 			if( txt[ix] == u'─' ) return thickKeisen ? "┸" : "┴";
 			if( txt[ix] == u'━' ) return thickKeisen ? "┻" : "┷";
 			if( txt[ix] == u'┐' ) return "┤";
