@@ -312,7 +312,7 @@ int getVisualColumn(QTextCursor cursor, QPlainTextEdit *editor) {
 	// 5. 割り算で「半角何文字分か」を出す
 	return fullWidth / halfWidth;
 }
-QString getUpSrcString(bool erase, const QString txt, int ix) {
+QString getUpSrcString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
 			if( txt[ix] == u'←' || txt[ix] == u'└' ) return "└";
@@ -327,7 +327,7 @@ QString getUpSrcString(bool erase, const QString txt, int ix) {
 				else
 					return "┴";
 		}
-		return "│";
+		return thickKeisen ? "┃" : "│";
 	} else {
 		if( ix < txt.size() ) {
 			if( txt[ix] == u'─' || txt[ix] == u'┌' || txt[ix] == u'┐' || txt[ix] == u'┬' )
@@ -344,7 +344,7 @@ QString getUpSrcString(bool erase, const QString txt, int ix) {
 //┌┬┐┌─→
 //├┼┤│
 //└┴┘↓
-QString getUpDstString(bool erase, const QString txt, int ix) {
+QString getUpDstString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
 			if( txt[ix] == u'│' || txt[ix] == u'┐' || txt[ix] == u'┌' || 
@@ -385,7 +385,7 @@ void MarkdownEditor::do_keisen_up(bool erase, bool thickKeisen) {
 // 1. 移動元（現在地）の置換
 	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc0 + 2 )
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-	cursor.insertText(getUpSrcString(erase, cursor.block().text(), ix));
+	cursor.insertText(getUpSrcString(erase, thickKeisen, cursor.block().text(), ix));
 	while( getVisualColumn(cursor, this) > vc0 )
 		cursor.movePosition(QTextCursor::Left);
 
@@ -403,13 +403,13 @@ void MarkdownEditor::do_keisen_up(bool erase, bool thickKeisen) {
 	ix = cursor.positionInBlock();
 	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc0 + 2)
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor); // 1文字だけ選択
-	cursor.insertText(getUpDstString(erase, cursor.block().text(), ix));	
+	cursor.insertText(getUpDstString(erase, thickKeisen, cursor.block().text(), ix));	
 	while( getVisualColumn(cursor, this) > vc0 )
 		cursor.movePosition(QTextCursor::Left);
 	cursor.endEditBlock();
 	setTextCursor(cursor);
 }
-QString getDownSrcString(bool erase, const QString txt, int ix) {
+QString getDownSrcString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
 			if( txt[ix] == u'→' || txt[ix] == u'┐' ) return "┐";
@@ -424,7 +424,7 @@ QString getDownSrcString(bool erase, const QString txt, int ix) {
 				else
 					return "┬";
 		}
-		return "│";
+		return thickKeisen ? "┃" : "│";
 	} else {
 		if( ix < txt.size() ) {
 			// 変化無し（すでに下に線がない）
@@ -440,10 +440,10 @@ QString getDownSrcString(bool erase, const QString txt, int ix) {
 		return "  ";
 	}
 }
-//┌┬┐┌─→
-//├┼┤│
-//└┴┘↓
-QString getDownDstString(bool erase, const QString txt, int ix) {
+//┌┬┐┌─→┏━━┓
+//├┼┤│    ┃    ┃
+//└┴┘↓    ┗━━┛
+QString getDownDstString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
 			if( txt[ix] == u'│' || txt[ix] == u'┘' || txt[ix] == u'└' || 
@@ -488,7 +488,7 @@ void MarkdownEditor::do_keisen_down(bool erase, bool thickKeisen) {
 	// 1. 移動元（現在地）の置換
 	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc0 + 2 ) 
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-	QString src = getDownSrcString(erase, cursor.block().text(), ix);
+	QString src = getDownSrcString(erase, thickKeisen, cursor.block().text(), ix);
 	cursor.insertText(src);
 	cursor.movePosition(QTextCursor::Left);
 
@@ -512,14 +512,14 @@ void MarkdownEditor::do_keisen_down(bool erase, bool thickKeisen) {
 	ix = cursor.positionInBlock(); // 位置が確定してからインデックス取得
 	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc0 + 2 )
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-	cursor.insertText(getDownDstString(erase, cursor.block().text(), ix));
+	cursor.insertText(getDownDstString(erase, thickKeisen, cursor.block().text(), ix));
 
 	while( getVisualColumn(cursor, this) > vc0 )
 		cursor.movePosition(QTextCursor::Left);
 	cursor.endEditBlock();
 	setTextCursor(cursor);
 }
-QString getLeftSrcString(bool erase, const QString txt, int ix) {
+QString getLeftSrcString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
 			if( txt[ix] == u'↓' || txt[ix] == u'┘' ) return "┘";
@@ -529,7 +529,7 @@ QString getLeftSrcString(bool erase, const QString txt, int ix) {
 			if( txt[ix] == u'┌' || txt[ix] == u'┬' ) return "┬";
 			if( txt[ix] == u'├' || txt[ix] == u'┼' ) return "┼";
 		}
-		return "─";
+		return thickKeisen ? "━" : "─";
 	} else {
 		if( ix < txt.size() ) {
 			if( txt[ix] == u'│' || txt[ix] == u'└' || txt[ix] == u'┌' || txt[ix] == u'├' )
@@ -544,7 +544,7 @@ QString getLeftSrcString(bool erase, const QString txt, int ix) {
 //┌┬┐┌─→
 //├┼┤│
 //└┴┘↓
-QString getLeftDstString(bool erase, const QString txt, int ix) {
+QString getLeftDstString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
 			if( txt[ix] == u'─' || txt[ix] == u'┌' || txt[ix] == u'┼')
@@ -574,12 +574,12 @@ void MarkdownEditor::do_keisen_left(bool erase, bool thickKeisen) {
 	if( !cursor.atBlockEnd() ) {
 		int ix = cursor.positionInBlock();
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-		src = getLeftSrcString(erase, cursor.block().text(), ix);
+		src = getLeftSrcString(erase, thickKeisen, cursor.block().text(), ix);
 		cursor.clearSelection();	//	選択解除、カーソル位置は movePosition() 後の位置、つまり選択末尾
 	}
 	while( !cursor.atBlockStart() && getVisualColumn(cursor, this) > vc - 2 )
 		cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor);
-	QString dst = getLeftDstString(erase, cursor.block().text(), cursor.positionInBlock());
+	QString dst = getLeftDstString(erase, thickKeisen, cursor.block().text(), cursor.positionInBlock());
 	cursor.insertText(dst+src);
 	cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, 2);
 	setTextCursor(cursor);
@@ -632,7 +632,7 @@ QString getRightSrcString(bool erase, bool thickKeisen, const QString txt, int i
 //┌┬┐┌─→
 //├┼┤│
 //└┴┘↓
-QString getRightDstString(bool erase, const QString txt, int ix) {
+QString getRightDstString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
 			if( txt[ix] == u'─' || txt[ix] == u'┐' || txt[ix] == u'┼')
@@ -672,7 +672,7 @@ void MarkdownEditor::do_keisen_right(bool erase, bool thickKeisen) {
 		do {
 			cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 		} while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc + 2);
-		str2 = getRightDstString(erase, cursor.block().text(), ix);
+		str2 = getRightDstString(erase, thickKeisen, cursor.block().text(), ix);
 	}
 	cursor.insertText(str + str2);
 	cursor.movePosition(QTextCursor::Left);
