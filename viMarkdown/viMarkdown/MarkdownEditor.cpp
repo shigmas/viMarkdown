@@ -315,8 +315,8 @@ int getVisualColumn(QTextCursor cursor, QPlainTextEdit *editor) {
 QString getUpSrcString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
-			if( txt[ix] == u'←' || txt[ix] == u'└' ) return "└";
-			if( txt[ix] == u'→' || txt[ix] == u'┘' ) return "┘";
+			if( txt[ix] == u'←' || txt[ix] == u'└' || txt[ix] == u'┗' ) return thickKeisen ? "┗" : "└";
+			if( txt[ix] == u'→' || txt[ix] == u'┘' || txt[ix] == u'┛' ) return thickKeisen ? "┛" : "┘";
 			if( txt[ix] == u'┴' ) return "┴";
 			if( txt[ix] == u'┐' || txt[ix] == u'┤' ) return "┤";
 			if( txt[ix] == u'┌' || txt[ix] == u'├' ) return "├";
@@ -341,13 +341,13 @@ QString getUpSrcString(bool erase, bool thickKeisen, const QString txt, int ix) 
 		return "  ";
 	}
 }
-//┌┬┐┌─→
-//├┼┤│
-//└┴┘↓
+//┌┬┐┌─→┏━━┓
+//├┼┤│    ┃    ┃
+//└┴┘↓    ┗━━┛
 QString getUpDstString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
-			if( txt[ix] == u'│' || txt[ix] == u'┐' || txt[ix] == u'┌' || 
+			if( txt[ix] == u'│' || txt[ix] == u'┃' || txt[ix] == u'┐' || txt[ix] == u'┌' || 
 				txt[ix] == u'┬' || txt[ix] == u'├' || txt[ix] == u'┤'|| txt[ix] == u'┼' )
 			{
 				return txt[ix];
@@ -412,8 +412,8 @@ void MarkdownEditor::do_keisen_up(bool erase, bool thickKeisen) {
 QString getDownSrcString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
-			if( txt[ix] == u'→' || txt[ix] == u'┐' ) return "┐";
-			if( txt[ix] == u'←' || txt[ix] == u'┌' ) return "┌";
+			if( txt[ix] == u'→' || txt[ix] == u'┐' || txt[ix] == u'┓' ) return thickKeisen ? "┓" : "┐";
+			if( txt[ix] == u'←' || txt[ix] == u'┌' || txt[ix] == u'┏' ) return thickKeisen ? "┏" : "┌";
 			if( txt[ix] == u'┬' ) return "┬";
 			if( txt[ix] == u'┘' || txt[ix] == u'┤' ) return "┤";
 			if( txt[ix] == u'└' || txt[ix] == u'├' ) return "├";
@@ -446,7 +446,7 @@ QString getDownSrcString(bool erase, bool thickKeisen, const QString txt, int ix
 QString getDownDstString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
-			if( txt[ix] == u'│' || txt[ix] == u'┘' || txt[ix] == u'└' || 
+			if( txt[ix] == u'│' || txt[ix] == u'┃' || txt[ix] == u'┘' || txt[ix] == u'└' || 
 				/*txt[ix] == u'┬' ||*/ txt[ix] == u'├' || txt[ix] == u'┤'|| txt[ix] == u'┼' )
 			{
 				return txt[ix];
@@ -522,8 +522,8 @@ void MarkdownEditor::do_keisen_down(bool erase, bool thickKeisen) {
 QString getLeftSrcString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
-			if( txt[ix] == u'↓' || txt[ix] == u'┘' ) return "┘";
-			if( txt[ix] == u'↑' || txt[ix] == u'┐' ) return "┐";
+			if( txt[ix] == u'↓' || txt[ix] == u'┘' || txt[ix] == u'┛' ) return thickKeisen ? "┛" : "┘";
+			if( txt[ix] == u'↑' || txt[ix] == u'┐' || txt[ix] == u'┓' ) return thickKeisen ? "┓" : "┐";
 			if( txt[ix] == u'│' || txt[ix] == u'┤' ) return "┤";
 			if( txt[ix] == u'└' || txt[ix] == u'┴' ) return "┴";
 			if( txt[ix] == u'┌' || txt[ix] == u'┬' ) return "┬";
@@ -541,13 +541,13 @@ QString getLeftSrcString(bool erase, bool thickKeisen, const QString txt, int ix
 		return "  ";
 	}
 }
-//┌┬┐┌─→
-//├┼┤│
-//└┴┘↓
+//┌┬┐┌─→┏━━┓
+//├┼┤│    ┃    ┃
+//└┴┘↓    ┗━━┛
 QString getLeftDstString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
-			if( txt[ix] == u'─' || txt[ix] == u'┌' || txt[ix] == u'┼')
+			if( txt[ix] == u'─' || txt[ix] == u'━' || txt[ix] == u'┌' || txt[ix] == u'┼')
 				return txt[ix];
 			if( txt[ix] == u'│' || txt[ix] == u'├' ) return "├";
 			if( txt[ix] == u'↑' || txt[ix] == u'└' ) return "└";
@@ -585,11 +585,10 @@ void MarkdownEditor::do_keisen_left(bool erase, bool thickKeisen) {
 	setTextCursor(cursor);
 }
 QString getRightSrcString(bool erase, bool thickKeisen, const QString txt, int ix) {
-#if 1
 	if( !erase ) {
 		if( ix < txt.size() ) {
-			if( txt[ix] == u'↑' || txt[ix] == u'┌' ) return "┌";
-			if( txt[ix] == u'↓' || txt[ix] == u'└' ) return "└";
+			if( txt[ix] == u'↑' || txt[ix] == u'┌' || txt[ix] == u'┏' ) return thickKeisen ? "┏" : "┌";
+			if( txt[ix] == u'↓' || txt[ix] == u'└' || txt[ix] == u'┗' ) return thickKeisen ? "┗" : "└";
 			if( txt[ix] == u'│' || txt[ix] == u'├' ) return "├";
 			if( txt[ix] == u'┘' || txt[ix] == u'┴' ) return "┴";
 			if( txt[ix] == u'┐' || txt[ix] == u'┬' ) return "┬";
@@ -606,36 +605,14 @@ QString getRightSrcString(bool erase, bool thickKeisen, const QString txt, int i
 		}
 		return "  ";
 	}
-#else
-	if( !erase ) {
-		if( ix < txt.size() ) {
-			if( txt[ix] == u'↑' || txt[ix] == u'┌' ) return "┌";
-			if( txt[ix] == u'↓' || txt[ix] == u'└' ) return "└";
-			if( txt[ix] == u'│' || txt[ix] == u'├' ) return "├";
-			if( txt[ix] == u'┘' || txt[ix] == u'┴' ) return "┴";
-			if( txt[ix] == u'┐' || txt[ix] == u'┬' ) return "┬";
-			if( txt[ix] == u'┤' || txt[ix] == u'┼' ) return "┼";
-		}
-		return "─";
-	} else {
-		if( ix < txt.size() ) {
-			if( txt[ix] == u'│' || txt[ix] == u'┘' || txt[ix] == u'┐' || txt[ix] == u'┤' )
-				return txt[ix];		//	変化無し
-			if( txt[ix] == u'└' || txt[ix] == u'┌' || txt[ix] == u'├' )
-				return "│";
-			if( txt[ix] == u'┼' ) return "┤";
-		}
-		return "  ";
-	}
-#endif
 }
-//┌┬┐┌─→
-//├┼┤│
-//└┴┘↓
+//┌┬┐┌─→┏━━┓
+//├┼┤│    ┃    ┃
+//└┴┘↓    ┗━━┛
 QString getRightDstString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
-			if( txt[ix] == u'─' || txt[ix] == u'┐' || txt[ix] == u'┼')
+			if( txt[ix] == u'─' || txt[ix] == u'━' || txt[ix] == u'┐' || txt[ix] == u'┼')
 				return txt[ix];
 			if( txt[ix] == u'│' || txt[ix] == u'┤' ) return "┤";
 			if( txt[ix] == u'↑' || txt[ix] == u'┐' ) return "┐";
@@ -678,203 +655,6 @@ void MarkdownEditor::do_keisen_right(bool erase, bool thickKeisen) {
 	cursor.movePosition(QTextCursor::Left);
 	setTextCursor(cursor);
 }
-#if 0
-QString getRightSrcString_erase(const QString txt, int ix) {
-	if( ix < txt.size() ) {
-		if( txt[ix] == u'│' || txt[ix] == u'┘' || txt[ix] == u'┐' || txt[ix] == u'┤' )
-			return txt[ix];		//	変化無し
-		if( txt[ix] == u'└' || txt[ix] == u'┌' || txt[ix] == u'├' )
-			return "│";
-		if( txt[ix] == u'┼' ) return "┤";
-	}
-	return "  ";
-}
-//┌┬┐┌─→
-//├┼┤│
-//└┴┘↓
-QString getRightDstString_erase(const QString txt, int ix) {
-	if( ix < txt.size() ) {
-		if( txt[ix] == u'└' || txt[ix] == u'┌' || txt[ix] == u'├' ) return txt[ix];		//	変化無し
-		if( txt[ix] == u'┐' || txt[ix] == u'┘' || txt[ix] == u'┤' ) return "│";
-		if( txt[ix] == u'┼' ) return "├";
-	}
-	return "  ";
-}
-void MarkdownEditor::do_keisen_right_erase() {
-	QTextCursor cursor = this->textCursor();
-	int vc0 = getVisualColumn(cursor, this);
-	QString str = "  ";
-	int ix = cursor.positionInBlock();
-	if( !cursor.atBlockEnd() ) {
-		int vc = getVisualColumn(cursor, this);
-		do {
-			cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-		} while( getVisualColumn(cursor, this) < vc + 2);
-		str = getRightSrcString_erase(cursor.block().text(), ix);
-	}
-	QString str2 = "  ";
-	if (!cursor.atBlockEnd()) {
-		int ix = cursor.positionInBlock();;
-		int vc = getVisualColumn(cursor, this);
-		do {
-			cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-		} while( getVisualColumn(cursor, this) < vc + 2);
-		str2 = getRightDstString_erase(cursor.block().text(), ix);
-	}
-	cursor.insertText(str + str2);
-	while( getVisualColumn(cursor, this) > vc0 + 2)
-		cursor.movePosition(QTextCursor::Left);
-	setTextCursor(cursor);
-}
-QString getLeftSrcString_erase(const QString txt, int ix) {
-	if( ix < txt.size() ) {
-		if( txt[ix] == u'│' || txt[ix] == u'└' || txt[ix] == u'┌' || txt[ix] == u'├' )
-			return txt[ix];		//	変化無し
-		if( txt[ix] == u'┘' || txt[ix] == u'┐' || txt[ix] == u'┤' )
-			return "│";
-		if( txt[ix] == u'┼' ) return "├";
-	}
-	return "  ";
-}
-//┌┬┐┌─→
-//├┼┤│
-//└┴┘↓
-QString getLeftDstString_erase(const QString txt, int ix) {
-	if( ix < txt.size() ) {
-		if( txt[ix] == u'┐' || txt[ix] == u'┘' || txt[ix] == u'┤' ) return txt[ix];		//	変化無し
-		if( txt[ix] == u'└' || txt[ix] == u'┌' || txt[ix] == u'├' ) return "│";
-		if( txt[ix] == u'┼' ) return "┤";
-	}
-	return "  ";
-}
-void MarkdownEditor::do_keisen_left_erase() {
-	QTextCursor cursor = this->textCursor();
-	if( cursor.atBlockStart() ) return;				//	行頭にいる場合は無視
-	int vc = getVisualColumn(cursor, this);
-	QString src = "  ";
-	if( !cursor.atBlockEnd() ) {
-		int ix = cursor.positionInBlock();
-		do {
-			cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-		} while (getVisualColumn(cursor, this) < vc + 2);
-		src = getLeftSrcString_erase(cursor.block().text(), ix);
-		cursor.clearSelection();	//	選択解除、カーソル位置は movePosition() 後の位置、つまり選択末尾
-	}
-	while( !cursor.atBlockStart() && getVisualColumn(cursor, this) > vc - 2 )
-		cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor);
-	QString dst = getLeftDstString_erase(cursor.block().text(), cursor.positionInBlock());
-	cursor.insertText(dst+src);
-	while (!cursor.atBlockStart() && getVisualColumn(cursor, this) > vc - 2)
-		cursor.movePosition(QTextCursor::Left);
-	setTextCursor(cursor);
-}
-QString getUpSrcString_erase(const QString txt, int ix) {
-	if( ix < txt.size() ) {
-		if( txt[ix] == u'─' || txt[ix] == u'┌' || txt[ix] == u'┐' || txt[ix] == u'┬' )
-			return txt[ix];		//	変化無し
-		if( txt[ix] == u'└' || txt[ix] == u'┘' || txt[ix] == u'┴' )
-			return "─";
-		if( txt[ix] == u'┼' ) return "┬";
-		if( txt[ix] == u'├' ) return "┌";
-		if( txt[ix] == u'┤' ) return "┐";
-	}
-	return "  ";
-}
-//┌┬┐┌─→
-//├┼┤│
-//└┴┘↓
-QString getUpDstString_erase(const QString txt, int ix) {
-	if( ix < txt.size() ) {
-		if( txt[ix] == u'─' || txt[ix] == u'┘' || txt[ix] == u'└' || txt[ix] == u'┴' )
-			return txt[ix];		//	変化無し
-		if( txt[ix] == u'┌' || txt[ix] == u'┐' || txt[ix] == u'├' ) return "─";
-		if( txt[ix] == u'┼' ) return "┴";
-		if( txt[ix] == u'├' ) return "└";
-		if( txt[ix] == u'┤' ) return "┘";
-	}
-	return "  ";
-}
-void MarkdownEditor::do_keisen_up_erase() {
-	QTextCursor cursor = this->textCursor();
-	cursor.beginEditBlock();
-	int vc0 = getVisualColumn(cursor, this);
-	int ix = cursor.positionInBlock();
-	if( !cursor.atBlockEnd() )
-		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-	cursor.insertText(getUpSrcString_erase(cursor.block().text(), ix));
-	cursor.movePosition(QTextCursor::Left);
-	int vc = getVisualColumn(cursor, this);
-	cursor.movePosition(QTextCursor::Up);
-	ix = cursor.positionInBlock();
-	int vc2 = getVisualColumn(cursor, this);
-	if( vc2 < vc ) cursor.insertText(QString(vc-vc2, u' '));
-	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc + 2 )
-		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-	cursor.insertText(getUpDstString_erase(cursor.block().text(), ix));
-	while( getVisualColumn(cursor, this) > vc0 )
-		cursor.movePosition(QTextCursor::Left);
-	cursor.endEditBlock();
-	setTextCursor(cursor);
-}
-QString getDownSrcString_erase(const QString txt, int ix) {
-	if( ix < txt.size() ) {
-		// 変化無し（すでに下に線がない）
-		if( txt[ix] == u'─' || txt[ix] == u'└' || txt[ix] == u'┘' || txt[ix] == u'┴' || txt[ix] == u'←' || txt[ix] == u'→' ) return txt[ix];
-		// 縦要素が消えて横棒だけ残る
-		if( txt[ix] == u'┌' || txt[ix] == u'┐' || txt[ix] == u'┬' ) return "─";
-		// Ｔ字・角に格下げ
-		if( txt[ix] == u'┼' ) return "┴";
-		if( txt[ix] == u'├' ) return "└";
-		if( txt[ix] == u'┤' ) return "┘";
-		if( txt[ix] == u'│' ) return "	";
-	}
-	return "  ";
-}
-//┌┬┐┌─→
-//├┼┤│
-//└┴┘↓
-QString getDownDstString_erase(const QString txt, int ix) {
-	if( ix < txt.size() ) {
-		// 変化無し（すでに上に線がない）
-		if( txt[ix] == u'─' || txt[ix] == u'┌' || txt[ix] == u'┐' || txt[ix] == u'┬' || txt[ix] == u'←' || txt[ix] == u'→' ) return txt[ix];
-		// 縦要素が消えて横棒だけ残る
-		if( txt[ix] == u'└' || txt[ix] == u'┘' || txt[ix] == u'┴' ) return "─";
-		// Ｔ字・角に格下げ
-		if( txt[ix] == u'┼' ) return "┬";
-		if( txt[ix] == u'├' ) return "┌";
-		if( txt[ix] == u'┤' ) return "┐";
-	}
-	return "  ";
-}
-void MarkdownEditor::do_keisen_down_erase() {
-	QTextCursor cursor = this->textCursor();
-	cursor.beginEditBlock();
-	int vc0 = getVisualColumn(cursor, this);
-	if (cursor.block() == cursor.document()->lastBlock()) {		//	カーソルが最終行にいる場合
-		QTextCursor tempCursor(document());
-		tempCursor.movePosition(QTextCursor::End);
-		tempCursor.insertBlock();		//	新規行作成
-	}
-	int ix = cursor.positionInBlock();
-	if( !cursor.atBlockEnd() )
-		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-	cursor.insertText(getDownSrcString_erase(cursor.block().text(), ix));
-	cursor.movePosition(QTextCursor::Left);
-	int vc = getVisualColumn(cursor, this);
-	cursor.movePosition(QTextCursor::Down);
-	int vc2 = getVisualColumn(cursor, this);
-	if( vc2 < vc ) cursor.insertText(QString(vc-vc2, u' '));		//	カーソル位置まで空白挿入
-	ix = cursor.positionInBlock();
-	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc + 2 )
-		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-	QString dst = getDownDstString_erase(cursor.block().text(), ix);
-	cursor.insertText(dst);
-	while( getVisualColumn(cursor, this) > vc0 )
-		cursor.movePosition(QTextCursor::Left);
-	cursor.endEditBlock();
-	setTextCursor(cursor);
-}
-#endif
 //void MarkdownEditor::scrollToTop(int ln) {		//	ln: 0 org.
 //}
 void MarkdownEditor::scrollToTop(const QTextCursor &cursor) {
