@@ -45,10 +45,10 @@ protected:
     void	onCurPosChanged();
     int		nColumn(const QString&) const;		//	表示カラム数を計算
 
-    void	do_keisen_left(bool erase = false);
-    void	do_keisen_right(bool erase = false);
-    void	do_keisen_up(bool erase = false);
-    void	do_keisen_down(bool erase = false);
+    void	do_keisen_left(bool erase = false, bool thickKeisen = false);
+    void	do_keisen_right(bool erase = false, bool thickKeisen = false);
+    void	do_keisen_up(bool erase = false, bool thickKeisen = false);
+    void	do_keisen_down(bool erase = false, bool thickKeisen = false);
 	void	applyAlignment(Align align);
 
 private:
