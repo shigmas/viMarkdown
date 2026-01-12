@@ -321,11 +321,18 @@ QString getUpSrcString(bool erase, bool thickKeisen, const QString txt, int ix) 
 			if( txt[ix] == u'┐' || txt[ix] == u'┤' ) return "┤";
 			if( txt[ix] == u'┌' || txt[ix] == u'├' ) return "├";
 			if( txt[ix] == u'┬' || txt[ix] == u'┼' ) return "┼";
-			if( txt[ix] == u'─' )
+			if( txt[ix] == u'─' ) {
 				if( ix < 2 )		//	undone: 左に文字がある場合
 					return "└";
 				else
 					return "┴";
+			}
+			if( txt[ix] == u'━' ) {
+				if( ix < 2 )		//	undone: 左に文字がある場合
+					return "└";
+				else
+					return thickKeisen ? "┻" : "┷";
+			}
 		}
 		return thickKeisen ? "┃" : "│";
 	} else {
@@ -341,9 +348,9 @@ QString getUpSrcString(bool erase, bool thickKeisen, const QString txt, int ix) 
 		return "  ";
 	}
 }
-//┌┬┐┌─→┏━━┓
-//├┼┤│    ┃    ┃
-//└┴┘↓    ┗━━┛
+//┌┰┐┌─→┏┳━┓┏━┯━┓
+//┝╋┥│    ┣╋━┫┠─┼─┨
+//└┸┘↓    ┗┻━┛┗━┷━┛
 QString getUpDstString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
@@ -358,6 +365,12 @@ QString getUpDstString(bool erase, bool thickKeisen, const QString txt, int ix) 
 			if( txt[ix] == u'─' ) {
 				if( ix > 0 && (txt[ix-1] == u'─' || txt[ix-1] == u'←') )
 					return "┬";
+				else
+					return "┌";
+			}
+			if( txt[ix] == u'━' ) {
+				if( ix > 0 && (txt[ix-1] == u'━' || txt[ix-1] == u'←') )
+					return thickKeisen ? "┳" : "┯";
 				else
 					return "┌";
 			}
@@ -418,11 +431,18 @@ QString getDownSrcString(bool erase, bool thickKeisen, const QString txt, int ix
 			if( txt[ix] == u'┘' || txt[ix] == u'┤' ) return "┤";
 			if( txt[ix] == u'└' || txt[ix] == u'├' ) return "├";
 			if( txt[ix] == u'┴' || txt[ix] == u'┼' ) return "┼";
-			if( txt[ix] == u'─' )
+			if( txt[ix] == u'─' ) {
 				if( ix < 2 )		//	undone: 左に文字がある場合
-					return "┌";
+					return thickKeisen ? "┏" : "┌";
 				else
 					return "┬";
+			}
+			if( txt[ix] == u'━' ) {
+				if( ix < 2 )		//	undone: 左に文字がある場合
+					return thickKeisen ? "┏" : "┌";
+				else
+					return thickKeisen ? "┳" : "┬";
+			}
 		}
 		return thickKeisen ? "┃" : "│";
 	} else {
@@ -440,9 +460,9 @@ QString getDownSrcString(bool erase, bool thickKeisen, const QString txt, int ix
 		return "  ";
 	}
 }
-//┌┬┐┌─→┏━━┓
-//├┼┤│    ┃    ┃
-//└┴┘↓    ┗━━┛
+//┌┰┐┌─→┏┳━┓┏┯━┓
+//┝╋┥│    ┣╋━┫┠┼─┨
+//└┸┘↓    ┗┻━┛┗┷━┛
 QString getDownDstString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
@@ -452,6 +472,7 @@ QString getDownDstString(bool erase, bool thickKeisen, const QString txt, int ix
 				return txt[ix];
 			}
 			if( txt[ix] == u'─' ) return "┴";
+			if( txt[ix] == u'━' ) return thickKeisen ? "┻" : "┷";
 			if( txt[ix] == u'┐' ) return "┤";
 			if( txt[ix] == u'┌' ) return "├";
 			if( txt[ix] == u'┴' ) return "┼";		//	undone: この下も参照？
@@ -524,7 +545,8 @@ QString getLeftSrcString(bool erase, bool thickKeisen, const QString txt, int ix
 		if( ix < txt.size() ) {
 			if( txt[ix] == u'↓' || txt[ix] == u'┘' || txt[ix] == u'┛' ) return thickKeisen ? "┛" : "┘";
 			if( txt[ix] == u'↑' || txt[ix] == u'┐' || txt[ix] == u'┓' ) return thickKeisen ? "┓" : "┐";
-			if( txt[ix] == u'│' || txt[ix] == u'┤' ) return "┤";
+			if( txt[ix] == u'│' || txt[ix] == u'┤' || txt[ix] == u'┥' ) return thickKeisen ? "┥" : "┤";
+			if( txt[ix] == u'┃' || txt[ix] == u'┨' || txt[ix] == u'┫' ) return thickKeisen ? "┫" : "┨";
 			if( txt[ix] == u'└' || txt[ix] == u'┴' ) return "┴";
 			if( txt[ix] == u'┌' || txt[ix] == u'┬' ) return "┬";
 			if( txt[ix] == u'├' || txt[ix] == u'┼' ) return "┼";
@@ -541,15 +563,17 @@ QString getLeftSrcString(bool erase, bool thickKeisen, const QString txt, int ix
 		return "  ";
 	}
 }
-//┌┬┐┌─→┏━━┓
-//├┼┤│    ┃    ┃
-//└┴┘↓    ┗━━┛
+//┌┰┐┌─→┏━━┓
+//│┃││    ┠──┨
+//┝╋┥│    ┣━━┫
+//└┸┘↓    ┗━━┛
 QString getLeftDstString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
 			if( txt[ix] == u'─' || txt[ix] == u'━' || txt[ix] == u'┌' || txt[ix] == u'┼')
 				return txt[ix];
 			if( txt[ix] == u'│' || txt[ix] == u'├' ) return "├";
+			if( txt[ix] == u'┃' || txt[ix] == u'├' ) return thickKeisen ? "┣" : "├";
 			if( txt[ix] == u'↑' || txt[ix] == u'└' ) return "└";
 			if( txt[ix] == u'↓' || txt[ix] == u'┌' ) return "┌";
 			if( txt[ix] == u'┘' || txt[ix] == u'┴' ) return "┴";
@@ -589,7 +613,8 @@ QString getRightSrcString(bool erase, bool thickKeisen, const QString txt, int i
 		if( ix < txt.size() ) {
 			if( txt[ix] == u'↑' || txt[ix] == u'┌' || txt[ix] == u'┏' ) return thickKeisen ? "┏" : "┌";
 			if( txt[ix] == u'↓' || txt[ix] == u'└' || txt[ix] == u'┗' ) return thickKeisen ? "┗" : "└";
-			if( txt[ix] == u'│' || txt[ix] == u'├' ) return "├";
+			if( txt[ix] == u'│' || txt[ix] == u'├' || txt[ix] == u'┝' ) return thickKeisen ? "┝" : "├";
+			if( txt[ix] == u'┃' || txt[ix] == u'┣' || txt[ix] == u'┠' ) return thickKeisen ? "┣" : "┠";
 			if( txt[ix] == u'┘' || txt[ix] == u'┴' ) return "┴";
 			if( txt[ix] == u'┐' || txt[ix] == u'┬' ) return "┬";
 			if( txt[ix] == u'┤' || txt[ix] == u'┼' ) return "┼";
@@ -606,15 +631,18 @@ QString getRightSrcString(bool erase, bool thickKeisen, const QString txt, int i
 		return "  ";
 	}
 }
-//┌┬┐┌─→┏━━┓
-//├┼┤│    ┃    ┃
-//└┴┘↓    ┗━━┛
+//┌┰┐┌─→┏━━┓┏━━┓
+//│┃││    ┃    ┃┃    ┃
+//┝╋┥│    ┠──┨┣━━┫
+//│┃││    ┃    ┃┃    ┃
+//└┸┘↓    ┗━━┛┗━━┛
 QString getRightDstString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
 			if( txt[ix] == u'─' || txt[ix] == u'━' || txt[ix] == u'┐' || txt[ix] == u'┼')
 				return txt[ix];
 			if( txt[ix] == u'│' || txt[ix] == u'┤' ) return "┤";
+			if( txt[ix] == u'┃' || txt[ix] == u'┨' ) return thickKeisen ? "┫" : "┥";
 			if( txt[ix] == u'↑' || txt[ix] == u'┐' ) return "┐";
 			if( txt[ix] == u'↓' || txt[ix] == u'┘' ) return "┘";
 			if( txt[ix] == u'└' || txt[ix] == u'┴' ) return "┴";
