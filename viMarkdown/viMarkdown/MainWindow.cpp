@@ -45,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent)
 	    "}" );
 	insertSearchComboBox();
 	updateHTMLModeCheck();		//	HTML or Source チェック状態に
+	updateThinThickCheck();		//	細・太罫線モード
 	ui->action_OutlineBar->setChecked(true);	//	暫定的
 	setWindowTitle(QString("viMarkdown ") + VER_STR); 
 	m_watcher = new QFileSystemWatcher(this);			//	外部アプリによる文書変更監視オブジェクト

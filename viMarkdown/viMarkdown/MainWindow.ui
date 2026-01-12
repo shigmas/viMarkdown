@@ -345,8 +345,8 @@
   <action name="action_Redo">
    <property name="icon">
     <iconset>
-     <normaloff>images/redo_48.png</normaloff>
-     <normalon>:/MainWindow/images/redo_48.png</normalon>images/redo_48.png</iconset>
+     <normaloff>../../../../../Users/ntsud/.designer/backup/images/redo_48.png</normaloff>
+     <normalon>:/MainWindow/images/redo_48.png</normalon>../../../../../Users/ntsud/.designer/backup/images/redo_48.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Redo</string>
@@ -358,8 +358,8 @@
   <action name="action_List">
    <property name="icon">
     <iconset>
-     <normaloff>images/format_list_bulleted_48.png</normaloff>
-     <normalon>:/MainWindow/images/format_list_bulleted_48.png</normalon>images/format_list_bulleted_48.png</iconset>
+     <normaloff>../../../../../Users/ntsud/.designer/backup/images/format_list_bulleted_48.png</normaloff>
+     <normalon>:/MainWindow/images/format_list_bulleted_48.png</normalon>../../../../../Users/ntsud/.designer/backup/images/format_list_bulleted_48.png</iconset>
    </property>
    <property name="text">
     <string>&amp;List</string>
@@ -368,8 +368,8 @@
   <action name="action_NumList">
    <property name="icon">
     <iconset>
-     <normaloff>images/format_list_numbered_48.png</normaloff>
-     <normalon>:/MainWindow/images/format_list_numbered_48.png</normalon>images/format_list_numbered_48.png</iconset>
+     <normaloff>../../../../../Users/ntsud/.designer/backup/images/format_list_numbered_48.png</normaloff>
+     <normalon>:/MainWindow/images/format_list_numbered_48.png</normalon>../../../../../Users/ntsud/.designer/backup/images/format_list_numbered_48.png</iconset>
    </property>
    <property name="text">
     <string>&amp;NumList</string>
@@ -378,8 +378,8 @@
   <action name="action_Indent">
    <property name="icon">
     <iconset>
-     <normaloff>images/format_indent_increase_48.png</normaloff>
-     <normalon>:/MainWindow/images/format_indent_increase_48.png</normalon>images/format_indent_increase_48.png</iconset>
+     <normaloff>../../../../../Users/ntsud/.designer/backup/images/format_indent_increase_48.png</normaloff>
+     <normalon>:/MainWindow/images/format_indent_increase_48.png</normalon>../../../../../Users/ntsud/.designer/backup/images/format_indent_increase_48.png</iconset>
    </property>
    <property name="text">
     <string>Inden&amp;t</string>
@@ -391,8 +391,8 @@
   <action name="action_UnIndent">
    <property name="icon">
     <iconset>
-     <normaloff>images/format_indent_decrease_48.png</normaloff>
-     <normalon>:/MainWindow/images/format_indent_decrease_48.png</normalon>images/format_indent_decrease_48.png</iconset>
+     <normaloff>../../../../../Users/ntsud/.designer/backup/images/format_indent_decrease_48.png</normaloff>
+     <normalon>:/MainWindow/images/format_indent_decrease_48.png</normalon>../../../../../Users/ntsud/.designer/backup/images/format_indent_decrease_48.png</iconset>
    </property>
    <property name="text">
     <string>u&amp;nIndent</string>
@@ -417,8 +417,8 @@
   <action name="action_AboutViMarkdown">
    <property name="icon">
     <iconset>
-     <normaloff>images/info_48.png</normaloff>
-     <normalon>:/MainWindow/images/info_48.png</normalon>images/info_48.png</iconset>
+     <normaloff>../../../../../Users/ntsud/.designer/backup/images/info_48.png</normaloff>
+     <normalon>:/MainWindow/images/info_48.png</normalon>../../../../../Users/ntsud/.designer/backup/images/info_48.png</iconset>
    </property>
    <property name="text">
     <string>&amp;About viMarkdown</string>
@@ -427,8 +427,8 @@
   <action name="action_Strikethrough">
    <property name="icon">
     <iconset>
-     <normaloff>images/strikethrough_s_48.png</normaloff>
-     <normalon>:/MainWindow/images/strikethrough_s_48.png</normalon>images/strikethrough_s_48.png</iconset>
+     <normaloff>../../../../../Users/ntsud/.designer/backup/images/strikethrough_s_48.png</normaloff>
+     <normalon>:/MainWindow/images/strikethrough_s_48.png</normalon>../../../../../Users/ntsud/.designer/backup/images/strikethrough_s_48.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Strikethrough</string>
@@ -687,7 +687,7 @@
      <normaloff>:/MainWindow/images/thin_48.png</normaloff>:/MainWindow/images/thin_48.png</iconset>
    </property>
    <property name="text">
-    <string>ThinKeisen(&amp;F)</string>
+    <string>&amp;ThinKeisen</string>
    </property>
    <property name="toolTip">
     <string>ThinKeisen</string>
@@ -702,7 +702,7 @@
      <normaloff>:/MainWindow/images/thick_48.png</normaloff>:/MainWindow/images/thick_48.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;ThickKeisen</string>
+    <string>ThickKeisen(&amp;F)</string>
    </property>
    <property name="toolTip">
     <string>ThickKeisen</string>
