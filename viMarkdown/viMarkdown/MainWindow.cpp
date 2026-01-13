@@ -476,7 +476,9 @@ void MainWindow::do_open(const QString& fullPath) {
 
 	QString content = file.readAll();
 	QFileInfo fileInfo(fullPath);
-	addTab(fileInfo.fileName(), fullPath, content);
+	QString title = fileInfo.fileName();
+	title.remove(QRegularExpression("\\.md$"));
+	addTab(title, fullPath, content);
 	updateOutlineTree();
 	QDir::setCurrent(fileInfo.path());
 	m_watcher->addPath(fullPath);
@@ -517,7 +519,9 @@ void MainWindow::do_save(bool fDialog) {
 	    if (fi.suffix().isEmpty()) fullPath += ".md";
 		docWidget->m_fullPath = fullPath;
 		QFileInfo fileInfo(fullPath);
-		docWidget->m_title = fileInfo.fileName();
+		QString title2 = fileInfo.fileName();
+		title2.remove(QRegularExpression("\\.md$"));
+		docWidget->m_title = title2;
 		ui->tabWidget->setTabText(ix, docWidget->m_title);
 		QTreeWidgetItem *top = findTopLevelItemByFullPath(oldTitle, oldFullPath);
 		top->setText(0, docWidget->m_title);
