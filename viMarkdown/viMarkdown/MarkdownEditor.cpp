@@ -622,19 +622,22 @@ QString getLeftDstString(bool erase, bool thickKeisen, const QString txt, int ix
 void MarkdownEditor::do_keisen_left(bool erase, bool thickKeisen) {
 	QTextCursor cursor = this->textCursor();
 	if( cursor.atBlockStart() ) return;				//	行頭にいる場合は無視
-	int vc = getVisualColumn(cursor, this);
+	int vc0 = getVisualColumn(cursor, this);
 	QString src = thickKeisen ? "━" : "─";
 	if( !cursor.atBlockEnd() ) {
 		int ix = cursor.positionInBlock();
-		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+		do {
+			cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+		} while (!cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc0 + 2);
 		src = getLeftSrcString(erase, thickKeisen, cursor.block().text(), ix);
 		cursor.clearSelection();	//	選択解除、カーソル位置は movePosition() 後の位置、つまり選択末尾
 	}
-	while( !cursor.atBlockStart() && getVisualColumn(cursor, this) > vc - 2 )
+	while( !cursor.atBlockStart() && getVisualColumn(cursor, this) > vc0 - 2 )
 		cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor);
 	QString dst = getLeftDstString(erase, thickKeisen, cursor.block().text(), cursor.positionInBlock());
 	cursor.insertText(dst+src);
-	cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, 2);
+	while( getVisualColumn(cursor, this) > vc0 - 2 )
+		cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
 	setTextCursor(cursor);
 }
 QString getRightSrcString(bool erase, bool thickKeisen, const QString txt, int ix) {
