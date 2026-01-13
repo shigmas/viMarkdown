@@ -200,13 +200,21 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
 	font.setPointSize(12);		// 12ptに設定
 	font.setFixedPitch(true);	// 明示的に固定幅として扱う設定
 	this->setFont(font);
-	//QFontMetrics fm(font());
-	//int lnAreaWidth = fm.horizontalAdvance('9') * 6;
+	if( m_mainWindow->isKeisenMode() )
+		onKeisenMode(true);
 	setViewportMargins(lnAreaWidth(), 0, 0, 0);
 	m_lnAreaWidget = new LnAreaWidget(this);
 	connect(this, &MarkdownEditor::updateRequest, this, &MarkdownEditor::updateLnArea);
 	connect(this, &MarkdownEditor::cursorPositionChanged, this, &MarkdownEditor::onCurPosChanged);
 	connect(document(), &QTextDocument::contentsChange, this, &MarkdownEditor::onContentsChanged);
+}
+void MarkdownEditor::onKeisenMode(bool b) {
+	int charWidth = 2;
+	if( b ) {
+		charWidth = fontMetrics().horizontalAdvance(u'　'); // 全角スペースの幅
+	}
+	setCursorWidth(charWidth);
+	viewport()->update();
 }
 void MarkdownEditor::inputMethodEvent(QInputMethodEvent *event) {
 	m_isComposing = !event->preeditString().isEmpty();
@@ -349,8 +357,11 @@ QString getUpSrcString(bool erase, bool thickKeisen, const QString txt, int ix) 
 			if( txt[ix] == u'└' || txt[ix] == u'┘' || txt[ix] == u'┴' )
 				return "─";
 			if( txt[ix] == u'┼' ) return "┬";
+			if( txt[ix] == u'╋' ) return "┳";
 			if( txt[ix] == u'├' ) return "┌";
+			if( txt[ix] == u'┣' ) return "┏";
 			if( txt[ix] == u'┤' ) return "┐";
+			if( txt[ix] == u'┫' ) return "┓";
 		}
 		return "  ";
 	}
@@ -392,8 +403,11 @@ QString getUpDstString(bool erase, bool thickKeisen, const QString txt, int ix) 
 				return txt[ix];		//	変化無し
 			if( txt[ix] == u'┌' || txt[ix] == u'┐' || txt[ix] == u'├' ) return "─";
 			if( txt[ix] == u'┼' ) return "┴";
+			if( txt[ix] == u'╋' ) return "┻";
 			if( txt[ix] == u'├' ) return "└";
+			if( txt[ix] == u'┣' ) return "┗";
 			if( txt[ix] == u'┤' ) return "┘";
+			if( txt[ix] == u'┫' ) return "┛";
 		}
 		return "  ";
 	}
@@ -467,13 +481,17 @@ QString getDownSrcString(bool erase, bool thickKeisen, const QString txt, int ix
 		if( ix < txt.size() ) {
 			// 変化無し（すでに下に線がない）
 			if( txt[ix] == u'─' || txt[ix] == u'└' || txt[ix] == u'┘' || txt[ix] == u'┴' || txt[ix] == u'←' || txt[ix] == u'→' ) return txt[ix];
+			if( txt[ix] == u'━' || txt[ix] == u'┗' || txt[ix] == u'┛' || txt[ix] == u'┻' ) return txt[ix];
 			// 縦要素が消えて横棒だけ残る
 			if( txt[ix] == u'┌' || txt[ix] == u'┐' || txt[ix] == u'┬' ) return "─";
 			// Ｔ字・角に格下げ
 			if( txt[ix] == u'┼' ) return "┴";
+			if( txt[ix] == u'╋' ) return "┻";
 			if( txt[ix] == u'├' ) return "└";
+			if( txt[ix] == u'┣' ) return "┗";
 			if( txt[ix] == u'┤' ) return "┘";
-			if( txt[ix] == u'│' ) return "	";
+			if( txt[ix] == u'┫' ) return "┛";
+			if( txt[ix] == u'│' || txt[ix] == u'┃' ) return "  ";
 		}
 		return "  ";
 	}
@@ -504,12 +522,16 @@ QString getDownDstString(bool erase, bool thickKeisen, const QString txt, int ix
 		if( ix < txt.size() ) {
 			// 変化無し（すでに上に線がない）
 			if( txt[ix] == u'─' || txt[ix] == u'┌' || txt[ix] == u'┐' || txt[ix] == u'┬' || txt[ix] == u'←' || txt[ix] == u'→' ) return txt[ix];
+			if( txt[ix] == u'━' || txt[ix] == u'┏' || txt[ix] == u'┓' || txt[ix] == u'┳' ) return txt[ix];
 			// 縦要素が消えて横棒だけ残る
 			if( txt[ix] == u'└' || txt[ix] == u'┘' || txt[ix] == u'┴' ) return "─";
 			// Ｔ字・角に格下げ
 			if( txt[ix] == u'┼' ) return "┬";
+			if( txt[ix] == u'╋' ) return "┳";
 			if( txt[ix] == u'├' ) return "┌";
+			if( txt[ix] == u'┣' ) return "┏";
 			if( txt[ix] == u'┤' ) return "┐";
+			if( txt[ix] == u'┣' ) return "┓";
 		}
 		return "  ";
 	}
@@ -582,11 +604,12 @@ QString getLeftSrcString(bool erase, bool thickKeisen, const QString txt, int ix
 		return thickKeisen ? "━" : "─";
 	} else {
 		if( ix < txt.size() ) {
-			if( txt[ix] == u'│' || txt[ix] == u'└' || txt[ix] == u'┌' || txt[ix] == u'├' )
-				return txt[ix];		//	変化無し
+			if( txt[ix] == u'│' || txt[ix] == u'└' || txt[ix] == u'┌' || txt[ix] == u'├' ) return txt[ix];		//	変化無し
+			if( txt[ix] == u'┃' || txt[ix] == u'┗' || txt[ix] == u'┏' || txt[ix] == u'┣' ) return txt[ix];		//	変化無し
 			if( txt[ix] == u'┘' || txt[ix] == u'┐' || txt[ix] == u'┤' )
 				return "│";
 			if( txt[ix] == u'┼' ) return "├";
+			if( txt[ix] == u'╋' ) return "┣";
 		}
 		return "  ";
 	}
@@ -613,8 +636,10 @@ QString getLeftDstString(bool erase, bool thickKeisen, const QString txt, int ix
 	} else {
 		if( ix < txt.size() ) {
 			if( txt[ix] == u'┐' || txt[ix] == u'┘' || txt[ix] == u'┤' ) return txt[ix];		//	変化無し
+			if( txt[ix] == u'┓' || txt[ix] == u'┛' || txt[ix] == u'┫' ) return txt[ix];		//	変化無し
 			if( txt[ix] == u'└' || txt[ix] == u'┌' || txt[ix] == u'├' ) return "│";
 			if( txt[ix] == u'┼' ) return "┤";
+			if( txt[ix] == u'╋' ) return "┫";
 		}
 		return "  ";
 	}
@@ -659,12 +684,10 @@ QString getRightSrcString(bool erase, bool thickKeisen, const QString txt, int i
 		return thickKeisen ? "━" : "─";
 	} else {
 		if( ix < txt.size() ) {
-			if( txt[ix] == u'│' || txt[ix] == u'┃' || txt[ix] == u'┘' || txt[ix] == u'┐' || txt[ix] == u'┤' )
-				return txt[ix];		//	変化無し
-			if( txt[ix] == u'└' || txt[ix] == u'┌' || txt[ix] == u'├' || txt[ix] == u'┝' )	//	上下が細線の場合
-				return "│";
-			if( txt[ix] == u'┗' || txt[ix] == u'┏' || txt[ix] == u'┠' || txt[ix] == u'┣' )	//	上下が太線の場合
-				return "┃";
+			if( txt[ix] == u'│' || txt[ix] == u'┘' || txt[ix] == u'┐' || txt[ix] == u'┤' ) return txt[ix];		//	変化無し
+			if( txt[ix] == u'┃' || txt[ix] == u'┛' || txt[ix] == u'┓' || txt[ix] == u'┫' ) return txt[ix];		//	変化無し
+			if( txt[ix] == u'└' || txt[ix] == u'┌' || txt[ix] == u'├' || txt[ix] == u'┝' ) return "│";		//	上下が細線の場合
+			if( txt[ix] == u'┗' || txt[ix] == u'┏' || txt[ix] == u'┠' || txt[ix] == u'┣' ) return "┃";		//	上下が太線の場合
 			if( txt[ix] == u'┼' ) return "┤";
 			if( txt[ix] == u'╋' ) return "┫";
 		}
@@ -697,6 +720,7 @@ QString getRightDstString(bool erase, bool thickKeisen, const QString txt, int i
 			if( txt[ix] == u'└' || txt[ix] == u'┌' || txt[ix] == u'├' ) return txt[ix];		//	変化無し
 			if( txt[ix] == u'┐' || txt[ix] == u'┘' || txt[ix] == u'┤' ) return "│";
 			if( txt[ix] == u'┼' ) return "├";
+			if( txt[ix] == u'╋' ) return "┣";
 		}
 		return "  ";
 	}
@@ -824,7 +848,7 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 		charsRemoved = qMin(charsRemoved, m_lastCurBlockText.size() - bpos);		//	行末を超えている場合対応
 		charsAdded = qMin(charsAdded, text.size() - bpos);		//	行末を超えている場合対応
 		int c = 0;
-		while( charsAdded-c-1 > 0 && charsRemoved-c-1 > 0 &&
+		while( charsAdded-c-1 > 0 && charsRemoved-c-1 > 0 &&		//	undone: インデックス範囲チェック
 			text[bpos+charsAdded-c-1] == m_lastCurBlockText[bpos+charsRemoved-c-1] )
 		{
 			++c;	//	末尾共通部分
@@ -926,13 +950,14 @@ void drawEOF(QPainter &p, QRect r) {
 }
 void MarkdownEditor::paintEvent(QPaintEvent *e) {
 	QPlainTextEdit::paintEvent(e); // 先にテキストを普通に描画
+
 	QPainter p(viewport());
 	//p.setPen(QColor(0, 120, 215, 80)); // 薄い青色（透過度 80）
 	p.setPen(QColor(100, 160, 220, 0xc0));
 
 	QFontMetrics fm(this->font());
 	int zWidth = fm.horizontalAdvance("□"); 
-
+	//	全角空白 □、改行マーク描画
 	for (QTextBlock b = firstVisibleBlock(); b.isValid(); b = b.next()) {
 		QRectF r = blockBoundingRect(b).translated(contentOffset());
 		if (r.top() > viewport()->height()) break; // 画面外なら終了
@@ -958,6 +983,30 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
 			}
 		}
 	}
+#if 0
+	//	罫線モードならば罫線幅高矩形描画
+	if( m_mainWindow->isKeisenMode() ) {
+		QRect rect = cursorRect();
+        
+        // 幅を全角1文字分に広げる（等幅フォント前提）
+        //int blockWidth = fontMetrics().horizontalAdvance(u'╋');
+        rect.setWidth(zWidth);
+
+        // --- 視認性を高める色の設定 ---
+        // 罫線モードだと分かりやすい色（例えば淡い青やオレンジ）
+        // アルファ値を 100 程度にすると、下の文字や罫線が透けて見えます
+        QColor keisenCursorColor(0, 120, 215, 100); 
+        
+        p.setPen(Qt::NoPen);
+        p.setBrush(keisenCursorColor);
+        p.drawRect(rect);
+        
+        // 枠線もつけると、より「図形を描いている感」が出ます
+        p.setPen(QColor(0, 120, 215));
+        p.setBrush(Qt::NoBrush);
+        p.drawRect(rect.adjusted(0, 0, -1, -1));
+	}
+#endif
 }
 void MarkdownEditor::updateLnArea(const QRect &rect, int dy) {
 	if (dy)

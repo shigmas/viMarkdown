@@ -906,6 +906,11 @@ void MainWindow::onAction_AlignRight() {
 }
 void MainWindow::onAction_KeisenMode(bool checked) {
 	m_keisenMode = checked;
+	for(int ix = 0; ix < ui->tabWidget->count(); ++ix) {
+		DocWidget *docWidget = (DocWidget*)ui->tabWidget->widget(ix);
+		if( docWidget != nullptr )
+			docWidget->m_mdEditor->onKeisenMode(checked);
+	}
 }
 void MainWindow::onAction_ThinKeisen(bool checked) {
 	m_thickKeisen = !checked;

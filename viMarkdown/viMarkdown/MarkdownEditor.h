@@ -29,6 +29,7 @@ public:
 	void	onAlignLeft();
 	void	onAlignCenter();
 	void	onAlignRight();
+	void	onKeisenMode(bool);
 
 signals:
     void tab_pressed();
