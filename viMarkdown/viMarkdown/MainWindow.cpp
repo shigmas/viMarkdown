@@ -295,6 +295,7 @@ void MainWindow::onMarkdownViewerLineClicked(int bln) {
 	cursor.setPosition(block.position() + ix + 3);
 	cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 	cursor.insertText(text[ix+3] == u' ' ? "x" : " ");
+	// undone: 完了時は (YYYY-MM-DD) を付加？
 #if 0
 	statusBar()->showMessage(QString("html block num = %1").arg(bln));
 	auto table = docWidget->m_htmlComvertor.getBlockNumTohtmlLineNum();

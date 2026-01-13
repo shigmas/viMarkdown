@@ -700,6 +700,7 @@ QString getRightDstString(bool erase, bool thickKeisen, const QString txt, int i
 }
 void MarkdownEditor::do_keisen_right(bool erase, bool thickKeisen) {
 	QTextCursor cursor = this->textCursor();
+	int vc0 = getVisualColumn(cursor, this);
 	QString str = thickKeisen ? "━": "─";
 	int ix = cursor.positionInBlock();
 	if( !cursor.atBlockEnd() ) {
@@ -719,7 +720,8 @@ void MarkdownEditor::do_keisen_right(bool erase, bool thickKeisen) {
 		str2 = getRightDstString(erase, thickKeisen, cursor.block().text(), ix);
 	}
 	cursor.insertText(str + str2);
-	cursor.movePosition(QTextCursor::Left);
+	while( getVisualColumn(cursor, this) > vc0 + 2 )
+		cursor.movePosition(QTextCursor::Left);
 	setTextCursor(cursor);
 }
 //void MarkdownEditor::scrollToTop(int ln) {		//	ln: 0 org.
