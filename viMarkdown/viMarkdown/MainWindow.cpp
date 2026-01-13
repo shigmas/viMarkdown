@@ -341,8 +341,7 @@ DocWidget *MainWindow::getCurDocWidget() {
 //}
 
 void MainWindow::onAboutToShow_RecentFiles() {
-	qDebug() << "MainWindow::onAboutToShow_RecentFiles()";
-
+	//qDebug() << "MainWindow::onAboutToShow_RecentFiles()";
 	ui->menu_RecentFiles->clear();
 	QSettings settings;
 	QStringList recentFilePaths = settings.value("recentFilePaths").toStringList();
@@ -356,7 +355,13 @@ void MainWindow::onAboutToShow_RecentFiles() {
 		QAction *act = ui->menu_RecentFiles->addAction("&" + key + " " + fullPath);
 		connect(act, &QAction::triggered, this, [this, fullPath]() {
 			QString pathArg = fullPath;
-			do_open(pathArg); 
+			if( !do_open(pathArg) ) {
+				//	ファイル削除などで、ファイルオープンできなかった場合
+				QSettings settings;
+		        QStringList recentFilePaths = settings.value("recentFilePaths").toStringList();
+		        recentFilePaths.removeAll(fullPath);
+		        settings.setValue("recentFilePaths", recentFilePaths);
+			}
 		});
 	}
 }
@@ -461,17 +466,17 @@ void MainWindow::close_empty_doc() {
 		}
 	}
 }
-void MainWindow::do_open(const QString& fullPath) {
+bool MainWindow::do_open(const QString& fullPath) {
 	int tix = tabIndexOf("", fullPath);
 	if( tix >= 0 ) {		//	すでにオープン済み
 		ui->tabWidget->setCurrentIndex(tix);
-		return;
+		return true;
 	}
 	m_opening_file = true;
 	QFile file(fullPath);
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		QMessageBox::warning(this, tr("エラー"), tr("ファイルが開けません:\n%1").arg(fullPath));
-		return;
+		return false;
 	}
 
 	QString content = file.readAll();
@@ -486,6 +491,7 @@ void MainWindow::do_open(const QString& fullPath) {
 
 	addToRecentFiles(fullPath);
 	close_empty_doc();
+	return true;
 }
 void MainWindow::onAction_Save() {
 	do_save();

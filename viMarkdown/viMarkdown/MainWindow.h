@@ -40,7 +40,7 @@ protected:
     void	insertInline(const QString&);
     QTreeWidgetItem* findTopLevelItemByFullPath(const QString& title, const QString fullPath);
     void	removeTopLevelItem(DocWidget*);
-    void	do_open(const QString&);
+    bool	do_open(const QString&);
     void	do_load(const QString&);
     void	close_empty_doc();
     void	do_save(bool fDialog = false);
