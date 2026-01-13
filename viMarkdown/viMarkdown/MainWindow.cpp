@@ -513,6 +513,8 @@ void MainWindow::do_save(bool fDialog) {
 		                ,QFileDialog::DontUseNativeDialog
 					);
 		if( fullPath.isEmpty() ) return;
+		QFileInfo fi(fullPath);
+	    if (fi.suffix().isEmpty()) fullPath += ".md";
 		docWidget->m_fullPath = fullPath;
 		QFileInfo fileInfo(fullPath);
 		docWidget->m_title = fileInfo.fileName();
