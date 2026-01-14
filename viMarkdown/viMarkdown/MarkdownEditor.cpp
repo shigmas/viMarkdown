@@ -932,6 +932,20 @@ void drawLeftArrow(QPainter &p, QRect r) {
 	p.drawLine(x_start, y_mid, x_start + headSize, y_mid - headSize);
 	p.drawLine(x_start, y_mid, x_start + headSize, y_mid + headSize);
 }
+void drawCRLF(QPainter &p, QRect r) {
+	// 枠に対して少し余白を持たせる
+	int x_start = r.left() + 4;
+	int x_end = r.right() - 4;
+	int y_start = r.top() + 2;
+	int y_q = r.center().y()+r.height()/4+2;
+	int headSize = r.height() / 8; // 矢印の頭の大きさ
+	// 軸（縦横線）
+	p.drawLine(x_end, y_start, x_end, y_q);
+	p.drawLine(x_start, y_q, x_end, y_q);
+	// 矢印の頭（＜の部分）
+	p.drawLine(x_start, y_q, x_start + headSize, y_q - headSize);
+	p.drawLine(x_start, y_q, x_start + headSize, y_q + headSize);
+}
 void drawEOF(QPainter &p, QRect r) {
 	int x = r.left() + 2;
 	int y_mid = r.center().y() + 2;
@@ -982,9 +996,10 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
 		cursor.movePosition(QTextCursor::EndOfBlock);
 		QRect cr = cursorRect(cursor);
 		cr.setWidth(zWidth);
-		if( b != document()->lastBlock() )
-			drawLeftArrow(p, cr);		 
-		else
+		if( b != document()->lastBlock() ) {
+			//drawLeftArrow(p, cr);		 
+			drawCRLF(p, cr);		 
+		} else
 			drawEOF(p, cr);
 		QString s = b.text();
 		for (int i = 0; i < s.size(); ++i) {
