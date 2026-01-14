@@ -401,7 +401,8 @@ QString getUpDstString(bool erase, bool thickKeisen, const QString txt, int ix) 
 		if( ix < txt.size() ) {
 			if( txt[ix] == u'─' || txt[ix] == u'┘' || txt[ix] == u'└' || txt[ix] == u'┴' )
 				return txt[ix];		//	変化無し
-			if( txt[ix] == u'┌' || txt[ix] == u'┐' || txt[ix] == u'├' ) return "─";
+			if( txt[ix] == u'┌' || txt[ix] == u'┐' || txt[ix] == u'┬' || txt[ix] == u'┰' ) return "─";
+			if( txt[ix] == u'┏' || txt[ix] == u'┓' || txt[ix] == u'┳' || txt[ix] == u'┯' ) return "━";
 			if( txt[ix] == u'┼' ) return "┴";
 			if( txt[ix] == u'╋' ) return "┻";
 			if( txt[ix] == u'├' ) return "└";
@@ -524,7 +525,8 @@ QString getDownDstString(bool erase, bool thickKeisen, const QString txt, int ix
 			if( txt[ix] == u'─' || txt[ix] == u'┌' || txt[ix] == u'┐' || txt[ix] == u'┬' || txt[ix] == u'←' || txt[ix] == u'→' ) return txt[ix];
 			if( txt[ix] == u'━' || txt[ix] == u'┏' || txt[ix] == u'┓' || txt[ix] == u'┳' ) return txt[ix];
 			// 縦要素が消えて横棒だけ残る
-			if( txt[ix] == u'└' || txt[ix] == u'┘' || txt[ix] == u'┴' ) return "─";
+			if( txt[ix] == u'└' || txt[ix] == u'┘' || txt[ix] == u'┴' || txt[ix] == u'┸' ) return "─";
+			if( txt[ix] == u'┗' || txt[ix] == u'┛' || txt[ix] == u'┷' || txt[ix] == u'┻' ) return "━";
 			// Ｔ字・角に格下げ
 			if( txt[ix] == u'┼' ) return "┬";
 			if( txt[ix] == u'╋' ) return "┳";
@@ -848,7 +850,7 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 		charsRemoved = qMin(charsRemoved, m_lastCurBlockText.size() - bpos);		//	行末を超えている場合対応
 		charsAdded = qMin(charsAdded, text.size() - bpos);		//	行末を超えている場合対応
 		int c = 0;
-		while( charsAdded-c-1 > 0 && charsRemoved-c-1 > 0 &&		//	undone: インデックス範囲チェック
+		while(bpos + charsAdded - c - 1 >= 0 && charsAdded-c-1 > 0 && charsRemoved-c-1 > 0 &&
 			text[bpos+charsAdded-c-1] == m_lastCurBlockText[bpos+charsRemoved-c-1] )
 		{
 			++c;	//	末尾共通部分
