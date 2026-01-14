@@ -860,18 +860,19 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 		int bpos = position - cursor.block().position();	//	ブロック先頭からの編集位置
 		//int bpos = cursor.positionInBlock();				//	ブロック先頭からの現カーソル位置
 		const QString strAdded = text.mid(bpos, charsAdded);
-		charsRemoved = qMin(charsRemoved, m_lastCurBlockText.size() - bpos);		//	行末を超えている場合対応
-		charsAdded = qMin(charsAdded, text.size() - bpos);		//	行末を超えている場合対応
+		const QString strRemoved = m_lastCurBlockText.mid(bpos, charsRemoved);
+		charsRemoved = qMin(charsRemoved, strRemoved.size());		//	行末を超えている場合対応
+		charsAdded = qMin(charsAdded, strAdded.size());		//	行末を超えている場合対応
 		int c = 0;
-		while(bpos + charsAdded - c - 1 >= 0 && charsAdded-c-1 > 0 && charsRemoved-c-1 > 0 &&
-			text[bpos+charsAdded-c-1] == m_lastCurBlockText[bpos+charsRemoved-c-1] )
+		while(charsAdded-c-1 > 0 && charsRemoved-c-1 > 0 &&
+			strAdded[charsAdded-c-1] == strRemoved[charsRemoved-c-1] )
 		{
 			++c;	//	末尾共通部分
 		}
 		charsRemoved -= c;
 		charsAdded -= c;
-		int ncAdded = nColumn(strAdded);
-		int ncRemoved = nColumn(m_lastCurBlockText.mid(bpos, charsRemoved));
+		int ncRemoved = nColumn(strRemoved.left(charsRemoved));
+		int ncAdded = nColumn(strAdded.left(charsAdded));
 		cursor.setPosition(cursor.block().position() + k);		//	罫線位置
 		int d = ncAdded - ncRemoved;
 		if( d > 0 ) {			//	文字列幅が増えた場合
