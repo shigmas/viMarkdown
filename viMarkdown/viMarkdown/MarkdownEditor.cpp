@@ -167,6 +167,11 @@ const ushort revKeisenTable[256] = {
 bool isKeisenChar(QChar ch) {
 	return ch.unicode() >= KEISEN_CODE_BEGIN && ch.unicode() < KEISEN_CODE_END;
 }
+ushort getConnectionBits(QChar ch) {
+	ushort uc = ch.unicode();
+	if( uc < KEISEN_CODE_BEGIN || uc >= KEISEN_CODE_END ) return 0;
+	return keisenTable[uc - KEISEN_CODE_BEGIN];
+}
 
 class MarkdownHighlighter : public QSyntaxHighlighter {
 public:
@@ -412,16 +417,18 @@ QString getUpDstString(bool erase, bool thickKeisen, const QString txt, int ix) 
 			if( txt[ix] == u'┤' || txt[ix] == u'┨' ) return thickKeisen ? "┨" : "┨";	//	左が細線
 			if( txt[ix] == u'┥' || txt[ix] == u'┫' ) return thickKeisen ? "┫" : "┥";	//	左が太線
 			if( txt[ix] == u'─' ) {
-				if( ix > 0 && (txt[ix-1] == u'─' || txt[ix-1] == u'←') )
-					return "┬";
+				//if( ix > 0 && (txt[ix-1] == u'─' || txt[ix-1] == u'└' || txt[ix-1] == u'┌' || txt[ix-1] == u'←') )
+				if( ix > 0 && ((getConnectionBits(txt[ix-1])&Right) != 0 || txt[ix-1] == u'←') )
+					return thickKeisen ? "┰" : "┬";
 				else
-					return "┌";
+					return thickKeisen ? "┏" : "┌";
 			}
 			if( txt[ix] == u'━' ) {
-				if( ix > 0 && (txt[ix-1] == u'━' || txt[ix-1] == u'←') )
+				//if( ix > 0 && (txt[ix-1] == u'━' || txt[ix-1] == u'←') )
+				if( ix > 0 && ((getConnectionBits(txt[ix-1])&ThickRight) != 0 || txt[ix-1] == u'←') )
 					return thickKeisen ? "┳" : "┯";
 				else
-					return "┌";
+					return thickKeisen ? "┏" : "┌";
 			}
 		}
 		return "↑";
