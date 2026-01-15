@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QRegularExpression>
 #include <QInputMethod>
+#include <QMouseEvent>
 #include "MarkdownEditor.h"
 #include "MainWindow.h"
 
@@ -20,6 +21,10 @@ protected:
         painter.fillRect(rc, QColor("lightgray"));
         MarkdownEditor *mdEditor = (MarkdownEditor*)parent();
         mdEditor->lnAreaPaintEvent(event);
+    }
+    void mousePressEvent(QMouseEvent *event) override {
+		MarkdownEditor* mdEditor = (MarkdownEditor*)parent();
+		mdEditor->lnAreaMousePressEvent(event);
     }
 };
 
@@ -1072,6 +1077,13 @@ void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
         bottom = top + (int) blockBoundingRect(block).height();
         ++blockNumber;
     }
+}
+void MarkdownEditor::lnAreaMousePressEvent(QMouseEvent *event) {
+	auto pos = event->position();
+	QTextCursor cursor = cursorForPosition(QPoint(0, (int)pos.y()));
+    cursor.movePosition(QTextCursor::StartOfBlock);          // 行頭へ移動
+    cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor); // 行末まで選択
+    setTextCursor(cursor);
 }
 void MarkdownEditor::resizeEvent(QResizeEvent *event) {
     QPlainTextEdit::resizeEvent(event);

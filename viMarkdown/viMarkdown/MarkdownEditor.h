@@ -18,6 +18,7 @@ public:
 		verticalScrollBar()->setValue(lineNum);
 	}
 	void	lnAreaPaintEvent(QPaintEvent *event);
+	void	lnAreaMousePressEvent(QMouseEvent *event);
 	int lnAreaWidth() {
         return fontMetrics().horizontalAdvance('9') * LN_WIDTH;
     }
