@@ -26,6 +26,14 @@ protected:
 		MarkdownEditor* mdEditor = (MarkdownEditor*)parent();
 		mdEditor->lnAreaMousePressEvent(event);
     }
+    void mouseMoveEvent(QMouseEvent *event) override {
+		MarkdownEditor* mdEditor = (MarkdownEditor*)parent();
+		mdEditor->lnAreaMouseMoveEvent(event);
+    }
+    void mouseReleaseEvent(QMouseEvent *event) override {
+		MarkdownEditor* mdEditor = (MarkdownEditor*)parent();
+		mdEditor->lnAreaMouseReleaseEvent(event);
+    }
 };
 
 const int KEISEN_CODE_BEGIN = 0x2500;
@@ -205,6 +213,7 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
 	font.setPointSize(12);		// 12ptに設定
 	font.setFixedPitch(true);	// 明示的に固定幅として扱う設定
 	this->setFont(font);
+	setLineSpacing(150);
 	if( m_mainWindow->isKeisenMode() )
 		onKeisenMode(true);
 	setViewportMargins(lnAreaWidth(), 0, 0, 0);
@@ -220,6 +229,15 @@ void MarkdownEditor::onKeisenMode(bool b) {
 	}
 	setCursorWidth(charWidth);
 	viewport()->update();
+}
+void MarkdownEditor::setLineSpacing(int percentage) {
+	QTextBlockFormat format;
+    format.setLineHeight(percentage, QTextBlockFormat::ProportionalHeight);
+    QTextCursor cursor(document());
+    cursor.select(QTextCursor::Document);
+    cursor.mergeBlockFormat(format);
+    QTextCursor editorCursor = textCursor();
+    editorCursor.setBlockFormat(format);
 }
 void MarkdownEditor::inputMethodEvent(QInputMethodEvent *event) {
 	m_isComposing = !event->preeditString().isEmpty();
@@ -1082,8 +1100,40 @@ void MarkdownEditor::lnAreaMousePressEvent(QMouseEvent *event) {
 	auto pos = event->position();
 	QTextCursor cursor = cursorForPosition(QPoint(0, (int)pos.y()));
     cursor.movePosition(QTextCursor::StartOfBlock);          // 行頭へ移動
+    m_anchorStartPosition = cursor.position();
     cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor); // 行末まで選択
+    m_selStart = cursor.selectionStart();
+    m_selEnd = cursor.selectionEnd();
+    m_curBlockNum = m_anchorBlockNum = cursor.blockNumber();
     setTextCursor(cursor);
+    m_isCursorAboveAnchor = false;
+    m_lnAreaPressed = true;
+}
+void MarkdownEditor::lnAreaMouseMoveEvent(QMouseEvent *event) {
+	if( !m_lnAreaPressed ) return;
+	auto pos = event->position();
+	QTextCursor cursor = cursorForPosition(QPoint(0, (int)pos.y()));
+	int cbn = cursor.blockNumber();
+	if( cbn == m_curBlockNum ) return;
+	m_curBlockNum = cbn;
+	if( cbn >= m_anchorBlockNum ) {
+	    cursor.movePosition(QTextCursor::EndOfBlock);	// 行末移動
+	    //if( m_isCursorAboveAnchor )
+			cursor.setPosition(m_anchorStartPosition, QTextCursor::KeepAnchor);
+	    //else
+		//	cursor.setPosition(m_selStart, QTextCursor::KeepAnchor);
+	    m_selEnd = cursor.selectionEnd();
+	    m_isCursorAboveAnchor = false;
+	} else {
+	    cursor.movePosition(QTextCursor::StartOfBlock);	// 行頭移動
+		cursor.setPosition(m_selEnd, QTextCursor::KeepAnchor);
+	    m_selStart = cursor.selectionStart();
+	    m_isCursorAboveAnchor = true;
+	}
+    setTextCursor(cursor);
+}
+void MarkdownEditor::lnAreaMouseReleaseEvent(QMouseEvent *event) {
+    m_lnAreaPressed = false;
 }
 void MarkdownEditor::resizeEvent(QResizeEvent *event) {
     QPlainTextEdit::resizeEvent(event);
