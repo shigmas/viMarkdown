@@ -124,10 +124,12 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 	m_nEmptyLines = 0;
 	m_inComment = false;
 	for(m_ln = 0; m_ln < m_lst.size(); ++m_ln) {
+		bool bComment = false;		//	コメントがあった
 		QString buf = m_lst[m_ln];
 		if( !m_inComment ) {
 			int start = 0, ix;
 			while( (ix = buf.indexOf("<!--", start)) >= 0 ) {
+				bComment = true;
 				int ix2 = buf.indexOf("-->", ix + 4);
 				if( ix2 < 0 ) {
 					buf = buf.left(ix);
@@ -136,7 +138,7 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 				}
 				buf = buf.left(ix) + buf.mid(ix2+3);
 			}
-			if( m_inComment && buf.isEmpty() ) continue;
+			if( bComment && buf.isEmpty() ) continue;
 		} else {
 			int ix = buf.indexOf("-->");
 			if( ix < 0 ) continue;
