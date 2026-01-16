@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
 	, ui(new Ui::MainWindowClass())
 {
+	//static bool to_restore_win = true;
 	ui->setupUi(this);
 	ui->mainToolBar->setStyleSheet(
 	    "QToolButton:checked {"
@@ -53,7 +54,10 @@ MainWindow::MainWindow(QWidget *parent)
 	ui->statusBar->addPermanentWidget(m_lcLabel);		//	ステータスバーに QLabel 設置
 	setAcceptDrops(true);		//	ファイルドロップ可
 	setup_connections();
-	read_settings();
+	//if( to_restore_win ) {
+		//to_restore_win = false;
+		restore_win();
+	//}
 	onAction_NewTab();
 }
 MainWindow::~MainWindow()
@@ -167,7 +171,7 @@ void MainWindow::setup_connections() {
 	connect(ui->treeWidget, &QTreeWidget::itemActivated, this, &MainWindow::onTreeItemActivated);				//	ダブルクリック or Enter 押下
 	connect(ui->action_AboutViMarkdown, &QAction::triggered, this, &MainWindow::onAction_About);
 }
-void MainWindow::read_settings() {
+void MainWindow::restore_win() {
 	QSettings settings;
 	settings.beginGroup("MainWindow");
 	
@@ -373,8 +377,13 @@ void MainWindow::onAction_Exit() {
 void MainWindow::onAction_New() {
 	qDebug() << "MainWindow::onAction_New()";
 #if 1
+	static int nwin = 1;
 	MainWindow *newWin = new MainWindow();
     newWin->setAttribute(Qt::WA_DeleteOnClose);		// ウィンドウが閉じられたときにメモリを自動解放
+    newWin->restoreGeometry(this->saveGeometry());
+    QPoint newPos = newWin->pos() + QPoint(20*nwin, 20*nwin);
+    ++nwin;
+    newWin->move(newPos);
     newWin->show();
 #else
 	addTab(QString("無題-%1").arg(++m_tab_number));

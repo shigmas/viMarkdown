@@ -24,7 +24,7 @@ public:
 
 protected:
     void	setup_connections();
-    void	read_settings();
+    void	restore_win();
     DocWidget	*newTabWidget(const QString& title, const QString& fullPath);
     void	onMDTextChanged();
     QSplitter	*getCurTabSplitter();
