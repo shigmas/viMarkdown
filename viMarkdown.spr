@@ -399,7 +399,7 @@
 0397 ◎ C 01/16 01/16 01011│ToDo│MarkdownViewer::do_body()：テキスト出力処理部分を関数化
 0398 ◎ C 01/17 01/17 01012│ToDo│Ctrl + N は新規 MainWindow、新規タブは Ctrl + T に？
 0399 ◎ C 01/17 01/17 01012│ToDo│Ctrl + N で新規 MainWindowの場合は、MainWindow を右下にすこしずらして表示
-0400 ● C 01/17            │ToDo│
+0400 ◎ C 01/17 01/17 01012│問題│下方が太線のＴに上から罫線を描くと横線が消える
 0401 ● C 01/17            │ToDo│
 0402 ● C 01/17            │ToDo│
 0403 ● C 01/17            │ToDo│

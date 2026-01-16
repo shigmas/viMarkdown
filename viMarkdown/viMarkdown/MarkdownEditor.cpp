@@ -491,16 +491,16 @@ QString getDownSrcString(bool erase, bool thickKeisen, const QString txt, int ix
 			if( txt[ix] == u'→' || txt[ix] == u'┐' || txt[ix] == u'┓' ) return thickKeisen ? "┓" : "┐";
 			if( txt[ix] == u'←' || txt[ix] == u'┌' || txt[ix] == u'┏' ) return thickKeisen ? "┏" : "┌";
 			if( txt[ix] == u'┬' ) return thickKeisen ? "┰" : "┬";
-			if( txt[ix] == u'┸' ) return thickKeisen ? "╂" : "┼";
+			//if( txt[ix] == u'┸' || txt[ix] == u'┼' || txt[ix] == u'╂' ) return thickKeisen ? "╂" : "┼";	//	左右が細線の場合
 			if( txt[ix] == u'┘' /*|| txt[ix] == u'┤'*/ ) return "┤";
 			if( txt[ix] == u'└' /*|| txt[ix] == u'├'*/ ) return "├";
 			if( txt[ix] == u'├' || txt[ix] == u'┠' ) return thickKeisen ? "┠" : "├";	//	右が細線
 			if( txt[ix] == u'┝' || txt[ix] == u'┣' ) return thickKeisen ? "┣" : "├";	//	右が太線
 			if( txt[ix] == u'┤' || txt[ix] == u'┨' ) return thickKeisen ? "┨" : "┨";	//	左が細線
 			if( txt[ix] == u'┥' || txt[ix] == u'┫' ) return thickKeisen ? "┫" : "┥";	//	左が太線
-			if( txt[ix] == u'┴' || /*txt[ix] == u'┸' ||*/ txt[ix] == u'┼' || txt[ix] == u'╂' )	//	左右が細線の場合
-				return thickKeisen ? "┿" : "┼";
-			if( txt[ix] == u'┷' || txt[ix] == u'┻' || txt[ix] == u'╂' || txt[ix] == u'╋' )	//	左右が太細線の場合
+			if( txt[ix] == u'┴' || txt[ix] == u'┸' || txt[ix] == u'┼' || txt[ix] == u'╂' )	//	左右が細線の場合
+				return thickKeisen ? "╂" : "┼";
+			if( txt[ix] == u'┷' || txt[ix] == u'┻' || txt[ix] == u'┿' || txt[ix] == u'╋' )	//	左右が太細線の場合
 				return thickKeisen ? "╋" : "┿";
 			if( txt[ix] == u'─' ) {
 				if( ix < 2 )		//	undone: 左に文字がある場合
@@ -556,8 +556,8 @@ QString getDownDstString(bool erase, bool thickKeisen, const QString txt, int ix
 			if( txt[ix] == u'━' ) return thickKeisen ? "┻" : "┷";
 			if( txt[ix] == u'┐' ) return "┤";
 			if( txt[ix] == u'┌' ) return "├";
-			if( txt[ix] == u'┴' ) return "┼";		//	undone: この下も参照？
-			if( txt[ix] == u'┬' ) return "┼";
+			if( txt[ix] == u'┴' || txt[ix] == u'┬' ) return thickKeisen ? "╂" : "┼";	//	左右が細線
+			if( txt[ix] == u'┷' || txt[ix] == u'┯' ) return thickKeisen ? "╋" : "┿";	//	左右が太線
 		}
 		return "↓";
 	} else {
