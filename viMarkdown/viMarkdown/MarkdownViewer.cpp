@@ -136,7 +136,7 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 				}
 				buf = buf.left(ix) + buf.mid(ix2+3);
 			}
-			if( buf.isEmpty() ) continue;
+			if( m_inComment && buf.isEmpty() ) continue;
 		} else {
 			int ix = buf.indexOf("-->");
 			if( ix < 0 ) continue;
