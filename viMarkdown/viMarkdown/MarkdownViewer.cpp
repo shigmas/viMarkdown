@@ -136,11 +136,13 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 				}
 				buf = buf.left(ix) + buf.mid(ix2+3);
 			}
+			if( buf.isEmpty() ) continue;
 		} else {
 			int ix = buf.indexOf("-->");
 			if( ix < 0 ) continue;
 			m_inComment = false;
 			buf = buf.mid(ix+3);
+			if( buf.isEmpty() ) continue;
 		}
 		m_nSpaces = 0;
 		while( m_nSpaces < buf.size() && buf[m_nSpaces] == u' ' ) ++m_nSpaces;
