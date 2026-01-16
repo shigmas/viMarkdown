@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent)
 	setAcceptDrops(true);		//	ファイルドロップ可
 	setup_connections();
 	read_settings();
-	onAction_New();
+	onAction_NewTab();
 }
 MainWindow::~MainWindow()
 {
@@ -128,6 +128,7 @@ void MainWindow::setup_connections() {
 	connect(m_watcher, &QFileSystemWatcher::fileChanged, this, &MainWindow::onFileChanged);
 	connect(ui->action_Exit, &QAction::triggered, this, &MainWindow::onAction_Exit);
 	connect(ui->action_New, &QAction::triggered, this, &MainWindow::onAction_New);
+	connect(ui->action_NewTab, &QAction::triggered, this, &MainWindow::onAction_NewTab);
 	connect(ui->action_Open, &QAction::triggered, this, &MainWindow::onAction_Open);
 	connect(ui->action_Save, &QAction::triggered, this, &MainWindow::onAction_Save);
 	connect(ui->action_SaveAs, &QAction::triggered, this, &MainWindow::onAction_SaveAs);
@@ -371,7 +372,15 @@ void MainWindow::onAction_Exit() {
 }
 void MainWindow::onAction_New() {
 	qDebug() << "MainWindow::onAction_New()";
-
+#if 1
+	MainWindow *newWin = new MainWindow();
+    newWin->setAttribute(Qt::WA_DeleteOnClose);		// ウィンドウが閉じられたときにメモリを自動解放
+    newWin->show();
+#else
+	addTab(QString("無題-%1").arg(++m_tab_number));
+#endif
+}
+void MainWindow::onAction_NewTab() {
 	addTab(QString("無題-%1").arg(++m_tab_number));
 }
 void MainWindow::addTab(const QString &title, const QString fullPath, const QString txt) {

@@ -61,6 +61,7 @@ protected:
     void	onMarkdownViewerLineClicked(int);
 
     void	onAction_New();
+    void	onAction_NewTab();
     void	onAction_Open();
     void	onAction_Save();
     void	onAction_SaveAs();

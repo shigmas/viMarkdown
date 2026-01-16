@@ -71,6 +71,7 @@
      <addaction name="action_AsHTML"/>
     </widget>
     <addaction name="action_New"/>
+    <addaction name="action_NewTab"/>
     <addaction name="action_Open"/>
     <addaction name="action_Save"/>
     <addaction name="action_SaveAs"/>
@@ -175,6 +176,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="action_New"/>
+   <addaction name="action_NewTab"/>
    <addaction name="action_Open"/>
    <addaction name="action_Save"/>
    <addaction name="action_Close"/>
@@ -248,10 +250,10 @@
   <action name="action_New">
    <property name="icon">
     <iconset resource="MainWindow.qrc">
-     <normaloff>:/MainWindow/images/add_notes_48.png</normaloff>:/MainWindow/images/add_notes_48.png</iconset>
+     <normaloff>:/MainWindow/images/new_main_window_48.png</normaloff>:/MainWindow/images/new_main_window_48.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;New</string>
+    <string>&amp;NewWin</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
@@ -706,6 +708,18 @@
    </property>
    <property name="toolTip">
     <string>ThickKeisen</string>
+   </property>
+  </action>
+  <action name="action_NewTab">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/new_tab_48.png</normaloff>:/MainWindow/images/new_tab_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>New&amp;Tab</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
    </property>
   </action>
  </widget>

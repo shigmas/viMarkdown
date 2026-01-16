@@ -40,5 +40,7 @@
         <file>images/close_48.png</file>
         <file>images/thick_48.png</file>
         <file>images/thin_48.png</file>
+        <file>images/new_main_window_48.png</file>
+        <file>images/new_tab_48.png</file>
     </qresource>
 </RCC>
