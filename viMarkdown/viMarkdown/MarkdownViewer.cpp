@@ -15,6 +15,8 @@ MarkdownViewer::MarkdownViewer(const MainWindow *mainWindow, QWidget* parent)
 	: m_mainWindow(mainWindow), QTextEdit(parent)
 {
 	setFrameStyle(QFrame::NoFrame);
+	//QString css = "hr { height: 1px; border: none; background-color: #333; margin-top: 10px; margin-bottom: 10px; }";
+	//document()->setDefaultStyleSheet(css);
 }
 
 bool isUnderlineHeading(const QString& txt);
@@ -68,6 +70,14 @@ void MarkdownViewer::mouseReleaseEvent(QMouseEvent *e)
 	}
     QTextEdit::mouseReleaseEvent(e);
 }
+void MarkdownViewer::do_body_sub(QTextCursor& cursor, const QString &buf) {
+	cursor.insertMarkdown(buf);
+	cursor.insertBlock();
+	QTextBlockFormat blockFormat;
+	blockFormat.setAlignment(Qt::AlignJustify); // 左右両端揃え
+	cursor.mergeBlockFormat(blockFormat);
+	//cursor.insertBlock();
+}
 void MarkdownViewer::do_body(QTextCursor& cursor) {
 	if( m_bodyList.isEmpty() ) return;
 	m_hasBody = false;
@@ -75,11 +85,7 @@ void MarkdownViewer::do_body(QTextCursor& cursor) {
 	for(auto txt: m_bodyList) {
 		if( txt.isEmpty() ) {		//	空行の場合
 			++m_nEmptyLines;
-			cursor.insertMarkdown(buf);
-			QTextBlockFormat blockFormat;
-			blockFormat.setAlignment(Qt::AlignJustify); // 左右両端揃え
-			cursor.mergeBlockFormat(blockFormat);
-			cursor.insertBlock();
+			do_body_sub(cursor, buf);
 			buf.clear();
 		} else {
 			buf += txt + "\n";
@@ -88,11 +94,7 @@ void MarkdownViewer::do_body(QTextCursor& cursor) {
 		}
 	}
 	if( !buf.isEmpty() ) {
-		cursor.insertMarkdown(buf);
-		QTextBlockFormat blockFormat;
-		blockFormat.setAlignment(Qt::AlignJustify); // 左右両端揃え
-		cursor.mergeBlockFormat(blockFormat);
-		cursor.insertBlock();
+		do_body_sub(cursor, buf);
 		m_hasBody = true;
 		m_nEmptyLines = 0;
 	}

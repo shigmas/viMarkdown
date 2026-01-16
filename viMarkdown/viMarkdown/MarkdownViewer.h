@@ -28,6 +28,7 @@ protected:
     bool	isTableHyphenLine(const QString&);
 
     void	do_body(QTextCursor&);
+    void	do_body_sub(QTextCursor&, const QString&);
     void	do_table(QTextCursor&);
     bool	do_underlineHeading(QTextCursor&, QString buf);
     void	do_heading(QTextCursor&, QString buf);
