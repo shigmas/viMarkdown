@@ -122,8 +122,26 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 	cursor.movePosition(QTextCursor::Start);
 	m_lst = mdtext.split(u'\n');
 	m_nEmptyLines = 0;
+	m_inComment = false;
 	for(m_ln = 0; m_ln < m_lst.size(); ++m_ln) {
 		QString buf = m_lst[m_ln];
+		if( !m_inComment ) {
+			int start = 0, ix;
+			while( (ix = buf.indexOf("<!--", start)) >= 0 ) {
+				int ix2 = buf.indexOf("-->", ix + 4);
+				if( ix2 < 0 ) {
+					buf = buf.left(ix);
+					m_inComment = true;
+					break;
+				}
+				buf = buf.left(ix) + buf.mid(ix2+3);
+			}
+		} else {
+			int ix = buf.indexOf("-->");
+			if( ix < 0 ) continue;
+			m_inComment = false;
+			buf = buf.mid(ix+3);
+		}
 		m_nSpaces = 0;
 		while( m_nSpaces < buf.size() && buf[m_nSpaces] == u' ' ) ++m_nSpaces;
 		if( m_nSpaces > 0 ) buf = buf.mid(m_nSpaces);

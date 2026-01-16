@@ -41,6 +41,7 @@ private:
     int		m_nSpaces;
     int		m_nEmptyLines = 0;		//	本文最後の空行数
     bool	m_hasBody = false;		//	do_body() で空文以外を出力したか？
+    bool	m_inComment = false;
     //QString	m_bodyText;
     QStringList	m_bodyList;
 	QStringList	m_lst;
