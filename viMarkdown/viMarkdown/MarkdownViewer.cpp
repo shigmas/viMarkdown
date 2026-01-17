@@ -164,6 +164,7 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 			do_body(cursor);
 			do_code(cursor);
 		} else if( isTableLine(buf) && m_ln + 1 < m_lst.size() && isTableHyphenLine(m_lst[m_ln+1]) ) {
+			do_body(cursor);
 			do_table(cursor);
 		} else {
 			if( buf.isEmpty() ) {		//	空行
