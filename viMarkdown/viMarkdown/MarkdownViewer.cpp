@@ -244,7 +244,7 @@ void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int
 	//##if( m_nEmptyLines >= 1 )
 	//##	cursor.insertBlock();			//	新規ブロック
 	//cursor.insertBlock();			//	新規ブロック
-	cursor.insertMarkdown(QString(h, u'#') + u' ' + buf /*+ "←" + "\n"*/);
+	cursor.insertMarkdown(QString(h, u'#') + u' ' + buf /*+ "\n"*/);		//	改行を付加すると、２行になってしまう
 	if( h == 1 ) {		//	H1 の場合はセンタリング（viMarkdown 独自？仕様）
 		QTextBlockFormat blockFormat;
 		blockFormat.setAlignment(Qt::AlignCenter);
