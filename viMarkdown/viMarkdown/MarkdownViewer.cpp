@@ -244,7 +244,7 @@ void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int
 	//##if( m_nEmptyLines >= 1 )
 	//##	cursor.insertBlock();			//	新規ブロック
 	//cursor.insertBlock();			//	新規ブロック
-	cursor.insertMarkdown(QString(h, u'#') + u' ' + buf + "\n");
+	cursor.insertMarkdown(QString(h, u'#') + u' ' + buf /*+ "←" + "\n"*/);
 	if( h == 1 ) {		//	H1 の場合はセンタリング（viMarkdown 独自？仕様）
 		QTextBlockFormat blockFormat;
 		blockFormat.setAlignment(Qt::AlignCenter);
@@ -261,12 +261,13 @@ void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int
 
 	//cursor.setCharFormat(QTextCharFormat());
 	m_headingBlockNum.push_back(cursor.blockNumber());
-	cursor.insertBlock();			//	新規ブロック
-	QTextBlockFormat blockFormat0;
-	blockFormat0.setHeadingLevel(0); // 見出し設定を解除
-	cursor.setBlockFormat(blockFormat0);
-	// 4. 文字書式のリセット（フォントサイズや太字設定を解除）
+	//cursor.insertBlock(QTextBlockFormat());		//	新規ブロック
+	//cursor.insertText("←");
+	//QTextBlockFormat blockFormat0;
+	//blockFormat0.setHeadingLevel(0); // 見出し設定を解除
+	//cursor.setBlockFormat(blockFormat0);
 	cursor.setCharFormat(QTextCharFormat()); // 空のフォーマットをセットすることでデフォルトに戻る
+	cursor.insertBlock(QTextBlockFormat());		//	新規ブロック
 
 	m_headingList.push_back(QChar(u'0'+h) + buf.remove("^ +"));
 	m_headingLineNum.push_back(ln);
