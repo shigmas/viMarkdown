@@ -2,6 +2,7 @@
 #include <QTextDocument>
 #include <QTextBlock>
 #include <QRegularExpression>
+#include <QTextTable>
 #include "MarkdownViewer.h"
 #include "MainWindow.h"
 
@@ -207,12 +208,27 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 #endif
 }
 void MarkdownViewer::do_table(QTextCursor& cursor) {
-	QString buf = m_lst[m_ln] + "\n" + m_lst[m_ln+1] + "\n";
+	QString buf = m_lst[m_ln] + "\n" + m_lst[m_ln+1] /*+ "\n"*/;
 	m_ln += 2;
 	while( m_ln < m_lst.size() && isTableLine(m_lst[m_ln]) ) {
-		buf += m_lst[m_ln++] + "\n";
+		buf += "\n" + m_lst[m_ln++];
 	}
 	cursor.insertMarkdown(buf);
+	cursor.movePosition(QTextCursor::Left);
+	QTextTable *table = cursor.currentTable();
+	if (table) {
+	    // 1行目（ヘッダ行）のすべての列をループ
+	    for (int col = 0; col < table->columns(); ++col) {
+	        QTextTableCell cell = table->cellAt(0, col);
+	        QTextCursor cellCursor = cell.firstCursorPosition();
+	        QTextBlockFormat format = cellCursor.blockFormat();
+	        format.setAlignment(Qt::AlignCenter);
+	        cellCursor.beginEditBlock();
+	        cellCursor.setBlockFormat(format);
+	        cellCursor.endEditBlock();
+	    }
+	}
+	cursor.movePosition(QTextCursor::Right);
 	cursor.insertBlock();
 	--m_ln;
 }
