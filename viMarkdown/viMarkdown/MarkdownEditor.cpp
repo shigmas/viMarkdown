@@ -411,11 +411,15 @@ QString getUpDstString(bool erase, bool thickKeisen, const QString txt, int ix) 
 				return txt[ix];
 			if( txt[ix] == u'┘' ) return "┤";
 			if( txt[ix] == u'└' ) return "├";
-			if( txt[ix] == u'┴' ) return "┼";
+			//if( txt[ix] == u'┴' ) return "┼";		//	左右が細線
 			if( txt[ix] == u'├' || txt[ix] == u'┠' ) return thickKeisen ? "┠" : "├";	//	右が細線
 			if( txt[ix] == u'┝' || txt[ix] == u'┣' ) return thickKeisen ? "┣" : "├";	//	右が太線
 			if( txt[ix] == u'┤' || txt[ix] == u'┨' ) return thickKeisen ? "┨" : "┨";	//	左が細線
 			if( txt[ix] == u'┥' || txt[ix] == u'┫' ) return thickKeisen ? "┫" : "┥";	//	左が太線
+			if( txt[ix] == u'┴' || txt[ix] == u'┸' || txt[ix] == u'┼' || txt[ix] == u'╂' )	//	左右が細線の場合
+				return thickKeisen ? "┿"  : "┼";
+			if( txt[ix] == u'┷' || txt[ix] == u'┻' || txt[ix] == u'╂' || txt[ix] == u'╋' )	//	左右が太細線の場合
+				return thickKeisen ? "╋" : "┼";
 			if( txt[ix] == u'─' ) {
 				//if( ix > 0 && (txt[ix-1] == u'─' || txt[ix-1] == u'└' || txt[ix-1] == u'┌' || txt[ix-1] == u'←') )
 				if( ix > 0 && ((getConnectionBits(txt[ix-1])&Right) != 0 || txt[ix-1] == u'←') )
@@ -491,7 +495,6 @@ QString getDownSrcString(bool erase, bool thickKeisen, const QString txt, int ix
 			if( txt[ix] == u'→' || txt[ix] == u'┐' || txt[ix] == u'┓' ) return thickKeisen ? "┓" : "┐";
 			if( txt[ix] == u'←' || txt[ix] == u'┌' || txt[ix] == u'┏' ) return thickKeisen ? "┏" : "┌";
 			if( txt[ix] == u'┬' ) return thickKeisen ? "┰" : "┬";
-			//if( txt[ix] == u'┸' || txt[ix] == u'┼' || txt[ix] == u'╂' ) return thickKeisen ? "╂" : "┼";	//	左右が細線の場合
 			if( txt[ix] == u'┘' /*|| txt[ix] == u'┤'*/ ) return "┤";
 			if( txt[ix] == u'└' /*|| txt[ix] == u'├'*/ ) return "├";
 			if( txt[ix] == u'├' || txt[ix] == u'┠' ) return thickKeisen ? "┠" : "├";	//	右が細線
@@ -556,8 +559,8 @@ QString getDownDstString(bool erase, bool thickKeisen, const QString txt, int ix
 			if( txt[ix] == u'━' ) return thickKeisen ? "┻" : "┷";
 			if( txt[ix] == u'┐' ) return "┤";
 			if( txt[ix] == u'┌' ) return "├";
-			if( txt[ix] == u'┴' || txt[ix] == u'┬' ) return thickKeisen ? "╂" : "┼";	//	左右が細線
-			if( txt[ix] == u'┷' || txt[ix] == u'┯' ) return thickKeisen ? "╋" : "┿";	//	左右が太線
+			if( txt[ix] == u'┴' || txt[ix] == u'┬' || txt[ix] == u'┼' || txt[ix] == u'╂' ) return thickKeisen ? "╂" : "┼";	//	左右が細線
+			if( txt[ix] == u'┷' || txt[ix] == u'┯' || txt[ix] == u'┿' || txt[ix] == u'╋' ) return thickKeisen ? "╋" : "┿";	//	左右が太線
 		}
 		return "↓";
 	} else {
