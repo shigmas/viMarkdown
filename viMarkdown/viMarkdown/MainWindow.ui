@@ -68,7 +68,7 @@
      <property name="title">
       <string>&amp;Export</string>
      </property>
-     <addaction name="action_AsHTML"/>
+     <addaction name="action_AsPDF"/>
     </widget>
     <addaction name="action_New"/>
     <addaction name="action_NewTab"/>
