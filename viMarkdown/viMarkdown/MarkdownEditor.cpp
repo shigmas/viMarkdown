@@ -672,10 +672,10 @@ QString getLeftDstString(bool erase, bool thickKeisen, const QString txt, int ix
 		if( ix < txt.size() ) {
 			if( txt[ix] == u'─' || txt[ix] == u'━' || txt[ix] == u'┌' || txt[ix] == u'┼')
 				return txt[ix];
-			if( txt[ix] == u'│' || txt[ix] == u'├' ) return "├";
-			if( txt[ix] == u'┃' || txt[ix] == u'├' ) return thickKeisen ? "┣" : "├";
-			if( txt[ix] == u'↑' || txt[ix] == u'└' ) return "└";
-			if( txt[ix] == u'↓' || txt[ix] == u'┌' ) return "┌";
+			if( txt[ix] == u'│' || txt[ix] == u'├' || txt[ix] == u'┝' ) return thickKeisen ? "┝" : "├";	//	縦：細罫線の場合
+			if( txt[ix] == u'┃' || txt[ix] == u'┠' || txt[ix] == u'┣' ) return thickKeisen ? "┣" : "┠";	//	縦：太罫線の場合
+			if( txt[ix] == u'↓' || txt[ix] == u'└' ) return "└";
+			if( txt[ix] == u'↑' || txt[ix] == u'┌' ) return "┌";
 			if( txt[ix] == u'┘' || txt[ix] == u'┴' ) return "┴";
 			if( txt[ix] == u'┐' || txt[ix] == u'┬' ) return "┬";
 			if( txt[ix] == u'┤' ) return "┼";
