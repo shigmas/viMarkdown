@@ -225,12 +225,20 @@ void MarkdownViewer::do_table(QTextCursor& cursor) {
 	        QTextCharFormat cellFormat = cell.format();
 	        cellFormat.setBackground(headerBgColor);
 	        cell.setFormat(cellFormat);
-	        
-	        // --- センタリングの設定（先ほどの内容） ---
+	        // --- センタリングの設定  ---
 	        QTextCursor cellCursor = cell.firstCursorPosition();
 	        QTextBlockFormat blockFormat = cellCursor.blockFormat();
 	        blockFormat.setAlignment(Qt::AlignCenter);
 	        cellCursor.setBlockFormat(blockFormat);
+	    }
+		QColor cellBgColor(255, 255, 224);
+	    for (int row = 2; row < table->rows(); row+=2) {
+		    for (int col = 0; col < table->columns(); ++col) {
+		        QTextTableCell cell = table->cellAt(row, col);
+		        QTextCharFormat cellFormat = cell.format();
+		        cellFormat.setBackground(cellBgColor);
+		        cell.setFormat(cellFormat);
+		    }
 	    }
 	}
 	cursor.movePosition(QTextCursor::Right);
