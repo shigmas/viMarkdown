@@ -293,17 +293,19 @@ void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int
 	m_nEmptyLines = 0;
 }
 void MarkdownViewer::do_code_keisen(QTextCursor& cursor) {
-	int m_ln0 = m_ln + 1;
-	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
-	}
     QFont font;
 	font.setFamilies({"MS Gothic", "MS UI Gothic", "Osaka-mono", "monospace"});
 	font.setFixedPitch(true);
 	font.setPointSizeF(12);
 	QFontMetrics fm(font);
+	int width = 100;
+	int m_ln0 = m_ln + 1;
+	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
+		width = qMax(width, fm.horizontalAdvance(m_lst[m_ln])+10);
+	}
 	int lineHeight = fm.lineSpacing(); // 行の間隔（高さ＋行間）
+	
 	int height = lineHeight * (m_ln - m_ln0);
-	int width = 800;	//	暫定
 	QImage img(width, height, QImage::Format_RGB32);
     img.fill(QColor("#c0f0c0"));
     QPainter painter(&img);
@@ -311,7 +313,7 @@ void MarkdownViewer::do_code_keisen(QTextCursor& cursor) {
     painter.setFont(font);
     painter.setPen(Qt::black);
     for(int i = 0; i < m_ln - m_ln0; ++i)
-    	painter.drawText(4, lineHeight*i+4, m_lst[m_ln0+i]);
+    	painter.drawText(5, lineHeight*i+fm.height(), m_lst[m_ln0+i]);
     painter.end();
     //
     cursor.insertBlock();
