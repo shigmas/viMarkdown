@@ -555,8 +555,20 @@ QString getDownDstString(bool erase, bool thickKeisen, const QString txt, int ix
 			if( txt[ix] == u'┝' || txt[ix] == u'┣' ) return thickKeisen ? "┣" : "├";	//	右が太線
 			if( txt[ix] == u'┤' || txt[ix] == u'┨' ) return thickKeisen ? "┨" : "┨";	//	左が細線
 			if( txt[ix] == u'┥' || txt[ix] == u'┫' ) return thickKeisen ? "┫" : "┥";	//	左が太線
-			if( txt[ix] == u'─' ) return thickKeisen ? "┸" : "┴";
-			if( txt[ix] == u'━' ) return thickKeisen ? "┻" : "┷";
+			//if( txt[ix] == u'─' ) return thickKeisen ? "┸" : "┴";
+			if( txt[ix] == u'─' ) {
+				if( ix == 0 || (getConnectionBits(txt[ix-1]) & (Right|ThickRight)) == 0 )		//	左に文字があるが右に結合しない場合
+					return thickKeisen ? "┗" : "└";
+				else
+					return thickKeisen ? "┸" : "┴";
+			}
+			//if( txt[ix] == u'━' ) return thickKeisen ? "┻" : "┷";
+			if( txt[ix] == u'━' ) {
+				if( ix == 0 || (getConnectionBits(txt[ix-1]) & (Right|ThickRight)) == 0 )		//	左に文字があるが、右に結合しない場合
+					return thickKeisen ? "┗" : "└";
+				else
+					return thickKeisen ? "┻" : "┷";
+			}
 			if( txt[ix] == u'┐' ) return "┤";
 			if( txt[ix] == u'┌' ) return "├";
 			if( txt[ix] == u'┴' || txt[ix] == u'┬' || txt[ix] == u'┼' || txt[ix] == u'╂' ) return thickKeisen ? "╂" : "┼";	//	左右が細線

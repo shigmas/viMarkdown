@@ -72,15 +72,29 @@ void MarkdownViewer::mouseReleaseEvent(QMouseEvent *e)
     QTextEdit::mouseReleaseEvent(e);
 }
 void MarkdownViewer::do_body_sub(QTextCursor& cursor, const QString &buf) {
-	cursor.insertMarkdown(buf);
-	cursor.insertBlock();
+	//cursor.insertMarkdown(buf);
+	//cursor.insertBlock();
 	QTextBlockFormat blockFormat;
 	blockFormat.setAlignment(Qt::AlignJustify); // 左右両端揃え
 	cursor.mergeBlockFormat(blockFormat);
 	//cursor.insertBlock();
+	cursor.insertMarkdown(buf);
 }
 void MarkdownViewer::do_body(QTextCursor& cursor) {
 	if( m_bodyList.isEmpty() ) return;
+#if 1
+	QString buf;
+	for(auto txt: m_bodyList) {
+		buf += txt + "\n";
+	}
+	if( !buf.isEmpty() ) {
+		QTextBlockFormat blockFormat;
+		blockFormat.setAlignment(Qt::AlignJustify); // 左右両端揃え
+		cursor.mergeBlockFormat(blockFormat);
+		cursor.insertMarkdown(buf);
+	}
+	m_bodyList.clear();
+#else
 	m_hasBody = false;
 	QString buf;
 	for(auto txt: m_bodyList) {
@@ -100,6 +114,7 @@ void MarkdownViewer::do_body(QTextCursor& cursor) {
 		m_nEmptyLines = 0;
 	}
 	m_bodyList.clear();
+#endif
 }
 
 static QRegularExpression re_list(R"(^ *[-\*+] )");
@@ -111,7 +126,7 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 	QString mdtext = doc->toPlainText();
 	QList<QStringView> tableTokens;
 	vector<char> tableAlign;
-#if 1
+
 	this->clear();
     QTextFrame *root = this->document()->rootFrame();
     QTextFrameFormat rformat = root->frameFormat();
@@ -168,44 +183,12 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 			do_body(cursor);
 			do_table(cursor);
 		} else {
-			if( buf.isEmpty() ) {		//	空行
-				m_bodyList += buf;
-				//if( m_bodyList.isEmpty() ) {
-				//	cursor.insertBlock();
-				//} else
-				//	m_bodyList += "  ";	//	強制改行
-				//do_body(cursor);
-				//cursor.insertMarkdown("\n");
-			} else {
-				if( isUnderlineHeading(buf) ) {
-					if( do_underlineHeading(cursor, buf) ) continue;	//	アンダーライン見出しだった場合
-				}
-				m_bodyList += buf;
-				//if( buf.endsWith("  ") )
-				//	m_bodyList += buf + u'\n';
-				//else
-				//	m_bodyList += buf + u' ';
-			}
+			if( isUnderlineHeading(buf) && do_underlineHeading(cursor, buf) )
+				continue;		//	アンダーライン見出しだった場合
+			m_bodyList += buf;
 		}
 	}
 	do_body(cursor);
-#else
-	document()->setMarkdown(mdtext);
-	for (QTextBlock block = doc->begin(); block.isValid(); block = block.next()) {
-        
-        QTextBlockFormat format = block.blockFormat();
-
-        if (format.headingLevel() == 0) {
-            format.setAlignment(Qt::AlignJustify);
-            QTextCursor cursor(block);
-            cursor.setBlockFormat(format);
-        } else if(format.headingLevel() == 1) {
-            format.setAlignment(Qt::AlignCenter);
-            QTextCursor cursor(block);
-            cursor.setBlockFormat(format);
-        }
-    }
-#endif
 }
 void MarkdownViewer::do_table(QTextCursor& cursor) {
 	QString buf = m_lst[m_ln] + "\n" + m_lst[m_ln+1] /*+ "\n"*/;
@@ -269,6 +252,8 @@ void MarkdownViewer::do_heading(QTextCursor& cursor, QString buf) {
 	do_heading_sub(cursor, buf.mid(i - 1), h, m_ln);
 }
 void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int ln) {
+	if( !cursor.atBlockStart() )
+		cursor.insertBlock();			//	新規ブロック
 	//## このロジックがあると、見出し＋空行＋見出し で空行が２つ生成されてしまう
 	//## だが、無いと 本文＋空行＋見出し の時、空行が生成されない
 	//##if( m_nEmptyLines >= 1 )
