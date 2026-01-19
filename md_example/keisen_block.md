@@ -1,7 +1,7 @@
 #title
 ## head
 text
-```keisen
+```Keisen
 ┏━━━━━━┓                        
 ┃   MdEdit   ┃          ┌─────┐
 ┠──────┨────→│fuga      │

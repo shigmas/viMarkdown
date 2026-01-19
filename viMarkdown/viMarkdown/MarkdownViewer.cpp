@@ -177,7 +177,7 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 		} else if( buf.startsWith("> ") ) {
 			do_body(cursor);
 			do_quote(cursor, buf);
-		} else if( buf.startsWith("```keisen") ) {
+		} else if( buf.compare("```keisen", Qt::CaseInsensitive) == 0 ) {
 			do_body(cursor);
 			do_code_keisen(cursor);
 		} else if( buf.startsWith("```") ) {
