@@ -3,6 +3,7 @@
 #include <QTextBlock>
 #include <QRegularExpression>
 #include <QTextTable>
+#include <qpainter.h>
 #include "MarkdownViewer.h"
 #include "MainWindow.h"
 
@@ -176,6 +177,9 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 		} else if( buf.startsWith("> ") ) {
 			do_body(cursor);
 			do_quote(cursor, buf);
+		} else if( buf.startsWith("```keisen") ) {
+			do_body(cursor);
+			do_code_keisen(cursor);
 		} else if( buf.startsWith("```") ) {
 			do_body(cursor);
 			do_code(cursor);
@@ -288,21 +292,42 @@ void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int
 	m_headingLineNum.push_back(ln);
 	m_nEmptyLines = 0;
 }
+void MarkdownViewer::do_code_keisen(QTextCursor& cursor) {
+	int m_ln0 = m_ln + 1;
+	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
+	}
+    QFont font;
+	font.setFamilies({"MS Gothic", "MS UI Gothic", "Osaka-mono", "monospace"});
+	font.setFixedPitch(true);
+	font.setPointSizeF(12);
+	QFontMetrics fm(font);
+	int lineHeight = fm.lineSpacing(); // 行の間隔（高さ＋行間）
+	int height = lineHeight * (m_ln - m_ln0);
+	int width = 800;	//	暫定
+	QImage img(width, height, QImage::Format_RGB32);
+    img.fill(QColor("#c0f0c0"));
+    QPainter painter(&img);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setFont(font);
+    painter.setPen(Qt::black);
+    for(int i = 0; i < m_ln - m_ln0; ++i)
+    	painter.drawText(4, lineHeight*i+4, m_lst[m_ln0+i]);
+    painter.end();
+    //
+    cursor.insertBlock();
+    QTextBlockFormat blockFormat;
+	blockFormat.setTopMargin(lineHeight/2);
+    cursor.mergeBlockFormat(blockFormat);
+    cursor.insertImage(img);
+    cursor.insertBlock();
+    //cursor.setBlockFormat(QTextBlockFormat());		//	トップマージンリセット
+}
 void MarkdownViewer::do_code(QTextCursor& cursor) {
 	QString buf;
 	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
 		if( !buf.isEmpty() ) buf += "\n";
 		buf += m_lst[m_ln];
 	}
-	// 1. フレームの書式を設定
-	QTextFrameFormat frameFormat;
-	frameFormat.setBackground(QColor("#fffff0")); // 薄い黄色
-	frameFormat.setMargin(0);                     // 外側の余白
-	frameFormat.setPadding(10);                   // 内側の余白（文字と端の隙間）
-	frameFormat.setBorder(0);                     // 枠線はなし
-	// 2. フレームを挿入（この中にカーソルが入る）
-	cursor.insertFrame(frameFormat);
-
 	QTextCharFormat codeCharFormat;
 #if 0
     codeCharFormat.setFontFamilies({"MS Gothic", "MS UI Gothic", "Osaka-mono", "monospace"});
@@ -320,6 +345,15 @@ void MarkdownViewer::do_code(QTextCursor& cursor) {
 	// 4. 設定済みの QFont を QTextCharFormat に適用
 	codeCharFormat.setFont(font);
 #endif
+	// フレームの書式を設定
+	QTextFrameFormat frameFormat;
+	frameFormat.setBackground(QColor("#fffff0")); // 薄い黄色
+	frameFormat.setMargin(0);                     // 外側の余白
+	frameFormat.setPadding(10);                   // 内側の余白（文字と端の隙間）
+	frameFormat.setBorder(0);                     // 枠線はなし
+	// 2. フレームを挿入（この中にカーソルが入る）
+	cursor.insertFrame(frameFormat);
+
 	// 3. フレームの中で Markdown を挿入
 	cursor.insertText(buf, codeCharFormat);
 	cursor.movePosition(QTextCursor::End);
