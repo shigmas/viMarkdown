@@ -2,6 +2,8 @@
 
 -- visual Markdown editor --
 
+[日本語版 (Japanese)](README_ja.md)
+
 **viMarkdown** is a lightweight, high-performance Markdown editor built with **Qt6** and **C++**.  
 It is designed for developers and writers who love efficiency.
 
