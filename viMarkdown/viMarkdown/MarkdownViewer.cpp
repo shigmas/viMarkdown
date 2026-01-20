@@ -296,13 +296,25 @@ void MarkdownViewer::do_code_keisen(QTextCursor& cursor) {
     QFont font;
     QStringView buf = m_lst[m_ln].mid(QString("```keisen").size());
     QColor bgcolor("#c0f0c0");
-    while( !buf.isEmpty() && buf[0] == u' ' ) buf = buf.mid(1);		//	skip u' ';
-    if( buf.startsWith(u"bgcolor:", Qt::CaseInsensitive) ) {
-    	buf = buf.mid(QString(u"bgcolor:").size());
+    QColor color("black");
+    for(;;) {
 	    while( !buf.isEmpty() && buf[0] == u' ' ) buf = buf.mid(1);		//	skip u' ';
-	    int ix = buf.indexOf(u';');
-	    if( ix >= 0 )
+	    if( buf.startsWith(u"background-color:", Qt::CaseInsensitive) ) {
+	    	buf = buf.mid(QString(u"background-color:").size());
+		    while( !buf.isEmpty() && buf[0] == u' ' ) buf = buf.mid(1);		//	skip u' ';
+		    int ix = buf.indexOf(u';');
+		    if( ix < 0 ) break;
 		    bgcolor = QColor(buf.left(ix));
+		    buf = buf.mid(ix+1);
+	    } else if( buf.startsWith(u"color:", Qt::CaseInsensitive) ) {
+	    	buf = buf.mid(QString(u"color:").size());
+		    while( !buf.isEmpty() && buf[0] == u' ' ) buf = buf.mid(1);		//	skip u' ';
+		    int ix = buf.indexOf(u';');
+		    if( ix < 0 ) break;
+		    color = QColor(buf.left(ix));
+		    buf = buf.mid(ix+1);
+	    } else
+	    	break;
     }
 	font.setFamilies({"MS Gothic", "MS UI Gothic", "Osaka-mono", "monospace"});
 	font.setFixedPitch(true);
@@ -321,7 +333,7 @@ void MarkdownViewer::do_code_keisen(QTextCursor& cursor) {
     QPainter painter(&img);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setFont(font);
-    painter.setPen(Qt::black);
+    painter.setPen(color);
     for(int i = 0; i < m_ln - m_ln0; ++i)
     	painter.drawText(5, lineHeight*i+fm.height(), m_lst[m_ln0+i]);
     painter.end();

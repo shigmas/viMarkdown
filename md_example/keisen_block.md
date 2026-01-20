@@ -1,7 +1,7 @@
 #title
 ## head
 text
-```keisen bgcolor: lightblue;
+```keisen color: yellow; background-color: darkblue;
 ┏━━━━━━┓                        
 ┃   MdEdit   ┃          ┌─────┐
 ┠──────┨────→│fuga      │
