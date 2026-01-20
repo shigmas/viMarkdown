@@ -10,30 +10,32 @@
 <img width="500" alt="image" src="./screen.png" />
 
 
-## Features
+## 主な特徴
 
-- **Fast & Native:** Built with Qt6 for lightning-fast performance compared to Electron-based editors.
-- **Tree View Navigation:** Manage your files and outline structure easily.
-- **Tabbed Interface:** Edit multiple files simultaneously.
-- **Markdown Preview:** Live preview of your Markdown content (supports Mermaid, MathJax).
+- **高速 & ネイティブ:** Qt6を採用。Electronベースのエディタと比較して、圧倒的に軽快なパフォーマンスを実現しています。
+- **ツリービューによるナビゲーション:** ファイル管理や文書構造の把握を容易に行えます。
+- **タブインターフェース:** 複数のファイルを同時に開いて、効率よく編集可能です。
+- **マークダウンプレビュー:** 編集内容をリアルタイムにプレビュー表示。
+- **罫線ブロック:** テキストの罫線記号を使ってクラス図、UIなどの図を簡単に描くことができます。
 
-## How to build
+## ビルド方法
 
-### Windows (Recommended)
-The project is currently developed and tested on **Windows 11** using **Visual Studio 2026** with **Qt VS Tools**.
+### Windows (推奨)
+本プロジェクトは、現在 **Windows 11** 環境にて **Visual Studio 2026** と **Qt VS Tools** を使用して開発およびテストされています。
 
-**Prerequisites:**
-- **Visual Studio 2026** or later
-- **Qt VS Tools** extension
-- **Qt 6 SDK** (MSVC build)
+**前提条件:**
+- **Visual Studio 2026** 以降
+- **Qt VS Tools** 拡張機能
+- **Qt 6 SDK** (MSVC ビルド版)
 
-**Build Instructions:**
-1. Clone the repository.
-2. Open `viMarkdown.sln` in Visual Studio.
-3. If prompted, configure the Qt Version in the Qt VS Tools settings to match your installed Qt SDK.
-4. **Build Solution** (Ctrl+Shift+B).
+**ビルド手順:**
+1. リポジトリをクローンします。
+2. Visual Studio で `viMarkdown.sln` を開きます。
+3. 必要に応じて、Qt VS Tools の設定でインストール済みの Qt SDK とバージョンが一致するように構成してください。
+4. **ソリューションのビルド** (Ctrl+Shift+B) を実行します。
 
 ### Linux / macOS / Qt Creator
-**Help Wanted:**
-Currently, build verification on Linux, macOS, or using Qt Creator (via `.pro` or `CMakeLists.txt`) is **untested**.
-If you are using these environments, you may need to generate the project files manually. Contributions to add `CMake` or `qmake` support are highly welcome!
+**協力者募集:**
+現在、Linux、macOS、または Qt Creator（`.pro` や `CMakeLists.txt` 経由）を使用したビルド検証は**未実施**です。  
+これらの環境を使用する場合、手動でプロジェクトファイルを生成する必要があるかもしれません。
+CMake や qmake への対応に関するコントリビューション（協力）を心よりお待ちしております！

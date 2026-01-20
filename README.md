@@ -15,7 +15,8 @@ It is designed for developers and writers who love efficiency.
 - **Fast & Native:** Built with Qt6 for lightning-fast performance compared to Electron-based editors.
 - **Tree View Navigation:** Manage your files and outline structure easily.
 - **Tabbed Interface:** Edit multiple files simultaneously.
-- **Markdown Preview:** Live preview of your Markdown content (supports Mermaid, MathJax).
+- **Markdown Preview:** Live preview of your Markdown content.
+- **Keisen Block:** Create class diagrams and UI mockups with ease using text-based characters.
 
 ## How to build
 
