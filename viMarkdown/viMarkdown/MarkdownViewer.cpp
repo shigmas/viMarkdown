@@ -177,7 +177,7 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 		} else if( buf.startsWith("> ") ) {
 			do_body(cursor);
 			do_quote(cursor, buf);
-		} else if( buf.compare("```keisen", Qt::CaseInsensitive) == 0 ) {
+		} else if( buf.startsWith("```keisen", Qt::CaseInsensitive) ) {
 			do_body(cursor);
 			do_code_keisen(cursor);
 		} else if( buf.startsWith("```") ) {
@@ -294,6 +294,16 @@ void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int
 }
 void MarkdownViewer::do_code_keisen(QTextCursor& cursor) {
     QFont font;
+    QStringView buf = m_lst[m_ln].mid(QString("```keisen").size());
+    QColor bgcolor("#c0f0c0");
+    while( !buf.isEmpty() && buf[0] == u' ' ) buf = buf.mid(1);		//	skip u' ';
+    if( buf.startsWith(u"bgcolor:", Qt::CaseInsensitive) ) {
+    	buf = buf.mid(QString(u"bgcolor:").size());
+	    while( !buf.isEmpty() && buf[0] == u' ' ) buf = buf.mid(1);		//	skip u' ';
+	    int ix = buf.indexOf(u';');
+	    if( ix >= 0 )
+		    bgcolor = QColor(buf.left(ix));
+    }
 	font.setFamilies({"MS Gothic", "MS UI Gothic", "Osaka-mono", "monospace"});
 	font.setFixedPitch(true);
 	font.setPointSizeF(12);
@@ -307,7 +317,7 @@ void MarkdownViewer::do_code_keisen(QTextCursor& cursor) {
 	
 	int height = lineHeight * (m_ln - m_ln0);
 	QImage img(width, height, QImage::Format_RGB32);
-    img.fill(QColor("#c0f0c0"));
+    img.fill(bgcolor);
     QPainter painter(&img);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setFont(font);
