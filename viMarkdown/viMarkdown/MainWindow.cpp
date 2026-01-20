@@ -390,7 +390,7 @@ void MainWindow::onAction_New() {
 #endif
 }
 void MainWindow::onAction_NewTab() {
-	addTab(QString("無題-%1").arg(++m_tab_number));
+	addTab(QString("vmd-%1").arg(++m_tab_number));
 }
 void MainWindow::addTab(const QString &title, const QString fullPath, const QString txt) {
 	auto docWidget = newTabWidget(title, fullPath);		//	新規タブ生成
