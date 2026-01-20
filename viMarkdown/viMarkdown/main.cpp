@@ -1,8 +1,11 @@
+#include <QDir>
 #include "MainWindow.h"
 #include <QtWidgets/QApplication>
 
 int main(int argc, char *argv[])
 {
+	QString exeDir = QCoreApplication::applicationDirPath();
+	QDir::setCurrent(exeDir);
     QApplication app(argc, argv);
     app.setWindowIcon(QIcon(":/MainWindow/images/viMarkdown.png"));
     QCoreApplication::setOrganizationName("VisualSoftLab");

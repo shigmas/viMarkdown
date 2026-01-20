@@ -77,6 +77,12 @@ void MainWindow::insertSearchComboBox() {
 	QStringList history = settings.value("search/history").toStringList();
     m_searchCB->clear();
     m_searchCB->addItems(history);
+    //	ついでに最近のファイル・ディレクトリをカレントディレクトリに設定
+	QStringList recentFilePaths = settings.value("recentFilePaths").toStringList();
+	if( !recentFilePaths.isEmpty() ) {
+		QFileInfo fi(recentFilePaths.front());
+		QDir::setCurrent(fi.path());
+	}
 }
 void MainWindow::onAction_Find() {
 	m_searchCB->setFocus();
