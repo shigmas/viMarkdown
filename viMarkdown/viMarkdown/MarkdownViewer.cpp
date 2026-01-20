@@ -252,8 +252,8 @@ void MarkdownViewer::do_heading(QTextCursor& cursor, QString buf) {
 	int i = 1;
 	while( i < buf.size() && buf[i] == '#' ) ++i;
 	int h = std::min(6, i);		//	[1, 6]
-	while( i < buf.size() && buf[i] == ' ' ) ++i;
-	do_heading_sub(cursor, buf.mid(i - 1), h, m_ln);
+	while( i < buf.size() && buf[i] == u' ' ) ++i;
+	do_heading_sub(cursor, buf.mid(i), h, m_ln);
 }
 void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int ln) {
 	if( !cursor.atBlockStart() )
