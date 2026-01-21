@@ -6,6 +6,7 @@
 #include <QRegularExpression>
 #include <QInputMethod>
 #include <QMouseEvent>
+#include <QDate>
 #include "MarkdownEditor.h"
 #include "MainWindow.h"
 
@@ -907,6 +908,12 @@ void MarkdownEditor::applyAlignment(Align align) {
 		cursor.setPosition(blockPos + ix2 - rightSpaces);
 		setTextCursor(cursor);
 	}
+}
+void MarkdownEditor::insertTodayString() {
+	QTextCursor cursor = this->textCursor();
+	QString today = QDate::currentDate().toString("yyyy-MM-dd");
+	cursor.insertText(today);
+	setTextCursor(cursor);
 }
 void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int charsAdded) {
 	if( m_processing || (charsRemoved == 0 && charsAdded == 0) ) return;

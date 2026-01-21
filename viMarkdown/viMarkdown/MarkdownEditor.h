@@ -33,6 +33,7 @@ public:
 	void	onAlignCenter();
 	void	onAlignRight();
 	void	onKeisenMode(bool);
+	void	insertTodayString();
 
 signals:
     void tab_pressed();

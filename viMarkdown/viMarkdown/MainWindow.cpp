@@ -84,6 +84,11 @@ void MainWindow::insertSearchComboBox() {
 		QDir::setCurrent(fi.path());
 	}
 }
+void MainWindow::onAction_TodayString_1() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	docWidget->m_mdEditor->insertTodayString();
+}
 void MainWindow::onAction_Find() {
 	m_searchCB->setFocus();
 }
@@ -160,6 +165,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_AlignLeft, &QAction::triggered, this, &MainWindow::onAction_AlignLeft);
 	connect(ui->action_AlignCenter, &QAction::triggered, this, &MainWindow::onAction_AlignCenter);
 	connect(ui->action_AlignRight, &QAction::triggered, this, &MainWindow::onAction_AlignRight);
+	connect(ui->action_TodayString_1, &QAction::triggered, this, &MainWindow::onAction_TodayString_1);
 	connect(ui->action_Find, &QAction::triggered, this, &MainWindow::onAction_Find);
 	connect(ui->action_ForwardAgain, &QAction::triggered, this, &MainWindow::onAction_ForwardAgain);
 	connect(ui->action_BackwardAgain, &QAction::triggered, this, &MainWindow::onAction_BackwardAgain);

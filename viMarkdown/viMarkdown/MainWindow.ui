@@ -97,7 +97,7 @@
     </property>
     <widget class="QMenu" name="menuinline">
      <property name="title">
-      <string>&amp;Inline</string>
+      <string>In&amp;line</string>
      </property>
      <addaction name="separator"/>
      <addaction name="action_Bold"/>
@@ -121,6 +121,12 @@
      <addaction name="action_AlignCenter"/>
      <addaction name="action_AlignRight"/>
     </widget>
+    <widget class="QMenu" name="menu_Insert">
+     <property name="title">
+      <string>&amp;Insert</string>
+     </property>
+     <addaction name="action_TodayString_1"/>
+    </widget>
     <addaction name="action_Undo"/>
     <addaction name="action_Redo"/>
     <addaction name="separator"/>
@@ -134,6 +140,7 @@
     <addaction name="menu_format"/>
     <addaction name="action_Indent"/>
     <addaction name="action_UnIndent"/>
+    <addaction name="menu_Insert"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -718,6 +725,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+T</string>
+   </property>
+  </action>
+  <action name="action_TodayString_1">
+   <property name="text">
+    <string>&amp;1 TodayString</string>
+   </property>
+   <property name="toolTip">
+    <string>Today's string</string>
    </property>
   </action>
  </widget>

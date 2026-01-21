@@ -83,6 +83,7 @@ protected:
     void	onAction_AlignLeft();
     void	onAction_AlignCenter();
     void	onAction_AlignRight();
+    void	onAction_TodayString_1();
     void	onAction_Find();
     void	onAction_ForwardAgain();
     void	onAction_BackwardAgain();
