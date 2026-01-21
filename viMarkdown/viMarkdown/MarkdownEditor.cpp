@@ -332,9 +332,21 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	QPlainTextEdit::keyPressEvent(e);	// Enter 以外のキーは通常通りの処理
 }
 void MarkdownEditor::mouseReleaseEvent(QMouseEvent *event) {
+	if( (event->modifiers() & Qt::ControlModifier) == 0 ) return;
 	auto pos = event->position();
-	QTextCursor cursor = cursorForPosition(QPoint((int)pos.x(), (int)pos.y()));
-
+	QTextCursor cursor = cursorForPosition(pos.toPoint());
+	QTextBlock block = cursor.block();
+	QString text = block.text();
+	int ix = cursor.positionInBlock();
+	int openIX = text.lastIndexOf("[[", ix);
+	if( openIX < 0 ) return;
+	int closeIX = text.indexOf("]]", openIX);
+	if( closeIX < 0 || ix > closeIX + 1 ) return;
+	int titleStart = openIX + 2;
+	QString title = text.mid(titleStart, closeIX - titleStart);
+	if( !title.endsWith(".md") ) title += ".md";
+	//qDebug() << "title = " << title;
+	emit title_clicked(title);
 }
 int MarkdownEditor::nColumn(const QString &text) const {
 	QFontMetrics fm(font());

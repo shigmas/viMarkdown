@@ -274,6 +274,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onMdEditCurPosChanged);
 	connect(mdEditor, &MarkdownEditor::tab_pressed, this, &MainWindow::onMdEditTabPressed);
 	connect(mdEditor, &MarkdownEditor::esc_pressed, this, &MainWindow::onMdEditEscPressed);
+	connect(mdEditor, &MarkdownEditor::title_clicked, this, &MainWindow::do_open);
 	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
 	//QTextEdit *mdEditor = new QTextEdit(splitter);
 	mdEditor->setPlaceholderText("\nここにMarkdownを入力\n"
@@ -498,6 +499,7 @@ void MainWindow::close_empty_doc() {
 	}
 }
 bool MainWindow::do_open(const QString& fullPath) {
+	qDebug() << "do_open(" << fullPath << ")";
 	int tix = tabIndexOf("", fullPath);
 	if( tix >= 0 ) {		//	すでにオープン済み
 		ui->tabWidget->setCurrentIndex(tix);

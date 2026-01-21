@@ -36,8 +36,9 @@ public:
 	void	insertTodayString();
 
 signals:
-    void tab_pressed();
-    void esc_pressed();
+    void	tab_pressed();
+    void	esc_pressed();
+    void	title_clicked(const QString title);
 
 protected:
     void	keyPressEvent(QKeyEvent *e) override;
