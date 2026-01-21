@@ -18,6 +18,17 @@ It is designed for developers and writers who love efficiency.
 - **Markdown Preview:** Live preview of your Markdown content.
 - **Keisen Block:** Create class diagrams and UI mockups with ease using text-based characters.
 
+## Development Phases
+
+| Phase | Description | Schedule |
+| :--- | :--- | :--- |
+| prototype | Experimental implementation | Dec 2025 – |
+| dev | Feature implementation & verification | Jan 2026 – (**Current**) |
+| Alpha | Bug fixes and occasional feature additions | Mid-Feb 2026 – |
+| Beta | Bug fixes only | Mar 2026 – |
+| RC | Bug fixes only (ensuring no side effects) | Mid-Mar 2026 – |
+| Stable | Maintenance mode | Apr 2026 – |
+
 ## How to build
 
 ### Windows (Recommended)

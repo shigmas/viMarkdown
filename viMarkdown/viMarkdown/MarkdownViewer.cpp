@@ -120,6 +120,16 @@ void MarkdownViewer::do_body(QTextCursor& cursor) {
 
 static QRegularExpression re_list(R"(^ *[-\*+] )");
 
+int indexOfComment(QStringView buf, int start) {
+	for(int i = start; i < buf.size(); ++i) {
+		if( buf[i] == u'\\' && i+1 < buf.size() )
+			++i;
+		else if( buf.mid(i).startsWith(u"<!--") )
+			return i;
+	}
+	return -1;
+}
+
 void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 	m_headingList.clear();
 	m_headingLineNum.clear();
@@ -147,7 +157,7 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 		QString buf = m_lst[m_ln];
 		if( !m_inComment ) {
 			int start = 0, ix;
-			while( (ix = buf.indexOf("<!--", start)) >= 0 ) {
+			while( (ix = indexOfComment(buf, start)) >= 0 ) {
 				bComment = true;
 				int ix2 = buf.indexOf("-->", ix + 4);
 				if( ix2 < 0 ) {

@@ -679,11 +679,23 @@ QString getLeftSrcString(bool erase, bool thickKeisen, const QString txt, int ix
 //┝╋┥├╂┤┠┼─┨┣╋━┫┝┿━┥
 //│┃││┃│┃│  ┃┃┃  ┃││  │
 //└┸┘└┸┘┗┷━┛┗┻━┛└┴─┘
-QString getLeftDstString(bool erase, bool thickKeisen, const QString txt, int ix) {
+QString getLeftDstString(bool erase, bool thickKeisen, const QString txt, int ix, const QString prev, const QString next) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
 			if( txt[ix] == u'─' || txt[ix] == u'━' || txt[ix] == u'┌' || txt[ix] == u'┼')
 				return txt[ix];
+			if( txt[ix] == u'│' || txt[ix] == u'┃' ) {
+				auto bits = getConnectionBits(txt[ix]);
+				if( ix >= prev.size() || (getConnectionBits(prev[ix])&(Down|ThickDown)) == 0 )
+					bits ^= ~(Up|ThickUp);
+				if( ix >= next.size() || (getConnectionBits(next[ix])&(Up|ThickUp)) == 0 )
+					bits ^= ~(Down|ThickDown);
+				bits |= thickKeisen ? ThickRight : Right;
+				if( bits != 0 && bits < 0x100 )
+					return QString(revKeisenTable[bits]);
+				else
+					return "←";
+			}
 			if( txt[ix] == u'│' || txt[ix] == u'├' || txt[ix] == u'┝' ) return thickKeisen ? "┝" : "├";	//	縦：細罫線の場合
 			if( txt[ix] == u'┃' || txt[ix] == u'┠' || txt[ix] == u'┣' ) return thickKeisen ? "┣" : "┠";	//	縦：太罫線の場合
 			if( txt[ix] == u'↓' || txt[ix] == u'└' ) return "└";
@@ -719,7 +731,12 @@ void MarkdownEditor::do_keisen_left(bool erase, bool thickKeisen) {
 	}
 	while( !cursor.atBlockStart() && getVisualColumn(cursor, this) > vc0 - 2 )
 		cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor);
-	QString dst = getLeftDstString(erase, thickKeisen, cursor.block().text(), cursor.positionInBlock());
+	QString prev, next;
+	QTextBlock pb = cursor.block().previous();
+	if( pb.isValid() ) prev = pb.text();
+	QTextBlock nb = cursor.block().next();
+	if( nb.isValid() ) next = nb.text();
+	QString dst = getLeftDstString(erase, thickKeisen, cursor.block().text(), cursor.positionInBlock(), prev, next);
 	cursor.insertText(dst+src);
 	while( getVisualColumn(cursor, this) > vc0 - 2 )
 		cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
