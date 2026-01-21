@@ -331,6 +331,11 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	}
 	QPlainTextEdit::keyPressEvent(e);	// Enter 以外のキーは通常通りの処理
 }
+void MarkdownEditor::mouseReleaseEvent(QMouseEvent *event) {
+	auto pos = event->position();
+	QTextCursor cursor = cursorForPosition(QPoint((int)pos.x(), (int)pos.y()));
+
+}
 int MarkdownEditor::nColumn(const QString &text) const {
 	QFontMetrics fm(font());
 	int halfWidth = fm.horizontalAdvance(u'9'); 

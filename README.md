@@ -20,14 +20,14 @@ It is designed for developers and writers who love efficiency.
 
 ## Development Phases
 
-| Phase | Description | Schedule |
-| :--- | :--- | :--- |
-| prototype | Experimental implementation | Dec 2025 – |
-| dev | Feature implementation & verification | Jan 2026 – (**Current**) |
-| Alpha | Bug fixes and occasional feature additions | Mid-Feb 2026 – |
-| Beta | Bug fixes only | Mar 2026 – |
-| RC | Bug fixes only (ensuring no side effects) | Mid-Mar 2026 – |
-| Stable | Maintenance mode | Apr 2026 – |
+|ver.| Phase | Description | Schedule |
+|----| :--- | :--- | :--- |
+|0.0.xxx| prototype | Experimental implementation | Dec 2025 – |
+|0.1.0xx| dev | Feature implementation & verification | Jan 2026 – (**Current**) |
+|0.1.1xx| Alpha | Bug fixes and occasional feature additions | Mid-Feb 2026 – |
+|0.1.2xx| Beta | Bug fixes only | Mar 2026 – |
+|0.2.xxx| RC | Bug fixes only (ensuring no side effects) | Mid-Mar 2026 – |
+|0.2.xxx| Stable | Maintenance mode | Apr 2026 – |
 
 ## How to build
 

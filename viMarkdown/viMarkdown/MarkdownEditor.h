@@ -41,6 +41,7 @@ signals:
 
 protected:
     void	keyPressEvent(QKeyEvent *e) override;
+    void	mouseReleaseEvent(QMouseEvent *event) override;
     void	paintEvent(QPaintEvent *e) override;
     void	resizeEvent(QResizeEvent *event) override;
     void	inputMethodEvent(QInputMethodEvent *event) override;
