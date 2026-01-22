@@ -984,6 +984,7 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 void MarkdownEditor::onCurPosChanged() {
 	QTextCursor cursor = this->textCursor();
 	m_lastCurBlockText = cursor.block().text();
+	//	Undone: プレビューの対応段落（見出し行＋本文）を画面内に
 }
 int MarkdownEditor::getVisualLineNumber(const QTextCursor &cursor) const {
 	int visualLineNum = 0;

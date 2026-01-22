@@ -275,6 +275,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(mdEditor, &MarkdownEditor::tab_pressed, this, &MainWindow::onMdEditTabPressed);
 	connect(mdEditor, &MarkdownEditor::esc_pressed, this, &MainWindow::onMdEditEscPressed);
 	connect(mdEditor, &MarkdownEditor::title_clicked, this, &MainWindow::do_open);
+	connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onCurPosChanged);
 	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
 	//QTextEdit *mdEditor = new QTextEdit(splitter);
 	mdEditor->setPlaceholderText("\nここにMarkdownを入力\n"
@@ -299,6 +300,12 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 
 	docWidget->setModified(false);
 	return docWidget;
+}
+void MainWindow::onCurPosChanged() {		//	MarkdownEditor でカーソルが移動した
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	QTextCursor cursor = docWidget->m_mdEditor->textCursor();
+	docWidget->m_markdownViewer->ensureLineVisible(cursor.blockNumber());
 }
 void MainWindow::onMarkdownViewerLineClicked(int bln) {
 	qDebug() << "MainWindow::onMarkdownViewerLineClicked(" << bln << ")";

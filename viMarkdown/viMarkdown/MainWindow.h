@@ -59,6 +59,7 @@ protected:
     void	onModificationChanged(bool);
     void	onSearchCBActivated();
     void	onMarkdownViewerLineClicked(int);
+    void	onCurPosChanged();
 
     void	onAction_New();
     void	onAction_NewTab();

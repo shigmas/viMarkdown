@@ -134,7 +134,7 @@ int indexOfComment(QStringView buf, int start) {
 
 void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 	m_headingList.clear();
-	m_headingLineNum.clear();
+	m_headingSrcLineNum.clear();
 	m_headingBlockNum.clear();
 	QString mdtext = doc->toPlainText();
 	QList<QStringView> tableTokens;
@@ -281,17 +281,9 @@ void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int
 		blockFormat.setAlignment(Qt::AlignCenter);
 		cursor.mergeBlockFormat(blockFormat);
 	}
-#if 0		//	うまくいかない
-	QTextCharFormat charFormat;
-	charFormat.setFontPointSize(h_font_size[h]);
-	cursor.select(QTextCursor::BlockUnderCursor);
-	cursor.mergeCharFormat(charFormat);
-	cursor.clearSelection();
-	this->setTextCursor(cursor);
-#endif
+	m_headingBlockNum.push_back(cursor.blockNumber());
 
 	//cursor.setCharFormat(QTextCharFormat());
-	m_headingBlockNum.push_back(cursor.blockNumber());
 	//cursor.insertBlock(QTextBlockFormat());		//	新規ブロック
 	//cursor.insertText("←");
 	//QTextBlockFormat blockFormat0;
@@ -301,7 +293,7 @@ void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int
 	cursor.insertBlock(QTextBlockFormat());		//	新規ブロック
 
 	m_headingList.push_back(QChar(u'0'+h) + buf.remove("^ +"));
-	m_headingLineNum.push_back(ln);
+	m_headingSrcLineNum.push_back(ln);
 	m_nEmptyLines = 0;
 }
 void MarkdownViewer::do_code_keisen(QTextCursor& cursor) {
@@ -467,4 +459,21 @@ void MarkdownViewer::do_list(QTextCursor& cursor, QString buf) {
 	cursor.setBlockFormat(blockFormat);
 	--m_ln;
 	m_nEmptyLines = 0;
+}
+void MarkdownViewer::ensureLineVisible(int srcBlockNum) {
+	//qDebug() << "srcBlockNum = " << srcBlockNum;
+	int i = 0;
+	while( i < m_headingSrcLineNum.size() && m_headingSrcLineNum[i] < srcBlockNum ) ++i;
+	if( i < m_headingBlockNum.size() )
+		scrollToBlock(m_headingBlockNum[i]);
+}
+void MarkdownViewer::scrollToBlock(int blockIndex) {
+    QTextBlock block = document()->findBlockByNumber(blockIndex);
+    if (!block.isValid()) return;
+	QTextCursor cursor = textCursor();
+	cursor.setPosition(block.position());
+	setTextCursor(cursor);
+	ensureCursorVisible();
+    //int y = (int)documentLayout()->blockBoundingRect(block).top();
+    //verticalScrollBar()->setValue(y);
 }
