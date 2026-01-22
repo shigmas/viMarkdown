@@ -465,7 +465,7 @@ void MarkdownViewer::do_list(QTextCursor& cursor, QString buf) {
 void MarkdownViewer::ensureLineVisible(int srcBlockNum) {
 	//qDebug() << "srcBlockNum = " << srcBlockNum;
 	int i = 0;
-	while( i < m_headingSrcLineNum.size() && m_headingSrcLineNum[i] < srcBlockNum ) ++i;
+	while( i+1 < m_headingSrcLineNum.size() && m_headingSrcLineNum[i+1] <= srcBlockNum ) ++i;
 	if( i < m_headingBlockNum.size() )
 		scrollToBlock(m_headingBlockNum[i]);
 }
