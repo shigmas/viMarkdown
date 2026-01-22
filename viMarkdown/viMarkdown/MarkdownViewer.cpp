@@ -3,6 +3,8 @@
 #include <QTextBlock>
 #include <QRegularExpression>
 #include <QTextTable>
+#include <QAbstractTextDocumentLayout>
+#include <QScrollbar>
 #include <qpainter.h>
 #include "MarkdownViewer.h"
 #include "MainWindow.h"
@@ -470,10 +472,13 @@ void MarkdownViewer::ensureLineVisible(int srcBlockNum) {
 void MarkdownViewer::scrollToBlock(int blockIndex) {
     QTextBlock block = document()->findBlockByNumber(blockIndex);
     if (!block.isValid()) return;
+#if 0
 	QTextCursor cursor = textCursor();
 	cursor.setPosition(block.position());
 	setTextCursor(cursor);
 	ensureCursorVisible();
-    //int y = (int)documentLayout()->blockBoundingRect(block).top();
-    //verticalScrollBar()->setValue(y);
+#else
+    int y = (int)document()->documentLayout()->blockBoundingRect(block).top();
+    verticalScrollBar()->setValue(y);
+#endif
 }
