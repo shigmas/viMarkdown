@@ -505,6 +505,18 @@ bool MainWindow::do_open(const QString& fullPath) {
 		ui->tabWidget->setCurrentIndex(tix);
 		return true;
 	}
+	QFileInfo checkFile(fullPath);
+	if( !checkFile.exists() ) {
+		auto reply = QMessageBox::question(this, "confirmation", "ファイルが存在しません。新規作成しますか？",
+                                   QMessageBox::Yes | QMessageBox::No);
+		if( reply != QMessageBox::Yes ) return false;
+		//newTabWidget(fullPath, fullPath);
+		QFileInfo fileInfo(fullPath);
+		QString title = fileInfo.fileName();
+		title.remove(QRegularExpression("\\.md$"));
+		addTab(title, fullPath);
+		return true;
+	}
 	m_opening_file = true;
 	QFile file(fullPath);
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
