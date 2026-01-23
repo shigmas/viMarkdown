@@ -530,8 +530,11 @@ bool MainWindow::do_open(const QString& fullPath) {
 		QMessageBox::warning(this, tr("エラー"), tr("ファイルが開けません:\n%1").arg(fullPath));
 		return false;
 	}
-
-	QString content = file.readAll();
+	//QString content = file.readAll();
+	QTextStream in(&file);
+	in.setAutoDetectUnicode(true); 
+    QString content = in.readAll();
+    file.close();
 	QFileInfo fileInfo(fullPath);
 	QString title = fileInfo.fileName();
 	title.remove(QRegularExpression("\\.md$"));
