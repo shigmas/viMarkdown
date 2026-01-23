@@ -30,6 +30,9 @@ using namespace std;
 const int N_RECENT_FILES = 10 + 26;
 const int N_FAVORITE_FILES = 10 + 26;
 
+const QStringView KEY_RECENT_FILES(u"recentFilePaths");
+const QStringView KEY_FAVORITE_FILES(u"favoriteFilePaths");
+
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
 	, ui(new Ui::MainWindowClass())
@@ -79,7 +82,7 @@ void MainWindow::insertSearchComboBox() {
     m_searchCB->clear();
     m_searchCB->addItems(history);
     //	ついでに最近のファイル・ディレクトリをカレントディレクトリに設定
-	QStringList recentFilePaths = settings.value("recentFilePaths").toStringList();
+	QStringList recentFilePaths = settings.value(KEY_RECENT_FILES).toStringList();
 	if( !recentFilePaths.isEmpty() ) {
 		QFileInfo fi(recentFilePaths.front());
 		QDir::setCurrent(fi.path());
@@ -378,7 +381,7 @@ void MainWindow::onAboutToShow_FavoriteFiles() {
 	    delete act;
 	}
 	QSettings settings;
-	QStringList favoriteFilePaths = settings.value("favoriteFilePaths").toStringList();
+	QStringList favoriteFilePaths = settings.value(KEY_FAVORITE_FILES).toStringList();
 	int k = 0;
 	QString key;
 	for(const QString &fullPath : favoriteFilePaths) {
@@ -392,9 +395,9 @@ void MainWindow::onAboutToShow_FavoriteFiles() {
 			if( !do_open(pathArg) ) {
 				//	ファイル削除などで、ファイルオープンできなかった場合
 				QSettings settings;
-		        QStringList favoriteFilePaths = settings.value("favoriteFilePaths").toStringList();
+		        QStringList favoriteFilePaths = settings.value(KEY_FAVORITE_FILES).toStringList();
 		        favoriteFilePaths.removeAll(fullPath);
-		        settings.setValue("favoriteFilePaths", favoriteFilePaths);
+		        settings.setValue(KEY_FAVORITE_FILES, favoriteFilePaths);
 			}
 		});
 	}
@@ -403,7 +406,7 @@ void MainWindow::onAboutToShow_RecentFiles() {
 	//qDebug() << "MainWindow::onAboutToShow_RecentFiles()";
 	ui->menu_RecentFiles->clear();
 	QSettings settings;
-	QStringList recentFilePaths = settings.value("recentFilePaths").toStringList();
+	QStringList recentFilePaths = settings.value(KEY_RECENT_FILES).toStringList();
 	int k = 0;
 	QString key;
 	for(const QString &fullPath : recentFilePaths) {
@@ -417,9 +420,9 @@ void MainWindow::onAboutToShow_RecentFiles() {
 			if( !do_open(pathArg) ) {
 				//	ファイル削除などで、ファイルオープンできなかった場合
 				QSettings settings;
-		        QStringList recentFilePaths = settings.value("recentFilePaths").toStringList();
+		        QStringList recentFilePaths = settings.value(KEY_RECENT_FILES).toStringList();
 		        recentFilePaths.removeAll(fullPath);
-		        settings.setValue("recentFilePaths", recentFilePaths);
+		        settings.setValue(KEY_RECENT_FILES, recentFilePaths);
 			}
 		});
 	}
@@ -429,13 +432,13 @@ void MainWindow::onAction_AddThisFavorite() {
 	if( docWidget == nullptr || docWidget->m_fullPath.isEmpty() )
 		return;
 	QSettings settings;
-	QStringList favoriteFilePaths = settings.value("favoriteFilePaths").toStringList();
+	QStringList favoriteFilePaths = settings.value(KEY_FAVORITE_FILES).toStringList();
 	int ix;
 	while( (ix = favoriteFilePaths.indexOf(docWidget->m_fullPath)) >= 0 )
 		favoriteFilePaths.removeAt(ix);
 	favoriteFilePaths.push_front(docWidget->m_fullPath);
 	while( favoriteFilePaths.size() > N_FAVORITE_FILES ) favoriteFilePaths.pop_back();
-	settings.setValue("favoriteFilePaths", favoriteFilePaths);
+	settings.setValue(KEY_FAVORITE_FILES, favoriteFilePaths);
 }
 void MainWindow::onAction_Exit() {
 	this->close(); // メインウィンドウを閉じる
@@ -505,13 +508,13 @@ int MainWindow::tabIndexOf(const QString& title, const QString& fullPath) {
 }
 void MainWindow::addToRecentFiles(const QString& fullPath) {
 	QSettings settings;
-	QStringList recentFilePaths = settings.value("recentFilePaths").toStringList();
+	QStringList recentFilePaths = settings.value(KEY_RECENT_FILES).toStringList();
 	int ix;
 	while( (ix = recentFilePaths.indexOf(fullPath)) >= 0 )
 		recentFilePaths.removeAt(ix);
 	recentFilePaths.push_front(fullPath);
 	while( recentFilePaths.size() > N_RECENT_FILES ) recentFilePaths.pop_back();
-	settings.setValue("recentFilePaths", recentFilePaths);
+	settings.setValue(KEY_RECENT_FILES, recentFilePaths);
 }
 void MainWindow::do_load(const QString& fullPath) {
 	int tix = tabIndexOf("", fullPath);

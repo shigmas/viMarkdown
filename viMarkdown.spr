@@ -452,7 +452,7 @@
 0450 ◎ C 01/24 01/24 01016│問題│BOM 付き UTF-16 .md 文書を読み込むと文字化けする
 0451 ● C 01/24            │ToDo│新規文書を保存するときは BOM 付き UTF-8 とする
 0452 ◎ C 01/24 01/24 01016│ToDo│File > Favorite：登録されているお気に入りファイルリストをメニュー表示
-0453 ● C 01/24            │ToDo│
+0453 ◎ C 01/24 01/24 01016│ToDo│"favoriteFilePaths", "recentFilePaths" は const QStringView に
 0454 ● C 01/24            │ToDo│
 0455 ● C 01/24            │ToDo│
 0456 ● C 01/24            │ToDo│
