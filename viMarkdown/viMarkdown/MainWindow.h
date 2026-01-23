@@ -97,9 +97,11 @@ protected:
     void	onAction_OutlineBar(bool);
     void	onAction_FocusOutline();
     void	onAction_About();
+    void	onAction_AddThisFavorite();
     void	onAction_Exit();
 
     void	onAboutToShow_RecentFiles();
+    void	onAboutToShow_FavoriteFiles();
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event) override;

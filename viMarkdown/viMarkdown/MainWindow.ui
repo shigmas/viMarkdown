@@ -58,11 +58,12 @@
      </property>
      <addaction name="actiondummy"/>
     </widget>
-    <widget class="QMenu" name="menu_FavoriteFile">
+    <widget class="QMenu" name="menu_FavoriteFiles">
      <property name="title">
       <string>&amp;FavoriteFile</string>
      </property>
-     <addaction name="actionAddThis"/>
+     <addaction name="action_AddThisFavorite"/>
+     <addaction name="separator"/>
     </widget>
     <widget class="QMenu" name="menu_Exoirt">
      <property name="title">
@@ -78,7 +79,7 @@
     <addaction name="menu_Exoirt"/>
     <addaction name="action_Close"/>
     <addaction name="menu_RecentFiles"/>
-    <addaction name="menu_FavoriteFile"/>
+    <addaction name="menu_FavoriteFiles"/>
     <addaction name="action_Print"/>
     <addaction name="separator"/>
     <addaction name="action_Exit"/>
@@ -562,14 +563,12 @@
     <string>Ctrl+Shift+S</string>
    </property>
   </action>
-  <action name="action_AddThis">
-   <property name="text">
-    <string>&amp;AddThis(&amp;@)</string>
-   </property>
-  </action>
-  <action name="actionAddThis">
+  <action name="action_AddThisFavorite">
    <property name="text">
     <string>AddThis(&amp;@)</string>
+   </property>
+   <property name="toolTip">
+    <string>Add This to Favorite Files</string>
    </property>
   </action>
   <action name="action_Exit">

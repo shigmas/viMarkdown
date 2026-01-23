@@ -28,6 +28,7 @@
 using namespace std;
 
 const int N_RECENT_FILES = 10 + 26;
+const int N_FAVORITE_FILES = 10 + 26;
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
@@ -140,8 +141,10 @@ void MainWindow::onAction_FindWord() {
 }
 void MainWindow::setup_connections() {
 	connect(ui->menu_RecentFiles, &QMenu::aboutToShow, this, &MainWindow::onAboutToShow_RecentFiles);
+	connect(ui->menu_FavoriteFiles, &QMenu::aboutToShow, this, &MainWindow::onAboutToShow_FavoriteFiles);
 	connect(m_watcher, &QFileSystemWatcher::fileChanged, this, &MainWindow::onFileChanged);
 	connect(ui->action_Exit, &QAction::triggered, this, &MainWindow::onAction_Exit);
+	connect(ui->action_AddThisFavorite, &QAction::triggered, this, &MainWindow::onAction_AddThisFavorite);
 	connect(ui->action_New, &QAction::triggered, this, &MainWindow::onAction_New);
 	connect(ui->action_NewTab, &QAction::triggered, this, &MainWindow::onAction_NewTab);
 	connect(ui->action_Open, &QAction::triggered, this, &MainWindow::onAction_Open);
@@ -366,6 +369,36 @@ DocWidget *MainWindow::getCurDocWidget() {
 //	}
 //}
 
+void MainWindow::onAboutToShow_FavoriteFiles() {
+	//ui->menu_FavoriteFiles->clear();
+	QList<QAction*> actions = ui->menu_FavoriteFiles->actions();
+	for (int i = 2; i < actions.size(); ++i) {
+	    QAction* act = actions.at(i);
+	    ui->menu_FavoriteFiles->removeAction(act);
+	    delete act;
+	}
+	QSettings settings;
+	QStringList favoriteFilePaths = settings.value("favoriteFilePaths").toStringList();
+	int k = 0;
+	QString key;
+	for(const QString &fullPath : favoriteFilePaths) {
+		if (++k <= 10)
+			key = QString::number(k % 10);
+		else
+			key = QChar(u'A' + k - 11);
+		QAction *act = ui->menu_FavoriteFiles->addAction("&" + key + " " + fullPath);
+		connect(act, &QAction::triggered, this, [this, fullPath]() {
+			QString pathArg = fullPath;
+			if( !do_open(pathArg) ) {
+				//	ファイル削除などで、ファイルオープンできなかった場合
+				QSettings settings;
+		        QStringList favoriteFilePaths = settings.value("favoriteFilePaths").toStringList();
+		        favoriteFilePaths.removeAll(fullPath);
+		        settings.setValue("favoriteFilePaths", favoriteFilePaths);
+			}
+		});
+	}
+}
 void MainWindow::onAboutToShow_RecentFiles() {
 	//qDebug() << "MainWindow::onAboutToShow_RecentFiles()";
 	ui->menu_RecentFiles->clear();
@@ -390,6 +423,19 @@ void MainWindow::onAboutToShow_RecentFiles() {
 			}
 		});
 	}
+}
+void MainWindow::onAction_AddThisFavorite() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr || docWidget->m_fullPath.isEmpty() )
+		return;
+	QSettings settings;
+	QStringList favoriteFilePaths = settings.value("favoriteFilePaths").toStringList();
+	int ix;
+	while( (ix = favoriteFilePaths.indexOf(docWidget->m_fullPath)) >= 0 )
+		favoriteFilePaths.removeAt(ix);
+	favoriteFilePaths.push_front(docWidget->m_fullPath);
+	while( favoriteFilePaths.size() > N_FAVORITE_FILES ) favoriteFilePaths.pop_back();
+	settings.setValue("favoriteFilePaths", favoriteFilePaths);
 }
 void MainWindow::onAction_Exit() {
 	this->close(); // メインウィンドウを閉じる
