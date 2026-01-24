@@ -185,6 +185,7 @@
    <addaction name="action_NewTab"/>
    <addaction name="action_Open"/>
    <addaction name="action_Save"/>
+   <addaction name="action_SaveAs"/>
    <addaction name="action_Close"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -556,6 +557,10 @@
    </property>
   </action>
   <action name="action_SaveAs">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/save_as_48.png</normaloff>:/MainWindow/images/save_as_48.png</iconset>
+   </property>
    <property name="text">
     <string>Save&amp;As...</string>
    </property>
