@@ -465,7 +465,8 @@ void MainWindow::addTab(const QString &title, const QString fullPath, const QStr
 	auto docWidget = newTabWidget(title, fullPath);		//	新規タブ生成
 	int ix = ui->tabWidget->addTab(docWidget, title);		//	新規タブを追加
 	ui->tabWidget->setCurrentIndex(ix);				//	新規タブをカレントに
-
+	if( !fullPath.isEmpty() ) 
+		ui->tabWidget->setTabToolTip(ix, fullPath);
 	MarkdownEditor *mdEditor = getCurDocWidget()->m_mdEditor;
 	if( !txt.isEmpty() )
 		mdEditor->setPlainText(txt);
@@ -478,6 +479,8 @@ void MainWindow::addTopItemToTreeWidget(const QString &title, const QString full
 	item->setIcon(0, QIcon(":/MainWindow/images/markdown_48.png"));
 	item->setText(0, title);
 	item->setData(0, Qt::UserRole, fullPath);
+	if( !fullPath.isEmpty() )
+		item->setToolTip(0, fullPath);
 	ui->treeWidget->addTopLevelItem(item);
 }
 void MainWindow::onAction_Open() {
