@@ -566,7 +566,8 @@ bool MainWindow::do_open(const QString& fullPath) {
 	}
 	QFileInfo checkFile(fullPath);
 	if( !checkFile.exists() ) {
-		auto reply = QMessageBox::question(this, "confirmation", "ファイルが存在しません。新規作成しますか？",
+		QString mess = QString("'%1'\nファイルが存在しません。\n新規作成しますか？").arg(fullPath);
+		auto reply = QMessageBox::question(this, "confirmation", mess,
                                    QMessageBox::Yes | QMessageBox::No);
 		if( reply != QMessageBox::Yes ) return false;
 		//newTabWidget(fullPath, fullPath);
