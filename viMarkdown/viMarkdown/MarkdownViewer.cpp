@@ -191,6 +191,9 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 		} else if( buf.startsWith("> ") ) {
 			do_body(cursor);
 			do_quote(cursor, buf);
+		} else if( buf.startsWith("```CSV", Qt::CaseInsensitive) ) {
+			do_body(cursor);
+			do_CSV(cursor);
 		} else if( buf.startsWith("```keisen", Qt::CaseInsensitive) ) {
 			do_body(cursor);
 			do_code_keisen(cursor);
@@ -297,6 +300,81 @@ void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int
 	m_headingList.push_back(QChar(u'0'+h) + buf.remove("^ +"));
 	m_headingSrcLineNum.push_back(ln);
 	m_nEmptyLines = 0;
+}
+QStringList parseCsvLine(const QString &line) {
+    QStringList fields;
+    QString currentField;
+    bool inQuotes = false;
+    for (int i = 0; i < line.length(); ++i) {
+        QChar c = line.at(i);
+        if (c == '"') {
+            // ダブルクォートの中のダブルクォート（エスケープ）をチェック
+            if (inQuotes && i + 1 < line.length() && line.at(i + 1) == '"') {
+                currentField += '"';
+                i++; // 1文字飛ばす
+            } else {
+                // クォート状態の反転
+                inQuotes = !inQuotes;
+            }
+        } else if (c == ',' && !inQuotes) {
+            // クォートの外にあるカンマはセパレータ
+            fields.append(currentField.trimmed());
+            currentField.clear();
+        } else {
+            // 通常の文字
+            currentField += c;
+        }
+    }
+    // 最後のフィールドを追加
+    fields.append(currentField.trimmed());
+    return fields;
+}
+void MarkdownViewer::do_CSV(QTextCursor& cursor) {
+	QList<QStringList> ll;
+	int max_clmn = 0;
+	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
+		auto sl = parseCsvLine(m_lst[m_ln]);
+		max_clmn = qMax(max_clmn, sl.size());
+		ll.push_back(sl);
+	}
+	static QRegularExpression re("^[+-]?(\\d+\\.\\d*|\\d+|\\.\\d+)$");
+	QTextTable *table = cursor.insertTable(ll.size(), max_clmn);
+	for(int row = 0; row < ll.size(); ++row) {
+		for(int col = 0; col < ll[row].size(); ++col) {
+			QTextTableCell cell = table->cellAt(row, col);
+			if (cell.isValid()) {
+			    QTextCursor cellCursor = cell.firstCursorPosition();
+			    QTextCharFormat charFormat;
+			    QTextBlockFormat blockFormat;
+				if (row == 0) {
+					QTextTableCellFormat cellFormat;
+				    cellFormat.setBackground(QColor("lightblue"));
+				    cell.setFormat(cellFormat);
+					charFormat.setFontWeight(QFont::Bold);
+				    blockFormat.setAlignment(Qt::AlignCenter); // ヘッダは中央
+				} else {
+					if( (row % 2) == 0 ) {
+						QTextTableCellFormat cellFormat;
+					    cellFormat.setBackground(QColor("lightyellow"));
+					    cell.setFormat(cellFormat);
+					}
+					charFormat.setFontWeight(QFont::Normal);
+					if (re.match(ll[row][col]).hasMatch()) {
+					    blockFormat.setAlignment(Qt::AlignRight);  // 数値は右
+					} else {
+					    blockFormat.setAlignment(Qt::AlignLeft);   // その他は左
+					}
+				}
+				cellCursor.setCharFormat(charFormat);
+				cellCursor.setBlockFormat(blockFormat);
+			    cellCursor.insertText(ll[row][col]);
+			}
+		}
+	}
+	cursor.setPosition(table->lastPosition());
+	cursor.movePosition(QTextCursor::NextCharacter);
+	cursor.insertBlock();
+	//++m_ln;
 }
 void MarkdownViewer::do_code_keisen(QTextCursor& cursor) {
     QFont font;
