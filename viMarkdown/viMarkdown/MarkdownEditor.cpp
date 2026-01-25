@@ -984,6 +984,7 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 void MarkdownEditor::onCurPosChanged() {
 	QTextCursor cursor = this->textCursor();
 	m_lastCurBlockText = cursor.block().text();
+	viewport()->update();
 	//	Undone: プレビューの対応段落（見出し行＋本文）を画面内に
 }
 int MarkdownEditor::getVisualLineNumber(const QTextCursor &cursor) const {
@@ -1101,30 +1102,14 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
 			}
 		}
 	}
-#if 0
-	//	罫線モードならば罫線幅高矩形描画
-	if( m_mainWindow->isKeisenMode() ) {
-		QRect rect = cursorRect();
-        
-        // 幅を全角1文字分に広げる（等幅フォント前提）
-        //int blockWidth = fontMetrics().horizontalAdvance(u'╋');
-        rect.setWidth(zWidth);
-
-        // --- 視認性を高める色の設定 ---
-        // 罫線モードだと分かりやすい色（例えば淡い青やオレンジ）
-        // アルファ値を 100 程度にすると、下の文字や罫線が透けて見えます
-        QColor keisenCursorColor(0, 120, 215, 100); 
-        
-        p.setPen(Qt::NoPen);
-        p.setBrush(keisenCursorColor);
-        p.drawRect(rect);
-        
-        // 枠線もつけると、より「図形を描いている感」が出ます
-        p.setPen(QColor(0, 120, 215));
-        p.setBrush(Qt::NoBrush);
-        p.drawRect(rect.adjusted(0, 0, -1, -1));
-	}
-#endif
+	//	行カーソル描画
+	QRect rect = cursorRect();
+    QPen pen(Qt::red, 1); // 赤色、太さ1px
+    p.setPen(pen);
+    int y = rect.bottom();
+    int left = 0;	//-lnAreaWidth();
+    int right = viewport()->width();
+    p.drawLine(left, y, right, y);
 }
 void MarkdownEditor::updateLnArea(const QRect &rect, int dy) {
 	if (dy)
@@ -1205,3 +1190,5 @@ void MarkdownEditor::resizeEvent(QResizeEvent *event) {
     QRect cr = contentsRect();
     m_lnAreaWidget->setGeometry(QRect(cr.left(), cr.top(), lnAreaWidth(), cr.height()));
 }
+//void MarkdownEditor::dropEvent() {
+//}
