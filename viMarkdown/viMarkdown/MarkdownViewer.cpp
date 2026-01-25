@@ -65,6 +65,14 @@ bool MarkdownViewer::isTableHyphenLine(const QString& lnStr) {
 	return m_tableAlign.size() > 1;
 }
 
+void MarkdownViewer::mouseMoveEvent(QMouseEvent *me) {
+	QString anchor = anchorAt(me->pos());
+	if (!anchor.isEmpty()) {	// リンクの上なら指差し
+        viewport()->setCursor(Qt::PointingHandCursor);
+    } else {	// それ以外なら通常（I型または矢印）
+        viewport()->setCursor(Qt::IBeamCursor);
+    }
+}
 void MarkdownViewer::mouseReleaseEvent(QMouseEvent *e)
 {
 	if (e->button() == Qt::LeftButton) {

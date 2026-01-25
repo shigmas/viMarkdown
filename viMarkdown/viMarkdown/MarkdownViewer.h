@@ -25,6 +25,7 @@ signals:
     void lineClicked(int blockNumber);
 
 protected:
+    void	mouseMoveEvent(QMouseEvent *e) override;
     void	mouseReleaseEvent(QMouseEvent *e) override;    // マウスクリックイベントをオーバーライド
     bool	isTableLine(const QString&);
     bool	isTableHyphenLine(const QString&);

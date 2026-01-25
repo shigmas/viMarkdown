@@ -290,7 +290,8 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 									"- リスト\n1. 連番\n"
 									"|見出し|見出し|\n|-----:|------|\n|   123|abc   |\n...");
 	MarkdownViewer *markdownViewer = docWidget->m_markdownViewer = new MarkdownViewer(this, splitter);
-	markdownViewer->setReadOnly(true); // プレビューなので読み取り専用にする
+	markdownViewer->setReadOnly(true); // プレビューなので読み取り専用に
+	markdownViewer->setMouseTracking(true); // マウスの動きを常に追跡
 	markdownViewer->setPlaceholderText("プレビュー画面");
 	markdownViewer->setStyleSheet("font-size: 12pt;");
 	connect(markdownViewer, &MarkdownViewer::lineClicked, this, &MainWindow::onMarkdownViewerLineClicked);
