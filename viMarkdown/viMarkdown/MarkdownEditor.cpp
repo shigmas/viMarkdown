@@ -1110,6 +1110,11 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
     int left = 0;	//-lnAreaWidth();
     int right = viewport()->width();
     p.drawLine(left, y, right, y);
+#if 0
+	QPainter p2(m_lnAreaWidget);
+    p2.setPen(pen);
+    p2.drawLine(0, y, lnAreaWidth(), y);
+#endif
 }
 void MarkdownEditor::updateLnArea(const QRect &rect, int dy) {
 	if (dy)
@@ -1144,6 +1149,14 @@ void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
         bottom = top + (int) blockBoundingRect(block).height();
         ++blockNumber;
     }
+	//	行カーソル描画
+	QRect rect = cursorRect();
+    QPen pen(Qt::red, 1); // 赤色、太さ1px
+    painter.setPen(pen);
+    int y = rect.bottom();
+    int left = 0;
+    int right = lnAreaWidth();
+    painter.drawLine(left, y, right, y);
 }
 void MarkdownEditor::lnAreaMousePressEvent(QMouseEvent *event) {
 	auto pos = event->position();

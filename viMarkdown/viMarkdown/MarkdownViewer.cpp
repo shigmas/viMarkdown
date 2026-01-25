@@ -75,13 +75,25 @@ void MarkdownViewer::mouseReleaseEvent(QMouseEvent *e)
     QTextEdit::mouseReleaseEvent(e);
 }
 void MarkdownViewer::do_body_sub(QTextCursor& cursor, const QString &buf) {
-	//cursor.insertMarkdown(buf);
+#if 1
+	int startPos = cursor.position(); // 挿入前の位置
+	cursor.insertMarkdown(buf);
+	int endPos = cursor.position();   // 挿入後の位置
+	QTextCursor selectCursor = cursor;
+	selectCursor.setPosition(startPos);
+	selectCursor.setPosition(endPos, QTextCursor::KeepAnchor);
+	QTextBlockFormat blockFormat;
+	blockFormat.setAlignment(Qt::AlignJustify);
+	selectCursor.mergeBlockFormat(blockFormat);
+#else
+	cursor.insertMarkdown(buf);
 	//cursor.insertBlock();
 	QTextBlockFormat blockFormat;
 	blockFormat.setAlignment(Qt::AlignJustify); // 左右両端揃え
 	cursor.mergeBlockFormat(blockFormat);
 	//cursor.insertBlock();
-	cursor.insertMarkdown(buf);
+	//cursor.insertMarkdown(buf);
+#endif
 }
 void MarkdownViewer::do_body(QTextCursor& cursor) {
 	if( m_bodyList.isEmpty() ) return;
