@@ -19,7 +19,7 @@
 - **罫線ブロック:** テキストの罫線記号を使ってクラス図、UIモックアップなどの図を簡単に描くことができます。
 
 
-[[viMarkdown-quickstart]]
+  [簡単な入門](viMarkdown-quickstart)
 
 ## ライセンス
 

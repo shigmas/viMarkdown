@@ -301,10 +301,16 @@ void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int
 	m_headingSrcLineNum.push_back(ln);
 	m_nEmptyLines = 0;
 }
-QStringList parseCsvLine(const QString &line) {
-    QStringList fields;
+bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes) {
+    //QStringList fields;
     QString currentField;
-    bool inQuotes = false;
+	if( !inQuotes ) {
+		fields.clear();
+	} else {
+		currentField = fields.back() + u'\n';
+		fields.pop_back();
+	}
+    //bool inQuotes = false;
     for (int i = 0; i < line.length(); ++i) {
         QChar c = line.at(i);
         if (c == '"') {
@@ -327,15 +333,19 @@ QStringList parseCsvLine(const QString &line) {
     }
     // 最後のフィールドを追加
     fields.append(currentField.trimmed());
-    return fields;
+    return inQuotes;
 }
 void MarkdownViewer::do_CSV(QTextCursor& cursor) {
 	QList<QStringList> ll;
 	int max_clmn = 0;
+    bool inQuotes = false;
+    QStringList fields;
 	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
-		auto sl = parseCsvLine(m_lst[m_ln]);
-		max_clmn = qMax(max_clmn, sl.size());
-		ll.push_back(sl);
+		inQuotes = parseCsvLine(fields, m_lst[m_ln], inQuotes);
+		if( !inQuotes ) {
+			max_clmn = qMax(max_clmn, fields.size());
+			ll.push_back(fields);
+		}
 	}
 	static QRegularExpression re("^[+-]?(\\d+\\.\\d*|\\d+|\\.\\d+)$");
 	QTextTable *table = cursor.insertTable(ll.size(), max_clmn);
