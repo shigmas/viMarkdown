@@ -1140,7 +1140,7 @@ void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
             painter.setPen(Qt::black); // 文字色
             
             // 右詰めで描画するために幅を調整（右側に2ピクセルの余白）
-            painter.drawText(0, top, m_lnAreaWidget->width() - charWidth, fontMetrics().height(),
+            painter.drawText(0, top, m_lnAreaWidget->width() - charWidth*2, fontMetrics().height(),
                              Qt::AlignRight, number);
         }
 

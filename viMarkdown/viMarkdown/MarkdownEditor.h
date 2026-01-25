@@ -4,7 +4,7 @@
 
 enum class Align { Left, Center, Right };
 
-const int LN_WIDTH = 6;
+const int LN_WIDTH = 7;
 
 class MainWindow;
 
