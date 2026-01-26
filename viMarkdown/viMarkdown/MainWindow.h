@@ -60,6 +60,7 @@ protected:
     void	onSearchCBActivated();
     void	onMarkdownViewerLineClicked(int);
     void	onCurPosChanged();
+    //void	onAnchorClicked(const QString&);
 
     void	onAction_New();
     void	onAction_NewTab();

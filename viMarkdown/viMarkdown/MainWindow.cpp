@@ -295,6 +295,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	markdownViewer->setPlaceholderText("プレビュー画面");
 	markdownViewer->setStyleSheet("font-size: 12pt;");
 	connect(markdownViewer, &MarkdownViewer::lineClicked, this, &MainWindow::onMarkdownViewerLineClicked);
+	connect(markdownViewer, &MarkdownViewer::anchorClicked, this, &MainWindow::do_open);
 	splitter->addWidget(mdEditor);
 	splitter->addWidget(markdownViewer);
 	splitter->setSizes(QList<int>() << 500 << 500);

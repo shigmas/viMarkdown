@@ -69,6 +69,7 @@ void MarkdownViewer::mouseMoveEvent(QMouseEvent *me) {
 	QString anchor = anchorAt(me->pos());
 	if (!anchor.isEmpty()) {	// リンクの上なら指差し
         viewport()->setCursor(Qt::PointingHandCursor);
+        m_mainWindow->statusBar()->showMessage(anchor);
     } else {	// それ以外なら通常（I型または矢印）
         viewport()->setCursor(Qt::IBeamCursor);
     }
@@ -79,6 +80,7 @@ void MarkdownViewer::mouseReleaseEvent(QMouseEvent *me)
 		QString anchor = anchorAt(me->pos());
 		if (!anchor.isEmpty()) {	// リンク上
 			qDebug() << "anchor = " << anchor;
+			emit anchorClicked(anchor);
 		} else {
 		    QTextCursor cursor = cursorForPosition(me->pos());
 		    emit lineClicked(cursor.block().userState());

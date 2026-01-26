@@ -22,7 +22,8 @@ public:
 
 signals:
     // クリックされたブロック番号を通知するシグナル
-    void lineClicked(int blockNumber);
+    void	lineClicked(int blockNumber);
+    void	anchorClicked(const QString &anchor);
 
 protected:
     void	mouseMoveEvent(QMouseEvent *e) override;
