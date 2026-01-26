@@ -99,6 +99,8 @@ protected:
     void	onAction_Source(bool);
     void	onAction_OutlineBar(bool);
     void	onAction_FocusOutline();
+    void	onAction_NextTab();
+    void	onAction_PrevTab();
     void	onAction_About();
     void	onAction_AddThisFavorite();
     void	onAction_Exit();

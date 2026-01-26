@@ -91,6 +91,8 @@
     <addaction name="separator"/>
     <addaction name="action_OutlineBar"/>
     <addaction name="action_FocusOutline"/>
+    <addaction name="action_NextTab"/>
+    <addaction name="action_PrevTab"/>
    </widget>
    <widget class="QMenu" name="menu_Edit">
     <property name="title">
@@ -749,6 +751,22 @@
    </property>
    <property name="shortcut">
     <string>Shift+F7</string>
+   </property>
+  </action>
+  <action name="action_NextTab">
+   <property name="text">
+    <string>&amp;NextTab</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Tab</string>
+   </property>
+  </action>
+  <action name="action_PrevTab">
+   <property name="text">
+    <string>&amp;PrevTab</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Backtab</string>
    </property>
   </action>
  </widget>

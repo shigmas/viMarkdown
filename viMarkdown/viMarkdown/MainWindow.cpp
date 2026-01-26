@@ -185,6 +185,8 @@ void MainWindow::setup_connections() {
 	connect(ui->action_Source, &QAction::toggled, this, &MainWindow::onAction_Source);
 	connect(ui->action_OutlineBar, &QAction::toggled, this, &MainWindow::onAction_OutlineBar);
 	connect(ui->action_FocusOutline, &QAction::triggered, this, &MainWindow::onAction_FocusOutline);
+	connect(ui->action_NextTab, &QAction::triggered, this, &MainWindow::onAction_NextTab);
+	connect(ui->action_PrevTab, &QAction::triggered, this, &MainWindow::onAction_PrevTab);
 	connect(ui->outlineBar, &QDockWidget::visibilityChanged, this, &MainWindow::onOutlineBarVisibilityChanged);
 	connect(ui->treeWidget, &QTreeWidget::currentItemChanged, this, &MainWindow::onTreeCurrentItemChanged);
 	//connect(ui->treeWidget, &QTreeWidget::itemDoubleClicked, this, &MainWindow::onTreeItemDoubleClicked);
@@ -1067,6 +1069,16 @@ void MainWindow::onAction_FocusOutline() {
 	QTreeWidgetItem* item = findTopLevelItemByFullPath(docWidget->m_title, docWidget->m_fullPath);
 	if( item != nullptr )
 		ui->treeWidget->setCurrentItem(item);
+}
+void MainWindow::onAction_NextTab() {
+	if( ui->tabWidget->count() <= 1 ) return;
+	int tix = (ui->tabWidget->currentIndex() + 1) % ui->tabWidget->count();
+	ui->tabWidget->setCurrentIndex(tix);
+}
+void MainWindow::onAction_PrevTab() {
+	if( ui->tabWidget->count() <= 1 ) return;
+	int tix = (ui->tabWidget->currentIndex() - 1) % ui->tabWidget->count();
+	ui->tabWidget->setCurrentIndex(tix);
 }
 void MainWindow::onOutlineBarVisibilityChanged(bool v) {
 	ui->action_OutlineBar->setChecked(v);
