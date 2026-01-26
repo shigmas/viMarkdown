@@ -933,6 +933,27 @@ void MarkdownEditor::applyAlignment(Align align) {
 	}
 }
 void MarkdownEditor::openPrev() {
+	QTextCursor cursor = this->textCursor();
+	QString ctext = cursor.block().text();	//	カーソル行テキスト
+	QString text;
+	int vc0 = 0;
+	for(int i = 0; i < ctext.size(); ++i) {
+		ushort bits = getConnectionBits(ctext[i]);
+		if( (bits&(Up|ThickUp)) != 0 ) {
+			int vc = getVisualColumn(ctext.left(i), this);
+			if( vc != vc0 )
+				text += QString(vc - vc0, u' ');
+			if( (bits&Up) != 0 )
+				text += u'│';
+			else
+				text += u'┃';
+			vc0 = vc + 2;
+		}
+	}
+	cursor.movePosition(QTextCursor::StartOfBlock);
+	cursor.insertBlock();		//	新規行作成
+	cursor.movePosition(QTextCursor::Up);	//	新行先頭に移動
+	cursor.insertText(text);
 }
 void MarkdownEditor::openNext() {		//	罫線補完次行オープン
 	QTextCursor cursor = this->textCursor();
