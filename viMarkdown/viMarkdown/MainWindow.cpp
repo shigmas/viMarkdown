@@ -179,6 +179,8 @@ void MainWindow::setup_connections() {
 	connect(ui->action_KeisenMode, &QAction::toggled, this, &MainWindow::onAction_KeisenMode);
 	connect(ui->action_ThinKeisen, &QAction::toggled, this, &MainWindow::onAction_ThinKeisen);
 	connect(ui->action_ThickKeisen, &QAction::toggled, this, &MainWindow::onAction_ThickKeisen);
+	connect(ui->action_OpenPrev, &QAction::triggered, this, &MainWindow::onAction_OpenPrev);
+	connect(ui->action_OpenNext, &QAction::triggered, this, &MainWindow::onAction_OpenNext);
 	connect(ui->action_HTML, &QAction::toggled, this, &MainWindow::onAction_HTML);
 	connect(ui->action_Source, &QAction::toggled, this, &MainWindow::onAction_Source);
 	connect(ui->action_OutlineBar, &QAction::toggled, this, &MainWindow::onAction_OutlineBar);
@@ -1032,6 +1034,16 @@ void MainWindow::onAction_ThickKeisen(bool checked) {
 void MainWindow::updateThinThickCheck() {
 	ui->action_ThinKeisen->setChecked(!m_thickKeisen);
 	ui->action_ThickKeisen->setChecked(m_thickKeisen);
+}
+void MainWindow::onAction_OpenPrev() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	docWidget->m_mdEditor->openPrev();
+}
+void MainWindow::onAction_OpenNext() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	docWidget->m_mdEditor->openNext();
 }
 void MainWindow::onAction_HTML(bool checked) {
 	//if( m_htmlMode ) return;

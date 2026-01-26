@@ -93,6 +93,8 @@ protected:
     void	onAction_KeisenMode(bool);
     void	onAction_ThinKeisen(bool);
     void	onAction_ThickKeisen(bool);
+    void	onAction_OpenPrev();
+    void	onAction_OpenNext();
     void	onAction_HTML(bool);
     void	onAction_Source(bool);
     void	onAction_OutlineBar(bool);

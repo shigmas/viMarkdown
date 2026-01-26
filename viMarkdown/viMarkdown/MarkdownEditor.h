@@ -33,6 +33,8 @@ public:
 	void	onAlignCenter();
 	void	onAlignRight();
 	void	onKeisenMode(bool);
+	void	openPrev();
+	void	openNext();
 	void	insertTodayString();
 
 signals:

@@ -354,6 +354,12 @@ int MarkdownEditor::nColumn(const QString &text) const {
 	int fullWidth = fm.horizontalAdvance(text);
 	return fullWidth / halfWidth;
 }
+int getVisualColumn(const QString&text, QPlainTextEdit *editor) {
+	QFontMetrics fm(editor->font());
+	int halfWidth = fm.horizontalAdvance("A"); 
+	int fullWidth = fm.horizontalAdvance(text);
+	return fullWidth / halfWidth;
+}
 int getVisualColumn(QTextCursor cursor, QPlainTextEdit *editor) {
 	// 1. 行頭から現在のカーソル位置までのテキストを取得
 	QString text = cursor.block().text().left(cursor.positionInBlock());
@@ -925,6 +931,30 @@ void MarkdownEditor::applyAlignment(Align align) {
 		cursor.setPosition(blockPos + ix2 - rightSpaces);
 		setTextCursor(cursor);
 	}
+}
+void MarkdownEditor::openPrev() {
+}
+void MarkdownEditor::openNext() {		//	罫線補完次行オープン
+	QTextCursor cursor = this->textCursor();
+	QString ctext = cursor.block().text();	//	カーソル行テキスト
+	QString text;
+	int vc0 = 0;
+	for(int i = 0; i < ctext.size(); ++i) {
+		ushort bits = getConnectionBits(ctext[i]);
+		if( (bits&(Down|ThickDown)) != 0 ) {
+			int vc = getVisualColumn(ctext.left(i), this);
+			if( vc != vc0 )
+				text += QString(vc - vc0, u' ');
+			if( (bits&Down) != 0 )
+				text += u'│';
+			else
+				text += u'┃';
+			vc0 = vc + 2;
+		}
+	}
+	cursor.movePosition(QTextCursor::EndOfBlock);
+	cursor.insertBlock();		//	新規行作成
+	cursor.insertText(text);
 }
 void MarkdownEditor::insertTodayString() {
 	QTextCursor cursor = this->textCursor();
