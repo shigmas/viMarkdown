@@ -1077,7 +1077,8 @@ void MainWindow::onAction_NextTab() {
 }
 void MainWindow::onAction_PrevTab() {
 	if( ui->tabWidget->count() <= 1 ) return;
-	int tix = (ui->tabWidget->currentIndex() - 1) % ui->tabWidget->count();
+	int tix = ui->tabWidget->currentIndex() - 1;
+	if( tix < 0 ) tix = ui->tabWidget->count() - 1;
 	ui->tabWidget->setCurrentIndex(tix);
 }
 void MainWindow::onOutlineBarVisibilityChanged(bool v) {
