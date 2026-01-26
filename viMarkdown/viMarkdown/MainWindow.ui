@@ -165,6 +165,7 @@
     <addaction name="action_KeisenMode"/>
     <addaction name="action_ThinKeisen"/>
     <addaction name="action_ThickKeisen"/>
+    <addaction name="action_OpenPrev"/>
     <addaction name="action_OpenNext"/>
    </widget>
    <addaction name="menu_File"/>
@@ -686,7 +687,10 @@
   </action>
   <action name="action_OpenNext">
    <property name="text">
-    <string>&amp;OpenNext</string>
+    <string>Open&amp;Next</string>
+   </property>
+   <property name="shortcut">
+    <string>F7</string>
    </property>
   </action>
   <action name="action_ThinKeisen">
@@ -737,6 +741,14 @@
    </property>
    <property name="toolTip">
     <string>Today's string</string>
+   </property>
+  </action>
+  <action name="action_OpenPrev">
+   <property name="text">
+    <string>Open&amp;Prev</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F7</string>
    </property>
   </action>
  </widget>
