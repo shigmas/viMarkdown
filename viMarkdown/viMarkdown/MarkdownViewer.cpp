@@ -73,14 +73,18 @@ void MarkdownViewer::mouseMoveEvent(QMouseEvent *me) {
         viewport()->setCursor(Qt::IBeamCursor);
     }
 }
-void MarkdownViewer::mouseReleaseEvent(QMouseEvent *e)
+void MarkdownViewer::mouseReleaseEvent(QMouseEvent *me)
 {
-	if (e->button() == Qt::LeftButton) {
-	    QTextCursor cursor = cursorForPosition(e->pos());
-	    //int blockNumber = cursor.blockNumber();
-	    emit lineClicked(cursor.block().userState());
+	if (me->button() == Qt::LeftButton) {
+		QString anchor = anchorAt(me->pos());
+		if (!anchor.isEmpty()) {	// リンク上
+			qDebug() << "anchor = " << anchor;
+		} else {
+		    QTextCursor cursor = cursorForPosition(me->pos());
+		    emit lineClicked(cursor.block().userState());
+		}
 	}
-    QTextEdit::mouseReleaseEvent(e);
+    QTextEdit::mouseReleaseEvent(me);
 }
 void MarkdownViewer::do_body_sub(QTextCursor& cursor, const QString &buf) {
 #if 1
@@ -109,7 +113,7 @@ void MarkdownViewer::do_body(QTextCursor& cursor) {
 	static QRegularExpression re("\\[\\[(.+?)\\]\\]");
 	QString buf;
 	for(auto txt: m_bodyList) {
-		txt.replace(re, "<a href=\".\" class=\"wiki-link\">\\1</a>");
+		txt.replace(re, "<a href=\"\\1\" class=\"wiki-link\">\\1</a>");
 		buf += txt + "\n";
 	}
 	if( !buf.isEmpty() ) {
