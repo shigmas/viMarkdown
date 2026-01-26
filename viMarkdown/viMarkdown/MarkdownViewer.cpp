@@ -5,6 +5,7 @@
 #include <QTextTable>
 #include <QAbstractTextDocumentLayout>
 #include <QScrollbar>
+#include <QDir>
 #include <qpainter.h>
 #include "MarkdownViewer.h"
 #include "MainWindow.h"
@@ -71,7 +72,8 @@ void MarkdownViewer::mouseMoveEvent(QMouseEvent *me) {
         viewport()->setCursor(Qt::PointingHandCursor);
 		if( !anchor.endsWith(".md", Qt::CaseInsensitive) )
 			anchor += ".md";
-        m_mainWindow->statusBar()->showMessage(anchor);
+		QString fullPath = QDir::current().absoluteFilePath(anchor);
+        m_mainWindow->statusBar()->showMessage(fullPath);
     } else {	// それ以外なら通常（I型または矢印）
         viewport()->setCursor(Qt::IBeamCursor);
     }
@@ -84,7 +86,8 @@ void MarkdownViewer::mouseReleaseEvent(QMouseEvent *me)
 			//qDebug() << "anchor = " << anchor;
 			if( !anchor.endsWith(".md", Qt::CaseInsensitive) )
 				anchor += ".md";
-			emit anchorClicked(anchor);
+			QString fullPath = QDir::current().absoluteFilePath(anchor);
+			emit anchorClicked(fullPath);
 		} else {
 		    QTextCursor cursor = cursorForPosition(me->pos());
 		    emit lineClicked(cursor.block().userState());
