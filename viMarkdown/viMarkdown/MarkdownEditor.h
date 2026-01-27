@@ -35,7 +35,7 @@ public:
 	void	onKeisenMode(bool);
 	void	openPrev();
 	void	openNext();
-	void	insertTodayString();
+	void	insertTodayString(const QString &fmt);
 
 signals:
     void	tab_pressed();

@@ -129,6 +129,8 @@
       <string>&amp;Insert</string>
      </property>
      <addaction name="action_TodayString_1"/>
+     <addaction name="action_TodayString_2"/>
+     <addaction name="action_TodayString_3"/>
     </widget>
     <addaction name="action_Undo"/>
     <addaction name="action_Redo"/>
@@ -739,7 +741,7 @@
   </action>
   <action name="action_TodayString_1">
    <property name="text">
-    <string>&amp;1 TodayString</string>
+    <string>&amp;1 Today'sString</string>
    </property>
    <property name="toolTip">
     <string>Today's string</string>
@@ -767,6 +769,16 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Backtab</string>
+   </property>
+  </action>
+  <action name="action_TodayString_2">
+   <property name="text">
+    <string>&amp;2 Today'sString</string>
+   </property>
+  </action>
+  <action name="action_TodayString_3">
+   <property name="text">
+    <string>&amp;3 Today'sString</string>
    </property>
   </action>
  </widget>

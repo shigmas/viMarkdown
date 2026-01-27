@@ -977,9 +977,9 @@ void MarkdownEditor::openNext() {		//	罫線補完次行オープン
 	cursor.insertBlock();		//	新規行作成
 	cursor.insertText(text);
 }
-void MarkdownEditor::insertTodayString() {
+void MarkdownEditor::insertTodayString(const QString &fmt) {
 	QTextCursor cursor = this->textCursor();
-	QString today = QDate::currentDate().toString("yyyy-MM-dd");
+	QString today = QDate::currentDate().toString(fmt);
 	cursor.insertText(today);
 	setTextCursor(cursor);
 }
