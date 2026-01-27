@@ -814,6 +814,7 @@ void MainWindow::onAction_Checkbox() {
 	QTextCursor cursor = mdEditor->textCursor();
 	QTextDocument *doc = mdEditor->document();
 	cursor.beginEditBlock();
+	bool hadSelection = cursor.hasSelection();
 	int startPos = cursor.selectionStart();
 	int endPos = cursor.selectionEnd();
 	QTextBlock startBlock = doc->findBlock(startPos);		// 範囲に含まれる最初のブロックと最後のブロックを取得
@@ -838,7 +839,9 @@ void MainWindow::onAction_Checkbox() {
 		currentBlock = currentBlock.next();		// 次のブロックへ
 	}
 	cursor.setPosition(startBlock.position());	//	行頭位置
-	if( endBlock.next().isValid() ) {
+	if( !hadSelection ) {
+		cursor.movePosition(QTextCursor::EndOfBlock);
+	} else if( endBlock.next().isValid() ) {
 		cursor.setPosition(endBlock.next().position(), QTextCursor::KeepAnchor);	//	行頭位置
 	} else {
 		cursor.setPosition(endBlock.position(), QTextCursor::KeepAnchor);
@@ -853,6 +856,7 @@ void MainWindow::onAction_List() {
 	QTextCursor cursor = mdEditor->textCursor();
 	QTextDocument *doc = mdEditor->document();
 	cursor.beginEditBlock();
+	bool hadSelection = cursor.hasSelection();
 	int startPos = cursor.selectionStart();
 	int endPos = cursor.selectionEnd();
 	QTextBlock startBlock = doc->findBlock(startPos);		// 範囲に含まれる最初のブロックと最後のブロックを取得
@@ -882,7 +886,9 @@ void MainWindow::onAction_List() {
 		currentBlock = currentBlock.next();		// 次のブロックへ
 	}
 	cursor.setPosition(startBlock.position());	//	行頭位置
-	if( endBlock.next().isValid() ) {
+	if( !hadSelection ) {
+		cursor.movePosition(QTextCursor::EndOfBlock);
+	} else if( endBlock.next().isValid() ) {
 		cursor.setPosition(endBlock.next().position(), QTextCursor::KeepAnchor);	//	行頭位置
 	} else {
 		cursor.setPosition(endBlock.position(), QTextCursor::KeepAnchor);
@@ -897,6 +903,7 @@ void MainWindow::onAction_NumList() {
 	QTextCursor cursor = mdEditor->textCursor();
 	QTextDocument *doc = mdEditor->document();
 	cursor.beginEditBlock();
+	bool hadSelection = cursor.hasSelection();
 	int startPos = cursor.selectionStart();
 	int endPos = cursor.selectionEnd();
 	QTextBlock startBlock = doc->findBlock(startPos);		// 範囲に含まれる最初のブロックと最後のブロックを取得
@@ -927,7 +934,9 @@ void MainWindow::onAction_NumList() {
 		currentBlock = currentBlock.next();		// 次のブロックへ
 	}
 	cursor.setPosition(startBlock.position());	//	行頭位置
-	if( endBlock.next().isValid() ) {
+	if( !hadSelection ) {
+		cursor.movePosition(QTextCursor::EndOfBlock);
+	} else if( endBlock.next().isValid() ) {
 		cursor.setPosition(endBlock.next().position(), QTextCursor::KeepAnchor);	//	行頭位置
 	} else {
 		cursor.setPosition(endBlock.position(), QTextCursor::KeepAnchor);
