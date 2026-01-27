@@ -480,8 +480,12 @@ void MainWindow::onAction_New() {
 void MainWindow::onAction_NewTab() {
 	addTab(QString("vmd-%1").arg(++m_tab_number));
 }
-void MainWindow::addTab(const QString &title, const QString fullPath, const QString txt) {
+void MainWindow::addTab(const QString &title, const QString fullPath, const QString txt,
+							bool withBOM, QStringConverter::Encoding encoding)
+{
 	auto docWidget = newTabWidget(title, fullPath);		//	新規タブ生成
+	docWidget->m_withBOM = withBOM;
+	docWidget->m_encoding = encoding;
 	int ix = ui->tabWidget->addTab(docWidget, title);		//	新規タブを追加
 	ui->tabWidget->setCurrentIndex(ix);				//	新規タブをカレントに
 	if( !fullPath.isEmpty() ) 
@@ -576,6 +580,11 @@ void MainWindow::close_empty_doc() {
 		}
 	}
 }
+bool hasBOM(QFile &file) {
+	QByteArray header = file.peek(3);
+	return header.startsWith("\xEF\xBB\xBF") ||		//	UTF-8
+			header.startsWith("\xFF\xFE") || header.startsWith("\xFE\xFF");		//	UTF-16 BE, LE
+}
 bool MainWindow::do_open(const QString& fullPath) {
 	qDebug() << "do_open(" << fullPath << ")";
 	int tix = tabIndexOf("", fullPath);
@@ -602,15 +611,18 @@ bool MainWindow::do_open(const QString& fullPath) {
 		QMessageBox::warning(this, tr("エラー"), tr("ファイルが開けません:\n%1").arg(fullPath));
 		return false;
 	}
+    bool withBOM = hasBOM(file);
 	//QString content = file.readAll();
 	QTextStream in(&file);
 	in.setAutoDetectUnicode(true); 
     QString content = in.readAll();
+    //bool bBOM = in.generateByteOrderMark();
+    auto encoding = in.encoding();
     file.close();
 	QFileInfo fileInfo(fullPath);
 	QString title = fileInfo.fileName();
 	title.remove(QRegularExpression("\\.md$"));
-	addTab(title, fullPath, content);
+	addTab(title, fullPath, content, withBOM, encoding);
 	updateOutlineTree();
 	QDir::setCurrent(fileInfo.path());
 	m_watcher->addPath(fullPath);
