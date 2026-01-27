@@ -4,7 +4,7 @@
 
 [English Version](README.md)
 
-**viMarkdown** は、Qt6 および C++ を採用した、動作が軽くパフォーマンスに優れた Markdown エディタです。
+**viMarkdown** は、Qt6 および C++ を採用した、動作が軽くパフォーマンスに優れた Markdown エディタです。  
 効率性を追求するエンジニアやライターに向けて設計されています。
 
 <img width="500" alt="image" src="./screen.png" />
