@@ -74,6 +74,7 @@ void MainWindow::insertSearchComboBox() {
 	m_searchCB->setEditable(true);					 // 入力可能にする
 	m_searchCB->setMinimumWidth(160);				// 幅を少し広げる
 	m_searchCB->setPlaceholderText(tr("search text")); // プレースホルダー表示
+	m_searchCB->setFocusPolicy(Qt::ClickFocus); 	//	直接クリックのみでフォーカス取得
 	//m_searchCB->setInsertPolicy(QComboBox::InsertAtTop); // 検索履歴を一番上に追加する設定
 	ui->mainToolBar->insertWidget(ui->action_List, m_searchCB);
 	connect(m_searchCB, &QComboBox::activated, this, &MainWindow::onSearchCBActivated);
@@ -849,6 +850,8 @@ void MainWindow::onAction_Checkbox() {
 	}
 	cursor.endEditBlock();
 	mdEditor->setTextCursor(cursor);
+	this->activateWindow();
+	mdEditor->setFocus();
 }
 void MainWindow::onAction_List() {
 	qDebug() << "MainWindow::onAction_List()";
@@ -896,6 +899,8 @@ void MainWindow::onAction_List() {
 	}
 	cursor.endEditBlock();
 	mdEditor->setTextCursor(cursor);
+	this->activateWindow();
+	mdEditor->setFocus();
 }
 void MainWindow::onAction_NumList() {
 	qDebug() << "MainWindow::onAction_NumList()";
@@ -944,6 +949,8 @@ void MainWindow::onAction_NumList() {
 	}
 	cursor.endEditBlock();
 	mdEditor->setTextCursor(cursor);
+	this->activateWindow();
+	mdEditor->setFocus();
 }
 void MainWindow::insertInline(const QString& delimiter) {
 	MarkdownEditor *mdEditor = getCurDocWidget()->m_mdEditor;
