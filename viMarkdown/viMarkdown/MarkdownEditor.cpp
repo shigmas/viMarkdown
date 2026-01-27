@@ -264,7 +264,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 			while( n < text.length() && text[n].isSpace() ) ++n;
 			QString atxt = text.left(n);
 			const QString mtxt = text.mid(n);
-			if( mtxt == "- " || mtxt == "- [ ] " || mtxt == "- [x] " || mtxt == "- [X] " ) {
+			if( mtxt == "- " || mtxt == "- [ ] " || mtxt == "- [x] " || mtxt == "- [X] " || mtxt == "1. " || mtxt == "1) " ) {
 				cursor.movePosition(QTextCursor::StartOfBlock);
 				cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
 				cursor.deleteChar();

@@ -54,7 +54,7 @@
     </property>
     <widget class="QMenu" name="menu_RecentFiles">
      <property name="title">
-      <string>&amp;RecentFiles</string>
+      <string>RecentFiles(&amp;1)</string>
      </property>
      <addaction name="actiondummy"/>
     </widget>
@@ -74,6 +74,7 @@
     <addaction name="action_New"/>
     <addaction name="action_NewTab"/>
     <addaction name="action_Open"/>
+    <addaction name="action_Reload"/>
     <addaction name="action_Save"/>
     <addaction name="action_SaveAs"/>
     <addaction name="menu_Exoirt"/>
@@ -779,6 +780,11 @@
   <action name="action_TodayString_3">
    <property name="text">
     <string>&amp;3 Today'sString</string>
+   </property>
+  </action>
+  <action name="action_Reload">
+   <property name="text">
+    <string>&amp;Reload</string>
    </property>
   </action>
  </widget>
