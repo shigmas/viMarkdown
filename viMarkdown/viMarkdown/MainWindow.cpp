@@ -700,7 +700,9 @@ void MainWindow::do_save(bool fDialog) {
 	QFile file(fullPath);
 	if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
 		QTextStream out(&file);
-		MarkdownEditor *mdEditor = getCurDocWidget()->m_mdEditor;
+		out.setEncoding(docWidget->m_encoding); 
+		out.setGenerateByteOrderMark(docWidget->m_withBOM);
+		MarkdownEditor *mdEditor = docWidget->m_mdEditor;
 		out << mdEditor->toPlainText();
 		file.close();
 		//QMessageBox::information(nullptr, "成功", "ファイルが保存されました:\n" + fullPath);
