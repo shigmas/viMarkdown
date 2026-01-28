@@ -133,6 +133,13 @@
      <addaction name="action_TodayString_2"/>
      <addaction name="action_TodayString_3"/>
     </widget>
+    <widget class="QMenu" name="menu_Convert">
+     <property name="title">
+      <string>Convert(&amp;X)</string>
+     </property>
+     <addaction name="action_CSV_MarkdownTable"/>
+     <addaction name="action_MarkdownTable_CSV"/>
+    </widget>
     <addaction name="action_Undo"/>
     <addaction name="action_Redo"/>
     <addaction name="separator"/>
@@ -147,6 +154,7 @@
     <addaction name="action_Indent"/>
     <addaction name="action_UnIndent"/>
     <addaction name="menu_Insert"/>
+    <addaction name="menu_Convert"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -785,6 +793,16 @@
   <action name="action_Reload">
    <property name="text">
     <string>&amp;Reload</string>
+   </property>
+  </action>
+  <action name="action_CSV_MarkdownTable">
+   <property name="text">
+    <string>CSV -&gt; &amp;MarkdownTable</string>
+   </property>
+  </action>
+  <action name="action_MarkdownTable_CSV">
+   <property name="text">
+    <string>MarkdownTable -&gt; &amp;CSV</string>
    </property>
   </action>
  </widget>

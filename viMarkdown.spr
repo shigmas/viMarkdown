@@ -501,9 +501,9 @@
 0500 ◎ P 01/29 01/29 01020│ToDo│4カラム＊30行程度の CSVブロックがあると、編集時の応答が極端に遅くなる？
 0501 ◎ C 01/29 01/29 01020│ToDo│MarkdownViewer::setMarkdown()：beginEditBlock(), endEditBlock() で囲んでおく
 0502 ◎ C 01/29 01/29 01020│ToDo│エンコーディング表示：QLabel から QComboBox に変更し、エンコーディングを変更可能に
-0503 ● C 01/29            │ToDo│
-0504 ● C 01/29            │ToDo│
-0505 ● C 01/29            │ToDo│
+0503 ◎ C 01/29 01/29 01020│ToDo│Edit > Convert > CSV -> Markdown Table, Markdown Table -> CSV メニュー追加
+0504 ● C 01/29            │ToDo│Edit > Convert > CSV -> Markdown Table 変換機能実装
+0505 ● C 01/29            │ToDo│Edit > Convert > Markdown Table -> CSV 変換機能実装
 0506 ● C 01/29            │ToDo│
 0507 ● C 01/29            │ToDo│
 0508 ● C 01/29            │ToDo│
