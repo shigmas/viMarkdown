@@ -261,12 +261,12 @@ void MainWindow::onCurrentTabChanged(int ix) {
 	if( docWidget == nullptr ) return;
 	//QString mess = QString("encoding = %1").arg((int)docWidget->m_encoding);
 	//QString mess = docWidget->m_encoding.nema();
-	QString mess = "utf-8";
+	QString mess = "UTF-8";
 	switch( docWidget->m_encoding ) {
 	case QStringConverter::Utf16:
 	case QStringConverter::Utf16BE:
 	case QStringConverter::Utf16LE:
-		mess = "Utf16";
+		mess = "UTF-16";
 		break;
 	}
 	if( docWidget->m_withBOM )
