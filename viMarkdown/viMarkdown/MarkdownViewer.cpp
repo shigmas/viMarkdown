@@ -185,6 +185,7 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
     root->setFrameFormat(rformat);
     m_bodyList.clear();
 	QTextCursor cursor(this->document());
+	cursor.beginEditBlock();
 	cursor.movePosition(QTextCursor::Start);
 	m_lst = mdtext.split(u'\n');
 	m_nEmptyLines = 0;
@@ -243,6 +244,7 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 		}
 	}
 	do_body(cursor);
+	cursor.endEditBlock();
 }
 void MarkdownViewer::do_table(QTextCursor& cursor) {
 	QString buf = m_lst[m_ln] + "\n" + m_lst[m_ln+1] /*+ "\n"*/;

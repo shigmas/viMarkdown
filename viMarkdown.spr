@@ -499,7 +499,7 @@
 0498 ◎ C 01/28 01/28 01019│ToDo│TabWidget タブ右ボタンクリック→ポップアップメニュー（Close, CopyPath）表示？
 0499 ◎ C 01/28 01/28 01019│ToDo│MainWindow::updateHTMLModeCheck()：クリーンナップ
 0500 ◎ P 01/29 01/29 01020│ToDo│30行程度の CSVブロックがあると、編集時の応答が極端に遅くなる？
-0501 ● C 01/29            │ToDo│
+0501 ◎ C 01/29 01/29 01020│ToDo│MarkdownViewer::setMarkdown()：beginEditBlock(), endEditBlock() で囲んでおく
 0502 ● C 01/29            │ToDo│
 0503 ● C 01/29            │ToDo│
 0504 ● C 01/29            │ToDo│
