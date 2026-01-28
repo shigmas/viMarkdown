@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
 	    "   background-color: rgba(0, 120, 215, 30);" // マウスホバー時も淡く反応させる
 	    "}" );
 	insertSearchComboBox();
-	updateHTMLModeCheck();		//	HTML or Source チェック状態に
+	//updateHTMLModeCheck();		//	HTML or Source チェック状態に
 	updateThinThickCheck();		//	細・太罫線モード
 	ui->action_OutlineBar->setChecked(true);	//	暫定的
 	setWindowTitle(QString("viMarkdown ") + VER_STR); 
@@ -61,9 +61,10 @@ MainWindow::MainWindow(QWidget *parent)
 	setAcceptDrops(true);		//	ファイルドロップ可
 	setup_connections();
 	//if( to_restore_win ) {
-		//to_restore_win = false;
-		restore_win();
+	//	to_restore_win = false;
+	//	restore_win();
 	//}
+	restore_win();
 	onAction_NewTab();
 }
 MainWindow::~MainWindow()
@@ -294,10 +295,12 @@ void MainWindow::onFileChanged(const QString& fullPath) {
 	}
 	do_load(fullPath);
 }
+#if 0
 void MainWindow::updateHTMLModeCheck() {
 	ui->action_HTML->setChecked(m_htmlMode);
 	ui->action_Source->setChecked(!m_htmlMode);
 }
+#endif
 DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPath) {
 	//auto containerWidget = new QWidget;
 	auto *docWidget = new DocWidget(title, fullPath);
@@ -1113,12 +1116,12 @@ void MainWindow::onAction_OpenNext() {
 void MainWindow::onAction_HTML(bool checked) {
 	//if( m_htmlMode ) return;
 	m_htmlMode = checked;
-	updateHTMLModeCheck();
+	//updateHTMLModeCheck();
 	updatePreview();
 }
 void MainWindow::onAction_Source(bool checked) {
 	m_htmlMode = !checked;
-	updateHTMLModeCheck();
+	//updateHTMLModeCheck();
 	updatePreview();
 }
 void MainWindow::onAction_OutlineBar(bool checked) {
