@@ -25,6 +25,7 @@ public:
 protected:
     void	setup_connections();
     void	setup_tabMenu();
+    void	setup_encodingCombo();
     void	restore_win();
     DocWidget	*newTabWidget(const QString& title, const QString& fullPath);
     void	onMDTextChanged();
@@ -64,6 +65,7 @@ protected:
     void	onCurPosChanged();
     //void	onAnchorClicked(const QString&);
     void	onCurrentTabChanged(int);
+    void	onEncodingChanged(int);
 
     void	onAction_New();
     void	onAction_NewTab();
@@ -130,6 +132,7 @@ private:
     //MarkdownToHtmlConvertor	m_htmlComvertor;
     class QLabel		*m_lcLabel;		//	行カラムラベル
     class QLabel		*m_encLabel;	//	文字エンコーディングラベル
+    class QComboBox				*m_encodingCombo = nullptr;
     class QComboBox				*m_searchCB = nullptr;
     class QFileSystemWatcher	*m_watcher;
 

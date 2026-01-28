@@ -57,8 +57,9 @@ MainWindow::MainWindow(QWidget *parent)
 	m_watcher = new QFileSystemWatcher(this);			//	外部アプリによる文書変更監視オブジェクト
 	(m_lcLabel = new QLabel("0:0", this))->setMinimumWidth(50);
 	ui->statusBar->addPermanentWidget(m_lcLabel);		//	ステータスバーに QLabel 設置
-	(m_encLabel = new QLabel("", this))->setMinimumWidth(100);
-	ui->statusBar->addPermanentWidget(m_encLabel);		//	ステータスバーに QLabel 設置
+	//(m_encLabel = new QLabel("", this))->setMinimumWidth(100);
+	//ui->statusBar->addPermanentWidget(m_encLabel);		//	ステータスバーに QLabel 設置
+	setup_encodingCombo();
 	setAcceptDrops(true);		//	ファイルドロップ可
 	setup_tabMenu();
 	setup_connections();
@@ -120,6 +121,42 @@ void MainWindow::setup_tabMenu() {
 	        }
 	    }
 	});
+}
+void MainWindow::setup_encodingCombo() {
+	m_encodingCombo = new QComboBox(this);
+    m_encodingCombo->setFrame(false);
+    m_encodingCombo->setFocusPolicy(Qt::NoFocus); // エディタからフォーカスを奪わない
+    m_encodingCombo->setStyleSheet("QComboBox { background: transparent; padding: 0px 5px; }");
+    m_encodingCombo->addItem("UTF-8",				QStringConverter::Utf8*2);
+    m_encodingCombo->addItem("UTF-8 with BOM",		QStringConverter::Utf8*2 + 1); // 後でフラグで判定
+    m_encodingCombo->addItem("UTF-16 LE",			QStringConverter::Utf16LE*2);
+    m_encodingCombo->addItem("UTF-16 LE with BOM",	QStringConverter::Utf16LE*2+1);
+    m_encodingCombo->addItem("UTF-16 BE",			QStringConverter::Utf16BE*2);
+    m_encodingCombo->addItem("UTF-16 BE with BOM",	QStringConverter::Utf16BE*2+1);
+    //m_encodingCombo->addItem("Shift-JIS",      QStringConverter::System); // または明示的に
+    // ステータスバーの右端に追加
+    statusBar()->addPermanentWidget(m_encodingCombo);
+    connect(m_encodingCombo, &QComboBox::activated, this, &MainWindow::onEncodingChanged);
+}
+void MainWindow::onEncodingChanged(int ix) {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	int data = m_encodingCombo->itemData(ix).toInt();
+    docWidget->m_encoding = (QStringConverter::Encoding)(data / 2);
+    docWidget->m_withBOM = (data&1) != 0;
+#if 1
+	QString mess = "UTF-8";
+	switch( docWidget->m_encoding ) {
+	case QStringConverter::Utf16:
+	case QStringConverter::Utf16BE:
+	case QStringConverter::Utf16LE:
+		mess = "UTF-16";
+		break;
+	}
+	if( docWidget->m_withBOM )
+		mess += " with BOM";
+	qDebug() << "encoding = " << mess;
+#endif
 }
 void MainWindow::onAction_TodayString_1() {
 	DocWidget *docWidget = getCurDocWidget();
@@ -291,6 +328,11 @@ void MainWindow::onCurrentTabChanged(int ix) {
 	if( docWidget == nullptr ) return;
 	//QString mess = QString("encoding = %1").arg((int)docWidget->m_encoding);
 	//QString mess = docWidget->m_encoding.nema();
+#if 1
+	int data = docWidget->m_encoding*2 + (docWidget->m_withBOM ? 1 : 0);
+	ix = m_encodingCombo->findData(data);
+	if( ix >= 0 ) m_encodingCombo->setCurrentIndex(ix);
+#else
 	QString mess = "UTF-8";
 	switch( docWidget->m_encoding ) {
 	case QStringConverter::Utf16:
@@ -303,6 +345,7 @@ void MainWindow::onCurrentTabChanged(int ix) {
 		mess += " with BOM";
 	//statusBar()->showMessage(mess);
 	m_encLabel->setText(mess);
+#endif
 }
 void MainWindow::onFileChanged(const QString& fullPath) {
 	statusBar()->showMessage("file changed: " + fullPath, 3000);
