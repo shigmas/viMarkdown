@@ -328,6 +328,11 @@ void MainWindow::onCurrentTabChanged(int ix) {
 	if( docWidget == nullptr ) return;
 	//QString mess = QString("encoding = %1").arg((int)docWidget->m_encoding);
 	//QString mess = docWidget->m_encoding.nema();
+	if( !docWidget->m_fullPath.isEmpty() ) {
+		QFileInfo fi(docWidget->m_fullPath);
+		QString dirPath = fi.absolutePath();
+	    QDir::setCurrent(dirPath);
+	}
 #if 1
 	int data = docWidget->m_encoding*2 + (docWidget->m_withBOM ? 1 : 0);
 	ix = m_encodingCombo->findData(data);
