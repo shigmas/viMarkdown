@@ -24,6 +24,7 @@ public:
 
 protected:
     void	setup_connections();
+    void	setup_tabMenu();
     void	restore_win();
     DocWidget	*newTabWidget(const QString& title, const QString& fullPath);
     void	onMDTextChanged();

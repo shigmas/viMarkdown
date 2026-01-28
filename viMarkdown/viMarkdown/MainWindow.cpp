@@ -9,6 +9,7 @@
 #include <QSettings>
 #include <QTextBlock>
 #include <QComboBox>
+#include <QClipboard>
 #include <qlabel.h>
 #include <QDockWidget>
 #include <QDragEnterEvent>
@@ -59,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent)
 	(m_encLabel = new QLabel("", this))->setMinimumWidth(100);
 	ui->statusBar->addPermanentWidget(m_encLabel);		//	ステータスバーに QLabel 設置
 	setAcceptDrops(true);		//	ファイルドロップ可
+	setup_tabMenu();
 	setup_connections();
 	//if( to_restore_win ) {
 	//	to_restore_win = false;
@@ -91,6 +93,33 @@ void MainWindow::insertSearchComboBox() {
 		QFileInfo fi(recentFilePaths.front());
 		QDir::setCurrent(fi.path());
 	}
+}
+void MainWindow::setup_tabMenu() {
+	QTabBar* tabBar = ui->tabWidget->tabBar();
+	tabBar->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(tabBar, &QTabBar::customContextMenuRequested, this, [this, tabBar](const QPoint &pos) {
+	    // 4. クリックされた位置にあるタブのインデックスを取得
+	    int index = tabBar->tabAt(pos);
+	    if (index == -1) return; // タブ以外の場所（隙間など）なら何もしない
+	    ui->tabWidget->setCurrentIndex(index);
+
+	    QMenu menu(this);
+	    QAction *closeAction = menu.addAction(tr("Close"));
+	    QAction *copyPathAction = menu.addAction(tr("Copy Fullpath"));
+	    QAction *selectedAction = menu.exec(tabBar->mapToGlobal(pos));
+	    if (selectedAction == closeAction) {
+	        ui->tabWidget->removeTab(index); 
+	    } else if (selectedAction == copyPathAction) {
+	        DocWidget *docWidget = (DocWidget*)ui->tabWidget->widget(index);
+	        if( docWidget != nullptr ) {
+	        	QClipboard *clipboard = QGuiApplication::clipboard();
+	        	if( !docWidget->m_fullPath.isEmpty() )
+	        		clipboard->setText(docWidget->m_fullPath);
+	        	else
+	        		clipboard->setText(docWidget->m_title);
+	        }
+	    }
+	});
 }
 void MainWindow::onAction_TodayString_1() {
 	DocWidget *docWidget = getCurDocWidget();
