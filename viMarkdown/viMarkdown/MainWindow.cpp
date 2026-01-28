@@ -56,6 +56,8 @@ MainWindow::MainWindow(QWidget *parent)
 	m_watcher = new QFileSystemWatcher(this);			//	外部アプリによる文書変更監視オブジェクト
 	(m_lcLabel = new QLabel("0:0", this))->setMinimumWidth(50);
 	ui->statusBar->addPermanentWidget(m_lcLabel);		//	ステータスバーに QLabel 設置
+	(m_encLabel = new QLabel("", this))->setMinimumWidth(100);
+	ui->statusBar->addPermanentWidget(m_encLabel);		//	ステータスバーに QLabel 設置
 	setAcceptDrops(true);		//	ファイルドロップ可
 	setup_connections();
 	//if( to_restore_win ) {
@@ -154,6 +156,7 @@ void MainWindow::onAction_FindWord() {
 	do_find();
 }
 void MainWindow::setup_connections() {
+	connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainWindow::onCurrentTabChanged);
 	connect(ui->menu_RecentFiles, &QMenu::aboutToShow, this, &MainWindow::onAboutToShow_RecentFiles);
 	connect(ui->menu_FavoriteFiles, &QMenu::aboutToShow, this, &MainWindow::onAboutToShow_FavoriteFiles);
 	connect(m_watcher, &QFileSystemWatcher::fileChanged, this, &MainWindow::onFileChanged);
@@ -252,6 +255,24 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 	settings.endGroup();
 	//
 	event->accept();
+}
+void MainWindow::onCurrentTabChanged(int ix) {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	//QString mess = QString("encoding = %1").arg((int)docWidget->m_encoding);
+	//QString mess = docWidget->m_encoding.nema();
+	QString mess = "utf-8";
+	switch( docWidget->m_encoding ) {
+	case QStringConverter::Utf16:
+	case QStringConverter::Utf16BE:
+	case QStringConverter::Utf16LE:
+		mess = "Utf16";
+		break;
+	}
+	if( docWidget->m_withBOM )
+		mess += " with BOM";
+	//statusBar()->showMessage(mess);
+	m_encLabel->setText(mess);
 }
 void MainWindow::onFileChanged(const QString& fullPath) {
 	statusBar()->showMessage("file changed: " + fullPath, 3000);

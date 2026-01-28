@@ -62,6 +62,7 @@ protected:
     void	onMarkdownViewerLineClicked(int);
     void	onCurPosChanged();
     //void	onAnchorClicked(const QString&);
+    void	onCurrentTabChanged(int);
 
     void	onAction_New();
     void	onAction_NewTab();
@@ -127,6 +128,7 @@ private:
     //QString	m_htmlText;
     //MarkdownToHtmlConvertor	m_htmlComvertor;
     class QLabel		*m_lcLabel;		//	行カラムラベル
+    class QLabel		*m_encLabel;	//	文字エンコーディングラベル
     class QComboBox				*m_searchCB = nullptr;
     class QFileSystemWatcher	*m_watcher;
 
