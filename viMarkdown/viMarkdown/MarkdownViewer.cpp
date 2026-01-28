@@ -384,6 +384,7 @@ void MarkdownViewer::do_CSV(QTextCursor& cursor) {
 		}
 	}
 	static QRegularExpression re("^[+-]?(\\d+\\.\\d*|\\d+|\\.\\d+)$");
+	cursor.beginEditBlock();
 	QTextTable *table = cursor.insertTable(ll.size(), max_clmn);
 	for(int row = 0; row < ll.size(); ++row) {
 		for(int col = 0; col < ll[row].size(); ++col) {
@@ -420,6 +421,7 @@ void MarkdownViewer::do_CSV(QTextCursor& cursor) {
 	cursor.setPosition(table->lastPosition());
 	cursor.movePosition(QTextCursor::NextCharacter);
 	cursor.insertBlock();
+	cursor.endEditBlock();
 	//++m_ln;
 }
 void MarkdownViewer::do_code_keisen(QTextCursor& cursor) {
