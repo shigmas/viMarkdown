@@ -385,6 +385,7 @@ void MarkdownViewer::do_CSV(QTextCursor& cursor) {
 			ll.push_back(fields);
 		}
 	}
+	if( ll.isEmpty() ) return;
 	static QRegularExpression re("^[+-]?(\\d+\\.\\d*|\\d+|\\.\\d+)$");
 	cursor.beginEditBlock();
 	QTextTable *table = cursor.insertTable(ll.size(), max_clmn);

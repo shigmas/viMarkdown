@@ -36,6 +36,8 @@ public:
 	void	openPrev();
 	void	openNext();
 	void	insertTodayString(const QString &fmt);
+	void	convert_CSV_MarkdownTable();
+	void	convert_MarkdownTable_CSV();
 
 signals:
     void	tab_pressed();

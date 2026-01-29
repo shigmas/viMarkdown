@@ -93,6 +93,8 @@ protected:
     void	onAction_TodayString_1();
     void	onAction_TodayString_2();
     void	onAction_TodayString_3();
+    void	onAction_CSV_MarkdownTable();
+    void	onAction_MarkdownTable_CSV();
     void	onAction_Find();
     void	onAction_ForwardAgain();
     void	onAction_BackwardAgain();

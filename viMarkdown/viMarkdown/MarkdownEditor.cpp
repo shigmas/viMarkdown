@@ -10,6 +10,8 @@
 #include "MarkdownEditor.h"
 #include "MainWindow.h"
 
+extern bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes);
+
 class LnAreaWidget : public QWidget {
 public:
 	LnAreaWidget(QWidget *parent = nullptr) : QWidget(parent) {}
@@ -982,6 +984,64 @@ void MarkdownEditor::insertTodayString(const QString &fmt) {
 	QString today = QDate::currentDate().toString(fmt);
 	cursor.insertText(today);
 	setTextCursor(cursor);
+}
+bool findCSVBlock(QTextCursor &cursor) {
+	QTextBlock block = cursor.block();
+	bool curline = true;
+	while( block.isValid() ) {
+		if( block.text().startsWith("```CSV", Qt::CaseInsensitive)) {
+			cursor.setPosition(block.position());
+			return true;
+		}
+		else if (block.text().startsWith("```") && !curline)
+			break;
+		curline = false;
+		block = block.previous();
+	}
+	return false;
+}
+void MarkdownEditor::convert_CSV_MarkdownTable() {
+	QTextCursor cursor = this->textCursor();
+	if( !findCSVBlock(cursor) ) return;
+	int startPosition = cursor.position();
+	QTextBlock block = cursor.block();
+	block = block.next();		//	skip "```CSV" line
+    bool inQuotes = false;
+    int endPosition = -1;
+	QList<QStringList> ll;
+    QStringList fields;
+	while( block.isValid() ) {
+		if( block.text().startsWith("```")) {
+			endPosition = block.position() + block.length();
+			break;
+		}
+		inQuotes = parseCsvLine(fields, block.text(), inQuotes);
+		if( !inQuotes ) {
+			ll.push_back(fields);
+		}
+	}
+	//if( endPosition < 0 )
+	QString mdtext;
+	bool header = true;
+	for(int row = 0; row < ll.size(); ++row) {
+		for(int col = 0; col < ll[row].size(); ++col) {
+			mdtext += "|" + ll[row][col];
+		}
+		mdtext += "|\n";
+		if( header ) {
+			for(int col = 0; col < ll[row].size(); ++col) {
+				mdtext += "|---";
+			}
+			mdtext += "|\n";
+			header = false;
+		}
+	}
+	cursor.setPosition(startPosition);
+	cursor.setPosition(endPosition, QTextCursor::KeepAnchor);
+	cursor.insertText(mdtext);
+	setTextCursor(cursor);
+}
+void MarkdownEditor::convert_MarkdownTable_CSV() {
 }
 void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int charsAdded) {
 	if( m_processing || (charsRemoved == 0 && charsAdded == 0) ) return;
