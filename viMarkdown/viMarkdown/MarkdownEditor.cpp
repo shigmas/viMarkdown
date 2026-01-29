@@ -1019,6 +1019,7 @@ void MarkdownEditor::convert_CSV_MarkdownTable() {
 		if( !inQuotes ) {
 			ll.push_back(fields);
 		}
+		block = block.next();
 	}
 	//if( endPosition < 0 )
 	QString mdtext;

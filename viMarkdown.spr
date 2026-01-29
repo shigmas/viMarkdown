@@ -502,7 +502,7 @@
 0501 ◎ C 01/29 01/29 01020│ToDo│MarkdownViewer::setMarkdown()：beginEditBlock(), endEditBlock() で囲んでおく
 0502 ◎ C 01/29 01/29 01020│ToDo│エンコーディング表示：QLabel から QComboBox に変更し、エンコーディングを変更可能に
 0503 ◎ C 01/29 01/29 01020│ToDo│Edit > Convert > CSV -> Markdown Table, Markdown Table -> CSV メニュー追加
-0504 ● C 01/29            │ToDo│Edit > Convert > CSV -> Markdown Table 変換機能実装
+0504 ◎ C 01/29 01/29 01020│ToDo│Edit > Convert > CSV -> Markdown Table 変換機能実装
 0505 ● C 01/29            │ToDo│Edit > Convert > Markdown Table -> CSV 変換機能実装
 0506 ● C 01/29            │ToDo│README.md：ロードマップの記述を追加
 0507 ◎ C 01/29 01/29 01020│問題│```CSV と入力した時点でクラッシュすることがある
