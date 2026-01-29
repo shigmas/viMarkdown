@@ -29,6 +29,17 @@ It is designed for developers and writers who love efficiency.
 |0.2.xxx| RC | Bug fixes only (ensuring no side effects) | Mid-Mar 2026 – |
 |0.2.xxx| Stable | Maintenance mode | Apr 2026 – |
 
+## Roadmap
+
+| Ver. | Features / Overview | Schedule |
+| :--- | :--- | :--- |
+| 0.2 | Basic editor features, Basic Markdown, Ruled-line (Keisen) blocks, CSV blocks | Scheduled for release around April 2026 |
+| 0.4 | vi commands, Japanese language support (UI/menus), Usability improvements, Performance optimizations | Dev version starts April 2026; Release date TBD |
+| 0.6 | Math formulas, Mind maps, Page view, Presentation mode? | TBD |
+| 0.8 | Mermaid diagrams?, Direct editing in the previewer? | TBD |
+
+\* This roadmap is current and subject to change without notice at the author's sole discretion.
+
 ## How to build
 
 ### Windows (Recommended)
