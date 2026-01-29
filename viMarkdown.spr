@@ -506,6 +506,6 @@
 0505 ● C 01/29            │ToDo│Edit > Convert > Markdown Table -> CSV 変換機能実装
 0506 ◎ C 01/29 01/29 01020│ToDo│README.md：ロードマップの記述を追加
 0507 ◎ C 01/29 01/29 01020│問題│```CSV と入力した時点でクラッシュすることがある
-0508 ● C 01/29            │ToDo│
-0509 ● C 01/29            │ToDo│
-0510 ● C 01/29            │ToDo│
+0508 ◎ C 01/30 01/30 01021│ToDo│README(_ja).md 以外のドキュメント類は docs(/ja) ディレクトリ以下に保存
+0509 ◎ C 01/30 01/30 01021│ToDo│quickstart.md を docs/ja に移動
+0510 ● C 01/30            │ToDo│
