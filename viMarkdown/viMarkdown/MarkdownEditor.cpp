@@ -936,6 +936,7 @@ void MarkdownEditor::applyAlignment(Align align) {
 }
 void MarkdownEditor::openPrev() {
 	QTextCursor cursor = this->textCursor();
+	cursor.beginEditBlock();
 	QString ctext = cursor.block().text();	//	カーソル行テキスト
 	QString text;
 	int vc0 = 0;
@@ -956,9 +957,11 @@ void MarkdownEditor::openPrev() {
 	cursor.insertBlock();		//	新規行作成
 	cursor.movePosition(QTextCursor::Up);	//	新行先頭に移動
 	cursor.insertText(text);
+	cursor.endEditBlock();
 }
 void MarkdownEditor::openNext() {		//	罫線補完次行オープン
 	QTextCursor cursor = this->textCursor();
+	cursor.beginEditBlock();
 	QString ctext = cursor.block().text();	//	カーソル行テキスト
 	QString text;
 	int vc0 = 0;
@@ -978,6 +981,7 @@ void MarkdownEditor::openNext() {		//	罫線補完次行オープン
 	cursor.movePosition(QTextCursor::EndOfBlock);
 	cursor.insertBlock();		//	新規行作成
 	cursor.insertText(text);
+	cursor.endEditBlock();
 }
 void MarkdownEditor::insertTodayString(const QString &fmt) {
 	QTextCursor cursor = this->textCursor();
