@@ -193,51 +193,66 @@ static const unsigned short keisenTable[KEISEN_CODE_END - KEISEN_CODE_BEGIN] = {
 	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None
 };
 const ushort revKeisenTable[256] = {
-	// 0x00 - 0x0F: 基本（細線のみ）
-    0x0000,  u'╵',  u'╷',  u'│',  u'╴',  u'┘',  u'┐',  u'┤',  
+    // 0x00 - 0x0F: 全て細線 (Up=1, Down=2, Left=4, Right=8)
+    u' ',  u'╵',  u'╷',  u'│',  u'╴',  u'┘',  u'┐',  u'┤',
     u'╶',  u'└',  u'┌',  u'├',  u'─',  u'┴',  u'┬',  u'┼',
-    // 0x10 - 0x1F: 太線 上 (ThickUp)
-    u'╹',  u'╹',  u'╿',  u'╿',  u'┚',  u'┛',  u'┒',  u'┨',
-    u'┖',  u'┗',  u'┎',  u'┠',  u'┸',  u'┺',  u'╄',  u'╊',
-    // 0x20 - 0x2F: 太線 下 (ThickDown)
-    u'╻',  u'╽',  u'╻',  u'╽',  u'┒',  u'┚',  u'┓',  u'┩',
-    u'┎',  u'┖',  u'┏',  u'┠',  u'┰',  u'╃',  u'┳',  u'╉',
+
+    // 0x10 - 0x1F: 太線 上 (ThickUp=0x10)
+    u'╹',  u'╹',  u'╿',  u'╿',  u'┚',  u'┚',  u'┒',  u'┦',
+    u'┖',  u'┖',  u'┎',  u'┞',  u'┸',  u'┸',  u'┰',  u'╀',
+
+    // 0x20 - 0x2F: 太線 下 (ThickDown=0x20)
+    u'╻',  u'╽',  u'╻',  u'╽',  u'┙',  u'┚',  u'┑',  u'┧',
+    u'┕',  u'┖',  u'┍',  u'┟',  u'┷',  u'╁',  u'┷',  u'╁',
+
     // 0x30 - 0x3F: 太線 上下 (ThickUp + ThickDown)
-    u'┃',  u'┃',  u'┃',  u'┃',  u'┚',  u'┛',  u'┓',  u'┫',
-    u'┖',  u'┗',  u'┏',  u'┣',  u'┸',  u'┻',  u'┳',  u'╋',
-    // 0x40 - 0x4F: 太線 左 (ThickLeft)
-    u'╸',  u'┚',  u'┒',  u'┨',  u'╸',  u'┚',  u'┒',  u'┨',
-    u'╼',  u'┙',  u'┑',  u'┥',  u'╾',  u'┵',  u'┭',  u'┽',
+    u'┃',  u'┃',  u'┃',  u'┃',  u'┨',  u'┨',  u'┨',  u'┨',
+    u'┠',  u'┠',  u'┠',  u'┠',  u'╂',  u'╂',  u'╂',  u'╂',
+
+    // 0x40 - 0x4F: 太線 左 (ThickLeft=0x40)
+    u'╸',  u'┙',  u'┑',  u'┥',  u'╸',  u'┙',  u'┑',  u'┥',
+    u'╼',  u'┕',  u'┍',  u'┽',  u'━',  u'┿',  u'┮',  u'┿',
+
     // 0x50 - 0x5F: 太線 上左 (ThickUp + ThickLeft)
     u'┛',  u'┛',  u'┩',  u'┩',  u'┛',  u'┛',  u'┩',  u'┩',
-    u'┙',  u'┙',  u'┥',  u'┥',  u'┵',  u'┵',  u'┽',  u'┽',
+    u'┕',  u'┛',  u'┍',  u'┽',  u'━',  u'┿',  u'┮',  u'┿',
+
     // 0x60 - 0x6F: 太線 下左 (ThickDown + ThickLeft)
-    u'┓',  u'┨',  u'┓',  u'┨',  u'┓',  u'┨',  u'┓',  u'┨',
-    u'┑',  u'┥',  u'┑',  u'┥',  u'┭',  u'┽',  u'┭',  u'┽',
+    u'┓',  u'┪',  u'┓',  u'┪',  u'┓',  u'┪',  u'┓',  u'┪',
+    u'┍',  u'┪',  u'┓',  u'┽',  u'━',  u'┿',  u'┮',  u'┿',
+
     // 0x70 - 0x7F: 太線 上下左 (ThickUp + ThickDown + ThickLeft)
     u'┫',  u'┫',  u'┫',  u'┫',  u'┫',  u'┫',  u'┫',  u'┫',
-    u'┥',  u'┥',  u'┥',  u'┥',  u'┽',  u'┽',  u'┽',  u'┽',
-    // 0x80 - 0x8F: 太線 右 (ThickRight)
-    u'╺',  u'┖',  u'┎',  u'┠',  u'╾',  u'┶',  u'┮',  u'╀',
-    u'╺',  u'┖',  u'┎',  u'┠',  u'━',  u'┷',  u'┯',  u'┿',
+    u'┍',  u'┫',  u'┓',  u'┽',  u'━',  u'┿',  u'┮',  u'┿',
+
+    // 0x80 - 0x8F: 太線 右 (ThickRight=0x80)
+    u'╺',  u'┖',  u'┎',  u'┝',  u'╾',  u'┕',  u'┍',  u'┾',
+    u'╺',  u'┖',  u'┎',  u'┝',  u'━',  u'┵',  u'┭',  u'┿',
+
     // 0x90 - 0x9F: 太線 上右 (ThickUp + ThickRight)
-    u'┗',  u'┗',  u'┠',  u'┠',  u'┶',  u'┶',  u'╀',  u'╀',
-    u'┗',  u'┗',  u'┠',  u'┠',  u'┷',  u'┷',  u'┿',  u'┿',
+    u'┗',  u'┗',  u'┡',  u'┡',  u'╾',  u'┕',  u'┍',  u'╅',
+    u'┗',  u'┗',  u'┡',  u'┡',  u'━',  u'┿',  u'┯',  u'╇',
+
     // 0xA0 - 0xAF: 太線 下右 (ThickDown + ThickRight)
-    u'┏',  u'┠',  u'┏',  u'┠',  u'┮',  u'╀',  u'┮',  u'╀',
-    u'┏',  u'┠',  u'┏',  u'┠',  u'┯',  u'┿',  u'┯',  u'┿',
+    u'┏',  u'┢',  u'┏',  u'┢',  u'╾',  u'┕',  u'┍',  u'╆',
+    u'┏',  u'┢',  u'┏',  u'┢',  u'━',  u'┿',  u'┯',  u'╇',
+
     // 0xB0 - 0xBF: 太線 上下右 (ThickUp + ThickDown + ThickRight)
-    u'┣',  u'┣',  u'┣',  u'┣',  u'╀',  u'╀',  u'╀',  u'╀',
-    u'┣',  u'┣',  u'┣',  u'┣',  u'┿',  u'┿',  u'┿',  u'┿',
+    u'┣',  u'┣',  u'┣',  u'┣',  u'╾',  u'┕',  u'┍',  u'╊',
+    u'┣',  u'┣',  u'┣',  u'┣',  u'━',  u'┿',  u'┯',  u'╇',
+
     // 0xC0 - 0xCF: 太線 左右 (ThickLeft + ThickRight)
-    u'━',  u'┸',  u'┰',  u'╄',  u'━',  u'┸',  u'┰',  u'╄',
-    u'━',  u'┸',  u'┰',  u'╄',  u'━',  u'┻',  u'┳',  u'╂',
+    u'━',  u'┸',  u'┰',  u'┿',  u'━',  u'┸',  u'┰',  u'┿',
+    u'━',  u'┸',  u'┰',  u'┿',  u'━',  u'┸',  u'┰',  u'┿',
+
     // 0xD0 - 0xDF: 太線 上左右 (ThickUp + ThickLeft + ThickRight)
-    u'┻',  u'┻',  u'╄',  u'╄',  u'┻',  u'┻',  u'╄',  u'╄',
-    u'┻',  u'┻',  u'╄',  u'╄',  u'┻',  u'┻',  u'╂',  u'╂',
+    u'┻',  u'┻',  u'╈',  u'╈',  u'┻',  u'┻',  u'╈',  u'╈',
+    u'┻',  u'┻',  u'╈',  u'╈',  u'┻',  u'┻',  u'╈',  u'╈',
+
     // 0xE0 - 0xEF: 太線 下左右 (ThickDown + ThickLeft + ThickRight)
-    u'┳',  u'╄',  u'┳',  u'╄',  u'┳',  u'╄',  u'┳',  u'╄',
-    u'┳',  u'╄',  u'┳',  u'╄',  u'┳',  u'┳',  u'╂',  u'╂',
+    u'┳',  u'╇',  u'┳',  u'╇',  u'┳',  u'╇',  u'┳',  u'╇',
+    u'┳',  u'╇',  u'┳',  u'╇',  u'┳',  u'╇',  u'┳',  u'╇',
+
     // 0xF0 - 0xFF: 太線 全方向 (ThickUp + ThickDown + ThickLeft + ThickRight)
     u'╋',  u'╋',  u'╋',  u'╋',  u'╋',  u'╋',  u'╋',  u'╋',
     u'╋',  u'╋',  u'╋',  u'╋',  u'╋',  u'╋',  u'╋',  u'╋'
