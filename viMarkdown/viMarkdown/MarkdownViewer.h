@@ -17,6 +17,7 @@ public:
     const QStringList&	getHeadings() const { return m_headingList; }
     const std::vector<int>&	getHeadingsLineNum() const { return m_headingSrcLineNum; }
     const std::vector<int>&	getHeadingsBlockNum() const { return m_headingBlockNum; }
+    void	setCursorAt(int srcBlockNum);
     void	ensureLineVisible(int srcBlockNum);
     void	scrollToBlock(int blockIndex);
 

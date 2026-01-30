@@ -591,6 +591,16 @@ void MarkdownViewer::do_list(QTextCursor& cursor, QString buf) {
 	--m_ln;
 	m_nEmptyLines = 0;
 }
+void MarkdownViewer::setCursorAt(int srcBlockNum) {
+	int i = 0;
+	while( i+1 < m_headingSrcLineNum.size() && m_headingSrcLineNum[i+1] <= srcBlockNum ) ++i;
+	if( i < m_headingBlockNum.size() ) {
+		QTextBlock block = document()->findBlockByNumber(m_headingBlockNum[i]);
+		QTextCursor cursor = textCursor();
+		cursor.setPosition(block.position());
+		setTextCursor(cursor);
+	}
+}
 void MarkdownViewer::ensureLineVisible(int srcBlockNum) {
 	//qDebug() << "srcBlockNum = " << srcBlockNum;
 	int i = 0;

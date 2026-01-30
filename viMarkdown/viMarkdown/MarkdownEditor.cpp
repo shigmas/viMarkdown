@@ -631,7 +631,7 @@ QString getDownSrcString(bool erase, bool thickKeisen, const QString txt, int ix
 				if( ix < 2 )		//	undone: 左に文字がある場合
 					return thickKeisen ? "┏" : "┌";
 				else
-					return thickKeisen ? "┳" : "┬";
+					return thickKeisen ? "┳" : "┯";
 			}
 		}
 		return thickKeisen ? "┃" : "│";

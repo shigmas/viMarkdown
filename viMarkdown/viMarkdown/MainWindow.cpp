@@ -422,7 +422,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 									"- リスト\n1. 連番\n"
 									"|見出し|見出し|\n|-----:|------|\n|   123|abc   |\n...");
 	MarkdownViewer *markdownViewer = docWidget->m_markdownViewer = new MarkdownViewer(this, splitter);
-	markdownViewer->setReadOnly(true); // プレビューなので読み取り専用に
+	//##markdownViewer->setReadOnly(true); // プレビューなので読み取り専用に
 	markdownViewer->setMouseTracking(true); // マウスの動きを常に追跡
 	markdownViewer->setPlaceholderText("プレビュー画面");
 	markdownViewer->setStyleSheet("font-size: 12pt;");
@@ -445,7 +445,8 @@ void MainWindow::onCurPosChanged() {		//	MarkdownEditor でカーソルが移動
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	QTextCursor cursor = docWidget->m_mdEditor->textCursor();
-	docWidget->m_markdownViewer->ensureLineVisible(cursor.blockNumber());
+	//docWidget->m_markdownViewer->ensureLineVisible(cursor.blockNumber());
+	docWidget->m_markdownViewer->setCursorAt(cursor.blockNumber());
 }
 void MainWindow::onMarkdownViewerLineClicked(int bln) {
 	qDebug() << "MainWindow::onMarkdownViewerLineClicked(" << bln << ")";
