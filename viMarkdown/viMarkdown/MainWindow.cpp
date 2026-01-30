@@ -25,6 +25,7 @@
 #include "DocWidget.h"
 #include "MarkdownEditor.h"
 #include "MarkdownViewer.h"
+#include "SettingsDialog.h"
 
 using namespace std;
 
@@ -238,6 +239,7 @@ void MainWindow::setup_connections() {
 	connect(ui->menu_FavoriteFiles, &QMenu::aboutToShow, this, &MainWindow::onAboutToShow_FavoriteFiles);
 	connect(m_watcher, &QFileSystemWatcher::fileChanged, this, &MainWindow::onFileChanged);
 	connect(ui->action_Exit, &QAction::triggered, this, &MainWindow::onAction_Exit);
+	connect(ui->action_Settings, &QAction::triggered, this, &MainWindow::onAction_Settings);
 	connect(ui->action_AddThisFavorite, &QAction::triggered, this, &MainWindow::onAction_AddThisFavorite);
 	connect(ui->action_New, &QAction::triggered, this, &MainWindow::onAction_New);
 	connect(ui->action_NewTab, &QAction::triggered, this, &MainWindow::onAction_NewTab);
@@ -571,6 +573,12 @@ void MainWindow::onAction_AddThisFavorite() {
 	favoriteFilePaths.push_front(docWidget->m_fullPath);
 	while( favoriteFilePaths.size() > N_FAVORITE_FILES ) favoriteFilePaths.pop_back();
 	settings.setValue(KEY_FAVORITE_FILES, favoriteFilePaths);
+}
+void MainWindow::onAction_Settings() {
+	SettingsDialog dlg(this);
+	if (dlg.exec() == QDialog::Accepted) {
+	    // OKボタンが押された時の処理
+	}
 }
 void MainWindow::onAction_Exit() {
 	this->close(); // メインウィンドウを閉じる
