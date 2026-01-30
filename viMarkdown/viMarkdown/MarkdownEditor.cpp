@@ -60,6 +60,80 @@ enum KeisenDir {		//	罫線各文字の連結方向＆罫線種フラグ
 	DblRight = Right << DblLine,
 };
 static const unsigned short keisenTable[KEISEN_CODE_END - KEISEN_CODE_BEGIN] = {
+#if 1
+	/* 2500-2507─ ━ │ ┃ ┄ ┅ ┆ ┇ */
+    Left|Right, ThickLeft|ThickRight, Up|Down, ThickUp|ThickDown,
+    Left|Right, ThickLeft|ThickRight, Up|Down, ThickUp|ThickDown, // 破線は基本線と同じフラグ
+
+    /* 2508-250F ┈ ┉ ┊ ┋ ┌ ┍ ┎ ┏ */
+    Left|Right, ThickLeft|ThickRight, Up|Down, ThickUp|ThickDown,
+    Down|Right, Down|ThickRight, ThickDown|Right, ThickDown|ThickRight,
+
+    /* 2510-2517 ┐ ┑ ┒ ┓ └ ┕ ┖ ┗ */
+    Down|Left, Down|ThickLeft, ThickDown|Left, ThickDown|ThickLeft,
+    Up|Right, Up|ThickRight, ThickUp|Right, ThickUp|ThickRight,
+
+    /* 2518-251F ┘ ┙ ┚ ┛ ├ ┝ ┞ ┟ */
+    Up|Left, Up|ThickLeft, ThickUp|Left, ThickUp|ThickLeft,
+    Up|Down|Right, Up|Down|ThickRight, ThickUp|Down|Right, Up|ThickDown|Right,
+
+    /* 2520-2527 ┠ ┡ ┢ ┣ ┤ ┥ ┦ ┧ */
+    ThickUp|ThickDown|Right,      // 2520: ┠ (Vertical Heavy, Right Light)
+    ThickUp|Down|ThickRight,      // 2521: ┡ (Up Heavy, Down Light, Right Heavy)
+    Up|ThickDown|ThickRight,      // 2522: ┢ (Up Light, Down Heavy, Right Heavy)
+    ThickUp|ThickDown|ThickRight, // 2523: ┣ (Vertical Heavy, Right Heavy)
+    Up|Down|Left,                 // 2524: ┤ (Vertical Light, Left Light)
+    Up|Down|ThickLeft,            // 2525: ┥ (Vertical Light, Left Heavy)
+    ThickUp|Down|Left,            // 2526: ┦ (Up Heavy, Down Light, Left Light)
+    Up|ThickDown|Left,            // 2527: ┧ (Up Light, Down Heavy, Left Light)
+
+    /* 2528-252F ┨ ┩ ┪ ┫ ┬ ┭ ┮ ┯ */
+    ThickUp|ThickDown|Left,       // 2528: ┨ (Vertical Heavy, Left Light)
+    ThickUp|Down|ThickLeft,       // 2529: ┩ (Up Heavy, Down Light, Left Heavy)
+    Up|ThickDown|ThickLeft,       // 252A: ┪ (Up Light, Down Heavy, Left Heavy)
+    ThickUp|ThickDown|ThickLeft,  // 252B: ┫ (Vertical Heavy, Left Heavy)
+    Left|Right|Down,              // 252C: ┬ (Horizontal Light, Down Light)
+    Left|ThickRight|Down,         // 252D: ┭ (Left Light, Right Heavy, Down Light)
+    ThickLeft|Right|Down,         // 252E: ┮ (Left Heavy, Right Light, Down Light)
+    ThickLeft|ThickRight|Down,    // 252F: ┯ (Horizontal Heavy, Down Light)
+
+    /* 2530-2537 ┰ ┱ ┲ ┳ ┴ ┵ ┶ ┷ */
+    Left|Right|ThickDown,         // 2530: ┰ (Horizontal Light, Down Heavy)
+    Left|ThickRight|ThickDown,    // 2531: ┱ (Left Light, Right Heavy, Down Heavy)
+    ThickLeft|Right|ThickDown,    // 2532: ┲ (Left Heavy, Right Light, Down Heavy)
+    ThickLeft|ThickRight|ThickDown, // 2533: ┳ (Horizontal Heavy, Down Heavy)
+    Left|Right|Up,                // 2534: ┴ (Horizontal Light, Up Light)
+    Left|ThickRight|Up,           // 2535: ┵ (Left Light, Right Heavy, Up Light)
+    ThickLeft|Right|Up,           // 2536: ┶ (Left Heavy, Right Light, Up Light)
+    ThickLeft|ThickRight|Up,      // 2537: ┷ (Horizontal Heavy, Up Light)
+
+    /* 2538-253F ┸ ┹ ┺ ┻ ┼ ┽ ┾ ┿ */
+    Left|Right|ThickUp,           // 2538: ┸ (Horizontal Light, Up Heavy)
+    Left|ThickRight|ThickUp,      // 2539: ┹ (Left Light, Right Heavy, Up Heavy)
+    ThickLeft|Right|ThickUp,      // 253A: ┺ (Left Heavy, Right Light, Up Heavy)
+    ThickLeft|ThickRight|ThickUp, // 253B: ┻ (Horizontal Heavy, Up Heavy)
+    Up|Down|Left|Right,           // 253C: ┼ (Vertical Light, Horizontal Light)
+    Up|Down|ThickLeft|Right,      // 253D: ┽ (Vertical Light, Left Heavy, Right Light)
+    Up|Down|Left|ThickRight,      // 253E: ┾ (Vertical Light, Left Light, Right Heavy)
+    Up|Down|ThickLeft|ThickRight, // 253F: ┿ (Vertical Light, Horizontal Heavy)
+
+    /* 2540-2547 ╀ ╁ ╂ ╃ ╄ ╅ ╆ ╇ */
+    ThickUp|Down|Left|Right,      // 2540: ╀ (Up Heavy, Down Light, Horizontal Light)
+    Up|ThickDown|Left|Right,      // 2541: ╁ (Up Light, Down Heavy, Horizontal Light)
+    ThickUp|ThickDown|Left|Right, // 2542: ╂ (Vertical Heavy, Horizontal Light)
+    ThickUp|Down|ThickLeft|Right, // 2543: ╃ (Up Heavy, Down Light, Left Heavy, Right Light)
+    Up|ThickDown|ThickLeft|Right, // 2544: ╄ (Up Light, Down Heavy, Left Heavy, Right Light)
+    ThickUp|Down|Left|ThickRight, // 2545: ╅ (Up Heavy, Down Light, Left Light, Right Heavy)
+    Up|ThickDown|Left|ThickRight, // 2546: ╆ (Up Light, Down Heavy, Left Light, Right Heavy)
+    ThickUp|Down|ThickLeft|ThickRight, // 2547: ╇ (Up Heavy, Down Light, Horizontal Heavy)
+    
+    /* 2548-254F ╈ ╉ ╊ ╋ ╌ ╍ ╎ ╏ */
+    Up|ThickDown|ThickLeft|ThickRight, // 2548: ╈ (Up Light, Down Heavy, Horizontal Heavy)
+    ThickUp|ThickDown|ThickLeft|Right, // 2549: ╉ (Vertical Heavy, Left Heavy, Right Light)
+    ThickUp|ThickDown|Left|ThickRight, // 254A: ╊ (Vertical Heavy, Left Light, Right Heavy)
+    ThickUp|ThickDown|ThickLeft|ThickRight, // 254B: ╋ (Vertical Heavy, Horizontal Heavy)
+    Left|Right, ThickLeft|ThickRight, Up|Down, ThickUp|ThickDown, // 254C-254F: 破線
+#else
 	/* 00-03 ─ ━ │ ┃ */
 	Left|Right, ThickLeft|ThickRight, Up|Down, ThickUp|ThickDown,
 	/* 04-0B (破線・点線系) -> None */
@@ -75,7 +149,7 @@ static const unsigned short keisenTable[KEISEN_CODE_END - KEISEN_CODE_BEGIN] = {
 	/* 1C-1F ├ ┝ ┞ ┟ */
 	Up|Down|Right, Up|Down|ThickRight, ThickUp|Down|Right, Up|ThickDown|Right,
 	/* 20-23 ┠ ┡ ┢ ┣ */
-	ThickUp|Down|Right, ThickUp|ThickDown|Right, ThickUp|Down|ThickRight, ThickUp|ThickDown|Right,
+	ThickUp|ThickDown|Right, ThickUp|Down|ThickRight, Up|ThickDown|ThickRight, ThickUp|ThickDown|ThickRight,
 	/* 24-27 ┤ ┥ ┦ ┧ */
 	Up|Down|Left, Up|Down|ThickLeft, ThickUp|Down|Left, Up|ThickDown|Left,
 	/* 28-2B ┨ ┩ ┪ ┫ */
@@ -98,6 +172,7 @@ static const unsigned short keisenTable[KEISEN_CODE_END - KEISEN_CODE_BEGIN] = {
 	ThickUp|ThickDown|Left|ThickRight, ThickUp|Down|ThickLeft|ThickRight, Up|ThickDown|ThickLeft|ThickRight, ThickUp|ThickDown|ThickLeft|ThickRight,
 	/* 4C-4F (破線太) -> None */
 	None, None, None, None,
+#endif
 	/* 50-53 ═ ║ ╒ ╓ (ここから二重線) */
 	DblLeft|DblRight, DblUp|DblDown, DblDown|DblRight, DblDown|DblRight,
 	/* 54-57 ╔ ╕ ╖ ╗ */
