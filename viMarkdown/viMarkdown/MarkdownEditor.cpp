@@ -1310,7 +1310,8 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
 	}
 	//	行カーソル描画
 	QRect rect = cursorRect();
-    QPen pen(Qt::red, 1); // 赤色、太さ1px
+    //QPen pen(Qt::red, 1); // 赤色、太さ1px
+    QPen pen(hasFocus() ? Qt::red : Qt::gray, 1); // 赤色、太さ1px
     p.setPen(pen);
     int y = rect.bottom();
     int left = 0;	//-lnAreaWidth();

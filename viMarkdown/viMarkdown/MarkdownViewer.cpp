@@ -22,6 +22,10 @@ MarkdownViewer::MarkdownViewer(const MainWindow *mainWindow, QWidget* parent)
 	setFrameStyle(QFrame::NoFrame);
 	//QString css = "hr { height: 1px; border: none; background-color: #333; margin-top: 10px; margin-bottom: 10px; }";
 	//document()->setDefaultStyleSheet(css);
+	connect(this, &MarkdownViewer::cursorPositionChanged, this, &MarkdownViewer::onCurPosChanged);
+}
+void MarkdownViewer::onCurPosChanged() {
+	viewport()->update();	//	強制再描画
 }
 
 bool isUnderlineHeading(const QString& txt);
@@ -100,7 +104,7 @@ void MarkdownViewer::paintEvent(QPaintEvent *e) {
 	QPainter p(viewport());
 	//	行カーソル描画
 	QRect rect = cursorRect();
-    QPen pen(Qt::red, 1); // 赤色、太さ1px
+    QPen pen(hasFocus() ? Qt::red : Qt::gray, 1); // 赤色、太さ1px
     p.setPen(pen);
     int y = rect.bottom();
     int left = 0;	//-lnAreaWidth();
