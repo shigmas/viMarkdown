@@ -95,6 +95,18 @@ void MarkdownViewer::mouseReleaseEvent(QMouseEvent *me)
 	}
     QTextEdit::mouseReleaseEvent(me);
 }
+void MarkdownViewer::paintEvent(QPaintEvent *e) {
+	QTextEdit::paintEvent(e); // 先にテキストを普通に描画
+	QPainter p(viewport());
+	//	行カーソル描画
+	QRect rect = cursorRect();
+    QPen pen(Qt::red, 1); // 赤色、太さ1px
+    p.setPen(pen);
+    int y = rect.bottom();
+    int left = 0;	//-lnAreaWidth();
+    int right = viewport()->width();
+    p.drawLine(left, y, right, y);
+}
 void MarkdownViewer::do_body_sub(QTextCursor& cursor, const QString &buf) {
 #if 1
 	int startPos = cursor.position(); // 挿入前の位置

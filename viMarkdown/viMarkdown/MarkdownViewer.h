@@ -29,6 +29,7 @@ signals:
 protected:
     void	mouseMoveEvent(QMouseEvent *e) override;
     void	mouseReleaseEvent(QMouseEvent *e) override;    // マウスクリックイベントをオーバーライド
+    void	paintEvent(QPaintEvent *e) override;
     bool	isTableLine(const QString&);
     bool	isTableHyphenLine(const QString&);
 
