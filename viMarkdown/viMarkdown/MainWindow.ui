@@ -160,7 +160,9 @@
     <property name="title">
      <string>&amp;Other</string>
     </property>
+    <addaction name="action_Settings"/>
     <addaction name="action_AboutViMarkdown"/>
+    <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menu_Search">
     <property name="title">
@@ -803,6 +805,11 @@
   <action name="action_MarkdownTable_CSV">
    <property name="text">
     <string>MarkdownTable -&gt; &amp;CSV</string>
+   </property>
+  </action>
+  <action name="action_Settings">
+   <property name="text">
+    <string>&amp;Settings...</string>
    </property>
   </action>
  </widget>
