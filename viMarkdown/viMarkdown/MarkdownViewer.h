@@ -26,12 +26,14 @@ signals:
     // クリックされたブロック番号を通知するシグナル
     void	lineClicked(int blockNumber);
     void	anchorClicked(const QString &anchor);
+    void	textInserted(QString);
 
 protected:
     void	mouseMoveEvent(QMouseEvent *e) override;
     void	mouseReleaseEvent(QMouseEvent *e) override;    // マウスクリックイベントをオーバーライド
     void	paintEvent(QPaintEvent *e) override;
     void	onCurPosChanged();
+    void	onContentsChanged(int position, int charsRemoved, int charsAdded);
     bool	isTableLine(const QString&);
     bool	isTableHyphenLine(const QString&);
 
@@ -53,6 +55,7 @@ private:
     int		m_nEmptyLines = 0;		//	本文最後の空行数
     bool	m_hasBody = false;		//	do_body() で空文以外を出力したか？
     bool	m_inComment = false;
+    bool	m_processing = false;	//	再入防止用フラグ
     //QString	m_bodyText;
     QStringList	m_bodyList;
 	QStringList	m_lst;

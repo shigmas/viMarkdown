@@ -23,9 +23,23 @@ MarkdownViewer::MarkdownViewer(const MainWindow *mainWindow, QWidget* parent)
 	//QString css = "hr { height: 1px; border: none; background-color: #333; margin-top: 10px; margin-bottom: 10px; }";
 	//document()->setDefaultStyleSheet(css);
 	connect(this, &MarkdownViewer::cursorPositionChanged, this, &MarkdownViewer::onCurPosChanged);
+	connect(document(), &QTextDocument::contentsChange, this, &MarkdownViewer::onContentsChanged);
 }
 void MarkdownViewer::onCurPosChanged() {
 	viewport()->update();	//	強制再描画
+}
+void MarkdownViewer::onContentsChanged(int position, int charsRemoved, int charsAdded) {
+	if( m_processing ) return;
+	if( charsAdded > 0 ) {
+		m_processing = true;
+		QTextCursor cursor = this->textCursor();
+		cursor.setPosition(position);
+		QTextBlock block = cursor.block();
+		QString addedStr = block.text().mid(cursor.position() - block.position(), charsAdded);
+		qDebug() << "addedStr = " << addedStr;
+		emit textInserted(addedStr);
+		m_processing = false;
+	}
 }
 
 bool isUnderlineHeading(const QString& txt);
@@ -191,6 +205,7 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 	QList<QStringView> tableTokens;
 	vector<char> tableAlign;
 
+	m_processing = true;
 	this->clear();
     QTextFrame *root = this->document()->rootFrame();
     QTextFrameFormat rformat = root->frameFormat();
@@ -261,6 +276,7 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 	}
 	do_body(cursor);
 	cursor.endEditBlock();
+	m_processing = false;
 }
 void MarkdownViewer::do_table(QTextCursor& cursor) {
 	QString buf = m_lst[m_ln] + "\n" + m_lst[m_ln+1] /*+ "\n"*/;

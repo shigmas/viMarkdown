@@ -429,6 +429,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	markdownViewer->setStyleSheet("font-size: 12pt;");
 	connect(markdownViewer, &MarkdownViewer::lineClicked, this, &MainWindow::onMarkdownViewerLineClicked);
 	connect(markdownViewer, &MarkdownViewer::anchorClicked, this, &MainWindow::do_open);
+	connect(markdownViewer, &MarkdownViewer::textInserted, this, &MainWindow::onTextInsertedAtViewer);
 	splitter->addWidget(mdEditor);
 	splitter->addWidget(markdownViewer);
 	splitter->setSizes(QList<int>() << 500 << 500);
@@ -491,6 +492,12 @@ void MainWindow::onMarkdownViewerLineClicked(int bln) {
 		}
 	}
 #endif
+}
+void MainWindow::onTextInsertedAtViewer(QString txt) {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	QTextCursor cursor = docWidget->m_mdEditor->textCursor();
+	cursor.insertText(txt);
 }
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 {

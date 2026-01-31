@@ -66,6 +66,7 @@ protected:
     //void	onAnchorClicked(const QString&);
     void	onCurrentTabChanged(int);
     void	onEncodingChanged(int);
+    void	onTextInsertedAtViewer(QString);
 
     void	onAction_New();
     void	onAction_NewTab();
