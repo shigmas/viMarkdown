@@ -610,21 +610,34 @@ void MarkdownViewer::do_list(QTextCursor& cursor, QString buf) {
 void MarkdownViewer::setCursorAt(int srcBlockNum, QString srcText, int ix) {		//	ix: ブロック内カーソル位置
 	int i = 0;
 	while( i+1 < m_headingSrcLineNum.size() && m_headingSrcLineNum[i+1] <= srcBlockNum ) ++i;
-	if( i < m_headingBlockNum.size() ) {
-		QTextBlock block = document()->findBlockByNumber(m_headingBlockNum[i]);
-		QTextCursor cursor = textCursor();
-		cursor.setPosition(block.position());
-		if( !srcText.isEmpty() ) {
-			QString t3 = srcText.mid(ix, 3);
-			auto cur = document()->find(t3, cursor);
-			if( !cur.isNull()) {
-				//cur.clearSelection();
-				cur.setPosition(cur.selectionStart(), QTextCursor::MoveAnchor);
-				cursor = cur;
-			}
+	if( i >= m_headingBlockNum.size() ) return;
+	QTextBlock block = document()->findBlockByNumber(m_headingBlockNum[i]);
+	QTextCursor cursor = textCursor();
+	cursor.setPosition(block.position());
+	if( !srcText.isEmpty() ) {
+		QString t3 = srcText.mid(ix, 3);
+		auto cur = document()->find(t3, cursor);
+		if( !cur.isNull()) {
+			//cur.clearSelection();
+			cur.setPosition(cur.selectionStart(), QTextCursor::MoveAnchor);
+			cursor = cur;
 		}
-		setTextCursor(cursor);
 	}
+	setTextCursor(cursor);
+}
+void MarkdownViewer::setCursorAtNthPat(int srcBlockNum, QString pat, int nth) {		//	nth: 何番目か（>0）
+	int i = 0;
+	while( i+1 < m_headingSrcLineNum.size() && m_headingSrcLineNum[i+1] <= srcBlockNum ) ++i;
+	if( i >= m_headingBlockNum.size() ) return;
+	QTextBlock block = document()->findBlockByNumber(m_headingBlockNum[i]);
+	QTextCursor cursor = textCursor();
+	cursor.setPosition(block.position());
+	for(int n = 0; n < nth; ++n) {
+		cursor = document()->find(pat, cursor);
+		if( cursor.isNull()) return;
+	}
+	cursor.setPosition(cursor.selectionStart(), QTextCursor::MoveAnchor);
+	setTextCursor(cursor);
 }
 void MarkdownViewer::ensureLineVisible(int srcBlockNum) {
 	//qDebug() << "srcBlockNum = " << srcBlockNum;
