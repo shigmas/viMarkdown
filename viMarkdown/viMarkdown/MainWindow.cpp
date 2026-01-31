@@ -284,6 +284,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_FocusOutline, &QAction::triggered, this, &MainWindow::onAction_FocusOutline);
 	connect(ui->action_NextTab, &QAction::triggered, this, &MainWindow::onAction_NextTab);
 	connect(ui->action_PrevTab, &QAction::triggered, this, &MainWindow::onAction_PrevTab);
+	connect(ui->action_ToggleFocus, &QAction::triggered, this, &MainWindow::onAction_ToggleFocus);
 	connect(ui->outlineBar, &QDockWidget::visibilityChanged, this, &MainWindow::onOutlineBarVisibilityChanged);
 	connect(ui->treeWidget, &QTreeWidget::currentItemChanged, this, &MainWindow::onTreeCurrentItemChanged);
 	//connect(ui->treeWidget, &QTreeWidget::itemDoubleClicked, this, &MainWindow::onTreeItemDoubleClicked);
@@ -1263,6 +1264,16 @@ void MainWindow::onAction_PrevTab() {
 	int tix = ui->tabWidget->currentIndex() - 1;
 	if( tix < 0 ) tix = ui->tabWidget->count() - 1;
 	ui->tabWidget->setCurrentIndex(tix);
+}
+void MainWindow::onAction_ToggleFocus() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	if( docWidget->m_mdEditor->hasFocus() )
+		docWidget->m_markdownViewer->setFocus();
+	else
+		docWidget->m_mdEditor->setFocus();
+	docWidget->m_mdEditor->viewport()->update();
+	docWidget->m_markdownViewer->viewport()->update();
 }
 void MainWindow::onOutlineBarVisibilityChanged(bool v) {
 	ui->action_OutlineBar->setChecked(v);

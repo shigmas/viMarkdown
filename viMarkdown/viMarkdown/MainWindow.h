@@ -110,6 +110,7 @@ protected:
     void	onAction_FocusOutline();
     void	onAction_NextTab();
     void	onAction_PrevTab();
+    void	onAction_ToggleFocus();
     void	onAction_About();
     void	onAction_AddThisFavorite();
     void	onAction_Settings();
