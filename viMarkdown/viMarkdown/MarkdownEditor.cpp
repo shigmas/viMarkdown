@@ -440,7 +440,16 @@ void MarkdownEditor::mouseReleaseEvent(QMouseEvent *event) {
 	//qDebug() << "title = " << title;
 	emit title_clicked(title);
 }
-void MarkdownEditor::setCursorAtNthPat(int srcBlockNum, QString pat, int nth) {
+void MarkdownEditor::setCursorAtNthPat(int headingBlockNum, QString pat, int nth) {		//	nth: 見出し行から何番目か（>0）
+	QTextBlock block = document()->findBlockByNumber(headingBlockNum);
+	QTextCursor cursor = textCursor();
+	cursor.setPosition(block.position());
+	for(int n = 0; n < nth; ++n) {
+		cursor = document()->find(pat, cursor);
+		if( cursor.isNull()) return;
+	}
+	cursor.setPosition(cursor.selectionStart(), QTextCursor::MoveAnchor);
+	setTextCursor(cursor);
 }
 int MarkdownEditor::nColumn(const QString &text) const {
 	QFontMetrics fm(font());

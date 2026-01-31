@@ -529,16 +529,16 @@
 0528 ◎ C 01/31 01/31 01022│ToDo│MarkdownViewer::setCursorAtNthPat() 追加
 0529 ◎ C 01/31 01/31 01022│問題│カーソル位置同期：見出し行先頭にカーソルがあると # を検索してしまう
 0530 ● C 01/31            │問題│カーソル位置同期：コードブロックの ``` 行にいる場合対応
-0531 ● C 01/31            │ToDo│ビューワ→エディタカーソル位置同期
+0531 ◎ C 01/31 02/01 01022│ToDo│ビューワ→エディタカーソル位置同期
 0532 ◎ C 01/31 01/31 01022│ToDo│View > Toggle Focus Ctrl + \：エディタ・プレビューワ フォーカス切り替え
-0533 ● C 01/31            │ToDo│MarkdownEditor::setCursorAtNthPat() 追加
+0533 ◎ C 01/31 02/01 01022│ToDo│MarkdownEditor::setCursorAtNthPat() 追加
 0534 ◎ C 01/31 01/31 01022│ToDo│ビューワでテキスト入力→エディタに入力機能をとりあえず実装
 0535 ● C 01/31            │ToDo│m_processing を bool から int に変更し、ネストを可能に？
 0536 ◎ C 02/01 02/01 01022│ToDo│MarkdownViewer：QTextBlock.userState：行種別フラグに変更
 0537 ● C 02/01            │問題│SPR#0536 の副作用？で、プレビューワでのチェックボックス行クリックによるチェックボックス状態反転が効かなくなっている
 0538 ● C 02/01            │ToDo│onCurPosChanged() → onEditorCurPosChanged() にリネームし、onViewerCurPosChanged() も追加
 0539 ◎ C 02/01 02/01 01022│問題│エディタがフォーカスを持っていないとき、行番号部分の行カーソルが赤のまま
-0540 ● C 02/01            │ToDo│
+0540 ● C 02/01            │問題│テキストカーソルの視認性がいまいち → 色を赤に変更し、幅も2pxにする？
 0541 ● C 02/01            │ToDo│
 0542 ● C 02/01            │ToDo│
 0543 ● C 02/01            │ToDo│
