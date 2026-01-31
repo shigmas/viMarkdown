@@ -453,8 +453,20 @@ void MainWindow::onEditorCurPosChanged() {		//	MarkdownEditor でカーソルが
 	QTextBlock block = cursor.block();
 	int i = 0;
 	QString text = block.text();
-	while( i < text.size() && text[i] == u'#' ) ++i;
-	while( i < text.size() && text[i] == u' ' ) ++i;
+	static QRegularExpression re("^( *- |- \\[[ xX]\\] )");
+	if( text.startsWith(u'#') ) {
+		while( i < text.size() && text[i] == u'#' ) ++i;
+		while( i < text.size() && text[i] == u' ' ) ++i;
+	} else {
+		QRegularExpressionMatch match = re.match(text);		//	"- ", "- [ ] " の場合
+		if( match.hasMatch() ) {
+			//i = match.capturedLength();
+			while( i < text.size() && text[i] == u' ' ) ++i;
+			i += 2;		//	skip "- ";
+			if( i < text.size() && text[i] == u'[' )
+				i += 4;
+		}
+	}
 	if( i != 0 )
 		cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, i);
 	QString pat = text.mid(cursor.position() - block.position(), 3);
