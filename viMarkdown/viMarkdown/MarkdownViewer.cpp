@@ -607,13 +607,22 @@ void MarkdownViewer::do_list(QTextCursor& cursor, QString buf) {
 	--m_ln;
 	m_nEmptyLines = 0;
 }
-void MarkdownViewer::setCursorAt(int srcBlockNum) {
+void MarkdownViewer::setCursorAt(int srcBlockNum, QString srcText, int ix) {		//	ix: ブロック内カーソル位置
 	int i = 0;
 	while( i+1 < m_headingSrcLineNum.size() && m_headingSrcLineNum[i+1] <= srcBlockNum ) ++i;
 	if( i < m_headingBlockNum.size() ) {
 		QTextBlock block = document()->findBlockByNumber(m_headingBlockNum[i]);
 		QTextCursor cursor = textCursor();
 		cursor.setPosition(block.position());
+		if( !srcText.isEmpty() ) {
+			QString t3 = srcText.mid(ix, 3);
+			auto cur = document()->find(t3, cursor);
+			if( !cur.isNull()) {
+				//cur.clearSelection();
+				cur.setPosition(cur.selectionStart(), QTextCursor::MoveAnchor);
+				cursor = cur;
+			}
+		}
 		setTextCursor(cursor);
 	}
 }

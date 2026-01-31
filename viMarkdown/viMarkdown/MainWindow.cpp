@@ -446,7 +446,8 @@ void MainWindow::onCurPosChanged() {		//	MarkdownEditor でカーソルが移動
 	if( docWidget == nullptr ) return;
 	QTextCursor cursor = docWidget->m_mdEditor->textCursor();
 	//docWidget->m_markdownViewer->ensureLineVisible(cursor.blockNumber());
-	docWidget->m_markdownViewer->setCursorAt(cursor.blockNumber());
+	QTextBlock block = cursor.block();
+	docWidget->m_markdownViewer->setCursorAt(cursor.blockNumber(), block.text(), cursor.position() - block.position());
 }
 void MainWindow::onMarkdownViewerLineClicked(int bln) {
 	qDebug() << "MainWindow::onMarkdownViewerLineClicked(" << bln << ")";
