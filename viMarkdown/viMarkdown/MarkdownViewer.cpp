@@ -20,6 +20,7 @@ MarkdownViewer::MarkdownViewer(const MainWindow *mainWindow, QWidget* parent)
 	: m_mainWindow(mainWindow), QTextEdit(parent)
 {
 	setFrameStyle(QFrame::NoFrame);
+	setCursorWidth(2);
 	//QString css = "hr { height: 1px; border: none; background-color: #333; margin-top: 10px; margin-bottom: 10px; }";
 	//document()->setDefaultStyleSheet(css);
 	connect(this, &MarkdownViewer::cursorPositionChanged, this, &MarkdownViewer::onCurPosChanged);

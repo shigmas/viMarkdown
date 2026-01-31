@@ -311,6 +311,7 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
 	font.setPointSize(12);		// 12ptに設定
 	font.setFixedPitch(true);	// 明示的に固定幅として扱う設定
 	this->setFont(font);
+	setCursorWidth(2);
 	setLineSpacing(150);
 	if( m_mainWindow->isKeisenMode() )
 		onKeisenMode(true);
