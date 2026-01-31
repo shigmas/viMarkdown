@@ -533,9 +533,9 @@
 0532 ◎ C 01/31 01/31 01022│ToDo│View > Toggle Focus Ctrl + \：エディタ・プレビューワ フォーカス切り替え
 0533 ● C 01/31            │ToDo│MarkdownViewer::setCursorAtNthPat() 追加
 0534 ◎ C 01/31 01/31 01022│ToDo│ビューワでテキスト入力→エディタに入力機能をとりあえず実装
-0535 ● C 01/31            │ToDo│
-0536 ● C 01/31            │ToDo│
-0537 ● C 01/31            │ToDo│
-0538 ● C 01/31            │ToDo│
-0539 ● C 01/31            │ToDo│
-0540 ● C 01/31            │ToDo│
+0535 ● C 01/31            │ToDo│m_processing を bool から int に変更し、ネストを可能に？
+0536 ◎ C 02/01 02/01 01022│ToDo│MarkdownViewer：QTextBlock.userState：行種別フラグに変更
+0537 ● C 02/01            │問題│SPR#0536 の副作用？で、プレビューワでのチェックボックス行クリックによるチェックボックス状態反転が効かなくなっている
+0538 ● C 02/01            │ToDo│
+0539 ● C 02/01            │ToDo│
+0540 ● C 02/01            │ToDo│

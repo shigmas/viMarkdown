@@ -342,11 +342,7 @@ void MarkdownViewer::do_heading(QTextCursor& cursor, QString buf) {
 void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int ln) {
 	if( !cursor.atBlockStart() )
 		cursor.insertBlock();			//	新規ブロック
-	//## このロジックがあると、見出し＋空行＋見出し で空行が２つ生成されてしまう
-	//## だが、無いと 本文＋空行＋見出し の時、空行が生成されない
-	//##if( m_nEmptyLines >= 1 )
-	//##	cursor.insertBlock();			//	新規ブロック
-	//cursor.insertBlock();			//	新規ブロック
+	cursor.block().setUserState(US_HEADING);
 	cursor.insertMarkdown(QString(h, u'#') + u' ' + buf /*+ "\n"*/);		//	改行を付加すると、２行になってしまう
 	QTextBlockFormat blockFormat;
 	if( h == 1 ) {		//	H1 の場合はセンタリング（viMarkdown 独自？仕様）
@@ -358,13 +354,6 @@ void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int
 	cursor.mergeBlockFormat(blockFormat);
 	m_headingBlockNum.push_back(cursor.blockNumber());
 
-	//cursor.setCharFormat(QTextCharFormat());
-	//cursor.insertBlock(QTextBlockFormat());		//	新規ブロック
-	//cursor.insertText("←");
-	//QTextBlockFormat blockFormat0;
-	//blockFormat0.setHeadingLevel(0); // 見出し設定を解除
-	//cursor.setBlockFormat(blockFormat0);
-	//cursor.setCharFormat(QTextCharFormat()); // 空のフォーマットをセットすることでデフォルトに戻る
 	cursor.insertBlock(QTextBlockFormat(), QTextCharFormat());		//	新規ブロック
 
 	m_headingList.push_back(QChar(u'0'+h) + buf.remove("^ +"));
@@ -613,7 +602,8 @@ void MarkdownViewer::do_list(QTextCursor& cursor, QString buf) {
 	if( is_checkbox ) {
 		QTextBlock block = document()->findBlock(pos);
 		for(int i = 0; i < n_item; ++i) {
-			block.setUserState(ln++);
+			//block.setUserState(ln++);
+			block.setUserState(US_CHECKBOX);
 			block = block.next();
 		}
 	}

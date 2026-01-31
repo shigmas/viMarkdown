@@ -5,6 +5,20 @@
 
 class MainWindow;
 
+/*
+	マークダウンプレビューを表示するためのクラス
+
+	QTextBlock.userState : int型：行種別情報（US_XXX）
+
+*/
+
+enum {
+	US_DEFAULT = -1,	//	本文など
+	//US_BODY = 0,		//	本文など
+	US_HEADING,			//	タイトル・見出し
+	US_CHECKBOX,		//	チェックボックス
+};
+
 class MarkdownViewer : public QTextEdit
 {
 	Q_OBJECT 
