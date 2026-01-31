@@ -448,7 +448,13 @@ void MainWindow::onCurPosChanged() {		//	MarkdownEditor でカーソルが移動
 	//docWidget->m_markdownViewer->ensureLineVisible(cursor.blockNumber());
 	QTextBlock block = cursor.block();
 	//docWidget->m_markdownViewer->setCursorAt(cursor.blockNumber(), block.text(), cursor.position() - block.position());
-	QString pat = block.text().mid(cursor.position() - block.position(), 3);
+	int i = 0;
+	QString text = block.text();
+	while( i < text.size() && text[i] == u'#' ) ++i;
+	while( i < text.size() && text[i] == u' ' ) ++i;
+	if( i != 0 )
+		cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, i);
+	QString pat = text.mid(cursor.position() - block.position(), 3);
 	int nth = 1;
 	while( block.isValid() && !block.text().startsWith("#") ) block = block.previous();
 	if( !block.isValid() ) block = docWidget->m_mdEditor->document()->begin();		//	最初のブロック
