@@ -414,7 +414,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(mdEditor, &MarkdownEditor::tab_pressed, this, &MainWindow::onMdEditTabPressed);
 	connect(mdEditor, &MarkdownEditor::esc_pressed, this, &MainWindow::onMdEditEscPressed);
 	connect(mdEditor, &MarkdownEditor::title_clicked, this, &MainWindow::do_open);
-	connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onCurPosChanged);
+	connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onEditorCurPosChanged);
 	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
 	//QTextEdit *mdEditor = new QTextEdit(splitter);
 	mdEditor->setPlaceholderText("\nここにMarkdownを入力\n"
@@ -430,6 +430,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(markdownViewer, &MarkdownViewer::lineClicked, this, &MainWindow::onMarkdownViewerLineClicked);
 	connect(markdownViewer, &MarkdownViewer::anchorClicked, this, &MainWindow::do_open);
 	connect(markdownViewer, &MarkdownViewer::textInserted, this, &MainWindow::onTextInsertedAtViewer);
+	connect(markdownViewer, &MarkdownViewer::cursorPositionChanged, this, &MainWindow::onViewerCurPosChanged);
 	splitter->addWidget(mdEditor);
 	splitter->addWidget(markdownViewer);
 	splitter->setSizes(QList<int>() << 500 << 500);
@@ -443,13 +444,13 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	docWidget->setModified(false);
 	return docWidget;
 }
-void MainWindow::onCurPosChanged() {		//	MarkdownEditor でカーソルが移動した
+void MainWindow::onEditorCurPosChanged() {		//	MarkdownEditor でカーソルが移動した
+	if( m_processing ) return;		//	再入禁止
+	m_processing = true;
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	QTextCursor cursor = docWidget->m_mdEditor->textCursor();
-	//docWidget->m_markdownViewer->ensureLineVisible(cursor.blockNumber());
 	QTextBlock block = cursor.block();
-	//docWidget->m_markdownViewer->setCursorAt(cursor.blockNumber(), block.text(), cursor.position() - block.position());
 	int i = 0;
 	QString text = block.text();
 	while( i < text.size() && text[i] == u'#' ) ++i;
@@ -468,6 +469,28 @@ void MainWindow::onCurPosChanged() {		//	MarkdownEditor でカーソルが移動
 		++nth;
 	}
 	docWidget->m_markdownViewer->setCursorAtNthPat(cursor.blockNumber(), pat, nth);
+	m_processing = false;
+}
+void MainWindow::onViewerCurPosChanged() {		//	MarkdownViewer でカーソルが移動した
+	if( m_processing ) return;		//	再入禁止
+	m_processing = true;
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	QTextCursor cursor = docWidget->m_markdownViewer->textCursor();
+	QTextBlock block = cursor.block();
+	QString pat = block.text().mid(cursor.position() - block.position(), 3);
+	int nth = 1;
+	while( block.isValid() && block.userState() != US_HEADING ) block = block.previous();
+	if( !block.isValid() ) block = docWidget->m_mdEditor->document()->begin();		//	最初のブロック
+	QTextCursor cur = cursor;
+	cur.setPosition(block.position());
+	for(;;) {
+		cur = docWidget->m_markdownViewer->document()->find(pat, cur);
+		if( cur.isNull() || cur.position() >= cursor.position() ) break;
+		++nth;
+	}
+	docWidget->m_mdEditor->setCursorAtNthPat(cursor.blockNumber(), pat, nth);
+	m_processing = false;
 }
 void MainWindow::onMarkdownViewerLineClicked(int bln) {
 	qDebug() << "MainWindow::onMarkdownViewerLineClicked(" << bln << ")";

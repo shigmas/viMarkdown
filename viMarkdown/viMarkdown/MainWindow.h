@@ -62,7 +62,8 @@ protected:
     void	onModificationChanged(bool);
     void	onSearchCBActivated();
     void	onMarkdownViewerLineClicked(int);
-    void	onCurPosChanged();
+    void	onEditorCurPosChanged();
+    void	onViewerCurPosChanged();
     //void	onAnchorClicked(const QString&);
     void	onCurrentTabChanged(int);
     void	onEncodingChanged(int);
@@ -126,6 +127,7 @@ protected:
     void closeEvent(QCloseEvent *event) override;
 
 private:
+    bool	m_processing = false;
     bool	m_opening_file = false;
     bool	m_ignore_changed = false;
     bool	m_htmlMode = true;

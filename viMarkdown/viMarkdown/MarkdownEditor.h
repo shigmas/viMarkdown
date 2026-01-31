@@ -38,6 +38,7 @@ public:
 	void	insertTodayString(const QString &fmt);
 	void	convert_CSV_MarkdownTable();
 	void	convert_MarkdownTable_CSV();
+    void	setCursorAtNthPat(int srcBlockNum, QString pat, int nth);
 
 signals:
     void	tab_pressed();

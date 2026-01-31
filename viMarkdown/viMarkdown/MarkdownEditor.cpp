@@ -440,6 +440,8 @@ void MarkdownEditor::mouseReleaseEvent(QMouseEvent *event) {
 	//qDebug() << "title = " << title;
 	emit title_clicked(title);
 }
+void MarkdownEditor::setCursorAtNthPat(int srcBlockNum, QString pat, int nth) {
+}
 int MarkdownEditor::nColumn(const QString &text) const {
 	QFontMetrics fm(font());
 	int halfWidth = fm.horizontalAdvance(u'9'); 
@@ -1358,7 +1360,7 @@ void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
     }
 	//	行カーソル描画
 	QRect rect = cursorRect();
-    QPen pen(Qt::red, 1); // 赤色、太さ1px
+    QPen pen(hasFocus() ? Qt::red : Qt::gray, 1); // 赤色、太さ1px
     painter.setPen(pen);
     int y = rect.bottom();
     int left = 0;
