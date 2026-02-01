@@ -410,7 +410,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	//QFontMetrics fm(mdEditor->font());
 	//int lnAreaWidth = fm.horizontalAdvance('9') * 8;
 	//mdEditor->setViewportMargins(lnAreaWidth, 0, 0, 0);
-	connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onMdEditCurPosChanged);
+	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onMdEditCurPosChanged);
 	connect(mdEditor, &MarkdownEditor::tab_pressed, this, &MainWindow::onMdEditTabPressed);
 	connect(mdEditor, &MarkdownEditor::esc_pressed, this, &MainWindow::onMdEditEscPressed);
 	connect(mdEditor, &MarkdownEditor::title_clicked, this, &MainWindow::do_open);
@@ -1546,6 +1546,7 @@ void MainWindow::onMdEditTabPressed() {
 void MainWindow::onMdEditEscPressed() {
 	ui->action_KeisenMode->setChecked(false);
 }
+#if 0
 void MainWindow::onMdEditCurPosChanged() {
 	qDebug() << "MainWindow::onMdEditCurPosChanged()";
 	MarkdownEditor *mdEditor = (MarkdownEditor*)sender();
@@ -1564,6 +1565,7 @@ void MainWindow::onMdEditCurPosChanged() {
 		statusBar()->showMessage(mess);
 	}
 }
+#endif
 void MainWindow::onAction_About() {
 	qDebug() << "MainWindow::onAction_About()";
 
