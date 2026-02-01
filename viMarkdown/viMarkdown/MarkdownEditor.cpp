@@ -445,12 +445,28 @@ void MarkdownEditor::setCursorAtNthPat(int srcHeadingBlockNum, QString pat, int 
 	qDebug() << QString("MarkdownEditor::setCursorAtNthPat(%1, '%2', %3,").arg(srcHeadingBlockNum).arg(pat).arg(nth) << tail << ")";
 	QTextBlock block = document()->findBlockByNumber(srcHeadingBlockNum);
 	QTextCursor cursor = textCursor();
-	cursor.setPosition(block.position());
-	for(int n = 0; n < nth; ++n) {
-		cursor = document()->find(pat, cursor);
-		if( cursor.isNull()) return;
+	if( !tail ) {
+		cursor.setPosition(block.position());
+		for(int n = 0; n < nth; ++n) {
+			cursor = document()->find(pat, cursor);
+			if( cursor.isNull()) return;
+		}
+		cursor.setPosition(cursor.selectionStart(), QTextCursor::MoveAnchor);
+	} else {
+		for(;;) {
+			if( block.text().endsWith(pat) ) {
+				if( --nth == 0 )
+					break;
+			}
+			block = block.next();
+			if( !block.isValid() ) {	
+				block = document()->lastBlock();
+				break;
+			}
+		}
+		cursor.setPosition(block.position());
+		cursor.movePosition(QTextCursor::EndOfBlock);
 	}
-	cursor.setPosition(cursor.selectionStart(), QTextCursor::MoveAnchor);
 	setTextCursor(cursor);
 }
 int MarkdownEditor::nColumn(const QString &text) const {

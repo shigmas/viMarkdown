@@ -660,7 +660,6 @@ void MarkdownViewer::setCursorAtNthPat(int srcBlockNum, QString pat, int nth, bo
 				break;
 			}
 		}
-		//cursor.setPosition(block.position() + block.length());
 		cursor.setPosition(block.position());
 		cursor.movePosition(QTextCursor::EndOfBlock);
 	}
