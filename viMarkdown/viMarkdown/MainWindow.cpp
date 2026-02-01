@@ -454,6 +454,14 @@ void MainWindow::onEditorCurPosChanged() {		//	MarkdownEditor でカーソルが
 	int i = 0;
 	QString text = block.text();
 	static QRegularExpression re("^( *- |- \\[[ xX]\\] )");
+	while( text.startsWith("```") ) {
+		block = block.next();
+		if( !block.isValid() ) {
+			m_processing = false;
+			return;
+		}
+		text = block.text();
+	}
 	if( text.startsWith(u'#') ) {
 		while( i < text.size() && text[i] == u'#' ) ++i;
 		while( i < text.size() && text[i] == u' ' ) ++i;
@@ -467,20 +475,40 @@ void MainWindow::onEditorCurPosChanged() {		//	MarkdownEditor でカーソルが
 				i += 4;
 		}
 	}
-	if( i != 0 )
-		cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, i);
-	QString pat = text.mid(cursor.position() - block.position(), 3);
-	int nth = 1;
-	while( block.isValid() && !block.text().startsWith("#") ) block = block.previous();
-	if( !block.isValid() ) block = docWidget->m_mdEditor->document()->begin();		//	最初のブロック
-	QTextCursor cur = cursor;
-	cur.setPosition(block.position());
-	for(;;) {
-		cur = docWidget->m_mdEditor->document()->find(pat, cur);
-		if( cur.isNull() || cur.position() >= cursor.position() ) break;
-		++nth;
+	if( i != 0 ) {
+		//cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, i);
+		text = text.mid(i);
 	}
-	docWidget->m_markdownViewer->setCursorAtNthPat(cursor.blockNumber(), pat, nth);
+	int ix = cursor.columnNumber() - i;
+	QString pat = text.mid(cursor.columnNumber() - i, 3);
+	int curBlockNum = cursor.blockNumber();
+	bool tail = false;
+	if( pat.isEmpty() ) {
+		tail = true;
+		pat = text.right(3);
+	}
+	int nth = 1;
+	while( block.isValid() && !block.text().startsWith("#") )	//	見出し行までブロック移動
+		block = block.previous();
+	if( !block.isValid() ) block = docWidget->m_mdEditor->document()->begin();		//	最初のブロック
+	int blockNum = block.blockNumber();
+	if( !tail ) {
+		QTextCursor cur = cursor;
+		cur.setPosition(block.position());
+		for(;;) {
+			cur = docWidget->m_mdEditor->document()->find(pat, cur);
+			if( cur.isNull() || cur.position() >= cursor.position() ) break;
+			++nth;
+		}
+	} else {
+		while( block.blockNumber() < curBlockNum ) {
+			if( block.text().endsWith(pat) )
+				++nth;
+			block = block.next();
+			if( !block.isValid() ) break;
+		}
+	}
+	docWidget->m_markdownViewer->setCursorAtNthPat(blockNum, pat, nth, tail);
 	m_processing = false;
 }
 void MainWindow::onViewerCurPosChanged() {		//	MarkdownViewer でカーソルが移動した

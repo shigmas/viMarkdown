@@ -32,7 +32,7 @@ public:
     const std::vector<int>&	getHeadingsLineNum() const { return m_headingSrcLineNum; }
     const std::vector<int>&	getHeadingsBlockNum() const { return m_headingBlockNum; }
     void	setCursorAt(int srcBlockNum, QString=QString(), int=0);
-    void	setCursorAtNthPat(int srcBlockNum, QString pat, int nth);
+    void	setCursorAtNthPat(int srcBlockNum, QString pat, int nth, bool=false);
     void	ensureLineVisible(int srcBlockNum);
     void	scrollToBlock(int blockIndex);
 
