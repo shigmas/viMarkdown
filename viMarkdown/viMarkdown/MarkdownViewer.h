@@ -42,8 +42,11 @@ signals:
     void	lineClicked(int blockNumber);
     void	anchorClicked(const QString &anchor);
     void	textInserted(QString);
+    void	textRemoved(int);
+    void	BS_pressed();		//	BackSpace
 
 protected:
+    void	keyPressEvent(QKeyEvent *e) override;
     void	mouseMoveEvent(QMouseEvent *e) override;
     void	mouseReleaseEvent(QMouseEvent *e) override;    // マウスクリックイベントをオーバーライド
     void	paintEvent(QPaintEvent *e) override;

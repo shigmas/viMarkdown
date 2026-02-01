@@ -31,16 +31,19 @@ void MarkdownViewer::onCurPosChanged() {
 }
 void MarkdownViewer::onContentsChanged(int position, int charsRemoved, int charsAdded) {
 	if( m_processing ) return;
+	m_processing = true;
 	if( charsAdded > 0 ) {
-		m_processing = true;
 		QTextCursor cursor = this->textCursor();
 		cursor.setPosition(position);
 		QTextBlock block = cursor.block();
 		QString addedStr = block.text().mid(cursor.position() - block.position(), charsAdded);
 		qDebug() << "addedStr = " << addedStr;
 		emit textInserted(addedStr);
-		m_processing = false;
 	}
+	if( charsRemoved > 0 ) {
+		emit textRemoved(charsRemoved);
+	}
+	m_processing = false;
 }
 
 bool isUnderlineHeading(const QString& txt);
@@ -85,6 +88,13 @@ bool MarkdownViewer::isTableHyphenLine(const QString& lnStr) {
 	return m_tableAlign.size() > 1;
 }
 
+void MarkdownViewer::keyPressEvent(QKeyEvent *e) {
+	if (e->key() == Qt::Key_Backspace) {
+		emit BS_pressed();
+		return;
+	}
+	QTextEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
+}
 void MarkdownViewer::mouseMoveEvent(QMouseEvent *me) {
 	QString anchor = anchorAt(me->pos());
 	if (!anchor.isEmpty()) {	// リンクの上なら指差し

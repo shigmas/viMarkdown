@@ -422,7 +422,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 			m_processing = false;
 		}
 	}
-	QPlainTextEdit::keyPressEvent(e);	// Enter 以外のキーは通常通りの処理
+	QPlainTextEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
 }
 void MarkdownEditor::mouseReleaseEvent(QMouseEvent *event) {
 	if( (event->modifiers() & Qt::ControlModifier) == 0 ) return;

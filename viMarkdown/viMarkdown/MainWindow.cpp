@@ -431,6 +431,8 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(markdownViewer, &MarkdownViewer::lineClicked, this, &MainWindow::onMarkdownViewerLineClicked);
 	connect(markdownViewer, &MarkdownViewer::anchorClicked, this, &MainWindow::do_open);
 	connect(markdownViewer, &MarkdownViewer::textInserted, this, &MainWindow::onTextInsertedAtViewer);
+	connect(markdownViewer, &MarkdownViewer::textRemoved, this, &MainWindow::onTextRemovedAtViewer);
+	connect(markdownViewer, &MarkdownViewer::BS_pressed, this, &MainWindow::onBS_pressed);
 	connect(markdownViewer, &MarkdownViewer::cursorPositionChanged, this, &MainWindow::onViewerCurPosChanged);
 	splitter->addWidget(mdEditor);
 	splitter->addWidget(markdownViewer);
@@ -590,6 +592,22 @@ void MainWindow::onTextInsertedAtViewer(QString txt) {
 	if( docWidget == nullptr ) return;
 	QTextCursor cursor = docWidget->m_mdEditor->textCursor();
 	cursor.insertText(txt);
+}
+void MainWindow::onTextRemovedAtViewer(int charsRemoved) {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	QTextCursor cursor = docWidget->m_mdEditor->textCursor();
+	cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, charsRemoved);
+	cursor.removeSelectedText();
+	syncPreviewCursorWithEditor();
+}
+void MainWindow::onBS_pressed() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	QTextCursor cursor = docWidget->m_mdEditor->textCursor();
+	cursor.deletePreviousChar();
+	docWidget->m_mdEditor->setTextCursor(cursor);
+	syncPreviewCursorWithEditor();
 }
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 {
