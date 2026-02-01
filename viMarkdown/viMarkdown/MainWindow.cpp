@@ -511,25 +511,50 @@ void MainWindow::onEditorCurPosChanged() {		//	MarkdownEditor でカーソルが
 	docWidget->m_markdownViewer->setCursorAtNthPat(blockNum, pat, nth, tail);
 	m_processing = false;
 }
+//	ビューワ → エディタ カーソル位置同期
 void MainWindow::onViewerCurPosChanged() {		//	MarkdownViewer でカーソルが移動した
 	if( m_processing ) return;		//	再入禁止
 	m_processing = true;
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	QTextCursor cursor = docWidget->m_markdownViewer->textCursor();
+	QTextCursor cursor = docWidget->m_markdownViewer->textCursor();		//	ビューワカーソル
+	QTextBlock b0 = cursor.block();
+	while( b0.userState() != US_HEADING ) {		//	見出し行まで移動
+		b0 = b0.previous();
+		if( !b0.isValid() ) {
+			b0 = cursor.document()->firstBlock();
+			break;
+		}
+	}
+
 	QTextBlock block = cursor.block();
 	QString pat = block.text().mid(cursor.position() - block.position(), 3);
+	int curBlockNum = cursor.blockNumber();
+	bool tail = false;
+	if( pat.isEmpty() ) {
+		tail = true;
+		pat = block.text().right(3);
+	}
 	int nth = 1;
 	while( block.isValid() && block.userState() != US_HEADING ) block = block.previous();
 	if( !block.isValid() ) block = docWidget->m_mdEditor->document()->begin();		//	最初のブロック
-	QTextCursor cur = cursor;
-	cur.setPosition(block.position());
-	for(;;) {
-		cur = docWidget->m_markdownViewer->document()->find(pat, cur);
-		if( cur.isNull() || cur.position() >= cursor.position() ) break;
-		++nth;
+	if( !tail ) {
+		QTextCursor cur = cursor;
+		cur.setPosition(block.position());
+		for(;;) {
+			cur = docWidget->m_markdownViewer->document()->find(pat, cur);
+			if( cur.isNull() || cur.position() >= cursor.position() ) break;
+			++nth;
+		}
+	} else {
+		while( block.blockNumber() < curBlockNum ) {
+			if( block.text().endsWith(pat) )
+				++nth;
+			block = block.next();
+			if( !block.isValid() ) break;
+		}
 	}
-	docWidget->m_mdEditor->setCursorAtNthPat(cursor.blockNumber(), pat, nth);
+	docWidget->m_mdEditor->setCursorAtNthPat(cursor.blockNumber(), pat, nth, tail);
 	m_processing = false;
 }
 void MainWindow::onMarkdownViewerLineClicked(int bln) {
@@ -1474,8 +1499,10 @@ void MainWindow::onMDTextChanged() {
 	//m_plainText = mdEditor->toPlainText();
 #if 1
 	int scrollPos = docWidget->m_markdownViewer->verticalScrollBar()->value();
+	docWidget->m_mdEditor->setProcessing(true);
 	docWidget->m_markdownViewer->setMarkdown(mdEditor->document());
 	docWidget->m_markdownViewer->verticalScrollBar()->setValue(scrollPos);
+	docWidget->m_mdEditor->setProcessing(false);
 #else
 	auto &htmlComvertor = docWidget->m_htmlComvertor;
 	htmlComvertor.convert(mdEditor->document());

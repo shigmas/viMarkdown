@@ -202,8 +202,8 @@ int indexOfComment(QStringView buf, int start) {
 
 void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 	m_headingList.clear();
-	m_headingSrcLineNum.clear();
-	m_headingBlockNum.clear();
+	m_srcHeadingBlocks.clear();
+	m_prvHeadingBlocks.clear();
 	QString mdtext = doc->toPlainText();
 	QList<QStringView> tableTokens;
 	vector<char> tableAlign;
@@ -355,12 +355,12 @@ void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int
 		blockFormat.setBottomMargin(12); // 下側の余白（ピクセル）
 	}
 	cursor.mergeBlockFormat(blockFormat);
-	m_headingBlockNum.push_back(cursor.blockNumber());
+	m_prvHeadingBlocks.push_back(cursor.blockNumber());
 
 	cursor.insertBlock(QTextBlockFormat(), QTextCharFormat());		//	新規ブロック
 
 	m_headingList.push_back(QChar(u'0'+h) + buf.remove("^ +"));
-	m_headingSrcLineNum.push_back(ln);
+	m_srcHeadingBlocks.push_back(ln);
 	m_nEmptyLines = 0;
 }
 bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes) {
@@ -618,9 +618,9 @@ void MarkdownViewer::do_list(QTextCursor& cursor, QString buf) {
 }
 void MarkdownViewer::setCursorAt(int srcBlockNum, QString srcText, int ix) {		//	ix: ブロック内カーソル位置
 	int i = 0;
-	while( i+1 < m_headingSrcLineNum.size() && m_headingSrcLineNum[i+1] <= srcBlockNum ) ++i;
-	if( i >= m_headingBlockNum.size() ) return;
-	QTextBlock block = document()->findBlockByNumber(m_headingBlockNum[i]);
+	while( i+1 < m_srcHeadingBlocks.size() && m_srcHeadingBlocks[i+1] <= srcBlockNum ) ++i;
+	if( i >= m_prvHeadingBlocks.size() ) return;
+	QTextBlock block = document()->findBlockByNumber(m_prvHeadingBlocks[i]);
 	QTextCursor cursor = textCursor();
 	cursor.setPosition(block.position());
 	if( !srcText.isEmpty() ) {
@@ -637,9 +637,9 @@ void MarkdownViewer::setCursorAt(int srcBlockNum, QString srcText, int ix) {		//
 void MarkdownViewer::setCursorAtNthPat(int srcBlockNum, QString pat, int nth, bool tail) {		//	nth: 何番目か（>0）
 	qDebug() << QString("MarkdownViewer::setCursorAtNthPat(%1, '%2', %3,").arg(srcBlockNum).arg(pat).arg(nth) << tail << ")";
 	int i = 0;
-	while( i+1 < m_headingSrcLineNum.size() && m_headingSrcLineNum[i+1] <= srcBlockNum ) ++i;
-	if( i >= m_headingBlockNum.size() ) return;
-	QTextBlock block = document()->findBlockByNumber(m_headingBlockNum[i]);
+	while( i+1 < m_srcHeadingBlocks.size() && m_srcHeadingBlocks[i+1] <= srcBlockNum ) ++i;
+	if( i >= m_prvHeadingBlocks.size() ) return;
+	QTextBlock block = document()->findBlockByNumber(m_prvHeadingBlocks[i]);
 	QTextCursor cursor = textCursor();
 	if( !tail ) {
 		cursor.setPosition(block.position());
@@ -669,9 +669,9 @@ void MarkdownViewer::setCursorAtNthPat(int srcBlockNum, QString pat, int nth, bo
 void MarkdownViewer::ensureLineVisible(int srcBlockNum) {
 	//qDebug() << "srcBlockNum = " << srcBlockNum;
 	int i = 0;
-	while( i+1 < m_headingSrcLineNum.size() && m_headingSrcLineNum[i+1] <= srcBlockNum ) ++i;
-	if( i < m_headingBlockNum.size() )
-		scrollToBlock(m_headingBlockNum[i]);
+	while( i+1 < m_srcHeadingBlocks.size() && m_srcHeadingBlocks[i+1] <= srcBlockNum ) ++i;
+	if( i < m_prvHeadingBlocks.size() )
+		scrollToBlock(m_prvHeadingBlocks[i]);
 }
 void MarkdownViewer::scrollToBlock(int blockIndex) {
     QTextBlock block = document()->findBlockByNumber(blockIndex);

@@ -441,8 +441,9 @@ void MarkdownEditor::mouseReleaseEvent(QMouseEvent *event) {
 	//qDebug() << "title = " << title;
 	emit title_clicked(title);
 }
-void MarkdownEditor::setCursorAtNthPat(int headingBlockNum, QString pat, int nth, bool tail) {		//	nth: 見出し行から何番目か（>0）
-	QTextBlock block = document()->findBlockByNumber(headingBlockNum);
+void MarkdownEditor::setCursorAtNthPat(int srcHeadingBlockNum, QString pat, int nth, bool tail) {		//	nth: 見出し行から何番目か（>0）
+	qDebug() << QString("MarkdownEditor::setCursorAtNthPat(%1, '%2', %3,").arg(srcHeadingBlockNum).arg(pat).arg(nth) << tail << ")";
+	QTextBlock block = document()->findBlockByNumber(srcHeadingBlockNum);
 	QTextCursor cursor = textCursor();
 	cursor.setPosition(block.position());
 	for(int n = 0; n < nth; ++n) {
