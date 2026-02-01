@@ -27,6 +27,7 @@ public:
     MarkdownViewer(const MainWindow*, QWidget* parent = nullptr);
 
 public:
+    bool	isProcessing() const { return m_processing; }
     void	setMarkdown(class QTextDocument*);
     const QStringList&	getHeadings() const { return m_headingList; }
     const std::vector<int>&	getHeadingsLineNum() const { return m_srcHeadingBlocks; }

@@ -446,6 +446,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 }
 void MainWindow::onEditorCurPosChanged() {		//	MarkdownEditor でカーソルが移動した
 	if( m_processing ) return;		//	再入禁止
+	qDebug() << "MainWindow::onEditorCurPosChanged()";
 	m_processing = true;
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
@@ -514,9 +515,11 @@ void MainWindow::onEditorCurPosChanged() {		//	MarkdownEditor でカーソルが
 //	ビューワ → エディタ カーソル位置同期
 void MainWindow::onViewerCurPosChanged() {		//	MarkdownViewer でカーソルが移動した
 	if( m_processing ) return;		//	再入禁止
-	m_processing = true;
+	qDebug() << "MainWindow::onViewerCurPosChanged()";
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
+	if( docWidget->m_markdownViewer->isProcessing() ) return;
+	m_processing = true;
 	QTextCursor cursor = docWidget->m_markdownViewer->textCursor();		//	ビューワカーソル
 	QTextBlock b0 = cursor.block();
 	while( b0.userState() != US_HEADING ) {		//	見出し行まで移動
@@ -526,7 +529,7 @@ void MainWindow::onViewerCurPosChanged() {		//	MarkdownViewer でカーソルが
 			break;
 		}
 	}
-
+	//auto headingList = docWidget->m_markdownViewer->
 	QTextBlock block = cursor.block();
 	QString pat = block.text().mid(cursor.position() - block.position(), 3);
 	int curBlockNum = cursor.blockNumber();
@@ -1544,6 +1547,7 @@ void MainWindow::onMdEditEscPressed() {
 	ui->action_KeisenMode->setChecked(false);
 }
 void MainWindow::onMdEditCurPosChanged() {
+	qDebug() << "MainWindow::onMdEditCurPosChanged()";
 	MarkdownEditor *mdEditor = (MarkdownEditor*)sender();
 	QTextCursor cursor = mdEditor->textCursor();
 	int bnum = cursor.blockNumber();
