@@ -414,7 +414,8 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(mdEditor, &MarkdownEditor::tab_pressed, this, &MainWindow::onMdEditTabPressed);
 	connect(mdEditor, &MarkdownEditor::esc_pressed, this, &MainWindow::onMdEditEscPressed);
 	connect(mdEditor, &MarkdownEditor::title_clicked, this, &MainWindow::do_open);
-	connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onEditorCurPosChanged);
+	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onEditorCurPosChanged);
+	connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::syncPreviewCursorWithEditor);
 	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
 	//QTextEdit *mdEditor = new QTextEdit(splitter);
 	mdEditor->setPlaceholderText("\nここにMarkdownを入力\n"
@@ -444,9 +445,9 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	docWidget->setModified(false);
 	return docWidget;
 }
-void MainWindow::onEditorCurPosChanged() {		//	MarkdownEditor でカーソルが移動した
+void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソルが移動した
 	if( m_processing ) return;		//	再入禁止
-	qDebug() << "MainWindow::onEditorCurPosChanged()";
+	qDebug() << "MainWindow::syncPreviewCursorWithEditor()";
 	m_processing = true;
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
@@ -1506,6 +1507,7 @@ void MainWindow::onMDTextChanged() {
 	docWidget->m_markdownViewer->setMarkdown(mdEditor->document());
 	docWidget->m_markdownViewer->verticalScrollBar()->setValue(scrollPos);
 	docWidget->m_mdEditor->setProcessing(false);
+	syncPreviewCursorWithEditor();
 #else
 	auto &htmlComvertor = docWidget->m_htmlComvertor;
 	htmlComvertor.convert(mdEditor->document());

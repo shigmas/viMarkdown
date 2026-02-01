@@ -68,6 +68,7 @@ protected:
     void	onCurrentTabChanged(int);
     void	onEncodingChanged(int);
     void	onTextInsertedAtViewer(QString);
+    void	syncPreviewCursorWithEditor();
 
     void	onAction_New();
     void	onAction_NewTab();
