@@ -19,6 +19,7 @@ enum {
 MarkdownViewer::MarkdownViewer(const MainWindow *mainWindow, QWidget* parent)
 	: m_mainWindow(mainWindow), QTextEdit(parent)
 {
+	setUndoRedoEnabled(false);
 	setFrameStyle(QFrame::NoFrame);
 	setCursorWidth(2);
 	//QString css = "hr { height: 1px; border: none; background-color: #333; margin-top: 10px; margin-bottom: 10px; }";
@@ -373,14 +374,19 @@ void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int
 	m_srcHeadingBlocks.push_back(ln);
 	m_nEmptyLines = 0;
 }
-bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment) {
+bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment, bool &commented) {
     //QStringList fields;
+    commented = false;
     int i = 0;
     if( inComment ) {
     	int ix = line.indexOf("-->");
     	if( ix < 0 ) return inQuotes;
     	inComment = false;
-    	i = ix + 3;		//	"-->" までスキップ
+		if( (i = ix + 3) >= line.length() ) {	//	"-->" までスキップ
+			commented = fields.isEmpty();
+			return inQuotes;
+		}
+
     }
     QString currentField;
 	if( !inQuotes ) {
@@ -393,9 +399,12 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
     for (; i < line.length(); ++i) {
         if( line.mid(i).startsWith("<!--") ) {
         	int ix = line.indexOf("-->", i + 4);
-        	if( ix > 0 )
-        		i = ix + 4;
-        	else {
+        	if( ix > 0 ) {	//	コメント終了を発見
+        		if( (i = ix + 3) >= line.length() ) {	//	"-->" までスキップ
+        			commented = fields.isEmpty();
+        			return inQuotes;
+        		}
+        	} else {
         		inComment = true;
         		return inQuotes;
         	}
@@ -428,10 +437,11 @@ void MarkdownViewer::do_CSV(QTextCursor& cursor) {
 	int max_clmn = 0;
     bool inQuotes = false;
     bool inComment = false;
+    bool commented = false;		//	行単位でコメントアウトされた
     QStringList fields;
 	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
-		inQuotes = parseCsvLine(fields, m_lst[m_ln], inQuotes, inComment);
-		if( !inQuotes && inComment ) {
+		inQuotes = parseCsvLine(fields, m_lst[m_ln], inQuotes, inComment, commented);
+		if( !inQuotes && !inComment && !commented ) {
 			max_clmn = qMax(max_clmn, fields.size());
 			ll.push_back(fields);
 		}
