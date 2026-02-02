@@ -416,6 +416,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(mdEditor, &MarkdownEditor::title_clicked, this, &MainWindow::do_open);
 	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onEditorCurPosChanged);
 	connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::syncPreviewCursorWithEditor);
+	connect(mdEditor, &MarkdownEditor::changeFontSize, this, &MainWindow::onChangeEditorFontSize);
 	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
 	//QTextEdit *mdEditor = new QTextEdit(splitter);
 	mdEditor->setPlaceholderText("\nここにMarkdownを入力\n"
@@ -562,6 +563,22 @@ void MainWindow::onViewerCurPosChanged() {		//	MarkdownViewer でカーソルが
 	}
 	docWidget->m_mdEditor->setCursorAtNthPat(cursor.blockNumber(), pat, nth, tail);
 	m_processing = false;
+}
+void MainWindow::onChangeEditorFontSize(int delta) {
+	if( delta > 0 ) {
+		m_editorFontSize = qMin(64, m_editorFontSize + 1);
+	} else {
+		m_editorFontSize = qMax(3, m_editorFontSize - 1);
+	}
+	statusBar()->showMessage(QString("editor font size = %1").arg(m_editorFontSize), 5000);
+	for(int i = 0; i < ui->tabWidget->count(); ++i) {
+		DocWidget *docWidget = (DocWidget*)ui->tabWidget->widget(i);
+		//docWidget->m_mdEditor->setStyleSheet(QString("font-size: %1pt;  line-height: 120%;").arg(m_editorFontSize));
+		QFont font = docWidget->m_mdEditor->font();
+		font.setPointSize(m_editorFontSize);
+		font.setFixedPitch(true);	// 明示的に固定幅として扱う設定
+		docWidget->m_mdEditor->setFont(font);
+	}
 }
 void MainWindow::onMarkdownViewerLineClicked(int bln) {
 	qDebug() << "MainWindow::onMarkdownViewerLineClicked(" << bln << ")";

@@ -300,7 +300,7 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
 	: m_mainWindow(mainWindow), QPlainTextEdit(parent)
 {
 	m_highlighter = new MarkdownHighlighter(this->document());
-#if 1
+#if 0
 	QTextCursor cursor = this->textCursor();
 	QTextBlockFormat format;
 	format.setLineHeight(150, QTextBlockFormat::ProportionalHeight); // 1.5倍

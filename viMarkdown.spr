@@ -567,5 +567,5 @@
 0566 ● C 02/02            │問題│CSVブロック：行の途中から <!-- コメント開始し、先の行で --> コメント終了した場合、最初のカラムが消えてしまう
 0567 ◎ C 02/02 02/02 01024│ToDo│MarkdownViewer：undo 不可に設定しておく
 0568 ◎ C 02/03 02/03 01024│ToDo│MarkdownEditor：Ctrl + マウスホイール：emit changeFontSize(int delta)
-0569 ● C 02/03            │ToDo│MainWindow：changeFontSize() 対応スロットで全エディタのフォントサイズ変更
+0569 ◎ C 02/03 02/03 01024│ToDo│MainWindow：changeFontSize() 対応スロットで全エディタのフォントサイズ変更
 0570 ● C 02/03            │ToDo│

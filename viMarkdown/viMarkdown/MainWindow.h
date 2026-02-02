@@ -138,6 +138,7 @@ private:
     bool	m_keisenMode = false;
     bool	m_thickKeisen = false;		//	Thin or Thick
     int		m_tab_number = 0;
+    int		m_editorFontSize = 12;		//	暫定的
     //QString	m_plainText;
     //QString	m_htmlText;
     //MarkdownToHtmlConvertor	m_htmlComvertor;
