@@ -10,7 +10,7 @@
 #include "MarkdownEditor.h"
 #include "MainWindow.h"
 
-extern bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes);
+extern bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment);
 
 class LnAreaWidget : public QWidget {
 public:
@@ -1130,6 +1130,7 @@ void MarkdownEditor::convert_CSV_MarkdownTable() {
 	QTextBlock block = cursor.block();
 	block = block.next();		//	skip "```CSV" line
     bool inQuotes = false;
+    bool inComment = false;
     int endPosition = -1;
 	QList<QStringList> ll;
     QStringList fields;
@@ -1138,8 +1139,8 @@ void MarkdownEditor::convert_CSV_MarkdownTable() {
 			endPosition = block.position() + block.length();
 			break;
 		}
-		inQuotes = parseCsvLine(fields, block.text(), inQuotes);
-		if( !inQuotes ) {
+		inQuotes = parseCsvLine(fields, block.text(), inQuotes, inComment);
+		if( !inQuotes && !inComment ) {
 			ll.push_back(fields);
 		}
 		block = block.next();

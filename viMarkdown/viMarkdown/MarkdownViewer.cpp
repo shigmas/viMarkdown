@@ -373,8 +373,15 @@ void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int
 	m_srcHeadingBlocks.push_back(ln);
 	m_nEmptyLines = 0;
 }
-bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes) {
+bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment) {
     //QStringList fields;
+    int i = 0;
+    if( inComment ) {
+    	int ix = line.indexOf("-->");
+    	if( ix < 0 ) return inQuotes;
+    	inComment = false;
+    	i = ix + 3;		//	"-->" までスキップ
+    }
     QString currentField;
 	if( !inQuotes ) {
 		fields.clear();
@@ -383,7 +390,16 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes) {
 		fields.pop_back();
 	}
     //bool inQuotes = false;
-    for (int i = 0; i < line.length(); ++i) {
+    for (; i < line.length(); ++i) {
+        if( line.mid(i).startsWith("<!--") ) {
+        	int ix = line.indexOf("-->", i + 4);
+        	if( ix > 0 )
+        		i = ix + 4;
+        	else {
+        		inComment = true;
+        		return inQuotes;
+        	}
+        }
         QChar c = line.at(i);
         if (c == '"') {
             // ダブルクォートの中のダブルクォート（エスケープ）をチェック
@@ -411,10 +427,11 @@ void MarkdownViewer::do_CSV(QTextCursor& cursor) {
 	QList<QStringList> ll;
 	int max_clmn = 0;
     bool inQuotes = false;
+    bool inComment = false;
     QStringList fields;
 	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
-		inQuotes = parseCsvLine(fields, m_lst[m_ln], inQuotes);
-		if( !inQuotes ) {
+		inQuotes = parseCsvLine(fields, m_lst[m_ln], inQuotes, inComment);
+		if( !inQuotes && inComment ) {
 			max_clmn = qMax(max_clmn, fields.size());
 			ll.push_back(fields);
 		}

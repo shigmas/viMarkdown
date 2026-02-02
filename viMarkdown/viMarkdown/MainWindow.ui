@@ -204,6 +204,8 @@
    <addaction name="action_Save"/>
    <addaction name="action_SaveAs"/>
    <addaction name="action_Close"/>
+   <addaction name="separator"/>
+   <addaction name="action_Settings"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -809,8 +811,15 @@
    </property>
   </action>
   <action name="action_Settings">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/settings_48.png</normaloff>:/MainWindow/images/settings_48.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Settings...</string>
+   </property>
+   <property name="shortcut">
+    <string>F8</string>
    </property>
   </action>
   <action name="action_ToggleFocus">
