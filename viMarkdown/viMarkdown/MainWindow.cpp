@@ -685,14 +685,17 @@ void MainWindow::onAboutToShow_FavoriteFiles() {
 			key = QChar(u'A' + k - 11);
 		QAction *act = ui->menu_FavoriteFiles->addAction("&" + key + " " + fullPath);
 		connect(act, &QAction::triggered, this, [this, fullPath]() {
+			QSettings settings;
+	        QStringList favoriteFilePaths = settings.value(KEY_FAVORITE_FILES).toStringList();
+	        favoriteFilePaths.removeAll(fullPath);
 			QString pathArg = fullPath;
 			if( !do_open(pathArg) ) {
 				//	ファイル削除などで、ファイルオープンできなかった場合
-				QSettings settings;
-		        QStringList favoriteFilePaths = settings.value(KEY_FAVORITE_FILES).toStringList();
-		        favoriteFilePaths.removeAll(fullPath);
-		        settings.setValue(KEY_FAVORITE_FILES, favoriteFilePaths);
+			} else {
+				//	Undone: オープンしたファイルをリスト先頭に移動
+				favoriteFilePaths.push_front(fullPath);
 			}
+	        settings.setValue(KEY_FAVORITE_FILES, favoriteFilePaths);
 		});
 	}
 }
