@@ -21,6 +21,7 @@ public:
 
     bool	isKeisenMode() const { return m_keisenMode; }
     bool	isThickKeisenMode() const { return m_thickKeisen; }
+    int		editorFontSize() const { return m_editorFontSize; }		//	暫定的
 
 protected:
     void	setup_connections();

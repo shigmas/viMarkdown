@@ -308,7 +308,7 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
 #endif
 	QFont font("MS Gothic");
 	//QFont font("Consolas");
-	//font.setPointSize(12);		// 12ptに設定
+	font.setPointSize(mainWindow->editorFontSize());		// フォントサイズ設定
 	font.setFixedPitch(true);	// 明示的に固定幅として扱う設定
 	this->setFont(font);
 	setCursorWidth(2);
