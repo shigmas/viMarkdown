@@ -568,4 +568,14 @@
 0567 ◎ C 02/02 02/02 01024│ToDo│MarkdownViewer：undo 不可に設定しておく
 0568 ◎ C 02/03 02/03 01024│ToDo│MarkdownEditor：Ctrl + マウスホイール：emit changeFontSize(int delta)
 0569 ◎ C 02/03 02/03 01024│ToDo│MainWindow：changeFontSize() 対応スロットで全エディタのフォントサイズ変更
-0570 ● C 02/03            │ToDo│
+0570 ● C 02/03            │ToDo│新規文書作成・文書オープン時：フォントサイズを変更されたものに
+0571 ◎ C 02/03 02/03 01024│ToDo│新フォントサイズを QSettings に保存、起動時に復帰
+0572 ◎ C 02/03 02/03 01024│問題│フォントサイズ変更時、行番号エリア幅が変更されない
+0573 ● C 02/03            │ToDo│
+0574 ● C 02/03            │ToDo│
+0575 ● C 02/03            │ToDo│
+0576 ● C 02/03            │ToDo│
+0577 ● C 02/03            │ToDo│
+0578 ● C 02/03            │ToDo│
+0579 ● C 02/03            │ToDo│
+0580 ● C 02/03            │ToDo│

@@ -34,6 +34,7 @@ const int N_FAVORITE_FILES = 10 + 26;
 
 const QStringView KEY_RECENT_FILES(u"recentFilePaths");
 const QStringView KEY_FAVORITE_FILES(u"favoriteFilePaths");
+const QStringView KEY_EDITOR_FONT_SIZE(u"editorFontSize");
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
@@ -64,10 +65,8 @@ MainWindow::MainWindow(QWidget *parent)
 	setAcceptDrops(true);		//	ファイルドロップ可
 	setup_tabMenu();
 	setup_connections();
-	//if( to_restore_win ) {
-	//	to_restore_win = false;
-	//	restore_win();
-	//}
+	QSettings settings;
+	m_editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE).toInt();
 	restore_win();
 	onAction_NewTab();
 }
@@ -406,7 +405,10 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	//font.setFixedPitch(true);	// 明示的に固定幅として扱う設定
 	//mdEditor->setFont(font);
 	//mdEditor->setStyleSheet("font-size: 12pt;");
-	mdEditor->setUndoRedoEnabled(true);
+	QFont font = mdEditor->font();
+	font.setPointSize(m_editorFontSize);
+	mdEditor->setFont(font);
+	mdEditor->setUndoRedoEnabled(true);		//	Undo/Redo 有効
 	//QFontMetrics fm(mdEditor->font());
 	//int lnAreaWidth = fm.horizontalAdvance('9') * 8;
 	//mdEditor->setViewportMargins(lnAreaWidth, 0, 0, 0);
@@ -571,6 +573,8 @@ void MainWindow::onChangeEditorFontSize(int delta) {
 		m_editorFontSize = qMax(3, m_editorFontSize - 1);
 	}
 	statusBar()->showMessage(QString("editor font size = %1").arg(m_editorFontSize), 5000);
+	QSettings settings;
+	settings.setValue(KEY_EDITOR_FONT_SIZE, m_editorFontSize);
 	for(int i = 0; i < ui->tabWidget->count(); ++i) {
 		DocWidget *docWidget = (DocWidget*)ui->tabWidget->widget(i);
 		//docWidget->m_mdEditor->setStyleSheet(QString("font-size: %1pt;  line-height: 120%;").arg(m_editorFontSize));
@@ -578,6 +582,7 @@ void MainWindow::onChangeEditorFontSize(int delta) {
 		font.setPointSize(m_editorFontSize);
 		font.setFixedPitch(true);	// 明示的に固定幅として扱う設定
 		docWidget->m_mdEditor->setFont(font);
+		docWidget->m_mdEditor->updateViewportMargines();
 	}
 }
 void MainWindow::onMarkdownViewerLineClicked(int bln) {

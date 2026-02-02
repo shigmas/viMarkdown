@@ -321,6 +321,9 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
 	connect(this, &MarkdownEditor::cursorPositionChanged, this, &MarkdownEditor::onCurPosChanged);
 	connect(document(), &QTextDocument::contentsChange, this, &MarkdownEditor::onContentsChanged);
 }
+void MarkdownEditor::updateViewportMargines() {
+	setViewportMargins(lnAreaWidth(), 0, 0, 0);
+}
 void MarkdownEditor::onKeisenMode(bool b) {
 	int charWidth = 2;
 	if( b ) {

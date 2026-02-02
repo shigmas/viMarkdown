@@ -24,6 +24,7 @@ public:
 	int lnAreaWidth() {
         return fontMetrics().horizontalAdvance('9') * LN_WIDTH;
     }
+	void	updateViewportMargines();
 	void	scrollToTop(const QTextCursor &cursor);
 	//{
 	//	this->scrollToTop(cursor.blockNumber());
