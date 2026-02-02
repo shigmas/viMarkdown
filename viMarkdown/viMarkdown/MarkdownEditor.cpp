@@ -441,6 +441,15 @@ void MarkdownEditor::mouseReleaseEvent(QMouseEvent *event) {
 	//qDebug() << "title = " << title;
 	emit title_clicked(title);
 }
+void MarkdownEditor::wheelEvent(QWheelEvent *event) {
+	qDebug() << "MarkdownEditor::wheelEvent()";
+	qDebug() << "e->angleDelta() = " << event->angleDelta();
+	if (event->modifiers() & Qt::ControlModifier) {
+		emit changeFontSize(event->angleDelta().y());
+		event->accept();
+	} else
+		QPlainTextEdit::wheelEvent(event);
+}
 void MarkdownEditor::setCursorAtNthPat(int srcHeadingBlockNum, QString pat, int nth, bool tail) {		//	nth: 見出し行から何番目か（>0）
 	qDebug() << QString("MarkdownEditor::setCursorAtNthPat(%1, '%2', %3,").arg(srcHeadingBlockNum).arg(pat).arg(nth) << tail << ")";
 	QTextBlock block = document()->findBlockByNumber(srcHeadingBlockNum);

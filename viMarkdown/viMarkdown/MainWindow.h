@@ -71,6 +71,7 @@ protected:
     void	onTextRemovedAtViewer(int);
     void	onBS_pressed();
     void	syncPreviewCursorWithEditor();
+    void	onChangeEditorFontSize(int);
 
     void	onAction_New();
     void	onAction_NewTab();

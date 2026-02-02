@@ -45,10 +45,12 @@ signals:
     void	tab_pressed();
     void	esc_pressed();
     void	title_clicked(const QString title);
+    void	changeFontSize(int delta);
 
 protected:
     void	keyPressEvent(QKeyEvent *e) override;
     void	mouseReleaseEvent(QMouseEvent *event) override;
+    void	wheelEvent(QWheelEvent *event) override;
     void	paintEvent(QPaintEvent *e) override;
     void	resizeEvent(QResizeEvent *event) override;
     void	inputMethodEvent(QInputMethodEvent *event) override;
