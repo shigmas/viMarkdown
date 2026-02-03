@@ -740,6 +740,7 @@ void MainWindow::onAction_AddThisFavorite() {
 void MainWindow::onAction_Settings() {
 	SettingsDialog dlg(this);
 	if (dlg.exec() == QDialog::Accepted) {
+	    qDebug() << "QDialog::Accepted";
 	    // OKボタンが押された時の処理
 	}
 }
