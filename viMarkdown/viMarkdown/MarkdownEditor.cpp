@@ -279,7 +279,7 @@ protected:
 	void highlightBlock(const QString &text) override {
 		if (text.startsWith("#")) {
 			QTextCharFormat fmt_darkred;
-			fmt_darkred.setForeground(QColor("darkred"));
+			fmt_darkred.setForeground(g.m_headingsColor);
 			setFormat(0, text.length(), fmt_darkred);
 		} else {
 			// デフォルトの色（黒）
@@ -322,6 +322,7 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
 	connect(this, &MarkdownEditor::cursorPositionChanged, this, &MarkdownEditor::onCurPosChanged);
 	connect(document(), &QTextDocument::contentsChange, this, &MarkdownEditor::onContentsChanged);
 }
+void MarkdownEditor::rehighlight() { m_highlighter->rehighlight(); }
 void MarkdownEditor::updateViewportMargines() {
 	setViewportMargins(lnAreaWidth(), 0, 0, 0);
 }

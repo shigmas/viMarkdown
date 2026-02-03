@@ -41,6 +41,7 @@ public:
 	void	convert_MarkdownTable_CSV();
     void	setCursorAtNthPat(int srcHeadingBlockNum, QString pat, int nth, bool=false);
     void	setProcessing(bool b) { m_processing = b; }
+    void	rehighlight();
 
 signals:
     void	tab_pressed();

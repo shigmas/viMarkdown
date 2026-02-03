@@ -80,6 +80,7 @@ MainWindow::~MainWindow()
 void MainWindow::load_settings() {
 	QSettings settings;
 	g.m_editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE, 12).toInt();		//	デフォルト：12pt
+	g.m_headingsColor = settings.value(KEY_EDITOR_HEADINGS_COLOR, QColor("#800000")).value<QColor>();		//	デフォルト：ダークレッド
 }
 void MainWindow::insertSearchComboBox() {
 	m_searchCB = new QComboBox;
@@ -595,6 +596,8 @@ void MainWindow::updateEditorFontSize(int sz) {
 		font.setFixedPitch(true);	// 明示的に固定幅として扱う設定
 		docWidget->m_mdEditor->setFont(font);
 		docWidget->m_mdEditor->updateViewportMargines();
+		docWidget->m_mdEditor->rehighlight();				//	再ハイライト
+		docWidget->m_mdEditor->viewport()->update();		//	再表示
 	}
 }
 void MainWindow::onMarkdownViewerLineClicked(int bln) {
@@ -754,8 +757,12 @@ void MainWindow::onAction_Settings() {
 	if (dlg.exec() == QDialog::Accepted) {
 	    //qDebug() << "QDialog::Accepted";
 	    QSettings settings;
-	    int editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE).toInt();
-	    updateEditorFontSize(editorFontSize);
+	    settings.setValue(KEY_EDITOR_FONT_SIZE, g.m_editorFontSize);
+	    //int editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE).toInt();
+	    settings.setValue(KEY_EDITOR_HEADINGS_COLOR, g.m_headingsColor);
+	    updateEditorFontSize(g.m_editorFontSize);
+	} else {
+		load_settings();		//	g を元に戻す
 	}
 }
 void MainWindow::onAction_Exit() {
