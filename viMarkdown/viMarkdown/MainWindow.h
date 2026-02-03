@@ -14,6 +14,11 @@ QT_END_NAMESPACE
 
 class DocWidget;
 
+struct Global {
+	int		m_editorFontSize;
+	QColor	m_headings;
+};
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -24,9 +29,10 @@ public:
 
     bool	isKeisenMode() const { return m_keisenMode; }
     bool	isThickKeisenMode() const { return m_thickKeisen; }
-    int		editorFontSize() const { return m_editorFontSize; }		//	暫定的
+    //int		editorFontSize() const { return m_editorFontSize; }		//	暫定的
 
 protected:
+    void	load_settings();
     void	setup_connections();
     void	setup_tabMenu();
     void	setup_encodingCombo();
@@ -143,7 +149,7 @@ private:
     bool	m_keisenMode = false;
     bool	m_thickKeisen = false;		//	Thin or Thick
     int		m_tab_number = 0;
-    int		m_editorFontSize = 12;		//	暫定的
+    //int		m_editorFontSize = 12;		//	暫定的
     //QString	m_plainText;
     //QString	m_htmlText;
     //MarkdownToHtmlConvertor	m_htmlComvertor;

@@ -1,16 +1,26 @@
-#include <QSettings>
+﻿#include <QSettings>
 #include <QColorDialog>
 #include "MainWindow.h"
 #include "SettingsDialog.h"
 
+extern Global g;
 
 SettingsDialog::SettingsDialog(QWidget *parent)
 	: QDialog(parent)
 	, ui(new Ui::SettingsDialogClass())
 {
 	ui->setupUi(this);
+	if (this->layout()) {
+        this->layout()->setSizeConstraint(QLayout::SetFixedSize);
+    }
 	QSettings settings;
-	ui->editorFontSize->setValue(settings.value(KEY_EDITOR_FONT_SIZE).toInt());
+	ui->editorFontSize->setValue(g.m_editorFontSize);
+	QColor color("#800000");
+	ui->headingsColorPB->setStyleSheet(QString(
+        "background-color: %1;" // 背景色をセット
+        "border: 1px solid gray;" // 枠線をつける（色の判別をしやすくするため）
+        "height: 20px;" // 必要に応じて高さを固定
+    ).arg(color.name()));
 	connect(ui->headingsColorPB, &QPushButton::clicked, this, &SettingsDialog::onHeadingColorButtonClicked);
 }
 

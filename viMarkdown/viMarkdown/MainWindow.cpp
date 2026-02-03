@@ -36,10 +36,13 @@ const QStringView KEY_RECENT_FILES(u"recentFilePaths");
 const QStringView KEY_FAVORITE_FILES(u"favoriteFilePaths");
 //const QStringView KEY_EDITOR_FONT_SIZE(u"editorFontSize");
 
+Global g;
+
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
 	, ui(new Ui::MainWindowClass())
 {
+	load_settings();
 	//static bool to_restore_win = true;
 	ui->setupUi(this);
 	ui->mainToolBar->setStyleSheet(
@@ -66,13 +69,17 @@ MainWindow::MainWindow(QWidget *parent)
 	setup_tabMenu();
 	setup_connections();
 	QSettings settings;
-	m_editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE).toInt();
+	//m_editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE).toInt();
 	restore_win();
 	onAction_NewTab();
 }
 MainWindow::~MainWindow()
 {
 	delete ui;
+}
+void MainWindow::load_settings() {
+	QSettings settings;
+	g.m_editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE, 12).toInt();		//	デフォルト：12pt
 }
 void MainWindow::insertSearchComboBox() {
 	m_searchCB = new QComboBox;
@@ -406,7 +413,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	//mdEditor->setFont(font);
 	//mdEditor->setStyleSheet("font-size: 12pt;");
 	QFont font = mdEditor->font();
-	font.setPointSize(m_editorFontSize);
+	font.setPointSize(g.m_editorFontSize);
 	mdEditor->setFont(font);
 	mdEditor->setUndoRedoEnabled(true);		//	Undo/Redo 有効
 	//QFontMetrics fm(mdEditor->font());
@@ -567,23 +574,24 @@ void MainWindow::onViewerCurPosChanged() {		//	MarkdownViewer でカーソルが
 	m_processing = false;
 }
 void MainWindow::onChangeEditorFontSize(int delta) {
+	//int sz = g.m_editorFontSize
 	if( delta > 0 ) {
-		m_editorFontSize = qMin(64, m_editorFontSize + 1);
+		g.m_editorFontSize = qMin(64, g.m_editorFontSize + 1);
 	} else {
-		m_editorFontSize = qMax(3, m_editorFontSize - 1);
+		g.m_editorFontSize = qMax(3, g.m_editorFontSize - 1);
 	}
-	statusBar()->showMessage(QString("editor font size = %1").arg(m_editorFontSize), 5000);
+	statusBar()->showMessage(QString("editor font size = %1").arg(g.m_editorFontSize), 5000);
 	QSettings settings;
-	settings.setValue(KEY_EDITOR_FONT_SIZE, m_editorFontSize);
-	updateEditorFontSize(m_editorFontSize);
+	settings.setValue(KEY_EDITOR_FONT_SIZE, g.m_editorFontSize);
+	updateEditorFontSize(g.m_editorFontSize);
 }
 void MainWindow::updateEditorFontSize(int sz) {
-	m_editorFontSize = sz;
+	g.m_editorFontSize = sz;
 	for(int i = 0; i < ui->tabWidget->count(); ++i) {
 		DocWidget *docWidget = (DocWidget*)ui->tabWidget->widget(i);
-		//docWidget->m_mdEditor->setStyleSheet(QString("font-size: %1pt;  line-height: 120%;").arg(m_editorFontSize));
+		//docWidget->m_mdEditor->setStyleSheet(QString("font-size: %1pt;  line-height: 120%;").arg(g.m_editorFontSize));
 		QFont font = docWidget->m_mdEditor->font();
-		font.setPointSize(m_editorFontSize);
+		font.setPointSize(g.m_editorFontSize);
 		font.setFixedPitch(true);	// 明示的に固定幅として扱う設定
 		docWidget->m_mdEditor->setFont(font);
 		docWidget->m_mdEditor->updateViewportMargines();

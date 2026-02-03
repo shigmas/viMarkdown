@@ -10,6 +10,7 @@
 #include "MarkdownEditor.h"
 #include "MainWindow.h"
 
+extern Global g;
 extern bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment, bool &commented);
 
 class LnAreaWidget : public QWidget {
@@ -308,7 +309,7 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
 #endif
 	QFont font("MS Gothic");
 	//QFont font("Consolas");
-	font.setPointSize(mainWindow->editorFontSize());		// フォントサイズ設定
+	font.setPointSize(g.m_editorFontSize);		// フォントサイズ設定
 	font.setFixedPitch(true);	// 明示的に固定幅として扱う設定
 	this->setFont(font);
 	setCursorWidth(2);
