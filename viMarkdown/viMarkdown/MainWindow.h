@@ -9,6 +9,8 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindowClass; };
 QT_END_NAMESPACE
 
+#define	KEY_EDITOR_FONT_SIZE	u"editorFontSize"
+
 class DocWidget;
 
 class MainWindow : public QMainWindow
@@ -73,6 +75,7 @@ protected:
     void	onBS_pressed();
     void	syncPreviewCursorWithEditor();
     void	onChangeEditorFontSize(int);
+    void	updateEditorFontSize(int);
 
     void	onAction_New();
     void	onAction_NewTab();

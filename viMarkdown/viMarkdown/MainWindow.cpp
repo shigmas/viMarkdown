@@ -34,7 +34,7 @@ const int N_FAVORITE_FILES = 10 + 26;
 
 const QStringView KEY_RECENT_FILES(u"recentFilePaths");
 const QStringView KEY_FAVORITE_FILES(u"favoriteFilePaths");
-const QStringView KEY_EDITOR_FONT_SIZE(u"editorFontSize");
+//const QStringView KEY_EDITOR_FONT_SIZE(u"editorFontSize");
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
@@ -575,6 +575,10 @@ void MainWindow::onChangeEditorFontSize(int delta) {
 	statusBar()->showMessage(QString("editor font size = %1").arg(m_editorFontSize), 5000);
 	QSettings settings;
 	settings.setValue(KEY_EDITOR_FONT_SIZE, m_editorFontSize);
+	updateEditorFontSize(m_editorFontSize);
+}
+void MainWindow::updateEditorFontSize(int sz) {
+	m_editorFontSize = sz;
 	for(int i = 0; i < ui->tabWidget->count(); ++i) {
 		DocWidget *docWidget = (DocWidget*)ui->tabWidget->widget(i);
 		//docWidget->m_mdEditor->setStyleSheet(QString("font-size: %1pt;  line-height: 120%;").arg(m_editorFontSize));
@@ -740,8 +744,10 @@ void MainWindow::onAction_AddThisFavorite() {
 void MainWindow::onAction_Settings() {
 	SettingsDialog dlg(this);
 	if (dlg.exec() == QDialog::Accepted) {
-	    qDebug() << "QDialog::Accepted";
-	    // OKボタンが押された時の処理
+	    //qDebug() << "QDialog::Accepted";
+	    QSettings settings;
+	    int editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE).toInt();
+	    updateEditorFontSize(editorFontSize);
 	}
 }
 void MainWindow::onAction_Exit() {
