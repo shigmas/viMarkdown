@@ -18,6 +18,8 @@ public:
 protected:
 	void accept() override;
 
+	void onHeadingColorButtonClicked();
+
 private:
 	Ui::SettingsDialogClass *ui;
 };
