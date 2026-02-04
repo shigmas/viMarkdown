@@ -271,8 +271,9 @@ class MarkdownHighlighter : public QSyntaxHighlighter {
 public:
 	MarkdownHighlighter(QTextDocument *parent) : QSyntaxHighlighter(parent)
 	{
-		boldFormat.setFontWeight(QFont::Bold);
-		boldRegex = QRegularExpression(R"(\*\*([^\*]+)\*\*)");
+		m_boldFormat.setFontWeight(QFont::Bold);
+		m_boldFormat.setForeground(g.m_boldColor);
+		m_boldRegex = QRegularExpression(R"(\*\*([^\*]+)\*\*)");
 	}
 
 protected:
@@ -284,17 +285,17 @@ protected:
 		} else {
 			// デフォルトの色（黒）
 			setFormat(0, text.length(), QColor("black"));
-			auto it = boldRegex.globalMatch(text);
+			auto it = m_boldRegex.globalMatch(text);
 			while (it.hasNext()) {
 				QRegularExpressionMatch match = it.next();
 				// マッチした範囲（開始位置と長さ）にフォーマットを適用
-				setFormat(match.capturedStart(), match.capturedLength(), boldFormat);
+				setFormat(match.capturedStart(), match.capturedLength(), m_boldFormat);
 			}
 		}
 	}
 private:
-	QTextCharFormat boldFormat;
-	QRegularExpression boldRegex;
+	QTextCharFormat m_boldFormat;
+	QRegularExpression m_boldRegex;
 };
 //----------------------------------------------------------------------
 MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)

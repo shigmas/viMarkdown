@@ -18,6 +18,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 	updateColorButtons();
 	//QColor color("#800000");
 	connect(ui->headingsColorPB, &QPushButton::clicked, this, &SettingsDialog::onHeadingColorButtonClicked);
+	connect(ui->boldColorPB, &QPushButton::clicked, this, &SettingsDialog::onBoldColorButtonClicked);
 	connect(ui->CSVHeaderPB, &QPushButton::clicked, this, &SettingsDialog::onCSVHeaderColorButtonClicked);
 	connect(ui->CSVZebra1PB, &QPushButton::clicked, this, &SettingsDialog::onCSVZebraColor1ButtonClicked);
 	connect(ui->CSVZebra2PB, &QPushButton::clicked, this, &SettingsDialog::onCSVZebraColor1ButtonClicked);
@@ -33,6 +34,11 @@ void SettingsDialog::updateColorButtons() {
         "border: 1px solid gray;" // 枠線をつける
         "height: 20px;" // 必要に応じて高さを固定
     ).arg(g.m_headingsColor.name()));
+	ui->boldColorPB->setStyleSheet(QString(
+        "background-color: %1;" // 背景色をセット
+        "border: 1px solid gray;" // 枠線をつける
+        "height: 20px;" // 必要に応じて高さを固定
+    ).arg(g.m_boldColor.name()));
 	ui->CSVHeaderPB->setStyleSheet(QString(
         "background-color: %1;" // 背景色をセット
         "border: 1px solid gray;" // 枠線をつける
@@ -59,6 +65,13 @@ void SettingsDialog::onHeadingColorButtonClicked() {
 	QColor selectedColor = QColorDialog::getColor(g.m_headingsColor, this, "Select Headings Color");
 	if( selectedColor.isValid() ) {
 		g.m_headingsColor = selectedColor;
+		updateColorButtons();
+	}
+}
+void SettingsDialog::onBoldColorButtonClicked() {
+	QColor selectedColor = QColorDialog::getColor(g.m_boldColor, this, "Select Headings Color");
+	if (selectedColor.isValid()) {
+		g.m_boldColor = selectedColor;
 		updateColorButtons();
 	}
 }

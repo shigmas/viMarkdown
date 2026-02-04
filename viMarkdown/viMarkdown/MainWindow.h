@@ -11,6 +11,7 @@ QT_END_NAMESPACE
 
 #define	KEY_EDITOR_FONT_SIZE		u"editorFontSize"
 #define	KEY_HEADINGS_COLOR			u"headingsColor"
+#define	KEY_BOLD_COLOR				u"boldColor"
 #define	KEY_CSV_HEADER_COLOR		u"CSVHeadingsColor"
 #define	KEY_CSV_ZEBRA_COLOR1		u"CSVZebraColor1"
 #define	KEY_CSV_ZEBRA_COLOR2		u"CSVZebraColor2"
@@ -20,6 +21,7 @@ class DocWidget;
 struct Global {
 	int		m_editorFontSize;
 	QColor	m_headingsColor;
+	QColor	m_boldColor;
 	QColor	m_CSVHeaderColor;
 	QColor	m_CSVZebraColor1;		//	本体奇数行
 	QColor	m_CSVZebraColor2;		//	本体偶数行

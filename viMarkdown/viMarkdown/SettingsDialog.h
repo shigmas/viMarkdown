@@ -19,6 +19,7 @@ protected:
 	void accept() override;
 
 	void onHeadingColorButtonClicked();
+	void onBoldColorButtonClicked();
 	void onCSVHeaderColorButtonClicked();
 	void onCSVZebraColor1ButtonClicked();
 	void onCSVZebraColor2ButtonClicked();

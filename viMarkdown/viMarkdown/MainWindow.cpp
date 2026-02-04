@@ -81,6 +81,7 @@ void MainWindow::load_settings() {
 	QSettings settings;
 	g.m_editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE, 12).toInt();		//	デフォルト：12pt
 	g.m_headingsColor = settings.value(KEY_HEADINGS_COLOR, QColor("#800000")).value<QColor>();		//	デフォルト：ダークレッド
+	g.m_boldColor = settings.value(KEY_BOLD_COLOR, QColor("#008000")).value<QColor>();
 	g.m_CSVHeaderColor = settings.value(KEY_CSV_HEADER_COLOR, QColor("lightblue")).value<QColor>();
 	g.m_CSVZebraColor1 = settings.value(KEY_CSV_ZEBRA_COLOR1, QColor("white")).value<QColor>();
 	g.m_CSVZebraColor2 = settings.value(KEY_CSV_ZEBRA_COLOR2, QColor("lightyellow")).value<QColor>();
