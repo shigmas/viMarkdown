@@ -80,7 +80,9 @@ MainWindow::~MainWindow()
 void MainWindow::load_settings() {
 	QSettings settings;
 	g.m_editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE, 12).toInt();		//	デフォルト：12pt
-	g.m_headingsColor = settings.value(KEY_EDITOR_HEADINGS_COLOR, QColor("#800000")).value<QColor>();		//	デフォルト：ダークレッド
+	g.m_headingsColor = settings.value(KEY_HEADINGS_COLOR, QColor("#800000")).value<QColor>();		//	デフォルト：ダークレッド
+	g.m_tableHeaderColor = settings.value(KEY_TABLE_HEADER_COLOR, QColor("lightblue")).value<QColor>();
+	g.m_tableZebraColor = settings.value(KEY_TABLE_ZEBRA_COLOR, QColor("lightyellow")).value<QColor>();
 }
 void MainWindow::insertSearchComboBox() {
 	m_searchCB = new QComboBox;
@@ -758,8 +760,9 @@ void MainWindow::onAction_Settings() {
 	    //qDebug() << "QDialog::Accepted";
 	    QSettings settings;
 	    settings.setValue(KEY_EDITOR_FONT_SIZE, g.m_editorFontSize);
-	    //int editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE).toInt();
-	    settings.setValue(KEY_EDITOR_HEADINGS_COLOR, g.m_headingsColor);
+	    settings.setValue(KEY_HEADINGS_COLOR, g.m_headingsColor);
+	    settings.setValue(KEY_TABLE_HEADER_COLOR, g.m_tableHeaderColor);
+	    settings.setValue(KEY_TABLE_ZEBRA_COLOR, g.m_tableZebraColor);
 	    updateEditorFontSize(g.m_editorFontSize);
 	} else {
 		load_settings();		//	g を元に戻す

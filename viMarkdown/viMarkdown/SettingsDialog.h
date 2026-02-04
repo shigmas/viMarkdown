@@ -19,6 +19,9 @@ protected:
 	void accept() override;
 
 	void onHeadingColorButtonClicked();
+	void onTableHeaderColorButtonClicked();
+	void onTableZebraColorButtonClicked();
+	void	updateColorButtons();
 
 private:
 	Ui::SettingsDialogClass *ui;

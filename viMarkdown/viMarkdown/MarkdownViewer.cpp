@@ -12,6 +12,8 @@
 
 using namespace std;
 
+extern Global g;
+
 enum {
 	ALIGHN_LEFT = 1, ALIGHN_RIGHT = 2, ALIGHN_CENTER = ALIGHN_LEFT| ALIGHN_RIGHT,
 };
@@ -459,14 +461,14 @@ void MarkdownViewer::do_CSV(QTextCursor& cursor) {
 			    QTextBlockFormat blockFormat;
 				if (row == 0) {
 					QTextTableCellFormat cellFormat;
-				    cellFormat.setBackground(QColor("lightblue"));
+				    cellFormat.setBackground(g.m_tableHeaderColor);
 				    cell.setFormat(cellFormat);
 					charFormat.setFontWeight(QFont::Bold);
 				    blockFormat.setAlignment(Qt::AlignCenter); // ヘッダは中央
 				} else {
 					if( (row % 2) == 0 ) {
 						QTextTableCellFormat cellFormat;
-					    cellFormat.setBackground(QColor("lightyellow"));
+					    cellFormat.setBackground(g.m_tableZebraColor);
 					    cell.setFormat(cellFormat);
 					}
 					charFormat.setFontWeight(QFont::Normal);

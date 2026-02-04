@@ -10,13 +10,17 @@ namespace Ui { class MainWindowClass; };
 QT_END_NAMESPACE
 
 #define	KEY_EDITOR_FONT_SIZE		u"editorFontSize"
-#define	KEY_EDITOR_HEADINGS_COLOR	u"editorHeadingsColor"
+#define	KEY_HEADINGS_COLOR			u"headingsColor"
+#define	KEY_TABLE_HEADER_COLOR		u"tableHeadingsColor"
+#define	KEY_TABLE_ZEBRA_COLOR		u"tableZebraColor"
 
 class DocWidget;
 
 struct Global {
 	int		m_editorFontSize;
 	QColor	m_headingsColor;
+	QColor	m_tableHeaderColor;
+	QColor	m_tableZebraColor;
 };
 
 class MainWindow : public QMainWindow
