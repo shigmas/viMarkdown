@@ -70,12 +70,12 @@
           <item row="0" column="0">
            <widget class="QLabel" name="label_3">
             <property name="text">
-             <string>Table Header color:</string>
+             <string>CSV Header color:</string>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QPushButton" name="tableHeaderPB">
+           <widget class="QPushButton" name="CSVHeaderPB">
             <property name="text">
              <string/>
             </property>
@@ -84,12 +84,26 @@
           <item row="1" column="0">
            <widget class="QLabel" name="label_4">
             <property name="text">
-             <string>Table zebra color:</string>
+             <string>CSV Zebra color 1:</string>
             </property>
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QPushButton" name="tableZebraPB">
+           <widget class="QPushButton" name="CSVZebra1PB">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>CSV Zebra color 2:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QPushButton" name="CSVZebra2PB">
             <property name="text">
              <string/>
             </property>

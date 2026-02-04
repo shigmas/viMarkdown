@@ -461,16 +461,14 @@ void MarkdownViewer::do_CSV(QTextCursor& cursor) {
 			    QTextBlockFormat blockFormat;
 				if (row == 0) {
 					QTextTableCellFormat cellFormat;
-				    cellFormat.setBackground(g.m_tableHeaderColor);
+				    cellFormat.setBackground(g.m_CSVHeaderColor);
 				    cell.setFormat(cellFormat);
 					charFormat.setFontWeight(QFont::Bold);
 				    blockFormat.setAlignment(Qt::AlignCenter); // ヘッダは中央
 				} else {
-					if( (row % 2) == 0 ) {
-						QTextTableCellFormat cellFormat;
-					    cellFormat.setBackground(g.m_tableZebraColor);
-					    cell.setFormat(cellFormat);
-					}
+					QTextTableCellFormat cellFormat;
+				    cellFormat.setBackground((row % 2) != 0 ? g.m_CSVZebraColor1 : g.m_CSVZebraColor2);
+				    cell.setFormat(cellFormat);
 					charFormat.setFontWeight(QFont::Normal);
 					if (re.match(ll[row][col]).hasMatch()) {
 					    blockFormat.setAlignment(Qt::AlignRight);  // 数値は右

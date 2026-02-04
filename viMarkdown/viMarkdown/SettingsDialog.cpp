@@ -18,8 +18,9 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 	updateColorButtons();
 	//QColor color("#800000");
 	connect(ui->headingsColorPB, &QPushButton::clicked, this, &SettingsDialog::onHeadingColorButtonClicked);
-	connect(ui->tableHeaderPB, &QPushButton::clicked, this, &SettingsDialog::onTableHeaderColorButtonClicked);
-	connect(ui->tableZebraPB, &QPushButton::clicked, this, &SettingsDialog::onTableZebraColorButtonClicked);
+	connect(ui->CSVHeaderPB, &QPushButton::clicked, this, &SettingsDialog::onCSVHeaderColorButtonClicked);
+	connect(ui->CSVZebra1PB, &QPushButton::clicked, this, &SettingsDialog::onCSVZebraColor1ButtonClicked);
+	connect(ui->CSVZebra2PB, &QPushButton::clicked, this, &SettingsDialog::onCSVZebraColor1ButtonClicked);
 }
 
 SettingsDialog::~SettingsDialog()
@@ -29,19 +30,24 @@ SettingsDialog::~SettingsDialog()
 void SettingsDialog::updateColorButtons() {
 	ui->headingsColorPB->setStyleSheet(QString(
         "background-color: %1;" // 背景色をセット
-        "border: 1px solid gray;" // 枠線をつける（色の判別をしやすくするため）
+        "border: 1px solid gray;" // 枠線をつける
         "height: 20px;" // 必要に応じて高さを固定
     ).arg(g.m_headingsColor.name()));
-	ui->tableHeaderPB->setStyleSheet(QString(
+	ui->CSVHeaderPB->setStyleSheet(QString(
         "background-color: %1;" // 背景色をセット
-        "border: 1px solid gray;" // 枠線をつける（色の判別をしやすくするため）
+        "border: 1px solid gray;" // 枠線をつける
         "height: 20px;" // 必要に応じて高さを固定
-    ).arg(g.m_tableHeaderColor.name()));
-	ui->tableZebraPB->setStyleSheet(QString(
+    ).arg(g.m_CSVHeaderColor.name()));
+	ui->CSVZebra1PB->setStyleSheet(QString(
         "background-color: %1;" // 背景色をセット
-        "border: 1px solid gray;" // 枠線をつける（色の判別をしやすくするため）
+        "border: 1px solid gray;" // 枠線をつける
         "height: 20px;" // 必要に応じて高さを固定
-    ).arg(g.m_tableZebraColor.name()));
+    ).arg(g.m_CSVZebraColor1.name()));
+	ui->CSVZebra2PB->setStyleSheet(QString(
+        "background-color: %1;" // 背景色をセット
+        "border: 1px solid gray;" // 枠線をつける
+        "height: 20px;" // 必要に応じて高さを固定
+    ).arg(g.m_CSVZebraColor2.name()));
 }
 
 void SettingsDialog::accept() {
@@ -56,17 +62,24 @@ void SettingsDialog::onHeadingColorButtonClicked() {
 		updateColorButtons();
 	}
 }
-void SettingsDialog::onTableHeaderColorButtonClicked() {
-	QColor selectedColor = QColorDialog::getColor(g.m_tableHeaderColor, this, "Select Headings Color");
+void SettingsDialog::onCSVHeaderColorButtonClicked() {
+	QColor selectedColor = QColorDialog::getColor(g.m_CSVHeaderColor, this, "Select Headings Color");
 	if( selectedColor.isValid() ) {
-		g.m_tableHeaderColor = selectedColor;
+		g.m_CSVHeaderColor = selectedColor;
 		updateColorButtons();
 	}
 }
-void SettingsDialog::onTableZebraColorButtonClicked() {
-	QColor selectedColor = QColorDialog::getColor(g.m_tableZebraColor, this, "Select Headings Color");
+void SettingsDialog::onCSVZebraColor1ButtonClicked() {
+	QColor selectedColor = QColorDialog::getColor(g.m_CSVZebraColor1, this, "Select Headings Color");
 	if( selectedColor.isValid() ) {
-		g.m_tableZebraColor = selectedColor;
+		g.m_CSVZebraColor1 = selectedColor;
+		updateColorButtons();
+	}
+}
+void SettingsDialog::onCSVZebraColor2ButtonClicked() {
+	QColor selectedColor = QColorDialog::getColor(g.m_CSVZebraColor2, this, "Select Headings Color");
+	if( selectedColor.isValid() ) {
+		g.m_CSVZebraColor2 = selectedColor;
 		updateColorButtons();
 	}
 }

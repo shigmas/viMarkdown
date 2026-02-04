@@ -81,8 +81,9 @@ void MainWindow::load_settings() {
 	QSettings settings;
 	g.m_editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE, 12).toInt();		//	デフォルト：12pt
 	g.m_headingsColor = settings.value(KEY_HEADINGS_COLOR, QColor("#800000")).value<QColor>();		//	デフォルト：ダークレッド
-	g.m_tableHeaderColor = settings.value(KEY_TABLE_HEADER_COLOR, QColor("lightblue")).value<QColor>();
-	g.m_tableZebraColor = settings.value(KEY_TABLE_ZEBRA_COLOR, QColor("lightyellow")).value<QColor>();
+	g.m_CSVHeaderColor = settings.value(KEY_CSV_HEADER_COLOR, QColor("lightblue")).value<QColor>();
+	g.m_CSVZebraColor1 = settings.value(KEY_CSV_ZEBRA_COLOR1, QColor("white")).value<QColor>();
+	g.m_CSVZebraColor2 = settings.value(KEY_CSV_ZEBRA_COLOR2, QColor("lightyellow")).value<QColor>();
 }
 void MainWindow::insertSearchComboBox() {
 	m_searchCB = new QComboBox;
@@ -761,8 +762,9 @@ void MainWindow::onAction_Settings() {
 	    QSettings settings;
 	    settings.setValue(KEY_EDITOR_FONT_SIZE, g.m_editorFontSize);
 	    settings.setValue(KEY_HEADINGS_COLOR, g.m_headingsColor);
-	    settings.setValue(KEY_TABLE_HEADER_COLOR, g.m_tableHeaderColor);
-	    settings.setValue(KEY_TABLE_ZEBRA_COLOR, g.m_tableZebraColor);
+	    settings.setValue(KEY_CSV_HEADER_COLOR, g.m_CSVHeaderColor);
+	    settings.setValue(KEY_CSV_ZEBRA_COLOR1, g.m_CSVZebraColor1);
+	    settings.setValue(KEY_CSV_ZEBRA_COLOR2, g.m_CSVZebraColor2);
 	    updateEditorFontSize(g.m_editorFontSize);
 	} else {
 		load_settings();		//	g を元に戻す
