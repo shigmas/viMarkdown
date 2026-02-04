@@ -600,6 +600,7 @@ void MainWindow::updateEditorFontSize(int sz) {
 		font.setFixedPitch(true);	// 明示的に固定幅として扱う設定
 		docWidget->m_mdEditor->setFont(font);
 		docWidget->m_mdEditor->updateViewportMargines();
+		docWidget->m_mdEditor->setBoldColor(g.m_boldColor);
 		docWidget->m_mdEditor->rehighlight();				//	再ハイライト
 		docWidget->m_mdEditor->viewport()->update();		//	再表示
 	}
@@ -763,6 +764,7 @@ void MainWindow::onAction_Settings() {
 	    QSettings settings;
 	    settings.setValue(KEY_EDITOR_FONT_SIZE, g.m_editorFontSize);
 	    settings.setValue(KEY_HEADINGS_COLOR, g.m_headingsColor);
+	    settings.setValue(KEY_BOLD_COLOR, g.m_boldColor);
 	    settings.setValue(KEY_CSV_HEADER_COLOR, g.m_CSVHeaderColor);
 	    settings.setValue(KEY_CSV_ZEBRA_COLOR1, g.m_CSVZebraColor1);
 	    settings.setValue(KEY_CSV_ZEBRA_COLOR2, g.m_CSVZebraColor2);

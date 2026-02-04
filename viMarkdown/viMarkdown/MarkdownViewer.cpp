@@ -14,6 +14,9 @@ using namespace std;
 
 extern Global g;
 
+bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens);
+bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign);
+
 enum {
 	ALIGHN_LEFT = 1, ALIGHN_RIGHT = 2, ALIGHN_CENTER = ALIGHN_LEFT| ALIGHN_RIGHT,
 };
@@ -50,6 +53,48 @@ void MarkdownViewer::onContentsChanged(int position, int charsRemoved, int chars
 }
 
 bool isUnderlineHeading(const QString& txt);
+#if 1
+bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens) {
+	QStringView sv(lnStr);
+	tableTokens.clear();
+	int ix = 0;
+	while( ix < sv.size() && sv[ix] == u' ' ) ++ix;		//	空白スキップ
+	if (ix < sv.size() && sv[ix] == u'|') ++ix;			//	先頭の '|' スキップ
+	while( ix < sv.size() ) {
+		int ix0 = ix;
+		while( ix < sv.size() && sv[ix] != u'|' ) {		//	'|' までループ
+			if( ix+1 < sv.size() && sv[ix] == u'\\' ) ix += 2;
+			else ++ix;
+		}
+		tableTokens.push_back(sv.mid(ix0, ix-ix0));
+		++ix;			//	'|' スキップ
+	}
+	return tableTokens.size() > 1;
+}
+bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign) {
+	tableAlign.clear();
+	QStringView sv(lnStr);
+	int ix = 0;
+	while( ix < sv.size() && sv[ix] == u' ' ) ++ix;		//	空白スキップ
+	if (ix < sv.size() && sv[ix] == u'|') ++ix;			//	先頭 '|' スキップ
+	while( ix < sv.size() ) {
+		char aln = 0;
+		while( ix < sv.size() && sv[ix] == u' ' ) ++ix;		//	空白スキップ
+		if( ix < sv.size() && sv[ix] == u':' ) aln = ALIGHN_LEFT;
+		while( ix < sv.size() && sv[ix] != u'|' ) {		//	次の'|' までループ
+			if( ix+1 < sv.size() && sv[ix] == u'\\' ) ix += 2;
+			else ++ix;
+		}
+		int i = ix - 1;
+		while( i >= 0 && sv[i] == u' ' ) --i;		//	空白スキップ
+		if( i >= 0 && sv[i] == u':' )
+			aln |= ALIGHN_RIGHT;
+		tableAlign.push_back(aln);
+		++ix;
+	}
+	return tableAlign.size() > 1;
+}
+#else
 bool MarkdownViewer::isTableLine(const QString& lnStr) {
 	QStringView sv(lnStr);
 	m_tableTokens.clear();
@@ -90,6 +135,7 @@ bool MarkdownViewer::isTableHyphenLine(const QString& lnStr) {
 	}
 	return m_tableAlign.size() > 1;
 }
+#endif
 
 void MarkdownViewer::keyPressEvent(QKeyEvent *e) {
 	if (e->key() == Qt::Key_Backspace) {
@@ -281,7 +327,7 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 		} else if( buf.startsWith("```") ) {
 			do_body(cursor);
 			do_code(cursor);
-		} else if( isTableLine(buf) && m_ln + 1 < m_lst.size() && isTableHyphenLine(m_lst[m_ln+1]) ) {
+		} else if( isTableLine(buf, m_tableTokens) && m_ln + 1 < m_lst.size() && isTableHyphenLine(m_lst[m_ln+1], m_tableAlign) ) {
 			do_body(cursor);
 			do_table(cursor);
 		} else {
@@ -297,7 +343,7 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 void MarkdownViewer::do_table(QTextCursor& cursor) {
 	QString buf = m_lst[m_ln] + "\n" + m_lst[m_ln+1] /*+ "\n"*/;
 	m_ln += 2;
-	while( m_ln < m_lst.size() && isTableLine(m_lst[m_ln]) ) {
+	while( m_ln < m_lst.size() && isTableLine(m_lst[m_ln], m_tableTokens) ) {
 		buf += "\n" + m_lst[m_ln++];
 	}
 	cursor.insertMarkdown(buf);

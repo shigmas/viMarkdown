@@ -52,8 +52,8 @@ protected:
     void	paintEvent(QPaintEvent *e) override;
     void	onCurPosChanged();
     void	onContentsChanged(int position, int charsRemoved, int charsAdded);
-    bool	isTableLine(const QString&);
-    bool	isTableHyphenLine(const QString&);
+    //bool	isTableLine(const QString&);
+    //bool	isTableHyphenLine(const QString&);
 
     void	do_body(QTextCursor&);
     void	do_body_sub(QTextCursor&, const QString&);
