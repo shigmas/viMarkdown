@@ -211,10 +211,10 @@ void MarkdownViewer::do_body_sub(QTextCursor& cursor, const QString &buf) {
 void MarkdownViewer::do_body(QTextCursor& cursor) {
 	if( m_bodyList.isEmpty() ) return;
 #if 1
-	static QRegularExpression re("\\[\\[(.+?)\\]\\]");		//	[[タイトル]]
+	//封印static QRegularExpression re("\\[\\[(.+?)\\]\\]");		//	[[タイトル]]
 	QString buf;
 	for(auto txt: m_bodyList) {
-		txt.replace(re, "<a href=\"\\1\" class=\"wiki-link\">\\1</a>");
+		//封印txt.replace(re, "<a href=\"\\1\" class=\"wiki-link\">\\1</a>");
 		buf += txt + "\n";
 	}
 	if( !buf.isEmpty() ) {
