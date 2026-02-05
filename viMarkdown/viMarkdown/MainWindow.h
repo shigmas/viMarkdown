@@ -137,6 +137,7 @@ protected:
     void	onAction_NextTab();
     void	onAction_PrevTab();
     void	onAction_ToggleFocus();
+    void	onAction_SwitchToAltFile();
     void	onAction_About();
     void	onAction_AddThisFavorite();
     void	onAction_Settings();

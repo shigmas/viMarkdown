@@ -95,6 +95,7 @@
     <addaction name="action_NextTab"/>
     <addaction name="action_PrevTab"/>
     <addaction name="action_ToggleFocus"/>
+    <addaction name="action_SwitchToAltFile"/>
    </widget>
    <widget class="QMenu" name="menu_Edit">
     <property name="title">
@@ -828,6 +829,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+\</string>
+   </property>
+  </action>
+  <action name="action_SwitchToAltFile">
+   <property name="text">
+    <string>Switch to &amp;Alt File</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+^</string>
    </property>
   </action>
  </widget>

@@ -296,6 +296,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_NextTab, &QAction::triggered, this, &MainWindow::onAction_NextTab);
 	connect(ui->action_PrevTab, &QAction::triggered, this, &MainWindow::onAction_PrevTab);
 	connect(ui->action_ToggleFocus, &QAction::triggered, this, &MainWindow::onAction_ToggleFocus);
+	connect(ui->action_SwitchToAltFile, &QAction::triggered, this, &MainWindow::onAction_SwitchToAltFile);
 	connect(ui->outlineBar, &QDockWidget::visibilityChanged, this, &MainWindow::onOutlineBarVisibilityChanged);
 	connect(ui->treeWidget, &QTreeWidget::currentItemChanged, this, &MainWindow::onTreeCurrentItemChanged);
 	//connect(ui->treeWidget, &QTreeWidget::itemDoubleClicked, this, &MainWindow::onTreeItemDoubleClicked);
@@ -1458,6 +1459,18 @@ void MainWindow::onAction_ToggleFocus() {
 		docWidget->m_mdEditor->setFocus();
 	docWidget->m_mdEditor->viewport()->update();
 	docWidget->m_markdownViewer->viewport()->update();
+}
+void MainWindow::onAction_SwitchToAltFile() {
+	//auto fullPath = m_altFullPath;
+	//m_altFullPath = m_curFullPath
+	if( !m_altFullPath.isEmpty() )
+		do_open(m_altFullPath);
+	else if( !m_altTitle.isEmpty() ) {
+		//	m_altTitle 文書をアクティブに
+		int ix = tabIndexOf(m_altTitle, m_altFullPath);
+		if( ix >= 0 )
+			ui->tabWidget->setCurrentIndex(ix);
+	}
 }
 void MainWindow::onOutlineBarVisibilityChanged(bool v) {
 	ui->action_OutlineBar->setChecked(v);
