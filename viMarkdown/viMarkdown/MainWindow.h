@@ -162,6 +162,10 @@ private:
     //QString	m_plainText;
     //QString	m_htmlText;
     //MarkdownToHtmlConvertor	m_htmlComvertor;
+    QString		m_curFullPath;			//	現文書フルパス
+    QString		m_curTitle;				//	現文書タイトル
+    QString		m_altFullPath;			//	直前文書フルパス
+    QString		m_altTitle;				//	直前文書タイトル
     class QLabel		*m_lcLabel;		//	行カラムラベル
     class QLabel		*m_encLabel;	//	文字エンコーディングラベル
     class QComboBox				*m_encodingCombo = nullptr;

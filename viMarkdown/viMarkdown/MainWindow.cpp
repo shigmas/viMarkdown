@@ -352,6 +352,11 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 void MainWindow::onCurrentTabChanged(int ix) {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
+	//qDebug() << "MainWindow::onCurrentTabChanged()";
+	m_altFullPath = m_curFullPath;
+	m_altTitle = m_curTitle;
+	m_curFullPath = docWidget->m_fullPath;
+	m_curTitle = docWidget->m_title;
 	//QString mess = QString("encoding = %1").arg((int)docWidget->m_encoding);
 	//QString mess = docWidget->m_encoding.nema();
 	if( !docWidget->m_fullPath.isEmpty() ) {
