@@ -524,7 +524,8 @@ void MarkdownViewer::do_CSV(QTextCursor& cursor) {
 				}
 				cellCursor.setCharFormat(charFormat);
 				cellCursor.setBlockFormat(blockFormat);
-			    cellCursor.insertText(ll[row][col]);
+			    //cellCursor.insertText(ll[row][col]);
+			    cellCursor.insertMarkdown(ll[row][col]);
 			}
 		}
 	}
