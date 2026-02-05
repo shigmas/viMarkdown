@@ -600,8 +600,8 @@
 0599 ◎ C 02/05 02/05 01026│ToDo│MarkdownViewer::isTableLine(), isTableHyphenLine() をメンバ変数→グローバル関数に変更
 0600 ◎ C 02/05 02/05 01026│ToDo│void MarkdownEditor::convert_MarkdownTable_CSV() 実装
 0601 ◎ C 02/05 02/05 01026│問題│CSV Zebra color2 ボタンで color1 が変更されてしまう
-0602 ● C 02/05            │ToDo│設定ダイアログ：色を選択した時点で、エディタ・ビューワに反映
-0603 ● C 02/05            │ToDo│
+0602 ◎ C 02/05 02/05 01027│ToDo│設定ダイアログ：色を選択した時点で、エディタ・ビューワに反映
+0603 ● C 02/05            │問題│表形式 → CSV形式変換：セルテキスト中のダブルクォートが "" にならない
 0604 ● C 02/05            │ToDo│
 0605 ● C 02/05            │ToDo│
 0606 ● C 02/05            │ToDo│

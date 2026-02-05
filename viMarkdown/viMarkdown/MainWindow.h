@@ -91,6 +91,7 @@ protected:
     void	syncPreviewCursorWithEditor();
     void	onChangeEditorFontSize(int);
     void	updateEditorFontSize(int);
+    void	onSettingsChanged();
 
     void	onAction_New();
     void	onAction_NewTab();

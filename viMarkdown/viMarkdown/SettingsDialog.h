@@ -25,6 +25,10 @@ protected:
 	void onCSVZebraColor2ButtonClicked();
 	void	updateColorButtons();
 
+signals:
+	void	settingsChanged();
+
+
 private:
 	Ui::SettingsDialogClass *ui;
 };

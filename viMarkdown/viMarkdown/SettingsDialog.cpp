@@ -66,6 +66,7 @@ void SettingsDialog::onHeadingColorButtonClicked() {
 	if( selectedColor.isValid() ) {
 		g.m_headingsColor = selectedColor;
 		updateColorButtons();
+		emit settingsChanged();
 	}
 }
 void SettingsDialog::onBoldColorButtonClicked() {
@@ -73,6 +74,7 @@ void SettingsDialog::onBoldColorButtonClicked() {
 	if (selectedColor.isValid()) {
 		g.m_boldColor = selectedColor;
 		updateColorButtons();
+		emit settingsChanged();
 	}
 }
 void SettingsDialog::onCSVHeaderColorButtonClicked() {
@@ -80,6 +82,7 @@ void SettingsDialog::onCSVHeaderColorButtonClicked() {
 	if( selectedColor.isValid() ) {
 		g.m_CSVHeaderColor = selectedColor;
 		updateColorButtons();
+		emit settingsChanged();
 	}
 }
 void SettingsDialog::onCSVZebraColor1ButtonClicked() {
@@ -87,6 +90,7 @@ void SettingsDialog::onCSVZebraColor1ButtonClicked() {
 	if( selectedColor.isValid() ) {
 		g.m_CSVZebraColor1 = selectedColor;
 		updateColorButtons();
+		emit settingsChanged();
 	}
 }
 void SettingsDialog::onCSVZebraColor2ButtonClicked() {
@@ -94,6 +98,7 @@ void SettingsDialog::onCSVZebraColor2ButtonClicked() {
 	if( selectedColor.isValid() ) {
 		g.m_CSVZebraColor2 = selectedColor;
 		updateColorButtons();
+		emit settingsChanged();
 	}
 }
 

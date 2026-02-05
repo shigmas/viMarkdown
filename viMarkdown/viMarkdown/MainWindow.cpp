@@ -758,7 +758,9 @@ void MainWindow::onAction_AddThisFavorite() {
 	settings.setValue(KEY_FAVORITE_FILES, favoriteFilePaths);
 }
 void MainWindow::onAction_Settings() {
+	Global g0 = g;
 	SettingsDialog dlg(this);
+	connect(&dlg, &SettingsDialog::settingsChanged, this, &MainWindow::onSettingsChanged);
 	if (dlg.exec() == QDialog::Accepted) {
 	    //qDebug() << "QDialog::Accepted";
 	    QSettings settings;
@@ -768,10 +770,15 @@ void MainWindow::onAction_Settings() {
 	    settings.setValue(KEY_CSV_HEADER_COLOR, g.m_CSVHeaderColor);
 	    settings.setValue(KEY_CSV_ZEBRA_COLOR1, g.m_CSVZebraColor1);
 	    settings.setValue(KEY_CSV_ZEBRA_COLOR2, g.m_CSVZebraColor2);
-	    updateEditorFontSize(g.m_editorFontSize);
+	    //updateEditorFontSize(g.m_editorFontSize);
 	} else {
-		load_settings();		//	g を元に戻す
+		//load_settings();		//	g を元に戻す
+		g = g0;
+	    updateEditorFontSize(g.m_editorFontSize);
 	}
+}
+void MainWindow::onSettingsChanged() {
+	updateEditorFontSize(g.m_editorFontSize);
 }
 void MainWindow::onAction_Exit() {
 	this->close(); // メインウィンドウを閉じる
