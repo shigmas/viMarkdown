@@ -21,7 +21,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 	connect(ui->boldColorPB, &QPushButton::clicked, this, &SettingsDialog::onBoldColorButtonClicked);
 	connect(ui->CSVHeaderPB, &QPushButton::clicked, this, &SettingsDialog::onCSVHeaderColorButtonClicked);
 	connect(ui->CSVZebra1PB, &QPushButton::clicked, this, &SettingsDialog::onCSVZebraColor1ButtonClicked);
-	connect(ui->CSVZebra2PB, &QPushButton::clicked, this, &SettingsDialog::onCSVZebraColor1ButtonClicked);
+	connect(ui->CSVZebra2PB, &QPushButton::clicked, this, &SettingsDialog::onCSVZebraColor2ButtonClicked);
 }
 
 SettingsDialog::~SettingsDialog()

@@ -1144,6 +1144,21 @@ bool findCSVBlock(QTextCursor &cursor) {
 	}
 	return false;
 }
+bool findTableHeader(QTextCursor &cursor) {
+	QTextBlock block = cursor.block();
+	bool curline = true;
+	while( block.isValid() ) {
+		if( block.text().startsWith("```CSV", Qt::CaseInsensitive)) {
+			cursor.setPosition(block.position());
+			return true;
+		}
+		else if (block.text().startsWith("```") && !curline)
+			break;
+		curline = false;
+		block = block.previous();
+	}
+	return false;
+}
 void MarkdownEditor::convert_CSV_MarkdownTable() {
 	QTextCursor cursor = this->textCursor();
 	if( !findCSVBlock(cursor) ) return;
@@ -1189,6 +1204,8 @@ void MarkdownEditor::convert_CSV_MarkdownTable() {
 	setTextCursor(cursor);
 }
 void MarkdownEditor::convert_MarkdownTable_CSV() {
+	QTextCursor cursor = this->textCursor();
+	if( !findTableHeader(cursor) ) return;
 }
 void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int charsAdded) {
 	if( m_processing || (charsRemoved == 0 && charsAdded == 0) ) return;
