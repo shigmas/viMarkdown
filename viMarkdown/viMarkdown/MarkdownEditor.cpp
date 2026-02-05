@@ -439,6 +439,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	QPlainTextEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
 }
 void MarkdownEditor::mouseReleaseEvent(QMouseEvent *event) {
+#if 0	//	[[ ]] は当面封印
 	if( (event->modifiers() & Qt::ControlModifier) == 0 ) return;
 	auto pos = event->position();
 	QTextCursor cursor = cursorForPosition(pos.toPoint());
@@ -454,6 +455,8 @@ void MarkdownEditor::mouseReleaseEvent(QMouseEvent *event) {
 	if( !title.endsWith(".md") ) title += ".md";
 	//qDebug() << "title = " << title;
 	emit title_clicked(title);
+#endif
+	QPlainTextEdit::mouseReleaseEvent(event);
 }
 void MarkdownEditor::wheelEvent(QWheelEvent *event) {
 	qDebug() << "MarkdownEditor::wheelEvent()";
