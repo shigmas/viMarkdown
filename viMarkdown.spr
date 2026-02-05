@@ -491,7 +491,7 @@
 0489 ◎ C 01/27 01/27 01019│問題│ツールバーがフローティング状態のとき、List, 連番, Checkbox アイコンを押下すると、その左の検索ボックスにフォーカスが設定されてしまう
 0490 ◎ C 01/27 01/27 01019│ToDo│Edit > Insert > 今日の日付：(&2) MM-DD, (&3) DD-MMM-YYYY 追加
 0491 ◎ C 01/27 02/04      │ToDo│File > &Reload、Recent は (&1) に変更？
-0492 ● B 01/27            │ToDo│表形式 → CSV形式変換
+0492 ◎ B 01/27 02/05 01026│ToDo│表形式 → CSV形式変換
 0493 ◎ C 01/27 02/04 01020│ToDo│CSV形式 → 表形式変換
 0494 ◎ C 01/28 01/28 01019│ToDo│ステータスバー右端に文字エンコード（with BOM）表示
 0495 ◎ C 01/28 01/28 01019│ToDo│エンコーディング種別、BOM 有/無 情報を DocWidget に保存
@@ -598,9 +598,9 @@
 0597 ◎ C 02/05 02/05 01026│問題│ボールドカラー変更がすぐにエディタテキストに反映されない
 0598 ◎ C 02/05 02/05 01026│問題│文書を閉じて別の文書を開くとボールドカラーがリセットされてしまう
 0599 ◎ C 02/05 02/05 01026│ToDo│MarkdownViewer::isTableLine(), isTableHyphenLine() をメンバ変数→グローバル関数に変更
-0600 ● C 02/05            │ToDo│void MarkdownEditor::convert_MarkdownTable_CSV() 実装
+0600 ◎ C 02/05 02/05 01026│ToDo│void MarkdownEditor::convert_MarkdownTable_CSV() 実装
 0601 ◎ C 02/05 02/05 01026│問題│CSV Zebra color2 ボタンで color1 が変更されてしまう
-0602 ● C 02/05            │ToDo│
+0602 ● C 02/05            │ToDo│設定ダイアログ：色を選択した時点で、エディタ・ビューワに反映
 0603 ● C 02/05            │ToDo│
 0604 ● C 02/05            │ToDo│
 0605 ● C 02/05            │ToDo│

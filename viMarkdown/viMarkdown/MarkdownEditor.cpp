@@ -12,6 +12,8 @@
 
 extern Global g;
 extern bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment, bool &commented);
+extern bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens);
+extern bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign);
 
 class LnAreaWidget : public QWidget {
 public:
@@ -1145,19 +1147,20 @@ bool findCSVBlock(QTextCursor &cursor) {
 	return false;
 }
 bool findTableHeader(QTextCursor &cursor) {
+	QList<QStringView> tableTokens;
 	QTextBlock block = cursor.block();
-	bool curline = true;
+	bool found = false;
 	while( block.isValid() ) {
-		if( block.text().startsWith("```CSV", Qt::CaseInsensitive)) {
-			cursor.setPosition(block.position());
-			return true;
-		}
-		else if (block.text().startsWith("```") && !curline)
+		if( !isTableLine(block.text(), tableTokens) )
 			break;
-		curline = false;
+		found = true;
 		block = block.previous();
 	}
-	return false;
+	if( found ) {
+		cursor.setPosition(block.next().position());
+		return true;
+	} else
+		return false;
 }
 void MarkdownEditor::convert_CSV_MarkdownTable() {
 	QTextCursor cursor = this->textCursor();
@@ -1206,6 +1209,31 @@ void MarkdownEditor::convert_CSV_MarkdownTable() {
 void MarkdownEditor::convert_MarkdownTable_CSV() {
 	QTextCursor cursor = this->textCursor();
 	if( !findTableHeader(cursor) ) return;
+	QTextBlock block = cursor.block();
+	int startPosition = block.position();
+	int endPosition = -1;
+	bool initial = true;
+	QString mdtext = "```CSV\n";;
+	QList<QStringView> tableTokens;
+    while( block.isValid() && isTableLine(block.text(), tableTokens) ) {
+	    for(int i = 0; i < tableTokens.size(); ++i) {
+	    	mdtext += QString(u'"') + tableTokens[i] + QString(u'"');
+	    	if( i+1 < tableTokens.size() )
+	    		mdtext += ", ";
+	    	else
+	    		mdtext += "\n";
+	    }
+	    if( initial ) {
+	    	initial = false;
+		    if( !(block = block.next()).isValid() ) break;	//	ハイフン行をスキップ
+	    }
+	    block = block.next();
+    }
+	endPosition = block.position();
+	cursor.setPosition(startPosition);
+	cursor.setPosition(endPosition, QTextCursor::KeepAnchor);
+	cursor.insertText(mdtext + "```\n");
+	setTextCursor(cursor);
 }
 void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int charsAdded) {
 	if( m_processing || (charsRemoved == 0 && charsAdded == 0) ) return;
