@@ -440,10 +440,11 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
 	//QTextEdit *mdEditor = new QTextEdit(splitter);
 	mdEditor->setPlaceholderText("\nここにMarkdownを入力\n"
-									"\nマークダウン書式：\n# タイトル\n## 大見出し\n"
+									"\nマークダウン書式：\n# タイトル\n## 大見出し\n### 中見出し\n"
 									"本文...（空行：段落区切り）\n行末に半角スペース2つ：強制改行\n"
 									"- リスト\n1. 連番\n"
-									"|見出し|見出し|\n|-----:|------|\n|   123|abc   |\n...");
+									"|見出し|見出し|\n|-----:|------|\n|   123|abc   |\n\n"
+									"```CSV\nCSV data...\n```\n");
 	MarkdownViewer *markdownViewer = docWidget->m_markdownViewer = new MarkdownViewer(this, splitter);
 	//##markdownViewer->setReadOnly(true); // プレビューなので読み取り専用に
 	markdownViewer->setMouseTracking(true); // マウスの動きを常に追跡
