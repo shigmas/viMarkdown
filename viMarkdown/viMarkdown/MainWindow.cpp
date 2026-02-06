@@ -247,6 +247,12 @@ void MainWindow::onAction_FindWord() {
 	m_searchCB->setCurrentText(cursor.selectedText());
 	do_find();
 }
+void MainWindow::onAction_ClearSearchHighlights() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	MarkdownEditor *mdEditor = docWidget->m_mdEditor;
+	mdEditor->highlightSearchText("");
+}
 void MainWindow::setup_connections() {
 	connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainWindow::onCurrentTabChanged);
 	connect(ui->menu_RecentFiles, &QMenu::aboutToShow, this, &MainWindow::onAboutToShow_RecentFiles);
@@ -287,6 +293,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_ForwardAgain, &QAction::triggered, this, &MainWindow::onAction_ForwardAgain);
 	connect(ui->action_BackwardAgain, &QAction::triggered, this, &MainWindow::onAction_BackwardAgain);
 	connect(ui->action_FindWord, &QAction::triggered, this, &MainWindow::onAction_FindWord);
+	connect(ui->action_ClearSearchHighlights, &QAction::triggered, this, &MainWindow::onAction_ClearSearchHighlights);
 	connect(ui->action_KeisenMode, &QAction::toggled, this, &MainWindow::onAction_KeisenMode);
 	connect(ui->action_ThinKeisen, &QAction::toggled, this, &MainWindow::onAction_ThinKeisen);
 	connect(ui->action_ThickKeisen, &QAction::toggled, this, &MainWindow::onAction_ThickKeisen);

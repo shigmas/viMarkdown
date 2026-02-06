@@ -96,12 +96,14 @@
     <ClCompile Include="MarkdownViewer.cpp" />
     <ClCompile Include="MarkdownEditor.cpp" />
     <ClCompile Include="MarkdownToHtmlConvertor.cpp" />
+    <ClCompile Include="ReplaceDialog.cpp" />
     <ClCompile Include="SettingsDialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="MainWindow.ui" />
     <QtMoc Include="MainWindow.h" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="main.cpp" />
+    <QtUic Include="ReplaceDialog.ui" />
     <QtUic Include="SettingsDialog.ui" />
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +112,7 @@
     <QtMoc Include="MarkdownEditor.h" />
     <ClInclude Include="MarkdownToHtmlConvertor.h" />
     <QtMoc Include="SettingsDialog.h" />
+    <QtMoc Include="ReplaceDialog.h" />
     <ClInclude Include="ver.h" />
   </ItemGroup>
   <ItemGroup>

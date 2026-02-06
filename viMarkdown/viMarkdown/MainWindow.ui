@@ -176,6 +176,7 @@
     <addaction name="action_ForwardAgain"/>
     <addaction name="action_BackwardAgain"/>
     <addaction name="action_FindWord"/>
+    <addaction name="action_ClearSearchHighlights"/>
    </widget>
    <widget class="QMenu" name="menu_Tool">
     <property name="title">
@@ -866,6 +867,17 @@
    </property>
    <property name="shortcut">
     <string>Alt+Right</string>
+   </property>
+  </action>
+  <action name="action_ClearSearchHighlights">
+   <property name="text">
+    <string>&amp;ClearSearchHighlights</string>
+   </property>
+   <property name="toolTip">
+    <string>ClearSearchHighlights</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+F3</string>
    </property>
   </action>
  </widget>
