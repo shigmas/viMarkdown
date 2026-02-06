@@ -222,6 +222,7 @@ void MainWindow::do_find(bool backward) {
 			qDebug() << "not found";
 		}
 	}
+	mdEditor->highlightSearchText(srcText);
 	mdEditor->setFocus();
 }
 void MainWindow::onSearchCBActivated() {

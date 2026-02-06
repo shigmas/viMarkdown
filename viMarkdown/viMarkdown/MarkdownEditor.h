@@ -46,6 +46,7 @@ public:
     void	setProcessing(bool b) { m_processing = b; }
     void	rehighlight();
     void	setBoldColor(QColor);
+    void	highlightSearchText(const QString &searchText);
 
 signals:
     void	tab_pressed();

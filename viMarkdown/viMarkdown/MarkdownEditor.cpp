@@ -1427,6 +1427,36 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
     p2.drawLine(0, y, lnAreaWidth(), y);
 #endif
 }
+void MarkdownEditor::highlightSearchText(const QString &searchText) {
+	QList<QTextEdit::ExtraSelection> extraSelections;
+    if (searchText.isEmpty()) {
+        setExtraSelections(extraSelections);
+        return;
+    }
+
+    // 検索時の書式設定
+    QTextCharFormat format;
+    format.setBackground(Qt::yellow);       // 背景を黄色に
+    format.setForeground(Qt::black);        // 文字を黒に（必要に応じて）
+
+    // ドキュメント全体から検索
+    QTextDocument *doc = document();
+    QTextCursor cursor(doc);
+
+    while (!cursor.isNull() && !cursor.atEnd()) {
+        // 次のヒットを検索
+        // 引数に FindFlags (大文字小文字区別など) を指定可能
+        cursor = doc->find(searchText, cursor);
+
+        if (!cursor.isNull()) {
+            QTextEdit::ExtraSelection selection;
+            selection.format = format;
+            selection.cursor = cursor;
+            extraSelections.append(selection);
+        }
+    }
+    setExtraSelections(extraSelections);    // エディタに適用
+}
 void MarkdownEditor::updateLnArea(const QRect &rect, int dy) {
 	if (dy)
         m_lnAreaWidget->scroll(0, dy);
