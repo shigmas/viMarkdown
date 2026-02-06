@@ -18,6 +18,8 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 	updateColorButtons();
 	//QColor color("#800000");
 	connect(ui->headingsColorPB, &QPushButton::clicked, this, &SettingsDialog::onHeadingColorButtonClicked);
+	connect(ui->activeLineColorPB, &QPushButton::clicked, this, &SettingsDialog::onActiveLineColorButtonClicked);
+	connect(ui->inactiveLineColorPB, &QPushButton::clicked, this, &SettingsDialog::onInactiveLineColorButtonClicked);
 	connect(ui->boldColorPB, &QPushButton::clicked, this, &SettingsDialog::onBoldColorButtonClicked);
 	connect(ui->CSVHeaderPB, &QPushButton::clicked, this, &SettingsDialog::onCSVHeaderColorButtonClicked);
 	connect(ui->CSVZebra1PB, &QPushButton::clicked, this, &SettingsDialog::onCSVZebraColor1ButtonClicked);
@@ -34,6 +36,16 @@ void SettingsDialog::updateColorButtons() {
         "border: 1px solid gray;" // 枠線をつける
         "height: 20px;" // 必要に応じて高さを固定
     ).arg(g.m_headingsColor.name()));
+	ui->activeLineColorPB->setStyleSheet(QString(
+        "background-color: %1;" // 背景色をセット
+        "border: 1px solid gray;" // 枠線をつける
+        "height: 20px;" // 必要に応じて高さを固定
+    ).arg(g.m_activeLnColor.name()));
+	ui->inactiveLineColorPB->setStyleSheet(QString(
+        "background-color: %1;" // 背景色をセット
+        "border: 1px solid gray;" // 枠線をつける
+        "height: 20px;" // 必要に応じて高さを固定
+    ).arg(g.m_inactiveLnColor.name()));
 	ui->boldColorPB->setStyleSheet(QString(
         "background-color: %1;" // 背景色をセット
         "border: 1px solid gray;" // 枠線をつける
@@ -60,6 +72,22 @@ void SettingsDialog::accept() {
 	QSettings settings;
 	settings.setValue(KEY_EDITOR_FONT_SIZE, ui->editorFontSize->value());
 	QDialog::accept();
+}
+void SettingsDialog::onActiveLineColorButtonClicked() {
+	QColor selectedColor = QColorDialog::getColor(g.m_activeLnColor, this, "Select Headings Color");
+	if (selectedColor.isValid()) {
+		g.m_activeLnColor = selectedColor;
+		updateColorButtons();
+		emit settingsChanged();
+	}
+}
+void SettingsDialog::onInactiveLineColorButtonClicked() {
+	QColor selectedColor = QColorDialog::getColor(g.m_inactiveLnColor, this, "Select Headings Color");
+	if (selectedColor.isValid()) {
+		g.m_inactiveLnColor = selectedColor;
+		updateColorButtons();
+		emit settingsChanged();
+	}
 }
 void SettingsDialog::onHeadingColorButtonClicked() {
 	QColor selectedColor = QColorDialog::getColor(g.m_headingsColor, this, "Select Headings Color");

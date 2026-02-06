@@ -179,7 +179,8 @@ void MarkdownViewer::paintEvent(QPaintEvent *e) {
 	//	行カーソル描画
 	QRect rect = cursorRect();
     //QPen pen(hasFocus() ? Qt::red : Qt::gray, 1); // 赤色、太さ1px
-    QPen pen(Qt::red, 1); // 赤色、太さ1px
+    //QPen pen(Qt::red, 1); // 赤色、太さ1px
+    QPen pen(hasFocus() ? g.m_activeLnColor: g.m_inactiveLnColor, 1); // 色、太さ1px
     if( !hasFocus() ) pen.setStyle(Qt::DashLine);	//	破線
     p.setPen(pen);
     int y = rect.bottom();

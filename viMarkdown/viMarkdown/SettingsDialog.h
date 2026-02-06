@@ -19,6 +19,8 @@ protected:
 	void accept() override;
 
 	void onHeadingColorButtonClicked();
+	void onActiveLineColorButtonClicked();
+	void onInactiveLineColorButtonClicked();
 	void onBoldColorButtonClicked();
 	void onCSVHeaderColorButtonClicked();
 	void onCSVZebraColor1ButtonClicked();

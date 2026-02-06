@@ -10,6 +10,8 @@ namespace Ui { class MainWindowClass; };
 QT_END_NAMESPACE
 
 #define	KEY_EDITOR_FONT_SIZE		u"editorFontSize"
+#define	KEY_ACTIVA_LINE_COLOR		u"activeLineColor"
+#define	KEY_INACTIVA_LINE_COLOR		u"inactiveLineColor"
 #define	KEY_HEADINGS_COLOR			u"headingsColor"
 #define	KEY_BOLD_COLOR				u"boldColor"
 #define	KEY_CSV_HEADER_COLOR		u"CSVHeadingsColor"
@@ -24,6 +26,8 @@ using QStringPair = std::pair<QString, QString>;
 
 struct Global {
 	int		m_editorFontSize;
+	QColor	m_activeLnColor;		//	アクティブ時アンダーライン行カーソル色
+	QColor	m_inactiveLnColor;		//	非アクティブ時アンダーライン行カーソル色
 	QColor	m_headingsColor;
 	QColor	m_boldColor;
 	QColor	m_CSVHeaderColor;
