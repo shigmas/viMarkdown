@@ -18,6 +18,10 @@ QT_END_NAMESPACE
 
 class DocWidget;
 
+#define		N_PATH_HIST		32
+
+using QStringPair = std::pair<QString, QString>;
+
 struct Global {
 	int		m_editorFontSize;
 	QColor	m_headingsColor;
@@ -172,6 +176,7 @@ private:
     class QComboBox				*m_encodingCombo = nullptr;
     class QComboBox				*m_searchCB = nullptr;
     class QFileSystemWatcher	*m_watcher;
+    QList<QStringPair>			m_pathTitleList;
 
     Ui::MainWindowClass *ui;
 };

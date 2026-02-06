@@ -1,4 +1,5 @@
 ﻿#include <QPlainTextEdit>
+#include <QTextEdit>
 #include <QTextCursor>
 #include <QTextBlock>
 #include <QSyntaxHighlighter>
@@ -304,7 +305,7 @@ private:
 };
 //----------------------------------------------------------------------
 MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
-	: m_mainWindow(mainWindow), QPlainTextEdit(parent)
+	: m_mainWindow(mainWindow), MarkdownBaseEdit(parent)
 {
 	m_highlighter = new MarkdownHighlighter(this->document());
 #if 0
@@ -354,7 +355,7 @@ void MarkdownEditor::setLineSpacing(int percentage) {
 }
 void MarkdownEditor::inputMethodEvent(QInputMethodEvent *event) {
 	m_isComposing = !event->preeditString().isEmpty();
-    QPlainTextEdit::inputMethodEvent(event);
+    MarkdownBaseEdit::inputMethodEvent(event);
 }
 void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	//static QRegularExpression re(R"(^\d[\.\)] )");
@@ -390,7 +391,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 			else if( mtxt.startsWith("> ") )
 				atxt += "> ";
 			//cursor.insertText("\n" + atxt);
-			QPlainTextEdit::keyPressEvent(e);		//	改行挿入
+			MarkdownBaseEdit::keyPressEvent(e);		//	改行挿入
 			if( !atxt.isEmpty() )
 				cursor.insertText(atxt);
 			// カーソル位置を画面内に維持
@@ -436,7 +437,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 			m_processing = false;
 		}
 	}
-	QPlainTextEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
+	MarkdownBaseEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
 }
 void MarkdownEditor::mouseReleaseEvent(QMouseEvent *event) {
 #if 0	//	[[ ]] は当面封印
@@ -456,7 +457,7 @@ void MarkdownEditor::mouseReleaseEvent(QMouseEvent *event) {
 	//qDebug() << "title = " << title;
 	emit title_clicked(title);
 #endif
-	QPlainTextEdit::mouseReleaseEvent(event);
+	MarkdownBaseEdit::mouseReleaseEvent(event);
 }
 void MarkdownEditor::wheelEvent(QWheelEvent *event) {
 	qDebug() << "MarkdownEditor::wheelEvent()";
@@ -465,7 +466,7 @@ void MarkdownEditor::wheelEvent(QWheelEvent *event) {
 		emit changeFontSize(event->angleDelta().y());
 		event->accept();
 	} else
-		QPlainTextEdit::wheelEvent(event);
+		MarkdownBaseEdit::wheelEvent(event);
 }
 void MarkdownEditor::setCursorAtNthPat(int srcHeadingBlockNum, QString pat, int nth, bool tail) {		//	nth: 見出し行から何番目か（>0）
 	qDebug() << QString("MarkdownEditor::setCursorAtNthPat(%1, '%2', %3,").arg(srcHeadingBlockNum).arg(pat).arg(nth) << tail << ")";
@@ -501,13 +502,13 @@ int MarkdownEditor::nColumn(const QString &text) const {
 	int fullWidth = fm.horizontalAdvance(text);
 	return fullWidth / halfWidth;
 }
-int getVisualColumn(const QString&text, QPlainTextEdit *editor) {
+int getVisualColumn(const QString&text, MarkdownBaseEdit *editor) {
 	QFontMetrics fm(editor->font());
 	int halfWidth = fm.horizontalAdvance("A"); 
 	int fullWidth = fm.horizontalAdvance(text);
 	return fullWidth / halfWidth;
 }
-int getVisualColumn(QTextCursor cursor, QPlainTextEdit *editor) {
+int getVisualColumn(QTextCursor cursor, MarkdownBaseEdit *editor) {
 	// 1. 行頭から現在のカーソル位置までのテキストを取得
 	QString text = cursor.block().text().left(cursor.positionInBlock());
 	// 2. フォントの計測準備
@@ -1373,7 +1374,7 @@ void drawEOF(QPainter &p, QRect r) {
 	p.drawLine(x, y_mid, x + char_w - 1, y_mid);
 }
 void MarkdownEditor::paintEvent(QPaintEvent *e) {
-	QPlainTextEdit::paintEvent(e); // 先にテキストを普通に描画
+	MarkdownBaseEdit::paintEvent(e); // 先にテキストを普通に描画
 
 	QPainter p(viewport());
 	//p.setPen(QColor(0, 120, 215, 80)); // 薄い青色（透過度 80）
@@ -1508,7 +1509,7 @@ void MarkdownEditor::lnAreaMouseReleaseEvent(QMouseEvent *event) {
     m_lnAreaPressed = false;
 }
 void MarkdownEditor::resizeEvent(QResizeEvent *event) {
-    QPlainTextEdit::resizeEvent(event);
+    MarkdownBaseEdit::resizeEvent(event);
 
     QRect cr = contentsRect();
     m_lnAreaWidget->setGeometry(QRect(cr.left(), cr.top(), lnAreaWidth(), cr.height()));

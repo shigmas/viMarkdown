@@ -8,7 +8,10 @@ const int LN_WIDTH = 7;
 
 class MainWindow;
 
-class MarkdownEditor : public QPlainTextEdit
+#define		MarkdownBaseEdit	QPlainTextEdit
+//#define		MarkdownBaseEdit	QTextEdit		//	QPlainTextEdit にしかないシグナルがあるため無理
+
+class MarkdownEditor : public MarkdownBaseEdit
 {
 	Q_OBJECT
 public:
