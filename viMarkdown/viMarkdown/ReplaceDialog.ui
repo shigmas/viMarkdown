@@ -107,6 +107,20 @@
       </spacer>
      </item>
      <item>
+      <widget class="QPushButton" name="pushButton_2">
+       <property name="text">
+        <string>Search &amp;Prev</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="text">
+        <string>Search &amp;Next</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="replaceNextButton">
        <property name="maximumSize">
         <size>
@@ -115,7 +129,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Replace &amp; Next</string>
+        <string>&amp;Replace &amp; Next</string>
        </property>
       </widget>
      </item>
