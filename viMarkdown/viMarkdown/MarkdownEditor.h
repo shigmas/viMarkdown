@@ -51,7 +51,7 @@ public:
 signals:
     void	tab_pressed();
     void	esc_pressed();
-    void	title_clicked(const QString title);
+    //void	title_clicked(const QString title, const QStrin);
     void	changeFontSize(int delta);
 
 protected:

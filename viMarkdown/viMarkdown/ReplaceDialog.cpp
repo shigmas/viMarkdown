@@ -12,6 +12,7 @@ ReplaceDialog::ReplaceDialog(QWidget *parent)
 	ui->searchCB->addItems(history);
 	connect(ui->searchPrev, &QPushButton::clicked, this, &ReplaceDialog::onSearchPrev);
 	connect(ui->searchNext, &QPushButton::clicked, this, &ReplaceDialog::onSearchNext);
+	connect(ui->replaceNext, &QPushButton::clicked, this, &ReplaceDialog::onReplaceNext);
 }
 
 ReplaceDialog::~ReplaceDialog()
@@ -27,5 +28,11 @@ void ReplaceDialog::onSearchNext() {
 	QString txt = ui->searchCB->currentText();
 	if( txt.isEmpty() ) return;
 	emit do_search(txt, false);
+}
+void ReplaceDialog::onReplaceNext() {
+	QString src = ui->searchCB->currentText();
+	QString dst = ui->replaceCB->currentText();
+	if( src.isEmpty() ) return;
+	emit do_replace_next(src, dst);
 }
 

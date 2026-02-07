@@ -144,9 +144,20 @@ void MarkdownViewer::keyPressEvent(QKeyEvent *e) {
 	}
 	QTextEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
 }
+QString splitName(QString& anchor) {
+	QString name;
+	int ix = anchor.indexOf(u'#');
+	if( ix >= 0 ) {
+		name = anchor.mid(ix+1);
+		anchor = anchor.left(ix);
+	}
+	return name;
+}
 void MarkdownViewer::mouseMoveEvent(QMouseEvent *me) {
 	QString anchor = anchorAt(me->pos());
-	if (!anchor.isEmpty()) {	// リンクの上なら指差し
+	QString name = splitName(anchor);
+	//qDebug() << "anchor = " << anchor << ", name = " << name;
+	if (!anchor.isEmpty() || !name.isEmpty() ) {	// リンクの上なら指差し
         viewport()->setCursor(Qt::PointingHandCursor);
 		if( !anchor.endsWith(".md", Qt::CaseInsensitive) )
 			anchor += ".md";
@@ -160,12 +171,13 @@ void MarkdownViewer::mouseReleaseEvent(QMouseEvent *me)
 {
 	if (me->button() == Qt::LeftButton) {
 		QString anchor = anchorAt(me->pos());
+		QString name = splitName(anchor);
 		if (!anchor.isEmpty()) {	// リンク上
 			//qDebug() << "anchor = " << anchor;
 			if( !anchor.endsWith(".md", Qt::CaseInsensitive) )
 				anchor += ".md";
 			QString fullPath = QDir::current().absoluteFilePath(anchor);
-			emit anchorClicked(fullPath);
+			emit anchorClicked(fullPath, name);
 		} else {
 		    QTextCursor cursor = cursorForPosition(me->pos());
 		    emit lineClicked(cursor.block().userState());
@@ -213,9 +225,11 @@ void MarkdownViewer::do_body(QTextCursor& cursor) {
 	if( m_bodyList.isEmpty() ) return;
 #if 1
 	//封印static QRegularExpression re("\\[\\[(.+?)\\]\\]");		//	[[タイトル]]
+	static QRegularExpression re("\\[([^\\]]+)\\]\\(([^)]+)\\)");		//	[タイトル](パス#見出し)
 	QString buf;
 	for(auto txt: m_bodyList) {
 		//封印txt.replace(re, "<a href=\"\\1\" class=\"wiki-link\">\\1</a>");
+		txt.replace(re, "<a href=\"\\2\">\\1</a>");
 		buf += txt + "\n";
 	}
 	if( !buf.isEmpty() ) {

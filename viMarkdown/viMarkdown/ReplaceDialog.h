@@ -18,9 +18,11 @@ public:
 protected:
 	void	onSearchPrev();
 	void	onSearchNext();
+	void	onReplaceNext();
 
 signals:
 	void	do_search(const QString, bool backward);
+	void	do_replace_next(const QString, const QString);
 
 private:
 	Ui::ReplaceDialogClass *ui;

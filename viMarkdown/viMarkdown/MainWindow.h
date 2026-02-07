@@ -69,7 +69,7 @@ protected:
     void	insertInline(const QString&);
     QTreeWidgetItem* findTopLevelItemByFullPath(const QString& title, const QString fullPath);
     void	removeTopLevelItem(DocWidget*);
-    bool	do_open(const QString&);
+    bool	do_open(const QString&, const QString name = QString());
     void	do_load(const QString&);
     void	close_empty_doc();
     void	do_save(bool fDialog = false);
@@ -78,6 +78,7 @@ protected:
     void	insertSearchComboBox();
     void	do_find(bool backward=false);
     void	do_search(const QString txt, bool backward);
+    void	do_replace_next(const QString, const QString);
 
     void	onOutlineBarVisibilityChanged(bool visible);
     void	onTreeCurrentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);

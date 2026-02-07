@@ -201,12 +201,24 @@ void MainWindow::onAction_MarkdownTable_CSV() {
 void MainWindow::onAction_Replace() {
 	ReplaceDialog dlg(this);
 	connect(&dlg, &ReplaceDialog::do_search, this, &MainWindow::do_search);
+	connect(&dlg, &ReplaceDialog::do_replace_next, this, &MainWindow::do_replace_next);
 	if (dlg.exec() == QDialog::Accepted) {
 	}
 
 }
 void MainWindow::onAction_Find() {
 	m_searchCB->setFocus();
+}
+void MainWindow::do_replace_next(const QString srcText, const QString dstText) {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	MarkdownEditor *mdEditor = docWidget->m_mdEditor;
+	QTextCursor cursor = mdEditor->textCursor();
+	if( cursor.hasSelection() ) {
+		cursor.insertText(dstText);
+		mdEditor->setTextCursor(cursor);
+	}
+	do_search(srcText, false);
 }
 void MainWindow::do_search(const QString srcText, bool backward) {
 	DocWidget *docWidget = getCurDocWidget();
@@ -455,7 +467,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onMdEditCurPosChanged);
 	connect(mdEditor, &MarkdownEditor::tab_pressed, this, &MainWindow::onMdEditTabPressed);
 	connect(mdEditor, &MarkdownEditor::esc_pressed, this, &MainWindow::onMdEditEscPressed);
-	connect(mdEditor, &MarkdownEditor::title_clicked, this, &MainWindow::do_open);
+	//connect(mdEditor, &MarkdownEditor::title_clicked, this, &MainWindow::do_open);
 	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onEditorCurPosChanged);
 	connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::syncPreviewCursorWithEditor);
 	connect(mdEditor, &MarkdownEditor::changeFontSize, this, &MainWindow::onChangeEditorFontSize);
@@ -935,7 +947,7 @@ bool hasBOM(QFile &file) {
 	return header.startsWith("\xEF\xBB\xBF") ||		//	UTF-8
 			header.startsWith("\xFF\xFE") || header.startsWith("\xFE\xFF");		//	UTF-16 BE, LE
 }
-bool MainWindow::do_open(const QString& fullPath) {
+bool MainWindow::do_open(const QString& fullPath, const QString name) {
 	qDebug() << "do_open(" << fullPath << ")";
 	int tix = tabIndexOf("", fullPath);
 	if( tix >= 0 ) {		//	すでにオープン済み
