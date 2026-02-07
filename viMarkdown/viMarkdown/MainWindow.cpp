@@ -26,6 +26,7 @@
 #include "MarkdownEditor.h"
 #include "MarkdownViewer.h"
 #include "SettingsDialog.h"
+#include "ReplaceDialog.h"
 
 using namespace std;
 
@@ -197,6 +198,12 @@ void MainWindow::onAction_MarkdownTable_CSV() {
 	if( docWidget == nullptr ) return;
 	docWidget->m_mdEditor->convert_MarkdownTable_CSV();
 }
+void MainWindow::onAction_Replace() {
+	ReplaceDialog dlg(this);
+	if (dlg.exec() == QDialog::Accepted) {
+	}
+
+}
 void MainWindow::onAction_Find() {
 	m_searchCB->setFocus();
 }
@@ -294,6 +301,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_BackwardAgain, &QAction::triggered, this, &MainWindow::onAction_BackwardAgain);
 	connect(ui->action_FindWord, &QAction::triggered, this, &MainWindow::onAction_FindWord);
 	connect(ui->action_ClearSearchHighlights, &QAction::triggered, this, &MainWindow::onAction_ClearSearchHighlights);
+	connect(ui->action_Replace, &QAction::triggered, this, &MainWindow::onAction_Replace);
 	connect(ui->action_KeisenMode, &QAction::toggled, this, &MainWindow::onAction_KeisenMode);
 	connect(ui->action_ThinKeisen, &QAction::toggled, this, &MainWindow::onAction_ThinKeisen);
 	connect(ui->action_ThickKeisen, &QAction::toggled, this, &MainWindow::onAction_ThickKeisen);

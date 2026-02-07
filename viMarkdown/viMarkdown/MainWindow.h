@@ -134,6 +134,7 @@ protected:
     void	onAction_BackwardAgain();
     void	onAction_FindWord();
     void	onAction_ClearSearchHighlights();
+    void	onAction_Replace();
     void	onAction_KeisenMode(bool);
     void	onAction_ThinKeisen(bool);
     void	onAction_ThickKeisen(bool);
