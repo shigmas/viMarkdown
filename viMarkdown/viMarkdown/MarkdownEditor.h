@@ -47,6 +47,7 @@ public:
     void	rehighlight();
     void	setBoldColor(QColor);
     void	highlightSearchText(const QString &searchText);
+    void	jumpToHeading(const QString &name);		//	見出し（name）行にカーソル設定
 
 signals:
     void	tab_pressed();

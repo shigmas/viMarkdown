@@ -468,6 +468,24 @@ void MarkdownEditor::wheelEvent(QWheelEvent *event) {
 	} else
 		MarkdownBaseEdit::wheelEvent(event);
 }
+void MarkdownEditor::jumpToHeading(const QString& name) {
+	QTextBlock block = document()->begin();
+	while( block.isValid() ) {
+		QString text = block.text();
+		if( text.startsWith("#") ) {
+			int i = 1;
+			while( i < text.size() && text[i] == u'#' ) ++i;
+			while( i < text.size() && text[i] == u' ' ) ++i;
+			if( text.mid(i) == name ) {
+				QTextCursor cursor = textCursor();
+				cursor.setPosition(block.position());		//	行頭位置
+				setTextCursor(cursor);
+				return;
+			}
+		}
+		block = block.next();
+	}
+}
 void MarkdownEditor::setCursorAtNthPat(int srcHeadingBlockNum, QString pat, int nth, bool tail) {		//	nth: 見出し行から何番目か（>0）
 	qDebug() << QString("MarkdownEditor::setCursorAtNthPat(%1, '%2', %3,").arg(srcHeadingBlockNum).arg(pat).arg(nth) << tail << ")";
 	QTextBlock block = document()->findBlockByNumber(srcHeadingBlockNum);

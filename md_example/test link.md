@@ -4,9 +4,10 @@
 
 
 [test keisen](test_keisen.md)  
-[テキスト](#見出し)  
+本稿内ジャンプ [テキスト](#見出し)  
 [あいうえお](test_LINK)  
-[あいうえお](test_LINK#見出し)  
+[あいうえお](test_LINK#見出し２)  
+[見出し３へジャンプ](test_LINK#見出し３)  
 [空白あり](test LINK)  
 [空白あり](test LINK#見出し)  
 　

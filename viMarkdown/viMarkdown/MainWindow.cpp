@@ -952,6 +952,10 @@ bool MainWindow::do_open(const QString& fullPath, const QString name) {
 	int tix = tabIndexOf("", fullPath);
 	if( tix >= 0 ) {		//	すでにオープン済み
 		ui->tabWidget->setCurrentIndex(tix);
+		if( !name.isEmpty() ) {
+			DocWidget *docWidget = (DocWidget*)ui->tabWidget->widget(tix);
+			docWidget->m_mdEditor->jumpToHeading(name);
+		}
 		return true;
 	}
 	QFileInfo checkFile(fullPath);
@@ -990,6 +994,9 @@ bool MainWindow::do_open(const QString& fullPath, const QString name) {
 	m_watcher->addPath(fullPath);
 	m_opening_file = false;
 
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget != nullptr )
+		docWidget->m_mdEditor->jumpToHeading(name);
 	addToRecentFiles(fullPath);
 	close_empty_doc();
 	return true;
