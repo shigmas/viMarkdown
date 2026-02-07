@@ -200,6 +200,7 @@ void MainWindow::onAction_MarkdownTable_CSV() {
 }
 void MainWindow::onAction_Replace() {
 	ReplaceDialog dlg(this);
+	connect(&dlg, &ReplaceDialog::do_search, this, &MainWindow::do_search);
 	if (dlg.exec() == QDialog::Accepted) {
 	}
 
@@ -207,9 +208,7 @@ void MainWindow::onAction_Replace() {
 void MainWindow::onAction_Find() {
 	m_searchCB->setFocus();
 }
-void MainWindow::do_find(bool backward) {
-	QString srcText = m_searchCB->currentText();
-	//qDebug() << "srcText = " << srcText;
+void MainWindow::do_search(const QString srcText, bool backward) {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	MarkdownEditor *mdEditor = docWidget->m_mdEditor;
@@ -231,6 +230,11 @@ void MainWindow::do_find(bool backward) {
 	}
 	mdEditor->highlightSearchText(srcText);
 	mdEditor->setFocus();
+}
+void MainWindow::do_find(bool backward) {
+	do_search(m_searchCB->currentText(), backward);
+	//QString srcText = m_searchCB->currentText();
+	//qDebug() << "srcText = " << srcText;
 }
 void MainWindow::onSearchCBActivated() {
 	do_find();

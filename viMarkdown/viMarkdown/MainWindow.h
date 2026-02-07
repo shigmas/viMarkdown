@@ -77,6 +77,7 @@ protected:
     void	addToRecentFiles(const QString& fullPath);
     void	insertSearchComboBox();
     void	do_find(bool backward=false);
+    void	do_search(const QString txt, bool backward);
 
     void	onOutlineBarVisibilityChanged(bool visible);
     void	onTreeCurrentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);

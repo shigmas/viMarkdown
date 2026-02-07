@@ -15,6 +15,13 @@ public:
 	ReplaceDialog(QWidget *parent = nullptr);
 	~ReplaceDialog();
 
+protected:
+	void	onSearchPrev();
+	void	onSearchNext();
+
+signals:
+	void	do_search(const QString, bool backward);
+
 private:
 	Ui::ReplaceDialogClass *ui;
 };

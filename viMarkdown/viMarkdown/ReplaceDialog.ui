@@ -26,7 +26,11 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QComboBox" name="searchCB"/>
+        <widget class="QComboBox" name="searchCB">
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
        <item row="2" column="0">
         <widget class="QLabel" name="label_2">
@@ -36,7 +40,11 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QComboBox" name="replaceCB"/>
+        <widget class="QComboBox" name="replaceCB">
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
        <item row="0" column="1">
         <spacer name="verticalSpacer_2">
@@ -107,21 +115,21 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="searchPrev">
        <property name="text">
         <string>Search &amp;Prev</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="searchNext">
        <property name="text">
         <string>Search &amp;Next</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="replaceNextButton">
+      <widget class="QPushButton" name="replaceNext">
        <property name="maximumSize">
         <size>
          <width>200</width>
@@ -130,19 +138,6 @@
        </property>
        <property name="text">
         <string>&amp;Replace &amp; Next</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="closeButton">
-       <property name="maximumSize">
-        <size>
-         <width>200</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Close</string>
        </property>
       </widget>
      </item>
@@ -159,11 +154,41 @@
        </property>
       </spacer>
      </item>
+     <item>
+      <widget class="QPushButton" name="closeButton">
+       <property name="maximumSize">
+        <size>
+         <width>200</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Close</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>closeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ReplaceDialogClass</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>320</x>
+     <y>121</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>223</x>
+     <y>125</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
