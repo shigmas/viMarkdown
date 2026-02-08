@@ -51,6 +51,7 @@ public:
 
 protected:
     void	load_settings();
+    void	save_settings();
     void	setup_connections();
     void	setup_tabMenu();
     void	setup_encodingCombo();
