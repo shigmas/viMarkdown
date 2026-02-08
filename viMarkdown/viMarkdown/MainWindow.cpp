@@ -80,6 +80,7 @@ MainWindow::~MainWindow()
 }
 void MainWindow::load_settings() {
 	QSettings settings;
+	g.m_ignoreCase = settings.value(KEY_IGNORE_CASE, true).toBool();
 	g.m_editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE, 12).toInt();		//	デフォルト：12pt
 	g.m_activeLnColor = settings.value(KEY_ACTIVA_LINE_COLOR, QColor("#ff0000")).value<QColor>();
 	g.m_inactiveLnColor = settings.value(KEY_INACTIVA_LINE_COLOR, QColor("#800000")).value<QColor>();
@@ -228,6 +229,8 @@ void MainWindow::do_search(const QString srcText, bool backward) {
 		QTextDocument::FindFlags flags;
 		if( backward )
 			flags |= QTextDocument::FindBackward;
+		if( !g.m_ignoreCase )
+			flags |= QTextDocument::FindCaseSensitively;
 		bool found = mdEditor->find(srcText, flags);
 		if (!found) {
 	        if( !backward )

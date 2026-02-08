@@ -19,6 +19,7 @@ protected:
 	void	onSearchPrev();
 	void	onSearchNext();
 	void	onReplaceNext();
+	void	onCheckStateChanged(Qt::CheckState state);
 
 signals:
 	void	do_search(const QString, bool backward);

@@ -9,6 +9,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindowClass; };
 QT_END_NAMESPACE
 
+#define	KEY_IGNORE_CASE				u"ignoreCase"
 #define	KEY_EDITOR_FONT_SIZE		u"editorFontSize"
 #define	KEY_ACTIVA_LINE_COLOR		u"activeLineColor"
 #define	KEY_INACTIVA_LINE_COLOR		u"inactiveLineColor"
@@ -25,6 +26,7 @@ class DocWidget;
 using QStringPair = std::pair<QString, QString>;
 
 struct Global {
+	bool	m_ignoreCase;			//	検索時：大文字小文字同一視
 	int		m_editorFontSize;
 	QColor	m_activeLnColor;		//	アクティブ時アンダーライン行カーソル色
 	QColor	m_inactiveLnColor;		//	非アクティブ時アンダーライン行カーソル色
