@@ -897,6 +897,7 @@ QString getLeftDstString(bool erase, bool thickKeisen, const QString txt, int ix
 		return "←";
 	} else {
 		if( ix < txt.size() ) {
+			if (txt[ix] == u'│' || txt[ix] == u'┃' ) return txt[ix];		//	変化無し
 			if( txt[ix] == u'┐' || txt[ix] == u'┘' || txt[ix] == u'┤' ) return txt[ix];		//	変化無し
 			if( txt[ix] == u'┓' || txt[ix] == u'┛' || txt[ix] == u'┫' ) return txt[ix];		//	変化無し
 			if( txt[ix] == u'└' || txt[ix] == u'┌' || txt[ix] == u'├' ) return "│";
@@ -910,7 +911,7 @@ void MarkdownEditor::do_keisen_left(bool erase, bool thickKeisen) {
 	QTextCursor cursor = this->textCursor();
 	if( cursor.atBlockStart() ) return;				//	行頭にいる場合は無視
 	int vc0 = getVisualColumn(cursor, this);
-	QString src = thickKeisen ? "━" : "─";
+	QString src = erase ? "  " : thickKeisen ? "━" : "─";
 	if( !cursor.atBlockEnd() ) {
 		int ix = cursor.positionInBlock();
 		do {
