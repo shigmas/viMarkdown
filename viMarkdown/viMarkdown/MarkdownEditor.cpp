@@ -985,6 +985,7 @@ QString getRightDstString(bool erase, bool thickKeisen, const QString txt, int i
 		return "→";
 	} else {
 		if( ix < txt.size() ) {
+			if (txt[ix] == u'│' || txt[ix] == u'┃' ) return txt[ix];		//	変化無し
 			if( txt[ix] == u'└' || txt[ix] == u'┌' || txt[ix] == u'├' ) return txt[ix];		//	変化無し
 			if( txt[ix] == u'┐' || txt[ix] == u'┘' || txt[ix] == u'┤' ) return "│";
 			if( txt[ix] == u'┼' ) return "├";
