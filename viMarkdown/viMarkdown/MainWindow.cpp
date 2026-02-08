@@ -949,6 +949,14 @@ bool hasBOM(QFile &file) {
 }
 bool MainWindow::do_open(const QString& fullPath, const QString name) {
 	qDebug() << "do_open(" << fullPath << ")";
+	if( fullPath.isEmpty() ) {		//	現文書内ジャンプ
+		if( !name.isEmpty() ) {
+			DocWidget *docWidget = getCurDocWidget();;
+			if( docWidget != nullptr )
+				docWidget->m_mdEditor->jumpToHeading(name);
+		}
+		return true;
+	}
 	int tix = tabIndexOf("", fullPath);
 	if( tix >= 0 ) {		//	すでにオープン済み
 		ui->tabWidget->setCurrentIndex(tix);

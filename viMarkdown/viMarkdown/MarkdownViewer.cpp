@@ -172,11 +172,14 @@ void MarkdownViewer::mouseReleaseEvent(QMouseEvent *me)
 	if (me->button() == Qt::LeftButton) {
 		QString anchor = anchorAt(me->pos());
 		QString name = splitName(anchor);
-		if (!anchor.isEmpty()) {	// リンク上
+		if (!anchor.isEmpty() || !name.isEmpty() ) {	// リンク上
 			//qDebug() << "anchor = " << anchor;
-			if( !anchor.endsWith(".md", Qt::CaseInsensitive) )
-				anchor += ".md";
-			QString fullPath = QDir::current().absoluteFilePath(anchor);
+			QString fullPath = anchor;
+			if(!anchor.isEmpty() ) {
+				if( !anchor.endsWith(".md", Qt::CaseInsensitive) )
+					anchor += ".md";
+				fullPath = QDir::current().absoluteFilePath(anchor);
+			}
 			emit anchorClicked(fullPath, name);
 		} else {
 		    QTextCursor cursor = cursorForPosition(me->pos());
