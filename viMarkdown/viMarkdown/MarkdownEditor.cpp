@@ -1464,7 +1464,10 @@ void MarkdownEditor::highlightSearchText(const QString &searchText) {
     while (!cursor.isNull() && !cursor.atEnd()) {
         // 次のヒットを検索
         // 引数に FindFlags (大文字小文字区別など) を指定可能
-        cursor = doc->find(searchText, cursor);
+		QTextDocument::FindFlags flags;
+		if( !g.m_ignoreCase )
+			flags |= QTextDocument::FindCaseSensitively;
+        cursor = doc->find(searchText, cursor, flags);
 
         if (!cursor.isNull()) {
             QTextEdit::ExtraSelection selection;
