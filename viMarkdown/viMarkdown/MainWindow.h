@@ -202,7 +202,7 @@ private:
     class QComboBox				*m_searchCB = nullptr;
     class QFileSystemWatcher	*m_watcher;
     //QList<QStringPair>			m_pathTitleList;
-    int							m_docLocIX = 0;
+    int							m_docLocIX = -1;
     QList<DocLocation>			m_docLocHist;
 
     Ui::MainWindowClass *ui;

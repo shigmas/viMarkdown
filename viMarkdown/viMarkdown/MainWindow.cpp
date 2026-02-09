@@ -211,14 +211,18 @@ void MainWindow::onAction_MarkdownTable_CSV() {
 	docWidget->m_mdEditor->convert_MarkdownTable_CSV();
 }
 void MainWindow::onAction_NaviBack() {
-	if( m_docLocIX == 0 ) return;
+	if( m_docLocIX - 1 < 0 ) return;
 	const auto &item = m_docLocHist[--m_docLocIX];
+	m_processing = true;
 	do_open(item.m_title, item.m_fullPath, item.m_title);
+	m_processing = false;
 }
 void MainWindow::onAction_NaviForward() {
 	if( m_docLocIX + 1 >= m_docLocHist.size() ) return;
-	const auto &item = m_docLocHist[m_docLocIX++];
+	const auto &item = m_docLocHist[++m_docLocIX];
+	m_processing = true;
 	do_open(item.m_title, item.m_fullPath, item.m_title);
+	m_processing = false;
 }
 void MainWindow::onAction_Replace() {
 	ReplaceDialog dlg(this);
@@ -441,6 +445,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 	event->accept();
 }
 void MainWindow::onCurrentTabChanged(int ix) {
+	if( m_processing ) return;		//	再入禁止
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	//qDebug() << "MainWindow::onCurrentTabChanged()";
@@ -477,7 +482,7 @@ void MainWindow::onCurrentTabChanged(int ix) {
 #endif
 }
 void MainWindow::appendToDocLoc(const QString& title, const QString& fullPath, int curBlockNum) {
-	while( m_docLocHist.size() > m_docLocIX)
+	while( m_docLocHist.size()-1 > m_docLocIX)
 		m_docLocHist.pop_back();
 	for(int i = m_docLocHist.size(); --i >= 0; ) {		//	重複削除
 		if( !fullPath.isEmpty() && m_docLocHist[i].m_fullPath == fullPath ||
@@ -489,7 +494,7 @@ void MainWindow::appendToDocLoc(const QString& title, const QString& fullPath, i
 	m_docLocHist.push_back(DocLocation(title, fullPath, curBlockNum));
 	while( m_docLocHist.size() > MAX_DOC_LOC_HIST_SIZE )
 		m_docLocHist.pop_front();
-	m_docLocIX = m_docLocHist.size();
+	m_docLocIX = m_docLocHist.size() - 1;		//	最後要素index
 }
 void MainWindow::onFileChanged(const QString& fullPath) {
 	statusBar()->showMessage("file changed: " + fullPath, 3000);
