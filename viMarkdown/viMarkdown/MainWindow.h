@@ -23,7 +23,12 @@ class DocWidget;
 
 #define		N_PATH_HIST		32
 
-using QStringPair = std::pair<QString, QString>;
+//using QStringPair = std::pair<QString, QString>;
+struct DocLocation {		//	Alt + 左右 ナビゲーション用
+	QString	m_title;
+	QString	m_fullPath;
+	int		m_cursorLine;		//	0 オリジンブロック番号
+};
 
 struct Global {
 	bool	m_ignoreCase;			//	検索時：大文字小文字同一視
@@ -82,6 +87,7 @@ protected:
     void	do_find(bool backward=false);
     void	do_search(const QString txt, bool backward);
     void	do_replace_next(const QString, const QString);
+    void	do_replace_all(const QString, const QString);
 
     void	onOutlineBarVisibilityChanged(bool visible);
     void	onTreeCurrentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
@@ -187,7 +193,8 @@ private:
     class QComboBox				*m_encodingCombo = nullptr;
     class QComboBox				*m_searchCB = nullptr;
     class QFileSystemWatcher	*m_watcher;
-    QList<QStringPair>			m_pathTitleList;
+    //QList<QStringPair>			m_pathTitleList;
+    QList<DocLocation>			m_docLocHist;
 
     Ui::MainWindowClass *ui;
 };

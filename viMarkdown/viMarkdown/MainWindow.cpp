@@ -213,6 +213,7 @@ void MainWindow::onAction_Replace() {
 	ReplaceDialog dlg(this);
 	connect(&dlg, &ReplaceDialog::do_search, this, &MainWindow::do_search);
 	connect(&dlg, &ReplaceDialog::do_replace_next, this, &MainWindow::do_replace_next);
+	connect(&dlg, &ReplaceDialog::do_replace_all, this, &MainWindow::do_replace_all);
 	if (dlg.exec() == QDialog::Accepted) {
 	}
 
@@ -230,6 +231,35 @@ void MainWindow::do_replace_next(const QString srcText, const QString dstText) {
 		mdEditor->setTextCursor(cursor);
 	}
 	do_search(srcText, false);
+}
+void MainWindow::do_replace_all(const QString srcText, const QString dstText) {
+	if( srcText == dstText ) return;
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	MarkdownEditor *mdEditor = docWidget->m_mdEditor;
+#if 1
+	QTextDocument *doc = mdEditor->document();
+	QTextCursor cursor(doc);
+	cursor.beginEditBlock();
+	bool replaced = false;
+	for (;;) {
+	    if( (cursor = doc->find(srcText, cursor)) .isNull() )
+	    	break;
+	    cursor.insertText(dstText);
+	    replaced = true;
+	}
+	cursor.endEditBlock();
+	if( replaced )
+		mdEditor->setTextCursor(cursor);
+#else
+	QTextCursor cursor = mdEditor->textCursor();
+	for(;;) {
+		do_search(srcText, false);
+		if( !cursor.hasSelection() ) break;
+		cursor.insertText(dstText);
+	}
+	mdEditor->setTextCursor(cursor);
+#endif
 }
 void MainWindow::do_search(const QString srcText, bool backward) {
 	DocWidget *docWidget = getCurDocWidget();

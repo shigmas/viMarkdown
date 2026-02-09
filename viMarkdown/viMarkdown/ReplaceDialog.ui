@@ -160,7 +160,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="replaceAll">
        <property name="text">
         <string>Replace&amp;All</string>
        </property>

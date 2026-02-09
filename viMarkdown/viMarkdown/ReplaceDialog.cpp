@@ -17,6 +17,7 @@ ReplaceDialog::ReplaceDialog(QWidget *parent)
 	connect(ui->searchPrev, &QPushButton::clicked, this, &ReplaceDialog::onSearchPrev);
 	connect(ui->searchNext, &QPushButton::clicked, this, &ReplaceDialog::onSearchNext);
 	connect(ui->replaceNext, &QPushButton::clicked, this, &ReplaceDialog::onReplaceNext);
+	connect(ui->replaceAll, &QPushButton::clicked, this, &ReplaceDialog::onReplaceAll);
 	connect(ui->ignoreCase, &QCheckBox::checkStateChanged, this, &ReplaceDialog::onCheckStateChanged);
 }
 
@@ -39,6 +40,12 @@ void ReplaceDialog::onReplaceNext() {
 	QString dst = ui->replaceCB->currentText();
 	if( src.isEmpty() ) return;
 	emit do_replace_next(src, dst);
+}
+void ReplaceDialog::onReplaceAll() {
+	QString src = ui->searchCB->currentText();
+	QString dst = ui->replaceCB->currentText();
+	if( src.isEmpty() ) return;
+	emit do_replace_all(src, dst);
 }
 void ReplaceDialog::onCheckStateChanged(Qt::CheckState state) {
 	g.m_ignoreCase = state == Qt::Checked;

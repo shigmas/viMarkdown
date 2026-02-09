@@ -19,11 +19,13 @@ protected:
 	void	onSearchPrev();
 	void	onSearchNext();
 	void	onReplaceNext();
+	void	onReplaceAll();
 	void	onCheckStateChanged(Qt::CheckState state);
 
 signals:
 	void	do_search(const QString, bool backward);
 	void	do_replace_next(const QString, const QString);
+	void	do_replace_all(const QString, const QString);
 
 private:
 	Ui::ReplaceDialogClass *ui;
