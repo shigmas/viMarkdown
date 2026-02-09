@@ -544,7 +544,7 @@ QString getUpSrcString(bool erase, bool thickKeisen, const QString txt, int ix) 
 			if( txt[ix] == u'←' || txt[ix] == u'└' || txt[ix] == u'┗' ) return thickKeisen ? "┗" : "└";
 			if( txt[ix] == u'→' || txt[ix] == u'┘' || txt[ix] == u'┛' ) return thickKeisen ? "┛" : "┘";
 			if( txt[ix] == u'┴' ) return "┴";
-			if( txt[ix] == u'┐' /*|| txt[ix] == u'┤'*/ ) return "┤";
+			if( txt[ix] == u'┐' /*|| txt[ix] == u'┤'*/ ) return thickKeisen ? "┨" : "┤";
 			if( txt[ix] == u'┌' /*|| txt[ix] == u'├'*/ ) return "├";
 			if( txt[ix] == u'├' || txt[ix] == u'┠' ) return thickKeisen ? "┠" : "├";	//	右が細線
 			if( txt[ix] == u'┝' || txt[ix] == u'┣' ) return thickKeisen ? "┣" : "├";	//	右が太線
