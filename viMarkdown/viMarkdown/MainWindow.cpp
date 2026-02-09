@@ -1731,7 +1731,7 @@ void MainWindow::onAction_About() {
 		
 		"<p><big><b>viMarkdown</b></big> " + VER_STR + "</p>"
 		"<p>The efficient visual Markdown editor"
-		"<br>Copyright (C) 2025 by N.Tsuda"
+		"<br>Copyright (C) 2025, 2026 by N.Tsuda"
 		"<br>Powered by Qt 6 and C++</p>"
 	);
 }
