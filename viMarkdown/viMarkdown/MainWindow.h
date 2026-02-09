@@ -28,6 +28,11 @@ struct DocLocation {		//	Alt + 左右 ナビゲーション用
 	QString	m_title;
 	QString	m_fullPath;
 	int		m_cursorLine;		//	0 オリジンブロック番号
+public:
+	DocLocation(const QString title = QString(), const QString fullPath = QString(), int bn = 0)
+		: m_title(title), m_fullPath(fullPath), m_cursorLine(bn)
+	{
+	}
 };
 
 struct Global {
@@ -77,7 +82,7 @@ protected:
     void	insertInline(const QString&);
     QTreeWidgetItem* findTopLevelItemByFullPath(const QString& title, const QString fullPath);
     void	removeTopLevelItem(DocWidget*);
-    bool	do_open(const QString&, const QString name = QString());
+    bool	do_open(const QString& title, const QString& fullPath, const QString name = QString());
     void	do_load(const QString&);
     void	close_empty_doc();
     void	do_save(bool fDialog = false);
@@ -103,6 +108,7 @@ protected:
     void	onViewerCurPosChanged();
     //void	onAnchorClicked(const QString&);
     void	onCurrentTabChanged(int);
+    void	appendToDocLoc(const QString&, const QString&, int);
     void	onEncodingChanged(int);
     void	onTextInsertedAtViewer(QString);
     void	onTextRemovedAtViewer(int);
@@ -140,6 +146,8 @@ protected:
     void	onAction_TodayString_3();
     void	onAction_CSV_MarkdownTable();
     void	onAction_MarkdownTable_CSV();
+    void	onAction_NaviForward();
+    void	onAction_NaviBack();
     void	onAction_Find();
     void	onAction_ForwardAgain();
     void	onAction_BackwardAgain();
@@ -194,6 +202,7 @@ private:
     class QComboBox				*m_searchCB = nullptr;
     class QFileSystemWatcher	*m_watcher;
     //QList<QStringPair>			m_pathTitleList;
+    int							m_docLocIX = 0;
     QList<DocLocation>			m_docLocHist;
 
     Ui::MainWindowClass *ui;

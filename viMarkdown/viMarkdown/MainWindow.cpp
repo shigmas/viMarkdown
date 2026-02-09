@@ -32,6 +32,7 @@ using namespace std;
 
 const int N_RECENT_FILES = 10 + 26;
 const int N_FAVORITE_FILES = 10 + 26;
+const int MAX_DOC_LOC_HIST_SIZE = 100;
 
 const QStringView KEY_RECENT_FILES(u"recentFilePaths");
 const QStringView KEY_FAVORITE_FILES(u"favoriteFilePaths");
@@ -209,6 +210,16 @@ void MainWindow::onAction_MarkdownTable_CSV() {
 	if( docWidget == nullptr ) return;
 	docWidget->m_mdEditor->convert_MarkdownTable_CSV();
 }
+void MainWindow::onAction_NaviBack() {
+	if( m_docLocIX == 0 ) return;
+	const auto &item = m_docLocHist[--m_docLocIX];
+	do_open(item.m_title, item.m_fullPath, item.m_title);
+}
+void MainWindow::onAction_NaviForward() {
+	if( m_docLocIX + 1 >= m_docLocHist.size() ) return;
+	const auto &item = m_docLocHist[m_docLocIX++];
+	do_open(item.m_title, item.m_fullPath, item.m_title);
+}
 void MainWindow::onAction_Replace() {
 	ReplaceDialog dlg(this);
 	connect(&dlg, &ReplaceDialog::do_search, this, &MainWindow::do_search);
@@ -355,6 +366,8 @@ void MainWindow::setup_connections() {
 	connect(ui->action_TodayString_3, &QAction::triggered, this, &MainWindow::onAction_TodayString_3);
 	connect(ui->action_CSV_MarkdownTable, &QAction::triggered, this, &MainWindow::onAction_CSV_MarkdownTable);
 	connect(ui->action_MarkdownTable_CSV, &QAction::triggered, this, &MainWindow::onAction_MarkdownTable_CSV);
+	connect(ui->action_NaviForward, &QAction::triggered, this, &MainWindow::onAction_NaviForward);
+	connect(ui->action_NaviBack, &QAction::triggered, this, &MainWindow::onAction_NaviBack);
 	connect(ui->action_Find, &QAction::triggered, this, &MainWindow::onAction_Find);
 	connect(ui->action_ForwardAgain, &QAction::triggered, this, &MainWindow::onAction_ForwardAgain);
 	connect(ui->action_BackwardAgain, &QAction::triggered, this, &MainWindow::onAction_BackwardAgain);
@@ -435,6 +448,8 @@ void MainWindow::onCurrentTabChanged(int ix) {
 	m_altTitle = m_curTitle;
 	m_curFullPath = docWidget->m_fullPath;
 	m_curTitle = docWidget->m_title;
+	int curBlockNum = docWidget->m_mdEditor->textCursor().blockNumber();
+	appendToDocLoc(m_curTitle, m_curFullPath, curBlockNum);
 	//QString mess = QString("encoding = %1").arg((int)docWidget->m_encoding);
 	//QString mess = docWidget->m_encoding.nema();
 	if( !docWidget->m_fullPath.isEmpty() ) {
@@ -460,6 +475,21 @@ void MainWindow::onCurrentTabChanged(int ix) {
 	//statusBar()->showMessage(mess);
 	m_encLabel->setText(mess);
 #endif
+}
+void MainWindow::appendToDocLoc(const QString& title, const QString& fullPath, int curBlockNum) {
+	while( m_docLocHist.size() > m_docLocIX)
+		m_docLocHist.pop_back();
+	for(int i = m_docLocHist.size(); --i >= 0; ) {		//	重複削除
+		if( !fullPath.isEmpty() && m_docLocHist[i].m_fullPath == fullPath ||
+			m_docLocHist[i].m_fullPath.isEmpty() && m_docLocHist[i].m_title == title )
+		{
+			m_docLocHist.removeAt(i);
+		}
+	}
+	m_docLocHist.push_back(DocLocation(title, fullPath, curBlockNum));
+	while( m_docLocHist.size() > MAX_DOC_LOC_HIST_SIZE )
+		m_docLocHist.pop_front();
+	m_docLocIX = m_docLocHist.size();
 }
 void MainWindow::onFileChanged(const QString& fullPath) {
 	statusBar()->showMessage("file changed: " + fullPath, 3000);
@@ -750,7 +780,7 @@ void MainWindow::dropEvent(QDropEvent *event)
 	for(const QUrl &url : urls ) {
 		QString fullPath = url.toLocalFile();
 		qDebug() << "dropped fullPath = " << fullPath;
-		do_open(fullPath);
+		do_open("", fullPath);
 	}
 }
 #if 0
@@ -793,7 +823,7 @@ void MainWindow::onAboutToShow_FavoriteFiles() {
 	        QStringList favoriteFilePaths = settings.value(KEY_FAVORITE_FILES).toStringList();
 	        favoriteFilePaths.removeAll(fullPath);
 			QString pathArg = fullPath;
-			if( !do_open(pathArg) ) {
+			if( !do_open("", pathArg) ) {
 				//	ファイル削除などで、ファイルオープンできなかった場合
 			} else {
 				//	Undone: オープンしたファイルをリスト先頭に移動
@@ -818,7 +848,7 @@ void MainWindow::onAboutToShow_RecentFiles() {
 		QAction *act = ui->menu_RecentFiles->addAction("&" + key + " " + fullPath);
 		connect(act, &QAction::triggered, this, [this, fullPath]() {
 			QString pathArg = fullPath;
-			if( !do_open(pathArg) ) {
+			if( !do_open("", pathArg) ) {
 				//	ファイル削除などで、ファイルオープンできなかった場合
 				QSettings settings;
 		        QStringList recentFilePaths = settings.value(KEY_RECENT_FILES).toStringList();
@@ -915,7 +945,7 @@ void MainWindow::onAction_Open() {
 
 	if (!fullPath.isEmpty()) {
 		qDebug() << "path = " << fullPath;
-		do_open(fullPath);
+		do_open("", fullPath);
 	}
 }
 int MainWindow::tabIndexOf(const QString& title, const QString& fullPath) {
@@ -984,9 +1014,9 @@ bool hasBOM(QFile &file) {
 	return header.startsWith("\xEF\xBB\xBF") ||		//	UTF-8
 			header.startsWith("\xFF\xFE") || header.startsWith("\xFE\xFF");		//	UTF-16 BE, LE
 }
-bool MainWindow::do_open(const QString& fullPath, const QString name) {
-	qDebug() << "do_open(" << fullPath << ")";
-	if( fullPath.isEmpty() ) {		//	現文書内ジャンプ
+bool MainWindow::do_open(const QString& title0, const QString& fullPath, const QString name) {
+	qDebug() << "do_open(" << title0 << ", " << fullPath << ")";
+	if( title0.isEmpty() && fullPath.isEmpty() ) {		//	現文書内ジャンプ
 		if( !name.isEmpty() ) {
 			DocWidget *docWidget = getCurDocWidget();;
 			if( docWidget != nullptr )
@@ -994,7 +1024,7 @@ bool MainWindow::do_open(const QString& fullPath, const QString name) {
 		}
 		return true;
 	}
-	int tix = tabIndexOf("", fullPath);
+	int tix = tabIndexOf(title0, fullPath);
 	if( tix >= 0 ) {		//	すでにオープン済み
 		ui->tabWidget->setCurrentIndex(tix);
 		if( !name.isEmpty() ) {
@@ -1551,7 +1581,7 @@ void MainWindow::onAction_SwitchToAltFile() {
 	//auto fullPath = m_altFullPath;
 	//m_altFullPath = m_curFullPath
 	if( !m_altFullPath.isEmpty() )
-		do_open(m_altFullPath);
+		do_open("", m_altFullPath);
 	else if( !m_altTitle.isEmpty() ) {
 		//	m_altTitle 文書をアクティブに
 		int ix = tabIndexOf(m_altTitle, m_altFullPath);

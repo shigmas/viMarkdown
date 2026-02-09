@@ -96,8 +96,8 @@
     <addaction name="action_PrevTab"/>
     <addaction name="action_ToggleFocus"/>
     <addaction name="action_SwitchToAltFile"/>
-    <addaction name="action_Back"/>
-    <addaction name="action_Forward"/>
+    <addaction name="action_NaviBack"/>
+    <addaction name="action_NaviForward"/>
    </widget>
    <widget class="QMenu" name="menu_Edit">
     <property name="title">
@@ -210,8 +210,8 @@
    <addaction name="action_SaveAs"/>
    <addaction name="action_Close"/>
    <addaction name="separator"/>
-   <addaction name="action_Back"/>
-   <addaction name="action_Forward"/>
+   <addaction name="action_NaviBack"/>
+   <addaction name="action_NaviForward"/>
    <addaction name="separator"/>
    <addaction name="action_Settings"/>
   </widget>
@@ -846,7 +846,7 @@
     <string>Ctrl+^</string>
    </property>
   </action>
-  <action name="action_Back">
+  <action name="action_NaviBack">
    <property name="icon">
     <iconset resource="MainWindow.qrc">
      <normaloff>:/MainWindow/images/arrow_back_48.png</normaloff>:/MainWindow/images/arrow_back_48.png</iconset>
@@ -858,7 +858,7 @@
     <string>Alt+Left</string>
    </property>
   </action>
-  <action name="action_Forward">
+  <action name="action_NaviForward">
    <property name="icon">
     <iconset resource="MainWindow.qrc">
      <normaloff>:/MainWindow/images/arrow_forward_48.png</normaloff>:/MainWindow/images/arrow_forward_48.png</iconset>

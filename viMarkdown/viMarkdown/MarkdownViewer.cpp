@@ -180,7 +180,7 @@ void MarkdownViewer::mouseReleaseEvent(QMouseEvent *me)
 					anchor += ".md";
 				fullPath = QDir::current().absoluteFilePath(anchor);
 			}
-			emit anchorClicked(fullPath, name);
+			emit anchorClicked("", fullPath, name);
 		} else {
 		    QTextCursor cursor = cursorForPosition(me->pos());
 		    emit lineClicked(cursor.block().userState());
