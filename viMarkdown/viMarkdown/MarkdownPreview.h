@@ -20,12 +20,12 @@ enum {
 	US_CHECKBOX,		//	チェックボックス
 };
 
-class MarkdownViewer : public QTextEdit
+class MarkdownPreview : public QTextEdit
 {
 	Q_OBJECT 
 
 public:
-    MarkdownViewer(const MainWindow*, QWidget* parent = nullptr);
+    MarkdownPreview(const MainWindow*, QWidget* parent = nullptr);
 
 public:
     bool	isProcessing() const { return m_processing; }

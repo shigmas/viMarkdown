@@ -93,7 +93,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DocWidget.cpp" />
-    <ClCompile Include="MarkdownViewer.cpp" />
+    <ClCompile Include="MarkdownPreview.cpp" />
     <ClCompile Include="MarkdownEditor.cpp" />
     <ClCompile Include="MarkdownToHtmlConvertor.cpp" />
     <ClCompile Include="ReplaceDialog.cpp" />
@@ -108,7 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DocWidget.h" />
-    <QtMoc Include="MarkdownViewer.h" />
+    <QtMoc Include="MarkdownPreview.h" />
     <QtMoc Include="MarkdownEditor.h" />
     <ClInclude Include="MarkdownToHtmlConvertor.h" />
     <QtMoc Include="SettingsDialog.h" />

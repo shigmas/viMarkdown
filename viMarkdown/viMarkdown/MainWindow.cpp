@@ -24,7 +24,7 @@
 #include "MainWindow.h"
 #include "DocWidget.h"
 #include "MarkdownEditor.h"
-#include "MarkdownViewer.h"
+#include "MarkdownPreview.h"
 #include "SettingsDialog.h"
 #include "ReplaceDialog.h"
 
@@ -560,26 +560,26 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 									"- リスト\n1. 連番\n"
 									"|見出し|見出し|\n|-----:|------|\n|   123|abc   |\n\n"
 									"```CSV\nCSV data...\n```\n");
-	MarkdownViewer *markdownViewer = docWidget->m_markdownViewer = new MarkdownViewer(this, splitter);
-	//##markdownViewer->setReadOnly(true); // プレビューなので読み取り専用に
-	markdownViewer->setMouseTracking(true); // マウスの動きを常に追跡
-	markdownViewer->setPlaceholderText("プレビュー画面");
-	markdownViewer->setStyleSheet("font-size: 12pt;");
-	connect(markdownViewer, &MarkdownViewer::lineClicked, this, &MainWindow::onMarkdownViewerLineClicked);
-	connect(markdownViewer, &MarkdownViewer::anchorClicked, this, &MainWindow::do_open);
-	connect(markdownViewer, &MarkdownViewer::textInserted, this, &MainWindow::onTextInsertedAtViewer);
-	connect(markdownViewer, &MarkdownViewer::textRemoved, this, &MainWindow::onTextRemovedAtViewer);
-	connect(markdownViewer, &MarkdownViewer::BS_pressed, this, &MainWindow::onBS_pressed);
-	connect(markdownViewer, &MarkdownViewer::cursorPositionChanged, this, &MainWindow::onViewerCurPosChanged);
+	MarkdownPreview *markdownPreview = docWidget->m_markdownPreview = new MarkdownPreview(this, splitter);
+	//##markdownPreview->setReadOnly(true); // プレビューなので読み取り専用に
+	markdownPreview->setMouseTracking(true); // マウスの動きを常に追跡
+	markdownPreview->setPlaceholderText("プレビュー画面");
+	markdownPreview->setStyleSheet("font-size: 12pt;");
+	connect(markdownPreview, &MarkdownPreview::lineClicked, this, &MainWindow::onMarkdownViewerLineClicked);
+	connect(markdownPreview, &MarkdownPreview::anchorClicked, this, &MainWindow::do_open);
+	connect(markdownPreview, &MarkdownPreview::textInserted, this, &MainWindow::onTextInsertedAtViewer);
+	connect(markdownPreview, &MarkdownPreview::textRemoved, this, &MainWindow::onTextRemovedAtViewer);
+	connect(markdownPreview, &MarkdownPreview::BS_pressed, this, &MainWindow::onBS_pressed);
+	connect(markdownPreview, &MarkdownPreview::cursorPositionChanged, this, &MainWindow::onViewerCurPosChanged);
 	splitter->addWidget(mdEditor);
-	splitter->addWidget(markdownViewer);
+	splitter->addWidget(markdownPreview);
 	splitter->setSizes(QList<int>() << 500 << 500);
 	QVBoxLayout *layout = new QVBoxLayout(docWidget);
 	layout->addWidget(splitter);
 	layout->setContentsMargins(0, 0, 0, 0); // 余白をなくして端まで広げる
 
 	connect(mdEditor, &MarkdownEditor::textChanged, this, &MainWindow::onMDTextChanged);
-	//connect(mdEditor, &MarkdownViewer::textChanged, this, &MainWindow::onMDTextChanged);
+	//connect(mdEditor, &MarkdownPreview::textChanged, this, &MainWindow::onMDTextChanged);
 
 	docWidget->setModified(false);
 	return docWidget;
@@ -649,18 +649,18 @@ void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソ
 			if( !block.isValid() ) break;
 		}
 	}
-	docWidget->m_markdownViewer->setCursorAtNthPat(blockNum, pat, nth, tail);
+	docWidget->m_markdownPreview->setCursorAtNthPat(blockNum, pat, nth, tail);
 	m_processing = false;
 }
 //	ビューワ → エディタ カーソル位置同期
-void MainWindow::onViewerCurPosChanged() {		//	MarkdownViewer でカーソルが移動した
+void MainWindow::onViewerCurPosChanged() {		//	MarkdownPreview でカーソルが移動した
 	if( m_processing ) return;		//	再入禁止
 	qDebug() << "MainWindow::onViewerCurPosChanged()";
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	if( docWidget->m_markdownViewer->isProcessing() ) return;
+	if( docWidget->m_markdownPreview->isProcessing() ) return;
 	m_processing = true;
-	QTextCursor cursor = docWidget->m_markdownViewer->textCursor();		//	ビューワカーソル
+	QTextCursor cursor = docWidget->m_markdownPreview->textCursor();		//	ビューワカーソル
 	QTextBlock b0 = cursor.block();
 	while( b0.userState() != US_HEADING ) {		//	見出し行まで移動
 		b0 = b0.previous();
@@ -669,7 +669,7 @@ void MainWindow::onViewerCurPosChanged() {		//	MarkdownViewer でカーソルが
 			break;
 		}
 	}
-	//auto headingList = docWidget->m_markdownViewer->
+	//auto headingList = docWidget->m_markdownPreview->
 	QTextBlock block = cursor.block();
 	QString pat = block.text().mid(cursor.position() - block.position(), 3);
 	int curBlockNum = cursor.blockNumber();
@@ -685,7 +685,7 @@ void MainWindow::onViewerCurPosChanged() {		//	MarkdownViewer でカーソルが
 		QTextCursor cur = cursor;
 		cur.setPosition(block.position());
 		for(;;) {
-			cur = docWidget->m_markdownViewer->document()->find(pat, cur);
+			cur = docWidget->m_markdownPreview->document()->find(pat, cur);
 			if( cur.isNull() || cur.position() >= cursor.position() ) break;
 			++nth;
 		}
@@ -1160,7 +1160,7 @@ void MainWindow::onAction_ExportAsPDF() {
     printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setOutputFileName(fileName);
 
-    docWidget->m_markdownViewer->print(&printer);
+    docWidget->m_markdownPreview->print(&printer);
 }
 void MainWindow::onAction_Close() {
 	qDebug() << "MainWindow::onAction_Close()";
@@ -1191,7 +1191,7 @@ void MainWindow::onAction_Print() {
     QPrintDialog dialog(&printer, this);
     dialog.setWindowTitle("print Markdown");
     if (dialog.exec() == QDialog::Accepted) {
-        docWidget->m_markdownViewer->print(&printer);
+        docWidget->m_markdownPreview->print(&printer);
     }
 }
 bool isCheckbox(const QString txt, int s) {
@@ -1619,11 +1619,11 @@ void MainWindow::onAction_ToggleFocus() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	if( docWidget->m_mdEditor->hasFocus() )
-		docWidget->m_markdownViewer->setFocus();
+		docWidget->m_markdownPreview->setFocus();
 	else
 		docWidget->m_mdEditor->setFocus();
 	docWidget->m_mdEditor->viewport()->update();
-	docWidget->m_markdownViewer->viewport()->update();
+	docWidget->m_markdownPreview->viewport()->update();
 }
 void MainWindow::onAction_SwitchToAltFile() {
 	//auto fullPath = m_altFullPath;
@@ -1685,7 +1685,7 @@ void MainWindow::updatePreview() {
 	DocWidget *docWidget = getCurDocWidget();
 	qDebug() << "docWidget = " << docWidget;
 	MarkdownEditor *mdEditor = docWidget->m_mdEditor;
-	MarkdownViewer* textEdit = docWidget->m_markdownViewer;
+	MarkdownPreview* textEdit = docWidget->m_markdownPreview;
 	QScrollBar *vScrollBar = textEdit->verticalScrollBar();
 	int currentPos = vScrollBar->value();
 	const QString &htmlText = docWidget->m_htmlComvertor.getHtmlText();
@@ -1728,8 +1728,8 @@ void MainWindow::updateOutlineTree() {
 	qDeleteAll(item0->takeChildren());
 	vector<QTreeWidgetItem*> parents(10, nullptr);		//	各レベルごとの親アイテムリスト
 	parents[0] = item0;
-	const QStringList &lst = docWidget->m_markdownViewer->getHeadings();
-	const vector<int>& hLineNum = docWidget->m_markdownViewer->getHeadingsLineNum();
+	const QStringList &lst = docWidget->m_markdownPreview->getHeadings();
+	const vector<int>& hLineNum = docWidget->m_markdownPreview->getHeadingsLineNum();
 	for(int i = 0; i != lst.size(); ++i) {
 		QTreeWidgetItem *item2 = new QTreeWidgetItem();
 		//bool ok;
@@ -1765,10 +1765,10 @@ void MainWindow::onMDTextChanged() {
 	MarkdownEditor *mdEditor = docWidget->m_mdEditor;
 	//m_plainText = mdEditor->toPlainText();
 #if 1
-	int scrollPos = docWidget->m_markdownViewer->verticalScrollBar()->value();
+	int scrollPos = docWidget->m_markdownPreview->verticalScrollBar()->value();
 	docWidget->m_mdEditor->setProcessing(true);
-	docWidget->m_markdownViewer->setMarkdown(mdEditor->document());
-	docWidget->m_markdownViewer->verticalScrollBar()->setValue(scrollPos);
+	docWidget->m_markdownPreview->setMarkdown(mdEditor->document());
+	docWidget->m_markdownPreview->verticalScrollBar()->setValue(scrollPos);
 	docWidget->m_mdEditor->setProcessing(false);
 	syncPreviewCursorWithEditor();
 #else

@@ -1,7 +1,7 @@
 ﻿#include <QTextBlock>
 #include "MarkdownEditor.h"
 #include "DocWidget.h"
-#include "MarkdownViewer.h"
+#include "MarkdownPreview.h"
 
 DocWidget::DocWidget(const QString& title, const QString& fullPath, QWidget *parent)
 	: m_title(title)
@@ -18,9 +18,9 @@ void DocWidget::setModified(bool b) {
 QString DocWidget::getTitle() const {
 	QString title;
 #if 0
-	auto hbn = m_markdownViewer->getHeadingsBlockNum();
+	auto hbn = m_markdownPreview->getHeadingsBlockNum();
 	if( !hbn.empty() && hbn[0] == 0 ) {		//	（コメントを無視した）最初の行が見出し行
-		title = m_markdownViewer->document()->begin().text();
+		title = m_markdownPreview->document()->begin().text();
 	}
 #else
 	int ln = 0;
@@ -30,7 +30,7 @@ QString DocWidget::getTitle() const {
 		++ln;
 		block = block.next();
 	}
-	auto hln = m_markdownViewer->getHeadingsLineNum();
+	auto hln = m_markdownPreview->getHeadingsLineNum();
 	if( !hln.empty() && hln[0] == ln ) {		//	コメントを除いた最初の行が見出し行
 		title = block.text();
 		int i = 0;

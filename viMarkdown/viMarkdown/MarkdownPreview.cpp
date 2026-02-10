@@ -7,7 +7,7 @@
 #include <QScrollbar>
 #include <QDir>
 #include <qpainter.h>
-#include "MarkdownViewer.h"
+#include "MarkdownPreview.h"
 #include "MainWindow.h"
 
 using namespace std;
@@ -21,7 +21,7 @@ enum {
 	ALIGHN_LEFT = 1, ALIGHN_RIGHT = 2, ALIGHN_CENTER = ALIGHN_LEFT| ALIGHN_RIGHT,
 };
 
-MarkdownViewer::MarkdownViewer(const MainWindow *mainWindow, QWidget* parent)
+MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, QWidget* parent)
 	: m_mainWindow(mainWindow), QTextEdit(parent)
 {
 	setUndoRedoEnabled(false);
@@ -29,13 +29,13 @@ MarkdownViewer::MarkdownViewer(const MainWindow *mainWindow, QWidget* parent)
 	setCursorWidth(2);
 	//QString css = "hr { height: 1px; border: none; background-color: #333; margin-top: 10px; margin-bottom: 10px; }";
 	//document()->setDefaultStyleSheet(css);
-	connect(this, &MarkdownViewer::cursorPositionChanged, this, &MarkdownViewer::onCurPosChanged);
-	connect(document(), &QTextDocument::contentsChange, this, &MarkdownViewer::onContentsChanged);
+	connect(this, &MarkdownPreview::cursorPositionChanged, this, &MarkdownPreview::onCurPosChanged);
+	connect(document(), &QTextDocument::contentsChange, this, &MarkdownPreview::onContentsChanged);
 }
-void MarkdownViewer::onCurPosChanged() {
+void MarkdownPreview::onCurPosChanged() {
 	viewport()->update();	//	強制再描画
 }
-void MarkdownViewer::onContentsChanged(int position, int charsRemoved, int charsAdded) {
+void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int charsAdded) {
 	if( m_processing ) return;
 	m_processing = true;
 	if( charsAdded > 0 ) {
@@ -95,7 +95,7 @@ bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign) {
 	return tableAlign.size() > 1;
 }
 #else
-bool MarkdownViewer::isTableLine(const QString& lnStr) {
+bool MarkdownPreview::isTableLine(const QString& lnStr) {
 	QStringView sv(lnStr);
 	m_tableTokens.clear();
 	int ix = 0;
@@ -112,7 +112,7 @@ bool MarkdownViewer::isTableLine(const QString& lnStr) {
 	}
 	return m_tableTokens.size() > 1;
 }
-bool MarkdownViewer::isTableHyphenLine(const QString& lnStr) {
+bool MarkdownPreview::isTableHyphenLine(const QString& lnStr) {
 	m_tableAlign.clear();
 	QStringView sv(lnStr);
 	int ix = 0;
@@ -137,7 +137,7 @@ bool MarkdownViewer::isTableHyphenLine(const QString& lnStr) {
 }
 #endif
 
-void MarkdownViewer::keyPressEvent(QKeyEvent *e) {
+void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 	if (e->key() == Qt::Key_Backspace) {
 		emit BS_pressed();
 		return;
@@ -153,7 +153,7 @@ QString splitName(QString& anchor) {
 	}
 	return name;
 }
-void MarkdownViewer::mouseMoveEvent(QMouseEvent *me) {
+void MarkdownPreview::mouseMoveEvent(QMouseEvent *me) {
 	QString anchor = anchorAt(me->pos());
 	QString name = splitName(anchor);
 	//qDebug() << "anchor = " << anchor << ", name = " << name;
@@ -167,7 +167,7 @@ void MarkdownViewer::mouseMoveEvent(QMouseEvent *me) {
         viewport()->setCursor(Qt::IBeamCursor);
     }
 }
-void MarkdownViewer::mouseReleaseEvent(QMouseEvent *me)
+void MarkdownPreview::mouseReleaseEvent(QMouseEvent *me)
 {
 	if (me->button() == Qt::LeftButton) {
 		QString anchor = anchorAt(me->pos());
@@ -183,12 +183,16 @@ void MarkdownViewer::mouseReleaseEvent(QMouseEvent *me)
 			emit anchorClicked("", fullPath, name);
 		} else {
 		    QTextCursor cursor = cursorForPosition(me->pos());
+		    QTextCharFormat format = cursor.charFormat();
+		    if( format.isAnchor() ) {
+		    	qDebug() << "checkbox is clicked";
+		    }
 		    emit lineClicked(cursor.block().userState());
 		}
 	}
     QTextEdit::mouseReleaseEvent(me);
 }
-void MarkdownViewer::paintEvent(QPaintEvent *e) {
+void MarkdownPreview::paintEvent(QPaintEvent *e) {
 	QTextEdit::paintEvent(e); // 先にテキストを普通に描画
 	QPainter p(viewport());
 	//	行カーソル描画
@@ -203,7 +207,7 @@ void MarkdownViewer::paintEvent(QPaintEvent *e) {
     int right = viewport()->width();
     p.drawLine(left, y, right, y);
 }
-void MarkdownViewer::do_body_sub(QTextCursor& cursor, const QString &buf) {
+void MarkdownPreview::do_body_sub(QTextCursor& cursor, const QString &buf) {
 #if 1
 	int startPos = cursor.position(); // 挿入前の位置
 	cursor.insertMarkdown(buf);
@@ -224,7 +228,7 @@ void MarkdownViewer::do_body_sub(QTextCursor& cursor, const QString &buf) {
 	//cursor.insertMarkdown(buf);
 #endif
 }
-void MarkdownViewer::do_body(QTextCursor& cursor) {
+void MarkdownPreview::do_body(QTextCursor& cursor) {
 	if( m_bodyList.isEmpty() ) return;
 #if 1
 	//封印static QRegularExpression re("\\[\\[(.+?)\\]\\]");		//	[[タイトル]]
@@ -277,7 +281,7 @@ int indexOfComment(QStringView buf, int start) {
 	return -1;
 }
 
-void MarkdownViewer::setMarkdown(QTextDocument *doc) {
+void MarkdownPreview::setMarkdown(QTextDocument *doc) {
 	m_headingList.clear();
 	m_srcHeadingBlocks.clear();
 	m_prvHeadingBlocks.clear();
@@ -358,7 +362,7 @@ void MarkdownViewer::setMarkdown(QTextDocument *doc) {
 	cursor.endEditBlock();
 	m_processing = false;
 }
-void MarkdownViewer::do_table(QTextCursor& cursor) {
+void MarkdownPreview::do_table(QTextCursor& cursor) {
 	QString buf = m_lst[m_ln] + "\n" + m_lst[m_ln+1] /*+ "\n"*/;
 	m_ln += 2;
 	while( m_ln < m_lst.size() && isTableLine(m_lst[m_ln], m_tableTokens) ) {
@@ -396,7 +400,7 @@ void MarkdownViewer::do_table(QTextCursor& cursor) {
 	cursor.insertBlock();
 	--m_ln;
 }
-bool MarkdownViewer::do_underlineHeading(QTextCursor& cursor, QString buf) {
+bool MarkdownPreview::do_underlineHeading(QTextCursor& cursor, QString buf) {
 	if( m_bodyList.isEmpty() || m_bodyList.back() == "" ) return false;
 	int h = 3;
 	if( buf[0] == u'=' ) {
@@ -412,14 +416,14 @@ bool MarkdownViewer::do_underlineHeading(QTextCursor& cursor, QString buf) {
 }
 int h_font_size[] = {12, 26*4, 22*4, 18, 16, 14, 12};		//	body, h1, h2, h3 ... h6
 
-void MarkdownViewer::do_heading(QTextCursor& cursor, QString buf) {
+void MarkdownPreview::do_heading(QTextCursor& cursor, QString buf) {
 	int i = 1;
 	while( i < buf.size() && buf[i] == '#' ) ++i;
 	int h = std::min(6, i);		//	[1, 6]
 	while( i < buf.size() && buf[i] == u' ' ) ++i;
 	do_heading_sub(cursor, buf.mid(i), h, m_ln);
 }
-void MarkdownViewer::do_heading_sub(QTextCursor& cursor, QString buf, int h, int ln) {
+void MarkdownPreview::do_heading_sub(QTextCursor& cursor, QString buf, int h, int ln) {
 	if( !cursor.atBlockStart() )
 		cursor.insertBlock();			//	新規ブロック
 	cursor.block().setUserState(US_HEADING);
@@ -498,7 +502,7 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
     fields.append(currentField.trimmed());
     return inQuotes;
 }
-void MarkdownViewer::do_CSV(QTextCursor& cursor) {
+void MarkdownPreview::do_CSV(QTextCursor& cursor) {
 	QList<QStringList> ll;
 	int max_clmn = 0;
     bool inQuotes = false;
@@ -553,7 +557,7 @@ void MarkdownViewer::do_CSV(QTextCursor& cursor) {
 	cursor.endEditBlock();
 	//++m_ln;
 }
-void MarkdownViewer::do_code_keisen(QTextCursor& cursor) {
+void MarkdownPreview::do_code_keisen(QTextCursor& cursor) {
     QFont font;
     QStringView buf = m_lst[m_ln].mid(QString("```keisen").size());
     QColor bgcolor("#c0f0c0");
@@ -607,7 +611,7 @@ void MarkdownViewer::do_code_keisen(QTextCursor& cursor) {
     cursor.insertBlock();
     //cursor.setBlockFormat(QTextBlockFormat());		//	トップマージンリセット
 }
-void MarkdownViewer::do_code(QTextCursor& cursor) {
+void MarkdownPreview::do_code(QTextCursor& cursor) {
 	QString buf;
 	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
 		if( !buf.isEmpty() ) buf += "\n";
@@ -649,7 +653,7 @@ void MarkdownViewer::do_code(QTextCursor& cursor) {
 	//--m_ln;
 	m_nEmptyLines = 0;
 }
-void MarkdownViewer::do_quote(QTextCursor& cursor, QString buf) {
+void MarkdownPreview::do_quote(QTextCursor& cursor, QString buf) {
 	buf = buf.mid(2);
 	while( ++m_ln < m_lst.size() ) {
 		if( !m_lst[m_ln].startsWith("> ") ) break;
@@ -674,7 +678,7 @@ void MarkdownViewer::do_quote(QTextCursor& cursor, QString buf) {
 	--m_ln;
 	m_nEmptyLines = 0;
 }
-void MarkdownViewer::do_list(QTextCursor& cursor, QString buf) {
+void MarkdownPreview::do_list(QTextCursor& cursor, QString buf) {
 	if( m_nEmptyLines >= 1 )
 		cursor.insertBlock();			//	新規ブロック
 	static QRegularExpression re_checkbox(R"(^( *)- \[[ xX]\] )");
@@ -718,7 +722,7 @@ void MarkdownViewer::do_list(QTextCursor& cursor, QString buf) {
 	--m_ln;
 	m_nEmptyLines = 0;
 }
-void MarkdownViewer::setCursorAt(int srcBlockNum, QString srcText, int ix) {		//	ix: ブロック内カーソル位置
+void MarkdownPreview::setCursorAt(int srcBlockNum, QString srcText, int ix) {		//	ix: ブロック内カーソル位置
 	int i = 0;
 	while( i+1 < m_srcHeadingBlocks.size() && m_srcHeadingBlocks[i+1] <= srcBlockNum ) ++i;
 	if( i >= m_prvHeadingBlocks.size() ) return;
@@ -736,8 +740,8 @@ void MarkdownViewer::setCursorAt(int srcBlockNum, QString srcText, int ix) {		//
 	}
 	setTextCursor(cursor);
 }
-void MarkdownViewer::setCursorAtNthPat(int srcBlockNum, QString pat, int nth, bool tail) {		//	nth: 何番目か（>0）
-	qDebug() << QString("MarkdownViewer::setCursorAtNthPat(%1, '%2', %3,").arg(srcBlockNum).arg(pat).arg(nth) << tail << ")";
+void MarkdownPreview::setCursorAtNthPat(int srcBlockNum, QString pat, int nth, bool tail) {		//	nth: 何番目か（>0）
+	qDebug() << QString("MarkdownPreview::setCursorAtNthPat(%1, '%2', %3,").arg(srcBlockNum).arg(pat).arg(nth) << tail << ")";
 	int i = 0;
 	while( i+1 < m_srcHeadingBlocks.size() && m_srcHeadingBlocks[i+1] <= srcBlockNum ) ++i;
 	if( i >= m_prvHeadingBlocks.size() ) return;
@@ -767,14 +771,14 @@ void MarkdownViewer::setCursorAtNthPat(int srcBlockNum, QString pat, int nth, bo
 	}
 	setTextCursor(cursor);
 }
-void MarkdownViewer::ensureLineVisible(int srcBlockNum) {
+void MarkdownPreview::ensureLineVisible(int srcBlockNum) {
 	//qDebug() << "srcBlockNum = " << srcBlockNum;
 	int i = 0;
 	while( i+1 < m_srcHeadingBlocks.size() && m_srcHeadingBlocks[i+1] <= srcBlockNum ) ++i;
 	if( i < m_prvHeadingBlocks.size() )
 		scrollToBlock(m_prvHeadingBlocks[i]);
 }
-void MarkdownViewer::scrollToBlock(int blockIndex) {
+void MarkdownPreview::scrollToBlock(int blockIndex) {
     QTextBlock block = document()->findBlockByNumber(blockIndex);
     if (!block.isValid()) return;
 #if 0
