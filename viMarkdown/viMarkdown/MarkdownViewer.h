@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <vector>
 #include <QTextCursor>
+#include <QDragEnterEvent>
 #include "C:\Qt\6.10.0\msvc2022_64\include\QtWidgets\qtextedit.h"
 
 class MainWindow;
@@ -50,6 +51,13 @@ protected:
     void	mouseMoveEvent(QMouseEvent *e) override;
     void	mouseReleaseEvent(QMouseEvent *e) override;    // マウスクリックイベントをオーバーライド
     void	paintEvent(QPaintEvent *e) override;
+    void	dragEnterEvent(QDragEnterEvent *e) override {
+    	e->ignore();
+        //e->acceptProposedAction();
+    }
+    void	dropEvent(QDropEvent *e) override {
+    	e->ignore();
+    }
     void	onCurPosChanged();
     void	onContentsChanged(int position, int charsRemoved, int charsAdded);
     //bool	isTableLine(const QString&);

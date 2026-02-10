@@ -1570,5 +1570,9 @@ void MarkdownEditor::resizeEvent(QResizeEvent *event) {
     QRect cr = contentsRect();
     m_lnAreaWidget->setGeometry(QRect(cr.left(), cr.top(), lnAreaWidth(), cr.height()));
 }
-//void MarkdownEditor::dropEvent() {
-//}
+void MarkdownEditor::dragEnterEvent(QDragEnterEvent *e) {
+   	e->ignore();
+}
+void MarkdownEditor::dropEvent(QDropEvent *e) {
+   	e->ignore();
+}

@@ -59,15 +59,19 @@ protected:
     void	keyPressEvent(QKeyEvent *e) override;
     void	mouseReleaseEvent(QMouseEvent *event) override;
     void	wheelEvent(QWheelEvent *event) override;
+    void	dragEnterEvent(QDragEnterEvent *event) override;
+    void	dropEvent(QDropEvent *event) override;
     void	paintEvent(QPaintEvent *e) override;
     void	resizeEvent(QResizeEvent *event) override;
     void	inputMethodEvent(QInputMethodEvent *event) override;
+#if 0
     void	dragEnterEvent(QDragEnterEvent *e) override {
         e->acceptProposedAction();
     }
     void	dropEvent(QDropEvent *e) override {
     	e->ignore();
     }
+#endif
 
     void	updateLnArea(const QRect &rect, int dy);
     void	onContentsChanged(int position, int charsRemoved, int charsAdded);
