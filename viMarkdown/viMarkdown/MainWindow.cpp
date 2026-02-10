@@ -1431,6 +1431,36 @@ void MainWindow::onAction_NumList() {
 	this->activateWindow();
 	mdEditor->setFocus();
 }
+bool isWrappedWith(const QTextCursor &cursor, const QString &delimiter) {
+    if (!cursor.hasSelection() || delimiter.isEmpty()) {
+        return false;
+    }
+    int start = cursor.selectionStart();
+    int end = cursor.selectionEnd();
+    int delLen = delimiter.length();
+    QTextDocument *doc = cursor.document();
+    // 1. 境界チェック：前後にデリミタ分の長さがあるか
+    if (start < delLen || (end + delLen) > doc->characterCount() - 1) {
+        return false;
+    }
+    // 2. 直前の文字列チェック
+    for (int i = 0; i < delLen; ++i) {
+        // start - delLen から delLen 分の文字を比較
+        if (doc->characterAt(start - delLen + i) != delimiter.at(i)) {
+            return false;
+        }
+    }
+    // 3. 直後の文字列チェック
+    for (int i = 0; i < delLen; ++i) {
+        // end から delLen 分の文字を比較
+        if (doc->characterAt(end + i) != delimiter.at(i)) {
+            return false;
+        }
+    }
+    return true;
+}
+//	選択前後に delimiter（** 等）を挿入
+//	ただし、選択前後に delimiter がある場合は削除
 void MainWindow::insertInline(const QString& delimiter) {
 	MarkdownEditor *mdEditor = getCurDocWidget()->m_mdEditor;
 	QTextCursor cursor = mdEditor->textCursor();
@@ -1443,8 +1473,17 @@ void MainWindow::insertInline(const QString& delimiter) {
 		// ブロック番号が異なる場合＝複数行選択されている場合は無視
 		if (startBlock.blockNumber() != endBlock.blockNumber())
 			return;
-		QString newText = delimiter + cursor.selectedText() + delimiter;
-		cursor.insertText(newText);
+		if( isWrappedWith(cursor, delimiter) ) {
+			QString newText = cursor.selectedText();
+		    int start = cursor.selectionStart() - delimiter.size();
+		    int end = cursor.selectionEnd() + delimiter.size();
+			cursor.setPosition(start);
+			cursor.setPosition(end, QTextCursor::KeepAnchor);
+			cursor.insertText(newText);
+		} else {
+			QString newText = delimiter + cursor.selectedText() + delimiter;
+			cursor.insertText(newText);
+		}
 	} else {
 		cursor.insertText(delimiter + delimiter);
 		cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, delimiter.length());

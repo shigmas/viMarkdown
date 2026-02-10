@@ -207,7 +207,7 @@
 0205 ◎ D 12/27 01/03 01003│ToDo│File > Print 印刷機能
 0206 ◎ C 12/28 12/28 00008│ToDo│File > export > PDF：PDFファイル生成
 0207 ○ E 12/28 02/06      │ToDo│File > export > HTML → NPTF
-0208 ● C 12/28            │ToDo│**xyz** の xyz を選択し Edit > Inline > Bold の場合はボールド解除
+0208 ◎ C 12/28 02/10 01102│ToDo│**xyz** の xyz を選択し Edit > Inline > Bold の場合はボールド解除
 0209 ◎ C 12/29 01/01 01001│ToDo│HTML, Source メニュー・ツールバーアイコン削除
 0210 ◎ C 12/29 12/29 00008│ToDo│HtmlViewer → MarkdownViewer にリネーム
 0211 ◎ C 12/29 12/29 00008│ToDo│MarkdownViewer::setMarkdown(QDocument*) 実装
