@@ -661,8 +661,8 @@
 0660 ◎ C 02/10 02/10 01101│ToDo│文書削除：フルパスを持たない場合は、文書履歴から削除すべき
 0661 ◎ C 02/10 02/10 01101│ToDo│MainWindow::removeHistoryEntries(title, fullPath) 追加
 0662 ● C 02/10            │ToDo│エディタ：Ctrl + クリック でリンク先をオープン機能は封印？
-0663 ● C 02/11            │ToDo│MainWindow::viewerPosToEditorPos(pos) : int 追加
-0664 ● C 02/11            │ToDo│README.md, README_ja.md：主な特徴に CSVブロックを追加
+0663 ● C 02/11            │ToDo│DocWidget::previewPosToEditorPos(int pos) : int 追加
+0664 ◎ C 02/11 02/11 01102│ToDo│README_ja.md：主な特徴に CSVブロックを追加
 0665 ◎ C 02/11 02/11 01102│問題│preview と viewer が混在している→preview に統一？
 0666 ◎ C 02/11 02/11 01102│ToDo│class MarkdownViewer → MarkdownPreview に変更
 0667 ● C 02/11            │ToDo│
