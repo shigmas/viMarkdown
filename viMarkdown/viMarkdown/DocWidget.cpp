@@ -10,27 +10,27 @@ DocWidget::DocWidget(const QString& title, const QString& fullPath, QWidget *par
 {
 }
 bool DocWidget::isModified() const {
-	return m_mdEditor->document()->isModified();
+	return m_editor->document()->isModified();
 }
 void DocWidget::setModified(bool b) {
-	m_mdEditor->document()->setModified(b);
+	m_editor->document()->setModified(b);
 }
 QString DocWidget::getTitle() const {
 	QString title;
 #if 0
-	auto hbn = m_markdownPreview->getHeadingsBlockNum();
+	auto hbn = m_preview->getHeadingsBlockNum();
 	if( !hbn.empty() && hbn[0] == 0 ) {		//	（コメントを無視した）最初の行が見出し行
-		title = m_markdownPreview->document()->begin().text();
+		title = m_preview->document()->begin().text();
 	}
 #else
 	int ln = 0;
-	QTextDocument *doc = m_mdEditor->document();
+	QTextDocument *doc = m_editor->document();
 	QTextBlock block = doc->begin();
 	while( block.isValid() && (block.text().startsWith("<!--") || block.text().isEmpty()) ) {
 		++ln;
 		block = block.next();
 	}
-	auto hln = m_markdownPreview->getHeadingsLineNum();
+	auto hln = m_preview->getHeadingsLineNum();
 	if( !hln.empty() && hln[0] == ln ) {		//	コメントを除いた最初の行が見出し行
 		title = block.text();
 		int i = 0;
@@ -40,4 +40,7 @@ QString DocWidget::getTitle() const {
 	}
 #endif
 	return title;
+}
+int DocWidget::previewPosToEditorPos(int pos) {
+	return pos;
 }

@@ -188,27 +188,27 @@ void MainWindow::onEncodingChanged(int ix) {
 void MainWindow::onAction_TodayString_1() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	docWidget->m_mdEditor->insertTodayString("yyyy-MM-dd");
+	docWidget->m_editor->insertTodayString("yyyy-MM-dd");
 }
 void MainWindow::onAction_TodayString_2() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	docWidget->m_mdEditor->insertTodayString("MM-dd");
+	docWidget->m_editor->insertTodayString("MM-dd");
 }
 void MainWindow::onAction_TodayString_3() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	docWidget->m_mdEditor->insertTodayString("dd-MMM-yyyy");
+	docWidget->m_editor->insertTodayString("dd-MMM-yyyy");
 }
 void MainWindow::onAction_CSV_MarkdownTable() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	docWidget->m_mdEditor->convert_CSV_MarkdownTable();
+	docWidget->m_editor->convert_CSV_MarkdownTable();
 }
 void MainWindow::onAction_MarkdownTable_CSV() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	docWidget->m_mdEditor->convert_MarkdownTable_CSV();
+	docWidget->m_editor->convert_MarkdownTable_CSV();
 }
 void MainWindow::onAction_NaviBack() {
 	if( m_docLocIX - 1 < 0 ) return;
@@ -239,7 +239,7 @@ void MainWindow::onAction_Find() {
 void MainWindow::do_replace_next(const QString srcText, const QString dstText) {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	MarkdownEditor *mdEditor = docWidget->m_mdEditor;
+	MarkdownEditor *mdEditor = docWidget->m_editor;
 	QTextCursor cursor = mdEditor->textCursor();
 	if( cursor.hasSelection() ) {
 		cursor.insertText(dstText);
@@ -251,7 +251,7 @@ void MainWindow::do_replace_all(const QString srcText, const QString dstText) {
 	if( srcText == dstText ) return;
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	MarkdownEditor *mdEditor = docWidget->m_mdEditor;
+	MarkdownEditor *mdEditor = docWidget->m_editor;
 #if 1
 	QTextDocument *doc = mdEditor->document();
 	QTextCursor cursor(doc);
@@ -279,7 +279,7 @@ void MainWindow::do_replace_all(const QString srcText, const QString dstText) {
 void MainWindow::do_search(const QString srcText, bool backward) {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	MarkdownEditor *mdEditor = docWidget->m_mdEditor;
+	MarkdownEditor *mdEditor = docWidget->m_editor;
 	if( !srcText.isEmpty() ) {
 		QTextDocument::FindFlags flags;
 		if( backward )
@@ -318,7 +318,7 @@ void MainWindow::onAction_BackwardAgain() {
 void MainWindow::onAction_FindWord() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	MarkdownEditor *mdEditor = docWidget->m_mdEditor;
+	MarkdownEditor *mdEditor = docWidget->m_editor;
 	QTextCursor cursor = mdEditor->textCursor();
 	if( !cursor.hasSelection() ) {
 		cursor.movePosition(QTextCursor::StartOfWord, QTextCursor::MoveAnchor);
@@ -331,7 +331,7 @@ void MainWindow::onAction_FindWord() {
 void MainWindow::onAction_ClearSearchHighlights() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	MarkdownEditor *mdEditor = docWidget->m_mdEditor;
+	MarkdownEditor *mdEditor = docWidget->m_editor;
 	mdEditor->highlightSearchText("");
 }
 void MainWindow::setup_connections() {
@@ -453,7 +453,7 @@ void MainWindow::onCurrentTabChanged(int ix) {
 	m_altTitle = m_curTitle;
 	m_curFullPath = docWidget->m_fullPath;
 	m_curTitle = docWidget->m_title;
-	int curBlockNum = docWidget->m_mdEditor->textCursor().blockNumber();
+	int curBlockNum = docWidget->m_editor->textCursor().blockNumber();
 	appendToDocLoc(m_curTitle, m_curFullPath, curBlockNum);
 	//QString mess = QString("encoding = %1").arg((int)docWidget->m_encoding);
 	//QString mess = docWidget->m_encoding.nema();
@@ -530,7 +530,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	auto *docWidget = new DocWidget(title, fullPath);
 	//docWidget->setStyleSheet("font-size: 12pt; line-height: 200%;");
 	QSplitter *splitter = new QSplitter(Qt::Horizontal, docWidget);
-	MarkdownEditor *mdEditor = docWidget->m_mdEditor = new MarkdownEditor(this, splitter);
+	MarkdownEditor *mdEditor = docWidget->m_editor = new MarkdownEditor(this, splitter);
 	//mdEditor->setLineWrapMode(QPlainTextEdit::NoWrap);		//	折り返しモード OFF
 	//QFont font("MS Gothic");
 	//QFont font("Consolas");
@@ -560,7 +560,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 									"- リスト\n1. 連番\n"
 									"|見出し|見出し|\n|-----:|------|\n|   123|abc   |\n\n"
 									"```CSV\nCSV data...\n```\n");
-	MarkdownPreview *markdownPreview = docWidget->m_markdownPreview = new MarkdownPreview(this, splitter);
+	MarkdownPreview *markdownPreview = docWidget->m_preview = new MarkdownPreview(this, splitter);
 	//##markdownPreview->setReadOnly(true); // プレビューなので読み取り専用に
 	markdownPreview->setMouseTracking(true); // マウスの動きを常に追跡
 	markdownPreview->setPlaceholderText("プレビュー画面");
@@ -590,7 +590,7 @@ void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソ
 	m_processing = true;
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	QTextCursor cursor = docWidget->m_mdEditor->textCursor();
+	QTextCursor cursor = docWidget->m_editor->textCursor();
 	QTextBlock block = cursor.block();
 	int i = 0;
 	QString text = block.text();
@@ -631,13 +631,13 @@ void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソ
 	int nth = 1;
 	while( block.isValid() && !block.text().startsWith("#") )	//	見出し行までブロック移動
 		block = block.previous();
-	if( !block.isValid() ) block = docWidget->m_mdEditor->document()->begin();		//	最初のブロック
+	if( !block.isValid() ) block = docWidget->m_editor->document()->begin();		//	最初のブロック
 	int blockNum = block.blockNumber();
 	if( !tail ) {
 		QTextCursor cur = cursor;
 		cur.setPosition(block.position());
 		for(;;) {
-			cur = docWidget->m_mdEditor->document()->find(pat, cur);
+			cur = docWidget->m_editor->document()->find(pat, cur);
 			if( cur.isNull() || cur.position() >= cursor.position() ) break;
 			++nth;
 		}
@@ -649,7 +649,7 @@ void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソ
 			if( !block.isValid() ) break;
 		}
 	}
-	docWidget->m_markdownPreview->setCursorAtNthPat(blockNum, pat, nth, tail);
+	docWidget->m_preview->setCursorAtNthPat(blockNum, pat, nth, tail);
 	m_processing = false;
 }
 //	ビューワ → エディタ カーソル位置同期
@@ -658,9 +658,9 @@ void MainWindow::onPreviewCurPosChanged() {		//	MarkdownPreview でカーソル�
 	qDebug() << "MainWindow::onPreviewCurPosChanged()";
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	if( docWidget->m_markdownPreview->isProcessing() ) return;
+	if( docWidget->m_preview->isProcessing() ) return;
 	m_processing = true;
-	QTextCursor cursor = docWidget->m_markdownPreview->textCursor();		//	ビューワカーソル
+	QTextCursor cursor = docWidget->m_preview->textCursor();		//	ビューワカーソル
 	QTextBlock b0 = cursor.block();
 	while( b0.userState() != US_HEADING ) {		//	見出し行まで移動
 		b0 = b0.previous();
@@ -669,7 +669,7 @@ void MainWindow::onPreviewCurPosChanged() {		//	MarkdownPreview でカーソル�
 			break;
 		}
 	}
-	//auto headingList = docWidget->m_markdownPreview->
+	//auto headingList = docWidget->m_preview->
 	QTextBlock block = cursor.block();
 	QString pat = block.text().mid(cursor.position() - block.position(), 3);
 	int curBlockNum = cursor.blockNumber();
@@ -680,12 +680,12 @@ void MainWindow::onPreviewCurPosChanged() {		//	MarkdownPreview でカーソル�
 	}
 	int nth = 1;
 	while( block.isValid() && block.userState() != US_HEADING ) block = block.previous();
-	if( !block.isValid() ) block = docWidget->m_mdEditor->document()->begin();		//	最初のブロック
+	if( !block.isValid() ) block = docWidget->m_editor->document()->begin();		//	最初のブロック
 	if( !tail ) {
 		QTextCursor cur = cursor;
 		cur.setPosition(block.position());
 		for(;;) {
-			cur = docWidget->m_markdownPreview->document()->find(pat, cur);
+			cur = docWidget->m_preview->document()->find(pat, cur);
 			if( cur.isNull() || cur.position() >= cursor.position() ) break;
 			++nth;
 		}
@@ -697,7 +697,7 @@ void MainWindow::onPreviewCurPosChanged() {		//	MarkdownPreview でカーソル�
 			if( !block.isValid() ) break;
 		}
 	}
-	docWidget->m_mdEditor->setCursorAtNthPat(cursor.blockNumber(), pat, nth, tail);
+	docWidget->m_editor->setCursorAtNthPat(cursor.blockNumber(), pat, nth, tail);
 	m_processing = false;
 }
 void MainWindow::onChangeEditorFontSize(int delta) {
@@ -716,22 +716,22 @@ void MainWindow::updateEditorFontSize(int sz) {
 	g.m_editorFontSize = sz;
 	for(int i = 0; i < ui->tabWidget->count(); ++i) {
 		DocWidget *docWidget = (DocWidget*)ui->tabWidget->widget(i);
-		//docWidget->m_mdEditor->setStyleSheet(QString("font-size: %1pt;  line-height: 120%;").arg(g.m_editorFontSize));
-		QFont font = docWidget->m_mdEditor->font();
+		//docWidget->m_editor->setStyleSheet(QString("font-size: %1pt;  line-height: 120%;").arg(g.m_editorFontSize));
+		QFont font = docWidget->m_editor->font();
 		font.setPointSize(g.m_editorFontSize);
 		font.setFixedPitch(true);	// 明示的に固定幅として扱う設定
-		docWidget->m_mdEditor->setFont(font);
-		docWidget->m_mdEditor->updateViewportMargines();
-		docWidget->m_mdEditor->setBoldColor(g.m_boldColor);
-		docWidget->m_mdEditor->rehighlight();				//	再ハイライト
-		docWidget->m_mdEditor->viewport()->update();		//	再表示
+		docWidget->m_editor->setFont(font);
+		docWidget->m_editor->updateViewportMargines();
+		docWidget->m_editor->setBoldColor(g.m_boldColor);
+		docWidget->m_editor->rehighlight();				//	再ハイライト
+		docWidget->m_editor->viewport()->update();		//	再表示
 	}
 }
 void MainWindow::onMarkdownPreviewLineClicked(int bln) {
 	qDebug() << "MainWindow::onMarkdownPreviewLineClicked(" << bln << ")";
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	QTextBlock block = docWidget->m_mdEditor->document()->findBlockByNumber(bln);
+	QTextBlock block = docWidget->m_editor->document()->findBlockByNumber(bln);
 	if (!block.isValid()) return;
 	QTextCursor cursor(block);
 	QString text = block.text();
@@ -754,13 +754,13 @@ void MainWindow::onMarkdownPreviewLineClicked(int bln) {
 void MainWindow::onTextInsertedAtPreview(QString txt) {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	QTextCursor cursor = docWidget->m_mdEditor->textCursor();
+	QTextCursor cursor = docWidget->m_editor->textCursor();
 	cursor.insertText(txt);
 }
 void MainWindow::onTextRemovedAtPreview(int charsRemoved) {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	QTextCursor cursor = docWidget->m_mdEditor->textCursor();
+	QTextCursor cursor = docWidget->m_editor->textCursor();
 	cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, charsRemoved);
 	cursor.removeSelectedText();
 	syncPreviewCursorWithEditor();
@@ -768,9 +768,9 @@ void MainWindow::onTextRemovedAtPreview(int charsRemoved) {
 void MainWindow::onBS_pressed() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	QTextCursor cursor = docWidget->m_mdEditor->textCursor();
+	QTextCursor cursor = docWidget->m_editor->textCursor();
 	cursor.deletePreviousChar();
-	docWidget->m_mdEditor->setTextCursor(cursor);
+	docWidget->m_editor->setTextCursor(cursor);
 	syncPreviewCursorWithEditor();
 }
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
@@ -927,7 +927,7 @@ void MainWindow::addTab(const QString &title, const QString fullPath, const QStr
 	ui->tabWidget->setCurrentIndex(ix);				//	新規タブをカレントに
 	if( !fullPath.isEmpty() ) 
 		ui->tabWidget->setTabToolTip(ix, fullPath);
-	MarkdownEditor *mdEditor = getCurDocWidget()->m_mdEditor;
+	MarkdownEditor *mdEditor = getCurDocWidget()->m_editor;
 	if( !txt.isEmpty() )
 		mdEditor->setPlainText(txt);
 	mdEditor->setFocus();
@@ -994,7 +994,7 @@ void MainWindow::do_load(const QString& fullPath) {
 		return;
 	}
 	QString content = file.readAll();
-	docWidget->m_mdEditor->setPlainText(content);
+	docWidget->m_editor->setPlainText(content);
 	docWidget->setModified(false);
 	ui->tabWidget->setTabText(tix, docWidget->m_title);
 	close_empty_doc();
@@ -1009,7 +1009,7 @@ void MainWindow::close_empty_doc() {
 	for(int ix = 0; ix < ui->tabWidget->count(); ++ix) {
 		DocWidget *docWidget = (DocWidget*)ui->tabWidget->widget(ix);
 		if( docWidget != nullptr && docWidget->m_fullPath.isEmpty() && !docWidget->isModified()) {
-			if( docWidget->m_mdEditor->toPlainText().isEmpty() ) {
+			if( docWidget->m_editor->toPlainText().isEmpty() ) {
 				removeHistoryEntries(docWidget->m_title, docWidget->m_fullPath);		//	履歴から削除
 				ui->tabWidget->removeTab(ix);		//	空の無名ドキュメントを削除
 				--ix;
@@ -1029,7 +1029,7 @@ bool MainWindow::do_open(const QString& title0, const QString& fullPath, const Q
 		if( !name.isEmpty() ) {
 			DocWidget *docWidget = getCurDocWidget();;
 			if( docWidget != nullptr )
-				docWidget->m_mdEditor->jumpToHeading(name);
+				docWidget->m_editor->jumpToHeading(name);
 		}
 		return true;
 	}
@@ -1038,7 +1038,7 @@ bool MainWindow::do_open(const QString& title0, const QString& fullPath, const Q
 		ui->tabWidget->setCurrentIndex(tix);
 		if( !name.isEmpty() ) {
 			DocWidget *docWidget = (DocWidget*)ui->tabWidget->widget(tix);
-			docWidget->m_mdEditor->jumpToHeading(name);
+			docWidget->m_editor->jumpToHeading(name);
 		}
 		return true;
 	}
@@ -1080,7 +1080,7 @@ bool MainWindow::do_open(const QString& title0, const QString& fullPath, const Q
 
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget != nullptr )
-		docWidget->m_mdEditor->jumpToHeading(name);
+		docWidget->m_editor->jumpToHeading(name);
 	addToRecentFiles(fullPath);
 	close_empty_doc();
 	return true;
@@ -1134,7 +1134,7 @@ void MainWindow::do_save(bool fDialog) {
 		QTextStream out(&file);
 		out.setEncoding(docWidget->m_encoding); 
 		out.setGenerateByteOrderMark(docWidget->m_withBOM);
-		MarkdownEditor *mdEditor = docWidget->m_mdEditor;
+		MarkdownEditor *mdEditor = docWidget->m_editor;
 		out << mdEditor->toPlainText();
 		file.close();
 		//QMessageBox::information(nullptr, "成功", "ファイルが保存されました:\n" + fullPath);
@@ -1160,7 +1160,7 @@ void MainWindow::onAction_ExportAsPDF() {
     printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setOutputFileName(fileName);
 
-    docWidget->m_markdownPreview->print(&printer);
+    docWidget->m_preview->print(&printer);
 }
 void MainWindow::onAction_Close() {
 	qDebug() << "MainWindow::onAction_Close()";
@@ -1191,7 +1191,7 @@ void MainWindow::onAction_Print() {
     QPrintDialog dialog(&printer, this);
     dialog.setWindowTitle("print Markdown");
     if (dialog.exec() == QDialog::Accepted) {
-        docWidget->m_markdownPreview->print(&printer);
+        docWidget->m_preview->print(&printer);
     }
 }
 bool isCheckbox(const QString txt, int s) {
@@ -1221,7 +1221,7 @@ int isNumListBlock(const QTextBlock& block) {		//	空白+ "数字. " で始ま�
 	return i + 3;
 }
 void MainWindow::onAction_Indent() {
-	MarkdownEditor *mdEditor = getCurDocWidget()->m_mdEditor;
+	MarkdownEditor *mdEditor = getCurDocWidget()->m_editor;
 	QTextCursor cursor = mdEditor->textCursor();
 	QTextDocument *doc = mdEditor->document();
 	cursor.beginEditBlock();
@@ -1254,7 +1254,7 @@ void MainWindow::onAction_Indent() {
 	cursor.endEditBlock();
 }
 void MainWindow::onAction_UnIndent() {
-	MarkdownEditor *mdEditor = getCurDocWidget()->m_mdEditor;
+	MarkdownEditor *mdEditor = getCurDocWidget()->m_editor;
 	QTextCursor cursor = mdEditor->textCursor();
 	QTextDocument *doc = mdEditor->document();
 	cursor.beginEditBlock();
@@ -1290,7 +1290,7 @@ void MainWindow::onAction_UnIndent() {
 	cursor.endEditBlock();
 }
 void MainWindow::onAction_Checkbox() {
-	MarkdownEditor *mdEditor = getCurDocWidget()->m_mdEditor;
+	MarkdownEditor *mdEditor = getCurDocWidget()->m_editor;
 	QTextCursor cursor = mdEditor->textCursor();
 	QTextDocument *doc = mdEditor->document();
 	cursor.beginEditBlock();
@@ -1334,7 +1334,7 @@ void MainWindow::onAction_Checkbox() {
 }
 void MainWindow::onAction_List() {
 	qDebug() << "MainWindow::onAction_List()";
-	MarkdownEditor *mdEditor = getCurDocWidget()->m_mdEditor;
+	MarkdownEditor *mdEditor = getCurDocWidget()->m_editor;
 	QTextCursor cursor = mdEditor->textCursor();
 	QTextDocument *doc = mdEditor->document();
 	cursor.beginEditBlock();
@@ -1383,7 +1383,7 @@ void MainWindow::onAction_List() {
 }
 void MainWindow::onAction_NumList() {
 	qDebug() << "MainWindow::onAction_NumList()";
-	MarkdownEditor *mdEditor = getCurDocWidget()->m_mdEditor;
+	MarkdownEditor *mdEditor = getCurDocWidget()->m_editor;
 	QTextCursor cursor = mdEditor->textCursor();
 	QTextDocument *doc = mdEditor->document();
 	cursor.beginEditBlock();
@@ -1462,7 +1462,7 @@ bool isWrappedWith(const QTextCursor &cursor, const QString &delimiter) {
 //	選択前後に delimiter（** 等）を挿入
 //	ただし、選択前後に delimiter がある場合は削除
 void MainWindow::insertInline(const QString& delimiter) {
-	MarkdownEditor *mdEditor = getCurDocWidget()->m_mdEditor;
+	MarkdownEditor *mdEditor = getCurDocWidget()->m_editor;
 	QTextCursor cursor = mdEditor->textCursor();
 	if (cursor.hasSelection()) {
 		// 2. 複数行にまたがっているかチェック
@@ -1493,22 +1493,22 @@ void MainWindow::insertInline(const QString& delimiter) {
 void MainWindow::onAction_Undo() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	docWidget->m_mdEditor->undo();
+	docWidget->m_editor->undo();
 }
 void MainWindow::onAction_Redo() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	docWidget->m_mdEditor->redo();
+	docWidget->m_editor->redo();
 }
 void MainWindow::onAction_SelectAll() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	docWidget->m_mdEditor->selectAll();
+	docWidget->m_editor->selectAll();
 }
 void MainWindow::onAction_Heading() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	QTextCursor cursor = docWidget->m_mdEditor->textCursor();
+	QTextCursor cursor = docWidget->m_editor->textCursor();
 	const QString buf = cursor.block().text();
 	cursor.movePosition(QTextCursor::StartOfBlock);
 	if( !buf.startsWith("#") ) {	//	ヘッダ行でない場合
@@ -1525,7 +1525,7 @@ void MainWindow::onAction_Heading() {
 			cursor.deleteChar();
 		}
 	}
-	docWidget->m_mdEditor->setTextCursor(cursor);
+	docWidget->m_editor->setTextCursor(cursor);
 }
 void MainWindow::onAction_Bold() {
 	insertInline("**");
@@ -1539,24 +1539,24 @@ void MainWindow::onAction_Strikethrough() {
 void MainWindow::onAction_AlignCenter() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	docWidget->m_mdEditor->onAlignCenter();
+	docWidget->m_editor->onAlignCenter();
 }
 void MainWindow::onAction_AlignLeft() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	docWidget->m_mdEditor->onAlignLeft();
+	docWidget->m_editor->onAlignLeft();
 }
 void MainWindow::onAction_AlignRight() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	docWidget->m_mdEditor->onAlignRight();
+	docWidget->m_editor->onAlignRight();
 }
 void MainWindow::onAction_KeisenMode(bool checked) {
 	m_keisenMode = checked;
 	for(int ix = 0; ix < ui->tabWidget->count(); ++ix) {
 		DocWidget *docWidget = (DocWidget*)ui->tabWidget->widget(ix);
 		if( docWidget != nullptr )
-			docWidget->m_mdEditor->onKeisenMode(checked);
+			docWidget->m_editor->onKeisenMode(checked);
 	}
 }
 void MainWindow::onAction_ThinKeisen(bool checked) {
@@ -1574,12 +1574,12 @@ void MainWindow::updateThinThickCheck() {
 void MainWindow::onAction_OpenPrev() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	docWidget->m_mdEditor->openPrev();
+	docWidget->m_editor->openPrev();
 }
 void MainWindow::onAction_OpenNext() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	docWidget->m_mdEditor->openNext();
+	docWidget->m_editor->openNext();
 }
 void MainWindow::onAction_HTML(bool checked) {
 	//if( m_htmlMode ) return;
@@ -1618,12 +1618,12 @@ void MainWindow::onAction_PrevTab() {
 void MainWindow::onAction_ToggleFocus() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	if( docWidget->m_mdEditor->hasFocus() )
-		docWidget->m_markdownPreview->setFocus();
+	if( docWidget->m_editor->hasFocus() )
+		docWidget->m_preview->setFocus();
 	else
-		docWidget->m_mdEditor->setFocus();
-	docWidget->m_mdEditor->viewport()->update();
-	docWidget->m_markdownPreview->viewport()->update();
+		docWidget->m_editor->setFocus();
+	docWidget->m_editor->viewport()->update();
+	docWidget->m_preview->viewport()->update();
 }
 void MainWindow::onAction_SwitchToAltFile() {
 	//auto fullPath = m_altFullPath;
@@ -1660,7 +1660,7 @@ void MainWindow::onTreeCurrentItemChanged(QTreeWidgetItem *current, QTreeWidgetI
 		if( current->parent() == nullptr ) {	//	トップレベルアイテムの場合
 			statusBar()->showMessage(docWidget->m_fullPath, 5000);
 		} else {	//	見出しアイテムの場合
-			MarkdownEditor *mdEditor = docWidget->m_mdEditor;
+			MarkdownEditor *mdEditor = docWidget->m_editor;
 			int ln = current->data(0, Qt::UserRole).toInt();			//	行番号　0 org.
 			//QTextBlock block = mdEditor->document()->findBlockByLineNumber(ln);
 			QTextBlock block = mdEditor->document()->findBlockByNumber(ln);
@@ -1677,15 +1677,15 @@ void MainWindow::onTreeItemActivated(QTreeWidgetItem *current, int) {
 	int tix = treeItemToTabIndex(current);
 	if( tix < 0 ) return;
 	DocWidget *docWidget = (DocWidget*)ui->tabWidget->widget(tix);
-	MarkdownEditor *mdEditor = docWidget->m_mdEditor;
+	MarkdownEditor *mdEditor = docWidget->m_editor;
 	mdEditor->setFocus();
 }
 void MainWindow::updatePreview() {
 #if 0
 	DocWidget *docWidget = getCurDocWidget();
 	qDebug() << "docWidget = " << docWidget;
-	MarkdownEditor *mdEditor = docWidget->m_mdEditor;
-	MarkdownPreview* textEdit = docWidget->m_markdownPreview;
+	MarkdownEditor *mdEditor = docWidget->m_editor;
+	MarkdownPreview* textEdit = docWidget->m_preview;
 	QScrollBar *vScrollBar = textEdit->verticalScrollBar();
 	int currentPos = vScrollBar->value();
 	const QString &htmlText = docWidget->m_htmlComvertor.getHtmlText();
@@ -1728,8 +1728,8 @@ void MainWindow::updateOutlineTree() {
 	qDeleteAll(item0->takeChildren());
 	vector<QTreeWidgetItem*> parents(10, nullptr);		//	各レベルごとの親アイテムリスト
 	parents[0] = item0;
-	const QStringList &lst = docWidget->m_markdownPreview->getHeadings();
-	const vector<int>& hLineNum = docWidget->m_markdownPreview->getHeadingsLineNum();
+	const QStringList &lst = docWidget->m_preview->getHeadings();
+	const vector<int>& hLineNum = docWidget->m_preview->getHeadingsLineNum();
 	for(int i = 0; i != lst.size(); ++i) {
 		QTreeWidgetItem *item2 = new QTreeWidgetItem();
 		//bool ok;
@@ -1762,14 +1762,14 @@ void MainWindow::onMDTextChanged() {
 	m_ignore_changed = true;
 	DocWidget *docWidget = getCurDocWidget();
 	//qDebug() << "docWidget = " << docWidget;
-	MarkdownEditor *mdEditor = docWidget->m_mdEditor;
+	MarkdownEditor *mdEditor = docWidget->m_editor;
 	//m_plainText = mdEditor->toPlainText();
 #if 1
-	int scrollPos = docWidget->m_markdownPreview->verticalScrollBar()->value();
-	docWidget->m_mdEditor->setProcessing(true);
-	docWidget->m_markdownPreview->setMarkdown(mdEditor->document());
-	docWidget->m_markdownPreview->verticalScrollBar()->setValue(scrollPos);
-	docWidget->m_mdEditor->setProcessing(false);
+	int scrollPos = docWidget->m_preview->verticalScrollBar()->value();
+	docWidget->m_editor->setProcessing(true);
+	docWidget->m_preview->setMarkdown(mdEditor->document());
+	docWidget->m_preview->verticalScrollBar()->setValue(scrollPos);
+	docWidget->m_editor->setProcessing(false);
 	syncPreviewCursorWithEditor();
 #else
 	auto &htmlComvertor = docWidget->m_htmlComvertor;

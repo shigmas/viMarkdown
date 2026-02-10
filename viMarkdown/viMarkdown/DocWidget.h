@@ -16,6 +16,7 @@ public:
 	bool	isModified() const;
 	void	setModified(bool);
 	QString	getTitle() const;
+	int		previewPosToEditorPos(int pos);		//	プレビュー position をエディタの対応 position に変換
 
 public:
 	//bool	m_modified = false;		//	編集＆未保存状態
@@ -25,8 +26,8 @@ public:
 	QStringConverter::Encoding m_encoding = QStringConverter::Utf8;
 	QString	m_title;				//	タブタイトル
 	QString	m_fullPath;
-	MarkdownEditor	*m_mdEditor = nullptr;			//	マークダウンエディタへのポインタ
-	MarkdownPreview		*m_markdownPreview = nullptr;			//	マークダウンプレビューワへのポインタ
+	MarkdownEditor		*m_editor = nullptr;	//	マークダウンエディタへのポインタ
+	MarkdownPreview		*m_preview = nullptr;	//	マークダウンプレビューワへのポインタ
     MarkdownToHtmlConvertor	m_htmlComvertor;
 };
 
