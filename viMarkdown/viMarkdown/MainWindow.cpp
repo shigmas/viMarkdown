@@ -565,12 +565,12 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	markdownPreview->setMouseTracking(true); // マウスの動きを常に追跡
 	markdownPreview->setPlaceholderText("プレビュー画面");
 	markdownPreview->setStyleSheet("font-size: 12pt;");
-	connect(markdownPreview, &MarkdownPreview::lineClicked, this, &MainWindow::onMarkdownViewerLineClicked);
+	connect(markdownPreview, &MarkdownPreview::lineClicked, this, &MainWindow::onMarkdownPreviewLineClicked);
 	connect(markdownPreview, &MarkdownPreview::anchorClicked, this, &MainWindow::do_open);
-	connect(markdownPreview, &MarkdownPreview::textInserted, this, &MainWindow::onTextInsertedAtViewer);
-	connect(markdownPreview, &MarkdownPreview::textRemoved, this, &MainWindow::onTextRemovedAtViewer);
+	connect(markdownPreview, &MarkdownPreview::textInserted, this, &MainWindow::onTextInsertedAtPreview);
+	connect(markdownPreview, &MarkdownPreview::textRemoved, this, &MainWindow::onTextRemovedAtPreview);
 	connect(markdownPreview, &MarkdownPreview::BS_pressed, this, &MainWindow::onBS_pressed);
-	connect(markdownPreview, &MarkdownPreview::cursorPositionChanged, this, &MainWindow::onViewerCurPosChanged);
+	connect(markdownPreview, &MarkdownPreview::cursorPositionChanged, this, &MainWindow::onPreviewCurPosChanged);
 	splitter->addWidget(mdEditor);
 	splitter->addWidget(markdownPreview);
 	splitter->setSizes(QList<int>() << 500 << 500);
@@ -653,9 +653,9 @@ void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソ
 	m_processing = false;
 }
 //	ビューワ → エディタ カーソル位置同期
-void MainWindow::onViewerCurPosChanged() {		//	MarkdownPreview でカーソルが移動した
+void MainWindow::onPreviewCurPosChanged() {		//	MarkdownPreview でカーソルが移動した
 	if( m_processing ) return;		//	再入禁止
-	qDebug() << "MainWindow::onViewerCurPosChanged()";
+	qDebug() << "MainWindow::onPreviewCurPosChanged()";
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	if( docWidget->m_markdownPreview->isProcessing() ) return;
@@ -727,8 +727,8 @@ void MainWindow::updateEditorFontSize(int sz) {
 		docWidget->m_mdEditor->viewport()->update();		//	再表示
 	}
 }
-void MainWindow::onMarkdownViewerLineClicked(int bln) {
-	qDebug() << "MainWindow::onMarkdownViewerLineClicked(" << bln << ")";
+void MainWindow::onMarkdownPreviewLineClicked(int bln) {
+	qDebug() << "MainWindow::onMarkdownPreviewLineClicked(" << bln << ")";
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	QTextBlock block = docWidget->m_mdEditor->document()->findBlockByNumber(bln);
@@ -751,13 +751,13 @@ void MainWindow::onMarkdownViewerLineClicked(int bln) {
 	}
 #endif
 }
-void MainWindow::onTextInsertedAtViewer(QString txt) {
+void MainWindow::onTextInsertedAtPreview(QString txt) {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	QTextCursor cursor = docWidget->m_mdEditor->textCursor();
 	cursor.insertText(txt);
 }
-void MainWindow::onTextRemovedAtViewer(int charsRemoved) {
+void MainWindow::onTextRemovedAtPreview(int charsRemoved) {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	QTextCursor cursor = docWidget->m_mdEditor->textCursor();
