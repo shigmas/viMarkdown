@@ -20,6 +20,11 @@ enum {
 	US_CHECKBOX,		//	チェックボックス
 };
 
+struct PosContext {
+    QChar	m_chPrev;				//	直前文字、行頭の場合は QChar()
+    QChar	m_chNext;				//	直後文字、行末の場合は QChar()
+    int		m_hBlockNumber = 0;		// 直前見出し行ブロック番号（0 org.）、見つからない場合は 0
+};
 class MarkdownPreview : public QTextEdit
 {
 	Q_OBJECT 
@@ -37,6 +42,7 @@ public:
     void	setCursorAtNthPat(int srcBlockNum, QString pat, int nth, bool=false);
     void	ensureLineVisible(int srcBlockNum);
     void	scrollToBlock(int blockIndex);
+    PosContext	contextAt(int pos);
 
 signals:
     // クリックされたブロック番号を通知するシグナル

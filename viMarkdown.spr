@@ -666,6 +666,6 @@
 0665 ◎ C 02/11 02/11 01102│問題│preview と viewer が混在している→preview に統一？
 0666 ◎ C 02/11 02/11 01102│ToDo│class MarkdownViewer → MarkdownPreview に変更
 0667 ◎ C 02/11 02/11 01102│ToDo│DocWidget::m_mdEditor → m_editor, m_markdownPreview → m_preview にリネーム
-0668 ● C 02/11            │ToDo│
+0668 ◎ C 02/11 02/11 01102│ToDo│MarkdownViewer::PosContext contextAt(int pos) const; 追加
 0669 ● C 02/11            │ToDo│
 0670 ● C 02/11            │ToDo│

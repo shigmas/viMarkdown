@@ -791,3 +791,17 @@ void MarkdownPreview::scrollToBlock(int blockIndex) {
     verticalScrollBar()->setValue(y);
 #endif
 }
+PosContext MarkdownPreview::contextAt(int pos) {
+	PosContext pc;
+	auto *doc = document();
+	QTextBlock block = doc->findBlock(pos);
+	pc.m_chPrev = pos != block.position() ? doc->characterAt(pos-1) : QChar();
+	pc.m_chNext = doc->characterAt(pos);
+	while( block.userState() != US_HEADING ) {
+		if( !block.previous().isValid() )
+			break;
+		block = block.previous();
+	}
+	pc.m_hBlockNumber = block.blockNumber();
+	return pc;
+}
