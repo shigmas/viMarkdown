@@ -481,9 +481,7 @@ void MainWindow::onCurrentTabChanged(int ix) {
 	m_encLabel->setText(mess);
 #endif
 }
-void MainWindow::appendToDocLoc(const QString& title, const QString& fullPath, int curBlockNum) {
-	while( m_docLocHist.size()-1 > m_docLocIX)
-		m_docLocHist.pop_back();
+void MainWindow::removeHistoryEntries(const QString& title, const QString& fullPath) {
 	for(int i = m_docLocHist.size(); --i >= 0; ) {		//	重複削除
 		if( !fullPath.isEmpty() && m_docLocHist[i].m_fullPath == fullPath ||
 			m_docLocHist[i].m_fullPath.isEmpty() && m_docLocHist[i].m_title == title )
@@ -491,6 +489,11 @@ void MainWindow::appendToDocLoc(const QString& title, const QString& fullPath, i
 			m_docLocHist.removeAt(i);
 		}
 	}
+}
+void MainWindow::appendToDocLoc(const QString& title, const QString& fullPath, int curBlockNum) {
+	while( m_docLocHist.size()-1 > m_docLocIX)
+		m_docLocHist.pop_back();
+	removeHistoryEntries(title, fullPath);
 	m_docLocHist.push_back(DocLocation(title, fullPath, curBlockNum));
 	while( m_docLocHist.size() > MAX_DOC_LOC_HIST_SIZE )
 		m_docLocHist.pop_front();
@@ -1007,6 +1010,7 @@ void MainWindow::close_empty_doc() {
 		DocWidget *docWidget = (DocWidget*)ui->tabWidget->widget(ix);
 		if( docWidget != nullptr && docWidget->m_fullPath.isEmpty() && !docWidget->isModified()) {
 			if( docWidget->m_mdEditor->toPlainText().isEmpty() ) {
+				removeHistoryEntries(docWidget->m_title, docWidget->m_fullPath);		//	履歴から削除
 				ui->tabWidget->removeTab(ix);		//	空の無名ドキュメントを削除
 				--ix;
 				removeTopLevelItem(docWidget);

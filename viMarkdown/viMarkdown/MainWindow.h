@@ -109,6 +109,7 @@ protected:
     //void	onAnchorClicked(const QString&);
     void	onCurrentTabChanged(int);
     void	appendToDocLoc(const QString&, const QString&, int);
+    void	removeHistoryEntries(const QString&, const QString&);
     void	onEncodingChanged(int);
     void	onTextInsertedAtViewer(QString);
     void	onTextRemovedAtViewer(int);
