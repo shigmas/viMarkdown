@@ -803,5 +803,36 @@ PosContext MarkdownPreview::contextAt(int pos) {
 		block = block.previous();
 	}
 	pc.m_hBlockNumber = block.blockNumber();
+	int count = 1;
+	int curPos = block.position();
+	for (int i = curPos; i < pos; ++i) {
+        // 1. 直前の文字 (prev) の取得
+        QChar chBefore;
+        if (i == block.position()) {
+            // ブロックの先頭なら QChar() 扱い
+            chBefore = QChar();
+        } else {
+            chBefore = doc->characterAt(i - 1);
+            // 改行記号なら行頭扱いにする
+            if (chBefore == QChar::ParagraphSeparator) {
+                chBefore = QChar();
+            }
+        }
+        // 2. 現在の位置の文字 (next) の取得
+        QChar chAt = doc->characterAt(i);
+        // 行末（改行記号）なら QChar() 扱いにする
+        if (chAt == QChar::ParagraphSeparator) {
+            chAt = QChar();
+        }
+        // 3. マッチ判定
+        if (chBefore == pc.m_chPrev && chAt == pc.m_chNext) {
+            count++;
+        }
+        // もし block を跨いだ場合は、ブロック先頭判定のために更新
+        if (i >= block.position() + block.length() - 1) {
+            block = block.next();
+        }
+    }
+	pc.m_indexOfPrevNext = count;
 	return pc;
 }
