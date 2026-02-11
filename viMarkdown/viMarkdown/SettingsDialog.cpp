@@ -21,6 +21,8 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 	connect(ui->activeLineColorPB, &QPushButton::clicked, this, &SettingsDialog::onActiveLineColorButtonClicked);
 	connect(ui->inactiveLineColorPB, &QPushButton::clicked, this, &SettingsDialog::onInactiveLineColorButtonClicked);
 	connect(ui->boldColorPB, &QPushButton::clicked, this, &SettingsDialog::onBoldColorButtonClicked);
+	connect(ui->italicColorPB, &QPushButton::clicked, this, &SettingsDialog::onItalicColorButtonClicked);
+	connect(ui->strikethroughColorPB, &QPushButton::clicked, this, &SettingsDialog::onStrikethroughColorButtonClicked);
 	connect(ui->matchColorPB, &QPushButton::clicked, this, &SettingsDialog::onMatchColorButtonClicked);
 	connect(ui->CSVHeaderPB, &QPushButton::clicked, this, &SettingsDialog::onCSVHeaderColorButtonClicked);
 	connect(ui->CSVZebra1PB, &QPushButton::clicked, this, &SettingsDialog::onCSVZebraColor1ButtonClicked);
@@ -45,6 +47,8 @@ void SettingsDialog::updateColorButtons() {
     setColorButtonStyle(ui->activeLineColorPB,   g.m_activeLnColor);
     setColorButtonStyle(ui->inactiveLineColorPB, g.m_inactiveLnColor);
     setColorButtonStyle(ui->boldColorPB,         g.m_boldColor);
+    setColorButtonStyle(ui->italicColorPB,       g.m_italicColor);
+    setColorButtonStyle(ui->strikethroughColorPB, g.m_strikethroughColor);
     setColorButtonStyle(ui->matchColorPB,        g.m_matchColor);
     setColorButtonStyle(ui->CSVHeaderPB,         g.m_CSVHeaderColor);
     setColorButtonStyle(ui->CSVZebra1PB,         g.m_CSVZebraColor1);
@@ -98,68 +102,42 @@ void SettingsDialog::accept() {
 	settings.setValue(KEY_EDITOR_FONT_SIZE, ui->editorFontSize->value());
 	QDialog::accept();
 }
-void SettingsDialog::onActiveLineColorButtonClicked() {
-	QColor selectedColor = QColorDialog::getColor(g.m_activeLnColor, this, "Select Headings Color");
+void SettingsDialog::pickColor(QColor &targetColor, const QString &title) {
+	QColor selectedColor = QColorDialog::getColor(targetColor, this, QString("Select %1 Color").arg(title));
 	if (selectedColor.isValid()) {
-		g.m_activeLnColor = selectedColor;
+		targetColor = selectedColor;
 		updateColorButtons();
 		emit settingsChanged();
 	}
+}
+void SettingsDialog::onActiveLineColorButtonClicked() {
+	pickColor(g.m_activeLnColor, "Active Line");
 }
 void SettingsDialog::onInactiveLineColorButtonClicked() {
-	QColor selectedColor = QColorDialog::getColor(g.m_inactiveLnColor, this, "Select Headings Color");
-	if (selectedColor.isValid()) {
-		g.m_inactiveLnColor = selectedColor;
-		updateColorButtons();
-		emit settingsChanged();
-	}
+	pickColor(g.m_inactiveLnColor, "Inactive Line");
 }
 void SettingsDialog::onHeadingColorButtonClicked() {
-	QColor selectedColor = QColorDialog::getColor(g.m_headingsColor, this, "Select Headings Color");
-	if( selectedColor.isValid() ) {
-		g.m_headingsColor = selectedColor;
-		updateColorButtons();
-		emit settingsChanged();
-	}
+	pickColor(g.m_headingsColor, "Heading");
 }
 void SettingsDialog::onBoldColorButtonClicked() {
-	QColor selectedColor = QColorDialog::getColor(g.m_boldColor, this, "Select Headings Color");
-	if (selectedColor.isValid()) {
-		g.m_boldColor = selectedColor;
-		updateColorButtons();
-		emit settingsChanged();
-	}
+	pickColor(g.m_boldColor, "Bold");
+}
+void SettingsDialog::onItalicColorButtonClicked() {
+	pickColor(g.m_italicColor, "Italic");
+}
+void SettingsDialog::onStrikethroughColorButtonClicked() {
+	pickColor(g.m_strikethroughColor, "Strikethrough");
 }
 void SettingsDialog::onMatchColorButtonClicked() {
-	QColor selectedColor = QColorDialog::getColor(g.m_boldColor, this, "Select Headings Color");
-	if (selectedColor.isValid()) {
-		g.m_matchColor = selectedColor;
-		updateColorButtons();
-		emit settingsChanged();
-	}
+	pickColor(g.m_matchColor, "Match");
 }
 void SettingsDialog::onCSVHeaderColorButtonClicked() {
-	QColor selectedColor = QColorDialog::getColor(g.m_CSVHeaderColor, this, "Select Headings Color");
-	if( selectedColor.isValid() ) {
-		g.m_CSVHeaderColor = selectedColor;
-		updateColorButtons();
-		emit settingsChanged();
-	}
+	pickColor(g.m_CSVHeaderColor, "CSV Header");
 }
 void SettingsDialog::onCSVZebraColor1ButtonClicked() {
-	QColor selectedColor = QColorDialog::getColor(g.m_CSVZebraColor1, this, "Select Headings Color");
-	if( selectedColor.isValid() ) {
-		g.m_CSVZebraColor1 = selectedColor;
-		updateColorButtons();
-		emit settingsChanged();
-	}
+	pickColor(g.m_CSVZebraColor1, "CSV Zebra-1 ");
 }
 void SettingsDialog::onCSVZebraColor2ButtonClicked() {
-	QColor selectedColor = QColorDialog::getColor(g.m_CSVZebraColor2, this, "Select Headings Color");
-	if( selectedColor.isValid() ) {
-		g.m_CSVZebraColor2 = selectedColor;
-		updateColorButtons();
-		emit settingsChanged();
-	}
+	pickColor(g.m_CSVZebraColor2, "CSV Zebra-2 ");
 }
 

@@ -22,11 +22,14 @@ protected:
 	void onActiveLineColorButtonClicked();
 	void onInactiveLineColorButtonClicked();
 	void onBoldColorButtonClicked();
+	void onItalicColorButtonClicked();
+	void onStrikethroughColorButtonClicked();
 	void onMatchColorButtonClicked();
 	void onCSVHeaderColorButtonClicked();
 	void onCSVZebraColor1ButtonClicked();
 	void onCSVZebraColor2ButtonClicked();
 	void	updateColorButtons();
+	void	pickColor(QColor &targetColor, const QString &title);
 
 signals:
 	void	settingsChanged();
