@@ -15,6 +15,7 @@ QT_END_NAMESPACE
 #define	KEY_INACTIVA_LINE_COLOR		u"inactiveLineColor"
 #define	KEY_HEADINGS_COLOR			u"headingsColor"
 #define	KEY_BOLD_COLOR				u"boldColor"
+#define	KEY_MATCH_COLOR				u"matchColor"
 #define	KEY_CSV_HEADER_COLOR		u"CSVHeadingsColor"
 #define	KEY_CSV_ZEBRA_COLOR1		u"CSVZebraColor1"
 #define	KEY_CSV_ZEBRA_COLOR2		u"CSVZebraColor2"
@@ -42,6 +43,7 @@ struct Global {
 	QColor	m_inactiveLnColor;		//	非アクティブ時アンダーライン行カーソル色
 	QColor	m_headingsColor;
 	QColor	m_boldColor;
+	QColor	m_matchColor;			//	検索マッチ背景色
 	QColor	m_CSVHeaderColor;
 	QColor	m_CSVZebraColor1;		//	本体奇数行
 	QColor	m_CSVZebraColor2;		//	本体偶数行
@@ -197,6 +199,7 @@ private:
     QString		m_curTitle;				//	現文書タイトル
     QString		m_altFullPath;			//	直前文書フルパス
     QString		m_altTitle;				//	直前文書タイトル
+    QString		m_srcText;				//	検索文字列
     class QLabel		*m_lcLabel;		//	行カラムラベル
     class QLabel		*m_encLabel;	//	文字エンコーディングラベル
     class QComboBox				*m_encodingCombo = nullptr;

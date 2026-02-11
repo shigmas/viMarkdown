@@ -21,6 +21,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 	connect(ui->activeLineColorPB, &QPushButton::clicked, this, &SettingsDialog::onActiveLineColorButtonClicked);
 	connect(ui->inactiveLineColorPB, &QPushButton::clicked, this, &SettingsDialog::onInactiveLineColorButtonClicked);
 	connect(ui->boldColorPB, &QPushButton::clicked, this, &SettingsDialog::onBoldColorButtonClicked);
+	connect(ui->matchColorPB, &QPushButton::clicked, this, &SettingsDialog::onMatchColorButtonClicked);
 	connect(ui->CSVHeaderPB, &QPushButton::clicked, this, &SettingsDialog::onCSVHeaderColorButtonClicked);
 	connect(ui->CSVZebra1PB, &QPushButton::clicked, this, &SettingsDialog::onCSVZebraColor1ButtonClicked);
 	connect(ui->CSVZebra2PB, &QPushButton::clicked, this, &SettingsDialog::onCSVZebraColor2ButtonClicked);
@@ -51,6 +52,11 @@ void SettingsDialog::updateColorButtons() {
         "border: 1px solid gray;" // 枠線をつける
         "height: 20px;" // 必要に応じて高さを固定
     ).arg(g.m_boldColor.name()));
+	ui->matchColorPB->setStyleSheet(QString(
+        "background-color: %1;" // 背景色をセット
+        "border: 1px solid gray;" // 枠線をつける
+        "height: 20px;" // 必要に応じて高さを固定
+    ).arg(g.m_matchColor.name()));
 	ui->CSVHeaderPB->setStyleSheet(QString(
         "background-color: %1;" // 背景色をセット
         "border: 1px solid gray;" // 枠線をつける
@@ -101,6 +107,14 @@ void SettingsDialog::onBoldColorButtonClicked() {
 	QColor selectedColor = QColorDialog::getColor(g.m_boldColor, this, "Select Headings Color");
 	if (selectedColor.isValid()) {
 		g.m_boldColor = selectedColor;
+		updateColorButtons();
+		emit settingsChanged();
+	}
+}
+void SettingsDialog::onMatchColorButtonClicked() {
+	QColor selectedColor = QColorDialog::getColor(g.m_boldColor, this, "Select Headings Color");
+	if (selectedColor.isValid()) {
+		g.m_matchColor = selectedColor;
 		updateColorButtons();
 		emit settingsChanged();
 	}

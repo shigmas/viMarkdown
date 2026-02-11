@@ -87,6 +87,7 @@ void MainWindow::load_settings() {
 	g.m_inactiveLnColor = settings.value(KEY_INACTIVA_LINE_COLOR, QColor("#800000")).value<QColor>();
 	g.m_headingsColor = settings.value(KEY_HEADINGS_COLOR, QColor("#800000")).value<QColor>();		//	デフォルト：ダークレッド
 	g.m_boldColor = settings.value(KEY_BOLD_COLOR, QColor("#008000")).value<QColor>();
+	g.m_matchColor = settings.value(KEY_MATCH_COLOR, QColor("#ffff00")).value<QColor>();
 	g.m_CSVHeaderColor = settings.value(KEY_CSV_HEADER_COLOR, QColor("lightblue")).value<QColor>();
 	g.m_CSVZebraColor1 = settings.value(KEY_CSV_ZEBRA_COLOR1, QColor("white")).value<QColor>();
 	g.m_CSVZebraColor2 = settings.value(KEY_CSV_ZEBRA_COLOR2, QColor("lightyellow")).value<QColor>();
@@ -97,6 +98,7 @@ void MainWindow::save_settings() {
     settings.setValue(KEY_EDITOR_FONT_SIZE, g.m_editorFontSize);
     settings.setValue(KEY_HEADINGS_COLOR, g.m_headingsColor);
     settings.setValue(KEY_BOLD_COLOR, g.m_boldColor);
+    settings.setValue(KEY_MATCH_COLOR, g.m_matchColor);
     settings.setValue(KEY_CSV_HEADER_COLOR, g.m_CSVHeaderColor);
     settings.setValue(KEY_CSV_ZEBRA_COLOR1, g.m_CSVZebraColor1);
     settings.setValue(KEY_CSV_ZEBRA_COLOR2, g.m_CSVZebraColor2);
@@ -300,6 +302,7 @@ void MainWindow::do_search(const QString srcText, bool backward) {
 			qDebug() << "not found";
 		}
 	}
+	m_srcText = srcText;
 	mdEditor->highlightSearchText(srcText);
 	mdEditor->setFocus();
 }
@@ -334,7 +337,8 @@ void MainWindow::onAction_ClearSearchHighlights() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	MarkdownEditor *mdEditor = docWidget->m_editor;
-	mdEditor->highlightSearchText("");
+	m_srcText.clear();
+	mdEditor->highlightSearchText(m_srcText);
 }
 void MainWindow::setup_connections() {
 	connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainWindow::onCurrentTabChanged);
@@ -726,6 +730,7 @@ void MainWindow::updateEditorFontSize(int sz) {
 		docWidget->m_editor->updateViewportMargines();
 		docWidget->m_editor->setBoldColor(g.m_boldColor);
 		docWidget->m_editor->rehighlight();				//	再ハイライト
+		docWidget->m_editor->highlightSearchText(m_srcText);				//	再ハイライト
 		docWidget->m_editor->viewport()->update();		//	再表示
 	}
 }

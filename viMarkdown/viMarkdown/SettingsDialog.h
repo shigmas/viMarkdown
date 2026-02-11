@@ -22,6 +22,7 @@ protected:
 	void onActiveLineColorButtonClicked();
 	void onInactiveLineColorButtonClicked();
 	void onBoldColorButtonClicked();
+	void onMatchColorButtonClicked();
 	void onCSVHeaderColorButtonClicked();
 	void onCSVZebraColor1ButtonClicked();
 	void onCSVZebraColor2ButtonClicked();

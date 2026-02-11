@@ -1456,7 +1456,7 @@ void MarkdownEditor::highlightSearchText(const QString &searchText) {
 
     // 検索時の書式設定
     QTextCharFormat format;
-    format.setBackground(Qt::yellow);       // 背景を黄色に
+    format.setBackground(g.m_matchColor);       // 背景を設定色に
     format.setForeground(Qt::black);        // 文字を黒に（必要に応じて）
 
     // ドキュメント全体から検索
