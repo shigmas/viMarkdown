@@ -274,9 +274,13 @@ class MarkdownHighlighter : public QSyntaxHighlighter {
 public:
 	MarkdownHighlighter(QTextDocument *parent) : QSyntaxHighlighter(parent)
 	{
-		m_boldFormat.setFontWeight(QFont::Bold);
+		//m_boldFormat.setFontWeight(QFont::Bold);
 		m_boldFormat.setForeground(g.m_boldColor);
+		m_italicFormat.setForeground(g.m_italicColor);
+		m_strikethroughFormat.setForeground(g.m_strikethroughColor);
 		m_boldRegex = QRegularExpression(R"(\*\*([^\*]+)\*\*)");
+		m_italicRegex = QRegularExpression(R"([^\*]\*([^\*]+)\*[^\*])");
+		m_strikethroughRegex = QRegularExpression(R"(\~\~([^\*]+)\~\~)");
 	}
 	void setBoldColor(const QColor &color) {
         m_boldFormat.setForeground(color);
@@ -294,14 +298,27 @@ protected:
 			auto it = m_boldRegex.globalMatch(text);
 			while (it.hasNext()) {
 				QRegularExpressionMatch match = it.next();
-				// マッチした範囲（開始位置と長さ）にフォーマットを適用
 				setFormat(match.capturedStart(), match.capturedLength(), m_boldFormat);
+			}
+			it = m_italicRegex.globalMatch(text);
+			while (it.hasNext()) {
+				QRegularExpressionMatch match = it.next();
+				setFormat(match.capturedStart(), match.capturedLength(), m_italicFormat);
+			}
+			it = m_strikethroughRegex.globalMatch(text);
+			while (it.hasNext()) {
+				QRegularExpressionMatch match = it.next();
+				setFormat(match.capturedStart(), match.capturedLength(), m_strikethroughFormat);
 			}
 		}
 	}
 private:
 	QTextCharFormat m_boldFormat;
+	QTextCharFormat m_italicFormat;
+	QTextCharFormat m_strikethroughFormat;
 	QRegularExpression m_boldRegex;
+	QRegularExpression m_italicRegex;
+	QRegularExpression m_strikethroughRegex;
 };
 //----------------------------------------------------------------------
 MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)

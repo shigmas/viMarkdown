@@ -86,7 +86,9 @@ void MainWindow::load_settings() {
 	g.m_activeLnColor = settings.value(KEY_ACTIVA_LINE_COLOR, QColor("#ff0000")).value<QColor>();
 	g.m_inactiveLnColor = settings.value(KEY_INACTIVA_LINE_COLOR, QColor("#800000")).value<QColor>();
 	g.m_headingsColor = settings.value(KEY_HEADINGS_COLOR, QColor("#800000")).value<QColor>();		//	デフォルト：ダークレッド
-	g.m_boldColor = settings.value(KEY_BOLD_COLOR, QColor("#008000")).value<QColor>();
+	g.m_boldColor = settings.value(KEY_BOLD_COLOR, QColor("#00FF00")).value<QColor>();
+	g.m_italicColor = settings.value(KEY_ITALIC_COLOR, QColor("#0000FF")).value<QColor>();
+	g.m_strikethroughColor = settings.value(KEY_STRIKETHROUGH_COLOR, QColor("#00ffff")).value<QColor>();
 	g.m_matchColor = settings.value(KEY_MATCH_COLOR, QColor("#ffff00")).value<QColor>();
 	g.m_CSVHeaderColor = settings.value(KEY_CSV_HEADER_COLOR, QColor("lightblue")).value<QColor>();
 	g.m_CSVZebraColor1 = settings.value(KEY_CSV_ZEBRA_COLOR1, QColor("white")).value<QColor>();
@@ -98,6 +100,8 @@ void MainWindow::save_settings() {
     settings.setValue(KEY_EDITOR_FONT_SIZE, g.m_editorFontSize);
     settings.setValue(KEY_HEADINGS_COLOR, g.m_headingsColor);
     settings.setValue(KEY_BOLD_COLOR, g.m_boldColor);
+    settings.setValue(KEY_ITALIC_COLOR, g.m_italicColor);
+    settings.setValue(KEY_STRIKETHROUGH_COLOR, g.m_strikethroughColor);
     settings.setValue(KEY_MATCH_COLOR, g.m_matchColor);
     settings.setValue(KEY_CSV_HEADER_COLOR, g.m_CSVHeaderColor);
     settings.setValue(KEY_CSV_ZEBRA_COLOR1, g.m_CSVZebraColor1);
