@@ -305,18 +305,16 @@ void MainWindow::do_search(const QString srcText, bool backward) {
 	m_srcText = srcText;
 	mdEditor->highlightSearchText(srcText);
 	mdEditor->setFocus();
-}
-void MainWindow::do_find(bool backward) {
-	const QString curText = m_searchCB->currentText();
-	if( curText.isEmpty() ) return;
-	do_search(curText, backward);
-	//QString srcText = m_searchCB->currentText();
-	//qDebug() << "srcText = " << srcText;
-	m_searchHist.push_front(curText);
+	m_searchHist.push_front(srcText);
 	m_searchHist.removeDuplicates();	//	重複削除
 	m_searchCB->clear();
     m_searchCB->addItems(m_searchHist);
-    m_searchCB->setCurrentText(curText);
+    m_searchCB->setCurrentText(srcText);
+}
+void MainWindow::do_find(bool backward) {
+	const QString srcText = m_searchCB->currentText();
+	if( srcText.isEmpty() ) return;
+	do_search(srcText, backward);
 }
 void MainWindow::onSearchCBActivated() {
 	do_find();
