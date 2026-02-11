@@ -121,6 +121,8 @@ void MainWindow::insertSearchComboBox() {
 		QFileInfo fi(recentFilePaths.front());
 		QDir::setCurrent(fi.path());
 	}
+	//	実験的実装
+	ui->mainToolBar->insertWidget(ui->action_Undo, ui->menuBar);
 }
 void MainWindow::setup_tabMenu() {
 	QTabBar* tabBar = ui->tabWidget->tabBar();
