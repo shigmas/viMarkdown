@@ -229,7 +229,7 @@ void MainWindow::onAction_NaviForward() {
 	m_processing = false;
 }
 void MainWindow::onAction_Replace() {
-	ReplaceDialog dlg(this);
+	ReplaceDialog dlg(m_searchHist, this);
 	connect(&dlg, &ReplaceDialog::do_search, this, &MainWindow::do_search);
 	connect(&dlg, &ReplaceDialog::do_replace_next, this, &MainWindow::do_replace_next);
 	connect(&dlg, &ReplaceDialog::do_replace_all, this, &MainWindow::do_replace_all);

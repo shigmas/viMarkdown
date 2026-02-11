@@ -12,7 +12,7 @@ class ReplaceDialog : public QDialog
 	Q_OBJECT
 
 public:
-	ReplaceDialog(QWidget *parent = nullptr);
+	ReplaceDialog(const QStringList &hist, QWidget *parent = nullptr);
 	~ReplaceDialog();
 
 protected:

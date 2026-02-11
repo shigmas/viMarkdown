@@ -34,7 +34,7 @@
        <item row="0" column="0">
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>Search&amp;Text:</string>
+          <string>Search Text:</string>
          </property>
         </widget>
        </item>
@@ -48,7 +48,7 @@
        <item row="1" column="0">
         <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>Replace&amp;To:</string>
+          <string>Replace To:</string>
          </property>
         </widget>
        </item>

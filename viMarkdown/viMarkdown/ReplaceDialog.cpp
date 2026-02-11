@@ -4,15 +4,15 @@
 
 extern Global g;
 
-ReplaceDialog::ReplaceDialog(QWidget *parent)
+ReplaceDialog::ReplaceDialog(const QStringList &hist, QWidget *parent)
 	: QDialog(parent)
 	, ui(new Ui::ReplaceDialogClass())
 {
 	ui->setupUi(this);
-	QSettings settings;
-	QStringList history = settings.value("search/history").toStringList();
+	//QSettings settings;
+	//QStringList history = settings.value("search/history").toStringList();
     ui->searchCB->clear();
-	ui->searchCB->addItems(history);
+	ui->searchCB->addItems(hist);
 	ui->ignoreCase->setCheckState(g.m_ignoreCase ? Qt::Checked : Qt::Unchecked);
 	connect(ui->searchPrev, &QPushButton::clicked, this, &ReplaceDialog::onSearchPrev);
 	connect(ui->searchNext, &QPushButton::clicked, this, &ReplaceDialog::onSearchNext);
