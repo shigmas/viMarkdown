@@ -31,7 +31,25 @@ SettingsDialog::~SettingsDialog()
 {
 	delete ui;
 }
+static void setColorButtonStyle(QPushButton* button, const QColor& color)
+{
+    button->setStyleSheet(QString(
+        "background-color: %1;"		// 背景色
+        "border: 1px solid gray;"	// 枠線
+        "height: 20px;"
+    ).arg(color.name()));
+}
 void SettingsDialog::updateColorButtons() {
+#if 1
+	setColorButtonStyle(ui->headingsColorPB,     g.m_headingsColor);
+    setColorButtonStyle(ui->activeLineColorPB,   g.m_activeLnColor);
+    setColorButtonStyle(ui->inactiveLineColorPB, g.m_inactiveLnColor);
+    setColorButtonStyle(ui->boldColorPB,         g.m_boldColor);
+    setColorButtonStyle(ui->matchColorPB,        g.m_matchColor);
+    setColorButtonStyle(ui->CSVHeaderPB,         g.m_CSVHeaderColor);
+    setColorButtonStyle(ui->CSVZebra1PB,         g.m_CSVZebraColor1);
+    setColorButtonStyle(ui->CSVZebra2PB,         g.m_CSVZebraColor2);
+#else
 	ui->headingsColorPB->setStyleSheet(QString(
         "background-color: %1;" // 背景色をセット
         "border: 1px solid gray;" // 枠線をつける
@@ -72,6 +90,7 @@ void SettingsDialog::updateColorButtons() {
         "border: 1px solid gray;" // 枠線をつける
         "height: 20px;" // 必要に応じて高さを固定
     ).arg(g.m_CSVZebraColor2.name()));
+#endif
 }
 
 void SettingsDialog::accept() {
