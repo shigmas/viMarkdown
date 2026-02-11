@@ -114,9 +114,9 @@ void MainWindow::insertSearchComboBox() {
 	ui->mainToolBar->insertWidget(ui->action_List, m_searchCB);
 	connect(m_searchCB, &QComboBox::activated, this, &MainWindow::onSearchCBActivated);
 	QSettings settings;
-	QStringList history = settings.value("search/history").toStringList();
+	m_searchHist = settings.value("search/history").toStringList();
     m_searchCB->clear();
-    m_searchCB->addItems(history);
+    m_searchCB->addItems(m_searchHist);
     //	ついでに最近のファイル・ディレクトリをカレントディレクトリに設定
 	QStringList recentFilePaths = settings.value(KEY_RECENT_FILES).toStringList();
 	if( !recentFilePaths.isEmpty() ) {
@@ -307,9 +307,16 @@ void MainWindow::do_search(const QString srcText, bool backward) {
 	mdEditor->setFocus();
 }
 void MainWindow::do_find(bool backward) {
-	do_search(m_searchCB->currentText(), backward);
+	const QString curText = m_searchCB->currentText();
+	if( curText.isEmpty() ) return;
+	do_search(curText, backward);
 	//QString srcText = m_searchCB->currentText();
 	//qDebug() << "srcText = " << srcText;
+	m_searchHist.push_front(curText);
+	m_searchHist.removeDuplicates();	//	重複削除
+	m_searchCB->clear();
+    m_searchCB->addItems(m_searchHist);
+    m_searchCB->setCurrentText(curText);
 }
 void MainWindow::onSearchCBActivated() {
 	do_find();
@@ -438,11 +445,11 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 		}
 	}
 	QSettings settings;
-	QStringList history;
-    for (int i = 0; i < m_searchCB->count(); ++i) {
-        history << m_searchCB->itemText(i);
-    }
-    settings.setValue("search/history", history);
+	//QStringList history;
+    //for (int i = 0; i < m_searchCB->count(); ++i) {
+    //    history << m_searchCB->itemText(i);
+    //}
+    settings.setValue("search/history", m_searchHist);
 	settings.beginGroup("MainWindow");
 	settings.setValue("geometry", saveGeometry()); // 位置・サイズ
 	settings.setValue("windowState", saveState()); // ツールバー・ドックの状態
