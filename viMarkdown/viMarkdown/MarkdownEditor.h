@@ -59,6 +59,7 @@ signals:
 protected:
     void	keyPressEvent(QKeyEvent *e) override;
     void	mouseReleaseEvent(QMouseEvent *event) override;
+    void	mouseDoubleClickEvent(QMouseEvent *e) override;
     void	wheelEvent(QWheelEvent *event) override;
     void	dragEnterEvent(QDragEnterEvent *event) override;
     void	dropEvent(QDropEvent *event) override;

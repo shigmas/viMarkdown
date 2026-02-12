@@ -505,6 +505,26 @@ void MarkdownEditor::mouseReleaseEvent(QMouseEvent *event) {
 #endif
 	MarkdownBaseEdit::mouseReleaseEvent(event);
 }
+void MarkdownEditor::mouseDoubleClickEvent(QMouseEvent *e) {
+	QTextCursor cursor = cursorForPosition(e->pos());
+    int pos = cursor.position();
+    QTextDocument *doc = document();
+    CharType type = getCharType(doc->characterAt(pos));
+    // 前方（左）への探索
+    int start = pos;
+    while (start > 0 && getCharType(doc->characterAt(start - 1)) == type) {
+        start--;
+    }
+    // 後方（右）への探索
+    int end = pos;
+    while (end < doc->characterCount() - 1 && getCharType(doc->characterAt(end)) == type) {
+        end++;
+    }
+    // 選択範囲を設定
+    cursor.setPosition(start);
+    cursor.setPosition(end, QTextCursor::KeepAnchor);
+    setTextCursor(cursor);
+}
 void MarkdownEditor::wheelEvent(QWheelEvent *event) {
 	qDebug() << "MarkdownEditor::wheelEvent()";
 	qDebug() << "e->angleDelta() = " << event->angleDelta();
