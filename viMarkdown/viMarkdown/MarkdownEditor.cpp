@@ -1045,18 +1045,28 @@ QString getRightSrcString(bool erase, bool thickKeisen, const QString txt, int i
 			if( txt[ix] == u'↑' || txt[ix] == u'┌' || txt[ix] == u'┏' ) return thickKeisen ? "┏" : "┌";
 			if( txt[ix] == u'↓' || txt[ix] == u'└' || txt[ix] == u'┗' ) return thickKeisen ? "┗" : "└";
 			if( txt[ix] == u'│' || txt[ix] == u'├' || txt[ix] == u'┝' ) {
-				ushort bits = ix < prev.size() ? getConnectionBits(prev[ix]) : 0;
-				if( (bits&(Down|ThickDown)) != 0 )			//	上部から下に接続している
-					return thickKeisen ? "┝" : "├";
-				else
-					return thickKeisen ? "┏" : "┌";
+				ushort pbits = ix < prev.size() ? getConnectionBits(prev[ix]) : 0;
+				ushort nbits = ix < next.size() ? getConnectionBits(next[ix]) : 0;
+				if( (pbits&(Down|ThickDown)) != 0 ) {		//	上部から下に接続している
+					if( (nbits&(Up|ThickUp)) != 0 )			//	下部から上に接続している
+						return thickKeisen ? "┝" : "├";
+					else
+						return thickKeisen ? "┗" : "└";
+				} else {
+					if( (nbits&(Up|ThickUp)) != 0 )			//	下部から上に接続している
+						return thickKeisen ? "┏" : "┌";
+					else
+						return thickKeisen ? "━" : "─";
+				}
 			}
 			if( txt[ix] == u'┃' || txt[ix] == u'┣' || txt[ix] == u'┠' ) {
 				ushort bits = ix < prev.size() ? getConnectionBits(prev[ix]) : 0;
-				if( (bits&(Down|ThickDown)) != 0 )			//	上部から下に接続している
+				if( (bits&(Down|ThickDown)) != 0 )		//	上部から下に接続している
 					return thickKeisen ? "┣" : "┠";
-				else
+				if( (bits&(Up|ThickUp)) != 0 )			//	下部から上に接続している
 					return thickKeisen ? "┏" : "┌";
+				else
+					return thickKeisen ? "━" : "─";
 			}
 			if( txt[ix] == u'┘' || txt[ix] == u'┴' ) return thickKeisen ? "┷" : "┴";	//	上方向が細線
 			if( txt[ix] == u'┛' || txt[ix] == u'┸' ) return thickKeisen ? "┻" : "┸";	//	上方向が太線
