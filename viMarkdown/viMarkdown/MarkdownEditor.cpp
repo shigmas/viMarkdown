@@ -494,6 +494,11 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 				while (pos < doc->characterCount() - 1 && getCharType(doc->characterAt(pos)) == startType) {
 					pos++;
 				}
+				if( startType != Type_Space ) {
+					while (pos < doc->characterCount() - 1 && getCharType(doc->characterAt(pos)) == Type_Space) {
+						pos++;
+					}
+				}
 				cursor.setPosition(pos);
 				setTextCursor(cursor);
 				return;
@@ -502,11 +507,16 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 				int pos = cursor.position();
 				QTextDocument *doc = document();
 				if (pos <= 0) return;
-		        CharType startType = getCharType(doc->characterAt(pos - 1));
-		        // 同じ種別の間は戻る
-		        while (pos > 0 && getCharType(doc->characterAt(pos - 1)) == startType) {
-		            pos--;
-		        }
+				CharType startType = getCharType(doc->characterAt(pos - 1));
+				while (pos > 0 && getCharType(doc->characterAt(pos - 1)) == startType) {
+					pos--;
+				}
+				if( startType == Type_Space ) {
+					CharType startType = getCharType(doc->characterAt(pos - 1));
+					while (pos > 0 && getCharType(doc->characterAt(pos - 1)) == startType) {
+						pos--;
+					}
+				}
 				cursor.setPosition(pos);
 				setTextCursor(cursor);
 				return;
@@ -1029,12 +1039,18 @@ void MarkdownEditor::do_keisen_left(bool erase, bool thickKeisen) {
 		cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor);
 	setTextCursor(cursor);
 }
-QString getRightSrcString(bool erase, bool thickKeisen, const QString txt, int ix) {
+QString getRightSrcString(bool erase, bool thickKeisen, const QString txt, int ix, const QString prev, const QString next) {
 	if( !erase ) {
 		if( ix < txt.size() ) {
 			if( txt[ix] == u'↑' || txt[ix] == u'┌' || txt[ix] == u'┏' ) return thickKeisen ? "┏" : "┌";
 			if( txt[ix] == u'↓' || txt[ix] == u'└' || txt[ix] == u'┗' ) return thickKeisen ? "┗" : "└";
-			if( txt[ix] == u'│' || txt[ix] == u'├' || txt[ix] == u'┝' ) return thickKeisen ? "┝" : "├";
+			if( txt[ix] == u'│' || txt[ix] == u'├' || txt[ix] == u'┝' ) {
+				ushort bits = ix < prev.size() ? getConnectionBits(prev[ix]) : 0;
+				if( (bits&(Down|ThickDown)) != 0 )			//	上部から下に接続している
+					return thickKeisen ? "┝" : "├";
+				else
+					return thickKeisen ? "┏" : "┌";
+			}
 			if( txt[ix] == u'┃' || txt[ix] == u'┣' || txt[ix] == u'┠' ) return thickKeisen ? "┣" : "┠";
 			if( txt[ix] == u'┘' || txt[ix] == u'┴' ) return thickKeisen ? "┷" : "┴";	//	上方向が細線
 			if( txt[ix] == u'┛' || txt[ix] == u'┸' ) return thickKeisen ? "┻" : "┸";	//	上方向が太線
@@ -1100,7 +1116,12 @@ void MarkdownEditor::do_keisen_right(bool erase, bool thickKeisen) {
 		do {
 			cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 		} while( getVisualColumn(cursor, this) < vc + 2);
-		str = getRightSrcString(erase, thickKeisen, cursor.block().text(), ix);
+		QString prev, next;
+		QTextBlock pb = cursor.block().previous();
+		if( pb.isValid() ) prev = pb.text();
+		QTextBlock nb = cursor.block().next();
+		if( nb.isValid() ) next = nb.text();
+		str = getRightSrcString(erase, thickKeisen, cursor.block().text(), ix, prev, next);
 	}
 	QString str2 = erase ? "  " : "→";
 	if (!cursor.atBlockEnd()) {
