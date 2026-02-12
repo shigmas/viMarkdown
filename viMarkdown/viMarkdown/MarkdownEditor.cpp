@@ -17,6 +17,25 @@ extern bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens);
 extern bool isTableLine(const QString& lnStr, QStringList &tableTokens);
 extern bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign);
 
+enum CharType {
+    Type_Other,
+    Type_Space,
+    Type_Kanji,
+    Type_Hiragana,
+    Type_Katakana,
+    Type_HalfAlphaNum,
+    Type_FullSymbol
+};
+CharType getCharType(QChar ch) {
+    ushort uc = ch.unicode();
+    if (ch.isSpace()) return Type_Space;
+    if (uc >= 0x4E00 && uc <= 0x9FFF) return Type_Kanji;
+    if (uc >= 0x3040 && uc <= 0x309F) return Type_Hiragana;
+    if (uc >= 0x30A0 && uc <= 0x30FF) return Type_Katakana;
+    if (ch.isLetterOrNumber()) return Type_HalfAlphaNum; // 半角英数
+    return Type_Other;
+}
+
 class LnAreaWidget : public QWidget {
 public:
 	LnAreaWidget(QWidget *parent = nullptr) : QWidget(parent) {}
