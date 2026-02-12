@@ -282,10 +282,10 @@ public:
 		m_italicRegex = QRegularExpression(R"([^\*]\*([^\*]+)\*[^\*])");
 		m_strikethroughRegex = QRegularExpression(R"(\~\~([^\*]+)\~\~)");
 	}
-	void setBoldColor(const QColor &color) {
-        m_boldFormat.setForeground(color);
-        rehighlight(); // これを呼ぶことでドキュメント全体の highlightBlock が再実行される
-    }
+	//void setBoldColor(const QColor &color) {
+    //    m_boldFormat.setForeground(color);
+    //    rehighlight(); // これを呼ぶことでドキュメント全体の highlightBlock が再実行される
+    //}
 	void updateInlineColors() {
         m_boldFormat.setForeground(g.m_boldColor);
         m_italicFormat.setForeground(g.m_italicColor);
@@ -353,9 +353,9 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
 	connect(document(), &QTextDocument::contentsChange, this, &MarkdownEditor::onContentsChanged);
 }
 void MarkdownEditor::rehighlight() { m_highlighter->rehighlight(); }
-void MarkdownEditor::setBoldColor(QColor col) {
-	m_highlighter->setBoldColor(col);
-}
+//void MarkdownEditor::setBoldColor(QColor col) {
+//	m_highlighter->setBoldColor(col);
+//}
 void MarkdownEditor::updateInlineColors() {
 	m_highlighter->updateInlineColors();
 }
