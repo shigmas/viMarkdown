@@ -1051,7 +1051,13 @@ QString getRightSrcString(bool erase, bool thickKeisen, const QString txt, int i
 				else
 					return thickKeisen ? "┏" : "┌";
 			}
-			if( txt[ix] == u'┃' || txt[ix] == u'┣' || txt[ix] == u'┠' ) return thickKeisen ? "┣" : "┠";
+			if( txt[ix] == u'┃' || txt[ix] == u'┣' || txt[ix] == u'┠' ) {
+				ushort bits = ix < prev.size() ? getConnectionBits(prev[ix]) : 0;
+				if( (bits&(Down|ThickDown)) != 0 )			//	上部から下に接続している
+					return thickKeisen ? "┣" : "┠";
+				else
+					return thickKeisen ? "┏" : "┌";
+			}
 			if( txt[ix] == u'┘' || txt[ix] == u'┴' ) return thickKeisen ? "┷" : "┴";	//	上方向が細線
 			if( txt[ix] == u'┛' || txt[ix] == u'┸' ) return thickKeisen ? "┻" : "┸";	//	上方向が太線
 			if( txt[ix] == u'┐' || txt[ix] == u'┬' ) return thickKeisen ? "┯" : "┬";	//	下方向が細線
