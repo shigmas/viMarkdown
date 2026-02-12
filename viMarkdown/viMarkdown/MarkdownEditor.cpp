@@ -20,6 +20,7 @@ extern bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlig
 enum CharType {
 	Type_Other,
 	Type_Space,
+	Type_NewLine,
 	Type_Kanji,
 	Type_Hiragana,
 	Type_Katakana,
@@ -28,6 +29,7 @@ enum CharType {
 };
 CharType getCharType(QChar ch) {
 	ushort uc = ch.unicode();
+	if( uc == 0x2028 || uc == 0x2029 ) return Type_NewLine;
 	if (ch.isSpace()) return Type_Space;
 	if (uc >= 0x4E00 && uc <= 0x9FFF) return Type_Kanji;
 	if (uc >= 0x3040 && uc <= 0x309F) return Type_Hiragana;
