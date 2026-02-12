@@ -18,22 +18,22 @@ extern bool isTableLine(const QString& lnStr, QStringList &tableTokens);
 extern bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign);
 
 enum CharType {
-    Type_Other,
-    Type_Space,
-    Type_Kanji,
-    Type_Hiragana,
-    Type_Katakana,
-    Type_HalfAlphaNum,
-    Type_FullSymbol
+	Type_Other,
+	Type_Space,
+	Type_Kanji,
+	Type_Hiragana,
+	Type_Katakana,
+	Type_HalfAlphaNum,
+	Type_FullSymbol
 };
 CharType getCharType(QChar ch) {
-    ushort uc = ch.unicode();
-    if (ch.isSpace()) return Type_Space;
-    if (uc >= 0x4E00 && uc <= 0x9FFF) return Type_Kanji;
-    if (uc >= 0x3040 && uc <= 0x309F) return Type_Hiragana;
-    if (uc >= 0x30A0 && uc <= 0x30FF) return Type_Katakana;
-    if (ch.isLetterOrNumber()) return Type_HalfAlphaNum; // 半角英数
-    return Type_Other;
+	ushort uc = ch.unicode();
+	if (ch.isSpace()) return Type_Space;
+	if (uc >= 0x4E00 && uc <= 0x9FFF) return Type_Kanji;
+	if (uc >= 0x3040 && uc <= 0x309F) return Type_Hiragana;
+	if (uc >= 0x30A0 && uc <= 0x30FF) return Type_Katakana;
+	if (ch.isLetterOrNumber()) return Type_HalfAlphaNum; // 半角英数
+	return Type_Other;
 }
 
 class LnAreaWidget : public QWidget {
@@ -41,26 +41,26 @@ public:
 	LnAreaWidget(QWidget *parent = nullptr) : QWidget(parent) {}
 
 protected:
-    void paintEvent(QPaintEvent *event) override {
-    	QPainter painter(this);
-    	QRect rc = event->rect();
-    	//rc.setWidth(rc.width());
-        painter.fillRect(rc, QColor("lightgray"));
-        MarkdownEditor *mdEditor = (MarkdownEditor*)parent();
-        mdEditor->lnAreaPaintEvent(event);
-    }
-    void mousePressEvent(QMouseEvent *event) override {
+	void paintEvent(QPaintEvent *event) override {
+		QPainter painter(this);
+		QRect rc = event->rect();
+		//rc.setWidth(rc.width());
+		painter.fillRect(rc, QColor("lightgray"));
+		MarkdownEditor *mdEditor = (MarkdownEditor*)parent();
+		mdEditor->lnAreaPaintEvent(event);
+	}
+	void mousePressEvent(QMouseEvent *event) override {
 		MarkdownEditor* mdEditor = (MarkdownEditor*)parent();
 		mdEditor->lnAreaMousePressEvent(event);
-    }
-    void mouseMoveEvent(QMouseEvent *event) override {
+	}
+	void mouseMoveEvent(QMouseEvent *event) override {
 		MarkdownEditor* mdEditor = (MarkdownEditor*)parent();
 		mdEditor->lnAreaMouseMoveEvent(event);
-    }
-    void mouseReleaseEvent(QMouseEvent *event) override {
+	}
+	void mouseReleaseEvent(QMouseEvent *event) override {
 		MarkdownEditor* mdEditor = (MarkdownEditor*)parent();
 		mdEditor->lnAreaMouseReleaseEvent(event);
-    }
+	}
 };
 
 const int KEISEN_CODE_BEGIN = 0x2500;
@@ -86,77 +86,77 @@ enum KeisenDir {		//	罫線各文字の連結方向＆罫線種フラグ
 static const unsigned short keisenTable[KEISEN_CODE_END - KEISEN_CODE_BEGIN] = {
 #if 1
 	/* 2500-2507─ ━ │ ┃ ┄ ┅ ┆ ┇ */
-    Left|Right, ThickLeft|ThickRight, Up|Down, ThickUp|ThickDown,
-    Left|Right, ThickLeft|ThickRight, Up|Down, ThickUp|ThickDown, // 破線は基本線と同じフラグ
+	Left|Right, ThickLeft|ThickRight, Up|Down, ThickUp|ThickDown,
+	Left|Right, ThickLeft|ThickRight, Up|Down, ThickUp|ThickDown, // 破線は基本線と同じフラグ
 
-    /* 2508-250F ┈ ┉ ┊ ┋ ┌ ┍ ┎ ┏ */
-    Left|Right, ThickLeft|ThickRight, Up|Down, ThickUp|ThickDown,
-    Down|Right, Down|ThickRight, ThickDown|Right, ThickDown|ThickRight,
+	/* 2508-250F ┈ ┉ ┊ ┋ ┌ ┍ ┎ ┏ */
+	Left|Right, ThickLeft|ThickRight, Up|Down, ThickUp|ThickDown,
+	Down|Right, Down|ThickRight, ThickDown|Right, ThickDown|ThickRight,
 
-    /* 2510-2517 ┐ ┑ ┒ ┓ └ ┕ ┖ ┗ */
-    Down|Left, Down|ThickLeft, ThickDown|Left, ThickDown|ThickLeft,
-    Up|Right, Up|ThickRight, ThickUp|Right, ThickUp|ThickRight,
+	/* 2510-2517 ┐ ┑ ┒ ┓ └ ┕ ┖ ┗ */
+	Down|Left, Down|ThickLeft, ThickDown|Left, ThickDown|ThickLeft,
+	Up|Right, Up|ThickRight, ThickUp|Right, ThickUp|ThickRight,
 
-    /* 2518-251F ┘ ┙ ┚ ┛ ├ ┝ ┞ ┟ */
-    Up|Left, Up|ThickLeft, ThickUp|Left, ThickUp|ThickLeft,
-    Up|Down|Right, Up|Down|ThickRight, ThickUp|Down|Right, Up|ThickDown|Right,
+	/* 2518-251F ┘ ┙ ┚ ┛ ├ ┝ ┞ ┟ */
+	Up|Left, Up|ThickLeft, ThickUp|Left, ThickUp|ThickLeft,
+	Up|Down|Right, Up|Down|ThickRight, ThickUp|Down|Right, Up|ThickDown|Right,
 
-    /* 2520-2527 ┠ ┡ ┢ ┣ ┤ ┥ ┦ ┧ */
-    ThickUp|ThickDown|Right,      // 2520: ┠ (Vertical Heavy, Right Light)
-    ThickUp|Down|ThickRight,      // 2521: ┡ (Up Heavy, Down Light, Right Heavy)
-    Up|ThickDown|ThickRight,      // 2522: ┢ (Up Light, Down Heavy, Right Heavy)
-    ThickUp|ThickDown|ThickRight, // 2523: ┣ (Vertical Heavy, Right Heavy)
-    Up|Down|Left,                 // 2524: ┤ (Vertical Light, Left Light)
-    Up|Down|ThickLeft,            // 2525: ┥ (Vertical Light, Left Heavy)
-    ThickUp|Down|Left,            // 2526: ┦ (Up Heavy, Down Light, Left Light)
-    Up|ThickDown|Left,            // 2527: ┧ (Up Light, Down Heavy, Left Light)
+	/* 2520-2527 ┠ ┡ ┢ ┣ ┤ ┥ ┦ ┧ */
+	ThickUp|ThickDown|Right,	  // 2520: ┠ (Vertical Heavy, Right Light)
+	ThickUp|Down|ThickRight,	  // 2521: ┡ (Up Heavy, Down Light, Right Heavy)
+	Up|ThickDown|ThickRight,	  // 2522: ┢ (Up Light, Down Heavy, Right Heavy)
+	ThickUp|ThickDown|ThickRight, // 2523: ┣ (Vertical Heavy, Right Heavy)
+	Up|Down|Left,				  // 2524: ┤ (Vertical Light, Left Light)
+	Up|Down|ThickLeft,			  // 2525: ┥ (Vertical Light, Left Heavy)
+	ThickUp|Down|Left,			  // 2526: ┦ (Up Heavy, Down Light, Left Light)
+	Up|ThickDown|Left,			  // 2527: ┧ (Up Light, Down Heavy, Left Light)
 
-    /* 2528-252F ┨ ┩ ┪ ┫ ┬ ┭ ┮ ┯ */
-    ThickUp|ThickDown|Left,       // 2528: ┨ (Vertical Heavy, Left Light)
-    ThickUp|Down|ThickLeft,       // 2529: ┩ (Up Heavy, Down Light, Left Heavy)
-    Up|ThickDown|ThickLeft,       // 252A: ┪ (Up Light, Down Heavy, Left Heavy)
-    ThickUp|ThickDown|ThickLeft,  // 252B: ┫ (Vertical Heavy, Left Heavy)
-    Left|Right|Down,              // 252C: ┬ (Horizontal Light, Down Light)
-    Left|ThickRight|Down,         // 252D: ┭ (Left Light, Right Heavy, Down Light)
-    ThickLeft|Right|Down,         // 252E: ┮ (Left Heavy, Right Light, Down Light)
-    ThickLeft|ThickRight|Down,    // 252F: ┯ (Horizontal Heavy, Down Light)
+	/* 2528-252F ┨ ┩ ┪ ┫ ┬ ┭ ┮ ┯ */
+	ThickUp|ThickDown|Left,		  // 2528: ┨ (Vertical Heavy, Left Light)
+	ThickUp|Down|ThickLeft,		  // 2529: ┩ (Up Heavy, Down Light, Left Heavy)
+	Up|ThickDown|ThickLeft,		  // 252A: ┪ (Up Light, Down Heavy, Left Heavy)
+	ThickUp|ThickDown|ThickLeft,  // 252B: ┫ (Vertical Heavy, Left Heavy)
+	Left|Right|Down,			  // 252C: ┬ (Horizontal Light, Down Light)
+	Left|ThickRight|Down,		  // 252D: ┭ (Left Light, Right Heavy, Down Light)
+	ThickLeft|Right|Down,		  // 252E: ┮ (Left Heavy, Right Light, Down Light)
+	ThickLeft|ThickRight|Down,	  // 252F: ┯ (Horizontal Heavy, Down Light)
 
-    /* 2530-2537 ┰ ┱ ┲ ┳ ┴ ┵ ┶ ┷ */
-    Left|Right|ThickDown,         // 2530: ┰ (Horizontal Light, Down Heavy)
-    Left|ThickRight|ThickDown,    // 2531: ┱ (Left Light, Right Heavy, Down Heavy)
-    ThickLeft|Right|ThickDown,    // 2532: ┲ (Left Heavy, Right Light, Down Heavy)
-    ThickLeft|ThickRight|ThickDown, // 2533: ┳ (Horizontal Heavy, Down Heavy)
-    Left|Right|Up,                // 2534: ┴ (Horizontal Light, Up Light)
-    Left|ThickRight|Up,           // 2535: ┵ (Left Light, Right Heavy, Up Light)
-    ThickLeft|Right|Up,           // 2536: ┶ (Left Heavy, Right Light, Up Light)
-    ThickLeft|ThickRight|Up,      // 2537: ┷ (Horizontal Heavy, Up Light)
+	/* 2530-2537 ┰ ┱ ┲ ┳ ┴ ┵ ┶ ┷ */
+	Left|Right|ThickDown,		  // 2530: ┰ (Horizontal Light, Down Heavy)
+	Left|ThickRight|ThickDown,	  // 2531: ┱ (Left Light, Right Heavy, Down Heavy)
+	ThickLeft|Right|ThickDown,	  // 2532: ┲ (Left Heavy, Right Light, Down Heavy)
+	ThickLeft|ThickRight|ThickDown, // 2533: ┳ (Horizontal Heavy, Down Heavy)
+	Left|Right|Up,				  // 2534: ┴ (Horizontal Light, Up Light)
+	Left|ThickRight|Up,			  // 2535: ┵ (Left Light, Right Heavy, Up Light)
+	ThickLeft|Right|Up,			  // 2536: ┶ (Left Heavy, Right Light, Up Light)
+	ThickLeft|ThickRight|Up,	  // 2537: ┷ (Horizontal Heavy, Up Light)
 
-    /* 2538-253F ┸ ┹ ┺ ┻ ┼ ┽ ┾ ┿ */
-    Left|Right|ThickUp,           // 2538: ┸ (Horizontal Light, Up Heavy)
-    Left|ThickRight|ThickUp,      // 2539: ┹ (Left Light, Right Heavy, Up Heavy)
-    ThickLeft|Right|ThickUp,      // 253A: ┺ (Left Heavy, Right Light, Up Heavy)
-    ThickLeft|ThickRight|ThickUp, // 253B: ┻ (Horizontal Heavy, Up Heavy)
-    Up|Down|Left|Right,           // 253C: ┼ (Vertical Light, Horizontal Light)
-    Up|Down|ThickLeft|Right,      // 253D: ┽ (Vertical Light, Left Heavy, Right Light)
-    Up|Down|Left|ThickRight,      // 253E: ┾ (Vertical Light, Left Light, Right Heavy)
-    Up|Down|ThickLeft|ThickRight, // 253F: ┿ (Vertical Light, Horizontal Heavy)
+	/* 2538-253F ┸ ┹ ┺ ┻ ┼ ┽ ┾ ┿ */
+	Left|Right|ThickUp,			  // 2538: ┸ (Horizontal Light, Up Heavy)
+	Left|ThickRight|ThickUp,	  // 2539: ┹ (Left Light, Right Heavy, Up Heavy)
+	ThickLeft|Right|ThickUp,	  // 253A: ┺ (Left Heavy, Right Light, Up Heavy)
+	ThickLeft|ThickRight|ThickUp, // 253B: ┻ (Horizontal Heavy, Up Heavy)
+	Up|Down|Left|Right,			  // 253C: ┼ (Vertical Light, Horizontal Light)
+	Up|Down|ThickLeft|Right,	  // 253D: ┽ (Vertical Light, Left Heavy, Right Light)
+	Up|Down|Left|ThickRight,	  // 253E: ┾ (Vertical Light, Left Light, Right Heavy)
+	Up|Down|ThickLeft|ThickRight, // 253F: ┿ (Vertical Light, Horizontal Heavy)
 
-    /* 2540-2547 ╀ ╁ ╂ ╃ ╄ ╅ ╆ ╇ */
-    ThickUp|Down|Left|Right,      // 2540: ╀ (Up Heavy, Down Light, Horizontal Light)
-    Up|ThickDown|Left|Right,      // 2541: ╁ (Up Light, Down Heavy, Horizontal Light)
-    ThickUp|ThickDown|Left|Right, // 2542: ╂ (Vertical Heavy, Horizontal Light)
-    ThickUp|Down|ThickLeft|Right, // 2543: ╃ (Up Heavy, Down Light, Left Heavy, Right Light)
-    Up|ThickDown|ThickLeft|Right, // 2544: ╄ (Up Light, Down Heavy, Left Heavy, Right Light)
-    ThickUp|Down|Left|ThickRight, // 2545: ╅ (Up Heavy, Down Light, Left Light, Right Heavy)
-    Up|ThickDown|Left|ThickRight, // 2546: ╆ (Up Light, Down Heavy, Left Light, Right Heavy)
-    ThickUp|Down|ThickLeft|ThickRight, // 2547: ╇ (Up Heavy, Down Light, Horizontal Heavy)
-    
-    /* 2548-254F ╈ ╉ ╊ ╋ ╌ ╍ ╎ ╏ */
-    Up|ThickDown|ThickLeft|ThickRight, // 2548: ╈ (Up Light, Down Heavy, Horizontal Heavy)
-    ThickUp|ThickDown|ThickLeft|Right, // 2549: ╉ (Vertical Heavy, Left Heavy, Right Light)
-    ThickUp|ThickDown|Left|ThickRight, // 254A: ╊ (Vertical Heavy, Left Light, Right Heavy)
-    ThickUp|ThickDown|ThickLeft|ThickRight, // 254B: ╋ (Vertical Heavy, Horizontal Heavy)
-    Left|Right, ThickLeft|ThickRight, Up|Down, ThickUp|ThickDown, // 254C-254F: 破線
+	/* 2540-2547 ╀ ╁ ╂ ╃ ╄ ╅ ╆ ╇ */
+	ThickUp|Down|Left|Right,	  // 2540: ╀ (Up Heavy, Down Light, Horizontal Light)
+	Up|ThickDown|Left|Right,	  // 2541: ╁ (Up Light, Down Heavy, Horizontal Light)
+	ThickUp|ThickDown|Left|Right, // 2542: ╂ (Vertical Heavy, Horizontal Light)
+	ThickUp|Down|ThickLeft|Right, // 2543: ╃ (Up Heavy, Down Light, Left Heavy, Right Light)
+	Up|ThickDown|ThickLeft|Right, // 2544: ╄ (Up Light, Down Heavy, Left Heavy, Right Light)
+	ThickUp|Down|Left|ThickRight, // 2545: ╅ (Up Heavy, Down Light, Left Light, Right Heavy)
+	Up|ThickDown|Left|ThickRight, // 2546: ╆ (Up Light, Down Heavy, Left Light, Right Heavy)
+	ThickUp|Down|ThickLeft|ThickRight, // 2547: ╇ (Up Heavy, Down Light, Horizontal Heavy)
+	
+	/* 2548-254F ╈ ╉ ╊ ╋ ╌ ╍ ╎ ╏ */
+	Up|ThickDown|ThickLeft|ThickRight, // 2548: ╈ (Up Light, Down Heavy, Horizontal Heavy)
+	ThickUp|ThickDown|ThickLeft|Right, // 2549: ╉ (Vertical Heavy, Left Heavy, Right Light)
+	ThickUp|ThickDown|Left|ThickRight, // 254A: ╊ (Vertical Heavy, Left Light, Right Heavy)
+	ThickUp|ThickDown|ThickLeft|ThickRight, // 254B: ╋ (Vertical Heavy, Horizontal Heavy)
+	Left|Right, ThickLeft|ThickRight, Up|Down, ThickUp|ThickDown, // 254C-254F: 破線
 #else
 	/* 00-03 ─ ━ │ ┃ */
 	Left|Right, ThickLeft|ThickRight, Up|Down, ThickUp|ThickDown,
@@ -217,69 +217,69 @@ static const unsigned short keisenTable[KEISEN_CODE_END - KEISEN_CODE_BEGIN] = {
 	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None
 };
 const ushort revKeisenTable[256] = {
-    // 0x00 - 0x0F: 全て細線 (Up=1, Down=2, Left=4, Right=8)
-    u' ',  u'╵',  u'╷',  u'│',  u'╴',  u'┘',  u'┐',  u'┤',
-    u'╶',  u'└',  u'┌',  u'├',  u'─',  u'┴',  u'┬',  u'┼',
+	// 0x00 - 0x0F: 全て細線 (Up=1, Down=2, Left=4, Right=8)
+	u' ',  u'╵',  u'╷',  u'│',	u'╴',  u'┘',  u'┐',  u'┤',
+	u'╶',  u'└',  u'┌',  u'├',	u'─',  u'┴',  u'┬',  u'┼',
 
-    // 0x10 - 0x1F: 太線 上 (ThickUp=0x10)
-    u'╹',  u'╹',  u'╿',  u'╿',  u'┚',  u'┚',  u'┒',  u'┦',
-    u'┖',  u'┖',  u'┎',  u'┞',  u'┸',  u'┸',  u'┰',  u'╀',
+	// 0x10 - 0x1F: 太線 上 (ThickUp=0x10)
+	u'╹',  u'╹',  u'╿',  u'╿',	u'┚',  u'┚',  u'┒',  u'┦',
+	u'┖',  u'┖',  u'┎',  u'┞',	u'┸',  u'┸',  u'┰',  u'╀',
 
-    // 0x20 - 0x2F: 太線 下 (ThickDown=0x20)
-    u'╻',  u'╽',  u'╻',  u'╽',  u'┙',  u'┚',  u'┑',  u'┧',
-    u'┕',  u'┖',  u'┍',  u'┟',  u'┷',  u'╁',  u'┷',  u'╁',
+	// 0x20 - 0x2F: 太線 下 (ThickDown=0x20)
+	u'╻',  u'╽',  u'╻',  u'╽',	u'┙',  u'┚',  u'┑',  u'┧',
+	u'┕',  u'┖',  u'┍',  u'┟',	u'┷',  u'╁',  u'┷',  u'╁',
 
-    // 0x30 - 0x3F: 太線 上下 (ThickUp + ThickDown)
-    u'┃',  u'┃',  u'┃',  u'┃',  u'┨',  u'┨',  u'┨',  u'┨',
-    u'┠',  u'┠',  u'┠',  u'┠',  u'╂',  u'╂',  u'╂',  u'╂',
+	// 0x30 - 0x3F: 太線 上下 (ThickUp + ThickDown)
+	u'┃',  u'┃',  u'┃',  u'┃',	u'┨',  u'┨',  u'┨',  u'┨',
+	u'┠',  u'┠',  u'┠',  u'┠',	u'╂',  u'╂',  u'╂',  u'╂',
 
-    // 0x40 - 0x4F: 太線 左 (ThickLeft=0x40)
-    u'╸',  u'┙',  u'┑',  u'┥',  u'╸',  u'┙',  u'┑',  u'┥',
-    u'╼',  u'┕',  u'┍',  u'┽',  u'━',  u'┿',  u'┮',  u'┿',
+	// 0x40 - 0x4F: 太線 左 (ThickLeft=0x40)
+	u'╸',  u'┙',  u'┑',  u'┥',	u'╸',  u'┙',  u'┑',  u'┥',
+	u'╼',  u'┕',  u'┍',  u'┽',	u'━',  u'┿',  u'┮',  u'┿',
 
-    // 0x50 - 0x5F: 太線 上左 (ThickUp + ThickLeft)
-    u'┛',  u'┛',  u'┩',  u'┩',  u'┛',  u'┛',  u'┩',  u'┩',
-    u'┕',  u'┛',  u'┍',  u'┽',  u'━',  u'┿',  u'┮',  u'┿',
+	// 0x50 - 0x5F: 太線 上左 (ThickUp + ThickLeft)
+	u'┛',  u'┛',  u'┩',  u'┩',	u'┛',  u'┛',  u'┩',  u'┩',
+	u'┕',  u'┛',  u'┍',  u'┽',	u'━',  u'┿',  u'┮',  u'┿',
 
-    // 0x60 - 0x6F: 太線 下左 (ThickDown + ThickLeft)
-    u'┓',  u'┪',  u'┓',  u'┪',  u'┓',  u'┪',  u'┓',  u'┪',
-    u'┍',  u'┪',  u'┓',  u'┽',  u'━',  u'┿',  u'┮',  u'┿',
+	// 0x60 - 0x6F: 太線 下左 (ThickDown + ThickLeft)
+	u'┓',  u'┪',  u'┓',  u'┪',	u'┓',  u'┪',  u'┓',  u'┪',
+	u'┍',  u'┪',  u'┓',  u'┽',	u'━',  u'┿',  u'┮',  u'┿',
 
-    // 0x70 - 0x7F: 太線 上下左 (ThickUp + ThickDown + ThickLeft)
-    u'┫',  u'┫',  u'┫',  u'┫',  u'┫',  u'┫',  u'┫',  u'┫',
-    u'┍',  u'┫',  u'┓',  u'┽',  u'━',  u'┿',  u'┮',  u'┿',
+	// 0x70 - 0x7F: 太線 上下左 (ThickUp + ThickDown + ThickLeft)
+	u'┫',  u'┫',  u'┫',  u'┫',	u'┫',  u'┫',  u'┫',  u'┫',
+	u'┍',  u'┫',  u'┓',  u'┽',	u'━',  u'┿',  u'┮',  u'┿',
 
-    // 0x80 - 0x8F: 太線 右 (ThickRight=0x80)
-    u'╺',  u'┖',  u'┎',  u'┝',  u'╾',  u'┕',  u'┍',  u'┾',
-    u'╺',  u'┖',  u'┎',  u'┝',  u'━',  u'┵',  u'┭',  u'┿',
+	// 0x80 - 0x8F: 太線 右 (ThickRight=0x80)
+	u'╺',  u'┖',  u'┎',  u'┝',	u'╾',  u'┕',  u'┍',  u'┾',
+	u'╺',  u'┖',  u'┎',  u'┝',	u'━',  u'┵',  u'┭',  u'┿',
 
-    // 0x90 - 0x9F: 太線 上右 (ThickUp + ThickRight)
-    u'┗',  u'┗',  u'┡',  u'┡',  u'╾',  u'┕',  u'┍',  u'╅',
-    u'┗',  u'┗',  u'┡',  u'┡',  u'━',  u'┿',  u'┯',  u'╇',
+	// 0x90 - 0x9F: 太線 上右 (ThickUp + ThickRight)
+	u'┗',  u'┗',  u'┡',  u'┡',	u'╾',  u'┕',  u'┍',  u'╅',
+	u'┗',  u'┗',  u'┡',  u'┡',	u'━',  u'┿',  u'┯',  u'╇',
 
-    // 0xA0 - 0xAF: 太線 下右 (ThickDown + ThickRight)
-    u'┏',  u'┢',  u'┏',  u'┢',  u'╾',  u'┕',  u'┍',  u'╆',
-    u'┏',  u'┢',  u'┏',  u'┢',  u'━',  u'┿',  u'┯',  u'╇',
+	// 0xA0 - 0xAF: 太線 下右 (ThickDown + ThickRight)
+	u'┏',  u'┢',  u'┏',  u'┢',	u'╾',  u'┕',  u'┍',  u'╆',
+	u'┏',  u'┢',  u'┏',  u'┢',	u'━',  u'┿',  u'┯',  u'╇',
 
-    // 0xB0 - 0xBF: 太線 上下右 (ThickUp + ThickDown + ThickRight)
-    u'┣',  u'┣',  u'┣',  u'┣',  u'╾',  u'┕',  u'┍',  u'╊',
-    u'┣',  u'┣',  u'┣',  u'┣',  u'━',  u'┿',  u'┯',  u'╇',
+	// 0xB0 - 0xBF: 太線 上下右 (ThickUp + ThickDown + ThickRight)
+	u'┣',  u'┣',  u'┣',  u'┣',	u'╾',  u'┕',  u'┍',  u'╊',
+	u'┣',  u'┣',  u'┣',  u'┣',	u'━',  u'┿',  u'┯',  u'╇',
 
-    // 0xC0 - 0xCF: 太線 左右 (ThickLeft + ThickRight)
-    u'━',  u'┸',  u'┰',  u'┿',  u'━',  u'┸',  u'┰',  u'┿',
-    u'━',  u'┸',  u'┰',  u'┿',  u'━',  u'┸',  u'┰',  u'┿',
+	// 0xC0 - 0xCF: 太線 左右 (ThickLeft + ThickRight)
+	u'━',  u'┸',  u'┰',  u'┿',	u'━',  u'┸',  u'┰',  u'┿',
+	u'━',  u'┸',  u'┰',  u'┿',	u'━',  u'┸',  u'┰',  u'┿',
 
-    // 0xD0 - 0xDF: 太線 上左右 (ThickUp + ThickLeft + ThickRight)
-    u'┻',  u'┻',  u'╈',  u'╈',  u'┻',  u'┻',  u'╈',  u'╈',
-    u'┻',  u'┻',  u'╈',  u'╈',  u'┻',  u'┻',  u'╈',  u'╈',
+	// 0xD0 - 0xDF: 太線 上左右 (ThickUp + ThickLeft + ThickRight)
+	u'┻',  u'┻',  u'╈',  u'╈',	u'┻',  u'┻',  u'╈',  u'╈',
+	u'┻',  u'┻',  u'╈',  u'╈',	u'┻',  u'┻',  u'╈',  u'╈',
 
-    // 0xE0 - 0xEF: 太線 下左右 (ThickDown + ThickLeft + ThickRight)
-    u'┳',  u'╇',  u'┳',  u'╇',  u'┳',  u'╇',  u'┳',  u'╇',
-    u'┳',  u'╇',  u'┳',  u'╇',  u'┳',  u'╇',  u'┳',  u'╇',
+	// 0xE0 - 0xEF: 太線 下左右 (ThickDown + ThickLeft + ThickRight)
+	u'┳',  u'╇',  u'┳',  u'╇',	u'┳',  u'╇',  u'┳',  u'╇',
+	u'┳',  u'╇',  u'┳',  u'╇',	u'┳',  u'╇',  u'┳',  u'╇',
 
-    // 0xF0 - 0xFF: 太線 全方向 (ThickUp + ThickDown + ThickLeft + ThickRight)
-    u'╋',  u'╋',  u'╋',  u'╋',  u'╋',  u'╋',  u'╋',  u'╋',
-    u'╋',  u'╋',  u'╋',  u'╋',  u'╋',  u'╋',  u'╋',  u'╋'
+	// 0xF0 - 0xFF: 太線 全方向 (ThickUp + ThickDown + ThickLeft + ThickRight)
+	u'╋',  u'╋',  u'╋',  u'╋',	u'╋',  u'╋',  u'╋',  u'╋',
+	u'╋',  u'╋',  u'╋',  u'╋',	u'╋',  u'╋',  u'╋',  u'╋'
 };
 bool isKeisenChar(QChar ch) {
 	return ch.unicode() >= KEISEN_CODE_BEGIN && ch.unicode() < KEISEN_CODE_END;
@@ -303,14 +303,14 @@ public:
 		m_strikethroughRegex = QRegularExpression(R"(\~\~([^\*]+)\~\~)");
 	}
 	//void setBoldColor(const QColor &color) {
-    //    m_boldFormat.setForeground(color);
-    //    rehighlight(); // これを呼ぶことでドキュメント全体の highlightBlock が再実行される
-    //}
+	//	  m_boldFormat.setForeground(color);
+	//	  rehighlight(); // これを呼ぶことでドキュメント全体の highlightBlock が再実行される
+	//}
 	void updateInlineColors() {
-        m_boldFormat.setForeground(g.m_boldColor);
-        m_italicFormat.setForeground(g.m_italicColor);
-        m_strikethroughFormat.setForeground(g.m_strikethroughColor);
-        rehighlight(); // これを呼ぶことでドキュメント全体の highlightBlock が再実行される
+		m_boldFormat.setForeground(g.m_boldColor);
+		m_italicFormat.setForeground(g.m_italicColor);
+		m_strikethroughFormat.setForeground(g.m_strikethroughColor);
+		rehighlight(); // これを呼ぶことでドキュメント全体の highlightBlock が再実行される
 	}
 protected:
 	void highlightBlock(const QString &text) override {
@@ -392,16 +392,16 @@ void MarkdownEditor::onKeisenMode(bool b) {
 }
 void MarkdownEditor::setLineSpacing(int percentage) {
 	QTextBlockFormat format;
-    format.setLineHeight(percentage, QTextBlockFormat::ProportionalHeight);
-    QTextCursor cursor(document());
-    cursor.select(QTextCursor::Document);
-    cursor.mergeBlockFormat(format);
-    QTextCursor editorCursor = textCursor();
-    editorCursor.setBlockFormat(format);
+	format.setLineHeight(percentage, QTextBlockFormat::ProportionalHeight);
+	QTextCursor cursor(document());
+	cursor.select(QTextCursor::Document);
+	cursor.mergeBlockFormat(format);
+	QTextCursor editorCursor = textCursor();
+	editorCursor.setBlockFormat(format);
 }
 void MarkdownEditor::inputMethodEvent(QInputMethodEvent *event) {
 	m_isComposing = !event->preeditString().isEmpty();
-    MarkdownBaseEdit::inputMethodEvent(event);
+	MarkdownBaseEdit::inputMethodEvent(event);
 }
 void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	//static QRegularExpression re(R"(^\d[\.\)] )");
@@ -482,6 +482,36 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 			}
 			m_processing = false;
 		}
+	} else {
+		if( (e->modifiers() & Qt::ControlModifier) != 0 ) {
+			if (e->key() == Qt::Key_Right ) {
+				QTextCursor cursor = textCursor();
+				int pos = cursor.position();
+				QTextDocument *doc = document();
+				if (pos >= doc->characterCount() - 1) return;
+				CharType startType = getCharType(doc->characterAt(pos));
+				// 同じ種別の間は進む
+				while (pos < doc->characterCount() - 1 && getCharType(doc->characterAt(pos)) == startType) {
+					pos++;
+				}
+				cursor.setPosition(pos);
+				setTextCursor(cursor);
+				return;
+			} else if (e->key() == Qt::Key_Left) {
+				QTextCursor cursor = textCursor();
+				int pos = cursor.position();
+				QTextDocument *doc = document();
+				if (pos <= 0) return;
+		        CharType startType = getCharType(doc->characterAt(pos - 1));
+		        // 同じ種別の間は戻る
+		        while (pos > 0 && getCharType(doc->characterAt(pos - 1)) == startType) {
+		            pos--;
+		        }
+				cursor.setPosition(pos);
+				setTextCursor(cursor);
+				return;
+			}
+		}
 	}
 	MarkdownBaseEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
 }
@@ -507,23 +537,23 @@ void MarkdownEditor::mouseReleaseEvent(QMouseEvent *event) {
 }
 void MarkdownEditor::mouseDoubleClickEvent(QMouseEvent *e) {
 	QTextCursor cursor = cursorForPosition(e->pos());
-    int pos = cursor.position();
-    QTextDocument *doc = document();
-    CharType type = getCharType(doc->characterAt(pos));
-    // 前方（左）への探索
-    int start = pos;
-    while (start > 0 && getCharType(doc->characterAt(start - 1)) == type) {
-        start--;
-    }
-    // 後方（右）への探索
-    int end = pos;
-    while (end < doc->characterCount() - 1 && getCharType(doc->characterAt(end)) == type) {
-        end++;
-    }
-    // 選択範囲を設定
-    cursor.setPosition(start);
-    cursor.setPosition(end, QTextCursor::KeepAnchor);
-    setTextCursor(cursor);
+	int pos = cursor.position();
+	QTextDocument *doc = document();
+	CharType type = getCharType(doc->characterAt(pos));
+	// 前方（左）への探索
+	int start = pos;
+	while (start > 0 && getCharType(doc->characterAt(start - 1)) == type) {
+		start--;
+	}
+	// 後方（右）への探索
+	int end = pos;
+	while (end < doc->characterCount() - 1 && getCharType(doc->characterAt(end)) == type) {
+		end++;
+	}
+	// 選択範囲を設定
+	cursor.setPosition(start);
+	cursor.setPosition(end, QTextCursor::KeepAnchor);
+	setTextCursor(cursor);
 }
 void MarkdownEditor::wheelEvent(QWheelEvent *event) {
 	qDebug() << "MarkdownEditor::wheelEvent()";
@@ -656,9 +686,9 @@ QString getUpSrcString(bool erase, bool thickKeisen, const QString txt, int ix) 
 	}
 }
 //┌┰┐┌┰┐┏┯━┓┏┳━┓┌┬─┐┌┬┐
-//│┃││┃│┃│  ┃┃┃  ┃││  ││││
+//│┃││┃│┃│	┃┃┃  ┃││  ││││
 //┝╋┥├╂┤┠┼─┨┣╋━┫┝┿━┥├┼┤
-//│┃││┃│┃│  ┃┃┃  ┃││  ││││
+//│┃││┃│┃│	┃┃┃  ┃││  ││││
 //└┸┘└┸┘┗┷━┛┗┻━┛└┴─┘└┴┘
 QString getUpDstString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
@@ -798,9 +828,9 @@ QString getDownSrcString(bool erase, bool thickKeisen, const QString txt, int ix
 	}
 }
 //┌┰┐┌┰┐┏┯━┓┏┳━┓┌┬─┐┌┬─┐
-//│┃││┃│┃│  ┃┃┃  ┃││  │││  │
+//│┃││┃│┃│	┃┃┃  ┃││  │││  │
 //┝╋┥├╂┤┠┼─┨┣╋━┫┝┿━┥├┼─┤
-//│┃││┃│┃│  ┃┃┃  ┃││  │││  │
+//│┃││┃│┃│	┃┃┃  ┃││  │││  │
 //└┸┘└┸┘┗┷━┛┗┻━┛└┴─┘└┴─┘
 QString getDownDstString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
@@ -931,9 +961,9 @@ QString getLeftSrcString(bool erase, bool thickKeisen, const QString txt, int ix
 	}
 }
 //┌┰┐┌┰┐┏┯━┓┏┳━┓┌┬─┐
-//│┃││┃│┃│  ┃┃┃  ┃││  │
+//│┃││┃│┃│	┃┃┃  ┃││  │
 //┝╋┥├╂┤┠┼─┨┣╋━┫┝┿━┥
-//│┃││┃│┃│  ┃┃┃  ┃││  │
+//│┃││┃│┃│	┃┃┃  ┃││  │
 //└┸┘└┸┘┗┷━┛┗┻━┛└┴─┘
 QString getLeftDstString(bool erase, bool thickKeisen, const QString txt, int ix, const QString prev, const QString next) {
 	if( !erase ) {
@@ -1029,9 +1059,9 @@ QString getRightSrcString(bool erase, bool thickKeisen, const QString txt, int i
 	}
 }
 //┌┰┐┌┰┐┏┯━┓┏┳━┓┌┬─┐
-//│┃││┃│┃│  ┃┃┃  ┃││  │
+//│┃││┃│┃│	┃┃┃  ┃││  │
 //┝╋┥├╂┤┠┼─┨┣╋━┫┝┿━┥
-//│┃││┃│┃│  ┃┃┃  ┃││  │
+//│┃││┃│┃│	┃┃┃  ┃││  │
 //└┸┘└┸┘┗┷━┛┗┻━┛└┴─┘
 QString getRightDstString(bool erase, bool thickKeisen, const QString txt, int ix) {
 	if( !erase ) {
@@ -1258,12 +1288,12 @@ void MarkdownEditor::convert_CSV_MarkdownTable() {
 	int startPosition = cursor.position();
 	QTextBlock block = cursor.block();
 	block = block.next();		//	skip "```CSV" line
-    bool inQuotes = false;
-    bool inComment = false;
-    bool commented = false;
-    int endPosition = -1;
+	bool inQuotes = false;
+	bool inComment = false;
+	bool commented = false;
+	int endPosition = -1;
 	QList<QStringList> ll;
-    QStringList fields;
+	QStringList fields;
 	while( block.isValid() ) {
 		if( block.text().startsWith("```")) {
 			endPosition = block.position() + block.length();
@@ -1306,23 +1336,23 @@ void MarkdownEditor::convert_MarkdownTable_CSV() {
 	QString mdtext = "```CSV\n";;
 	//QList<QStringView> tableTokens;
 	QStringList tableTokens;
-    while( block.isValid() && isTableLine(block.text(), tableTokens) ) {
-	    for(int i = 0; i < tableTokens.size(); ++i) {
-	    	QString txt(tableTokens[i]);
-	    	txt.replace("\"", "\"\"");
-	    	//mdtext += QString(u'"') + tableTokens[i] + QString(u'"');
-	    	mdtext += QString(u'"') + txt + QString(u'"');
-	    	if( i+1 < tableTokens.size() )
-	    		mdtext += ", ";
-	    	else
-	    		mdtext += "\n";
-	    }
-	    if( initial ) {
-	    	initial = false;
-		    if( !(block = block.next()).isValid() ) break;	//	ハイフン行をスキップ
-	    }
-	    block = block.next();
-    }
+	while( block.isValid() && isTableLine(block.text(), tableTokens) ) {
+		for(int i = 0; i < tableTokens.size(); ++i) {
+			QString txt(tableTokens[i]);
+			txt.replace("\"", "\"\"");
+			//mdtext += QString(u'"') + tableTokens[i] + QString(u'"');
+			mdtext += QString(u'"') + txt + QString(u'"');
+			if( i+1 < tableTokens.size() )
+				mdtext += ", ";
+			else
+				mdtext += "\n";
+		}
+		if( initial ) {
+			initial = false;
+			if( !(block = block.next()).isValid() ) break;	//	ハイフン行をスキップ
+		}
+		block = block.next();
+	}
 	endPosition = block.position();
 	cursor.setPosition(startPosition);
 	cursor.setPosition(endPosition, QTextCursor::KeepAnchor);
@@ -1501,110 +1531,110 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
 	}
 	//	行カーソル描画
 	QRect rect = cursorRect();
-    //QPen pen(Qt::red, 1); // 赤色、太さ1px
-    QPen pen(hasFocus() ? g.m_activeLnColor: g.m_inactiveLnColor, 1); // 色、太さ1px
-    if( !hasFocus() ) pen.setStyle(Qt::DashLine);	//	破線
-    p.setPen(pen);
-    int y = rect.bottom();
-    int left = 0;	//-lnAreaWidth();
-    int right = viewport()->width();
-    p.drawLine(left, y, right, y);
+	//QPen pen(Qt::red, 1); // 赤色、太さ1px
+	QPen pen(hasFocus() ? g.m_activeLnColor: g.m_inactiveLnColor, 1); // 色、太さ1px
+	if( !hasFocus() ) pen.setStyle(Qt::DashLine);	//	破線
+	p.setPen(pen);
+	int y = rect.bottom();
+	int left = 0;	//-lnAreaWidth();
+	int right = viewport()->width();
+	p.drawLine(left, y, right, y);
 #if 0
 	QPainter p2(m_lnAreaWidget);
-    p2.setPen(pen);
-    p2.drawLine(0, y, lnAreaWidth(), y);
+	p2.setPen(pen);
+	p2.drawLine(0, y, lnAreaWidth(), y);
 #endif
 }
 void MarkdownEditor::highlightSearchText(const QString &searchText) {
 	QList<QTextEdit::ExtraSelection> extraSelections;
-    if (searchText.isEmpty()) {
-        setExtraSelections(extraSelections);
-        return;
-    }
+	if (searchText.isEmpty()) {
+		setExtraSelections(extraSelections);
+		return;
+	}
 
-    // 検索時の書式設定
-    QTextCharFormat format;
-    format.setBackground(g.m_matchColor);       // 背景を設定色に
-    format.setForeground(Qt::black);        // 文字を黒に（必要に応じて）
+	// 検索時の書式設定
+	QTextCharFormat format;
+	format.setBackground(g.m_matchColor);		// 背景を設定色に
+	format.setForeground(Qt::black);		// 文字を黒に（必要に応じて）
 
-    // ドキュメント全体から検索
-    QTextDocument *doc = document();
-    QTextCursor cursor(doc);
+	// ドキュメント全体から検索
+	QTextDocument *doc = document();
+	QTextCursor cursor(doc);
 
-    while (!cursor.isNull() && !cursor.atEnd()) {
-        // 次のヒットを検索
-        // 引数に FindFlags (大文字小文字区別など) を指定可能
+	while (!cursor.isNull() && !cursor.atEnd()) {
+		// 次のヒットを検索
+		// 引数に FindFlags (大文字小文字区別など) を指定可能
 		QTextDocument::FindFlags flags;
 		if( !g.m_ignoreCase )
 			flags |= QTextDocument::FindCaseSensitively;
-        cursor = doc->find(searchText, cursor, flags);
+		cursor = doc->find(searchText, cursor, flags);
 
-        if (!cursor.isNull()) {
-            QTextEdit::ExtraSelection selection;
-            selection.format = format;
-            selection.cursor = cursor;
-            extraSelections.append(selection);
-        }
-    }
-    setExtraSelections(extraSelections);    // エディタに適用
+		if (!cursor.isNull()) {
+			QTextEdit::ExtraSelection selection;
+			selection.format = format;
+			selection.cursor = cursor;
+			extraSelections.append(selection);
+		}
+	}
+	setExtraSelections(extraSelections);	// エディタに適用
 }
 void MarkdownEditor::updateLnArea(const QRect &rect, int dy) {
 	if (dy)
-        m_lnAreaWidget->scroll(0, dy);
-    else
-        m_lnAreaWidget->update(0, rect.y(), m_lnAreaWidget->width(), rect.height());
+		m_lnAreaWidget->scroll(0, dy);
+	else
+		m_lnAreaWidget->update(0, rect.y(), m_lnAreaWidget->width(), rect.height());
 }
 void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
 	QPainter painter(m_lnAreaWidget);
 	// 現在表示されている最初のブロックを取得
-    QTextBlock block = firstVisibleBlock();
-    int blockNumber = block.blockNumber();
-    
-    // ブロックの表示上の位置（Y座標）を取得
-    int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
-    int bottom = top + (int) blockBoundingRect(block).height();
-    int charWidth = fontMetrics().horizontalAdvance('9');
+	QTextBlock block = firstVisibleBlock();
+	int blockNumber = block.blockNumber();
+	
+	// ブロックの表示上の位置（Y座標）を取得
+	int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
+	int bottom = top + (int) blockBoundingRect(block).height();
+	int charWidth = fontMetrics().horizontalAdvance('9');
 
-    // 画面内に見える範囲のブロックをループして描画
-    while (block.isValid() && top <= event->rect().bottom()) {
-        if (block.isVisible() && bottom >= event->rect().top()) {
-            QString number = QString::number(blockNumber + 1);
-            painter.setPen(Qt::black); // 文字色
-            
-            // 右詰めで描画するために幅を調整（右側に2ピクセルの余白）
-            painter.drawText(0, top, m_lnAreaWidget->width() - charWidth*2, fontMetrics().height(),
-                             Qt::AlignRight, number);
-        }
+	// 画面内に見える範囲のブロックをループして描画
+	while (block.isValid() && top <= event->rect().bottom()) {
+		if (block.isVisible() && bottom >= event->rect().top()) {
+			QString number = QString::number(blockNumber + 1);
+			painter.setPen(Qt::black); // 文字色
+			
+			// 右詰めで描画するために幅を調整（右側に2ピクセルの余白）
+			painter.drawText(0, top, m_lnAreaWidget->width() - charWidth*2, fontMetrics().height(),
+							 Qt::AlignRight, number);
+		}
 
-        block = block.next();
-        top = bottom;
-        bottom = top + (int) blockBoundingRect(block).height();
-        ++blockNumber;
-    }
+		block = block.next();
+		top = bottom;
+		bottom = top + (int) blockBoundingRect(block).height();
+		++blockNumber;
+	}
 	//	行カーソル描画
 	QRect rect = cursorRect();
-    //QPen pen(hasFocus() ? Qt::red : Qt::gray, 1); // 赤色、太さ1px
-    //QPen pen(Qt::red, 1); // 赤色、太さ1px
-    QPen pen(hasFocus() ? g.m_activeLnColor: g.m_inactiveLnColor, 1); // 色、太さ1px
-    if( !hasFocus() ) pen.setStyle(Qt::DashLine);	//	破線
-    painter.setPen(pen);
-    int y = rect.bottom();
-    int left = 0;
-    int right = lnAreaWidth();
-    painter.drawLine(left, y, right, y);
+	//QPen pen(hasFocus() ? Qt::red : Qt::gray, 1); // 赤色、太さ1px
+	//QPen pen(Qt::red, 1); // 赤色、太さ1px
+	QPen pen(hasFocus() ? g.m_activeLnColor: g.m_inactiveLnColor, 1); // 色、太さ1px
+	if( !hasFocus() ) pen.setStyle(Qt::DashLine);	//	破線
+	painter.setPen(pen);
+	int y = rect.bottom();
+	int left = 0;
+	int right = lnAreaWidth();
+	painter.drawLine(left, y, right, y);
 }
 void MarkdownEditor::lnAreaMousePressEvent(QMouseEvent *event) {
 	auto pos = event->position();
 	QTextCursor cursor = cursorForPosition(QPoint(0, (int)pos.y()));
-    cursor.movePosition(QTextCursor::StartOfBlock);          // 行頭へ移動
-    m_anchorStartPosition = cursor.position();
-    cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor); // 行末まで選択
-    m_selStart = cursor.selectionStart();
-    m_selEnd = cursor.selectionEnd();
-    m_curBlockNum = m_anchorBlockNum = cursor.blockNumber();
-    setTextCursor(cursor);
-    m_isCursorAboveAnchor = false;
-    m_lnAreaPressed = true;
+	cursor.movePosition(QTextCursor::StartOfBlock);			 // 行頭へ移動
+	m_anchorStartPosition = cursor.position();
+	cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor); // 行末まで選択
+	m_selStart = cursor.selectionStart();
+	m_selEnd = cursor.selectionEnd();
+	m_curBlockNum = m_anchorBlockNum = cursor.blockNumber();
+	setTextCursor(cursor);
+	m_isCursorAboveAnchor = false;
+	m_lnAreaPressed = true;
 }
 void MarkdownEditor::lnAreaMouseMoveEvent(QMouseEvent *event) {
 	if( !m_lnAreaPressed ) return;
@@ -1614,29 +1644,29 @@ void MarkdownEditor::lnAreaMouseMoveEvent(QMouseEvent *event) {
 	if( cbn == m_curBlockNum ) return;
 	m_curBlockNum = cbn;
 	if( cbn >= m_anchorBlockNum ) {
-	    cursor.movePosition(QTextCursor::EndOfBlock);	// 行末移動
-	    //if( m_isCursorAboveAnchor )
+		cursor.movePosition(QTextCursor::EndOfBlock);	// 行末移動
+		//if( m_isCursorAboveAnchor )
 			cursor.setPosition(m_anchorStartPosition, QTextCursor::KeepAnchor);
-	    //else
+		//else
 		//	cursor.setPosition(m_selStart, QTextCursor::KeepAnchor);
-	    m_selEnd = cursor.selectionEnd();
-	    m_isCursorAboveAnchor = false;
+		m_selEnd = cursor.selectionEnd();
+		m_isCursorAboveAnchor = false;
 	} else {
-	    cursor.movePosition(QTextCursor::StartOfBlock);	// 行頭移動
+		cursor.movePosition(QTextCursor::StartOfBlock);	// 行頭移動
 		cursor.setPosition(m_selEnd, QTextCursor::KeepAnchor);
-	    m_selStart = cursor.selectionStart();
-	    m_isCursorAboveAnchor = true;
+		m_selStart = cursor.selectionStart();
+		m_isCursorAboveAnchor = true;
 	}
-    setTextCursor(cursor);
+	setTextCursor(cursor);
 }
 void MarkdownEditor::lnAreaMouseReleaseEvent(QMouseEvent *event) {
-    m_lnAreaPressed = false;
+	m_lnAreaPressed = false;
 }
 void MarkdownEditor::resizeEvent(QResizeEvent *event) {
-    MarkdownBaseEdit::resizeEvent(event);
+	MarkdownBaseEdit::resizeEvent(event);
 
-    QRect cr = contentsRect();
-    m_lnAreaWidget->setGeometry(QRect(cr.left(), cr.top(), lnAreaWidth(), cr.height()));
+	QRect cr = contentsRect();
+	m_lnAreaWidget->setGeometry(QRect(cr.left(), cr.top(), lnAreaWidth(), cr.height()));
 }
 void MarkdownEditor::dragEnterEvent(QDragEnterEvent *e) {
    	e->ignore();
