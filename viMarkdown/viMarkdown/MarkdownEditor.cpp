@@ -286,6 +286,12 @@ public:
         m_boldFormat.setForeground(color);
         rehighlight(); // これを呼ぶことでドキュメント全体の highlightBlock が再実行される
     }
+	void updateInlineColors() {
+        m_boldFormat.setForeground(g.m_boldColor);
+        m_italicFormat.setForeground(g.m_italicColor);
+        m_strikethroughFormat.setForeground(g.m_strikethroughColor);
+        rehighlight(); // これを呼ぶことでドキュメント全体の highlightBlock が再実行される
+	}
 protected:
 	void highlightBlock(const QString &text) override {
 		if (text.startsWith("#")) {
@@ -349,6 +355,9 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
 void MarkdownEditor::rehighlight() { m_highlighter->rehighlight(); }
 void MarkdownEditor::setBoldColor(QColor col) {
 	m_highlighter->setBoldColor(col);
+}
+void MarkdownEditor::updateInlineColors() {
+	m_highlighter->updateInlineColors();
 }
 void MarkdownEditor::updateViewportMargines() {
 	setViewportMargins(lnAreaWidth(), 0, 0, 0);

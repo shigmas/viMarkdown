@@ -46,6 +46,7 @@ public:
     void	setProcessing(bool b) { m_processing = b; }
     void	rehighlight();
     void	setBoldColor(QColor);
+    void	updateInlineColors();
     void	highlightSearchText(const QString &searchText);
     void	jumpToHeading(const QString &name);		//	見出し（name）行にカーソル設定
 

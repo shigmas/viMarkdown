@@ -737,7 +737,8 @@ void MainWindow::updateEditorFontSize(int sz) {
 		font.setFixedPitch(true);	// 明示的に固定幅として扱う設定
 		docWidget->m_editor->setFont(font);
 		docWidget->m_editor->updateViewportMargines();
-		docWidget->m_editor->setBoldColor(g.m_boldColor);
+		//docWidget->m_editor->setBoldColor(g.m_boldColor);
+		docWidget->m_editor->updateInlineColors();
 		docWidget->m_editor->rehighlight();				//	再ハイライト
 		docWidget->m_editor->highlightSearchText(m_srcText);				//	再ハイライト
 		docWidget->m_editor->viewport()->update();		//	再表示
