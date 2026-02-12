@@ -14,6 +14,7 @@
 extern Global g;
 extern bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment, bool &commented);
 extern bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens);
+extern bool isTableLine(const QString& lnStr, QStringList &tableTokens);
 extern bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign);
 
 class LnAreaWidget : public QWidget {
@@ -1264,12 +1265,14 @@ void MarkdownEditor::convert_MarkdownTable_CSV() {
 	int endPosition = -1;
 	bool initial = true;
 	QString mdtext = "```CSV\n";;
-	QList<QStringView> tableTokens;
+	//QList<QStringView> tableTokens;
+	QStringList tableTokens;
     while( block.isValid() && isTableLine(block.text(), tableTokens) ) {
 	    for(int i = 0; i < tableTokens.size(); ++i) {
-	    	//QString txt(tableTokens[i]);
-	    	//txt.replace("\"", "\"\"");
-	    	mdtext += QString(u'"') + tableTokens[i] + QString(u'"');
+	    	QString txt(tableTokens[i]);
+	    	txt.replace("\"", "\"\"");
+	    	//mdtext += QString(u'"') + tableTokens[i] + QString(u'"');
+	    	mdtext += QString(u'"') + txt + QString(u'"');
 	    	if( i+1 < tableTokens.size() )
 	    		mdtext += ", ";
 	    	else

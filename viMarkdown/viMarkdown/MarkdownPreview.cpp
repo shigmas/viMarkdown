@@ -15,6 +15,7 @@ using namespace std;
 extern Global g;
 
 bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens);
+bool isTableLine(const QString& lnStr, QStringList &tableTokens);
 bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign);
 
 enum {
@@ -56,6 +57,23 @@ bool isUnderlineHeading(const QString& txt);
 #if 1
 bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens) {
 	QStringView sv(lnStr);
+	tableTokens.clear();
+	int ix = 0;
+	while( ix < sv.size() && sv[ix] == u' ' ) ++ix;		//	空白スキップ
+	if (ix < sv.size() && sv[ix] == u'|') ++ix;			//	先頭の '|' スキップ
+	while( ix < sv.size() ) {
+		int ix0 = ix;
+		while( ix < sv.size() && sv[ix] != u'|' ) {		//	'|' までループ
+			if( ix+1 < sv.size() && sv[ix] == u'\\' ) ix += 2;
+			else ++ix;
+		}
+		tableTokens.push_back(sv.mid(ix0, ix-ix0));
+		++ix;			//	'|' スキップ
+	}
+	return tableTokens.size() > 1;
+}
+bool isTableLine(const QString& lnStr, QStringList &tableTokens) {
+	QString sv(lnStr);
 	tableTokens.clear();
 	int ix = 0;
 	while( ix < sv.size() && sv[ix] == u' ' ) ++ix;		//	空白スキップ
