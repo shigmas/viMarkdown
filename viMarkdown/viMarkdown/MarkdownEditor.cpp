@@ -1489,6 +1489,8 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 			}
 		}
 	}
+	//rehighlight();
+	highlightSearchText(m_mainWindow->srcText());
 	m_processing = false;
 }
 void MarkdownEditor::onCurPosChanged() {
