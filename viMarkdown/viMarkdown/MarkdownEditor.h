@@ -74,7 +74,8 @@ protected:
     	e->ignore();
     }
 #endif
-
+	void	moveToNextWord(QTextCursor& cursor, bool select);
+	void	moveToPrevWord(QTextCursor& cursor, bool select);
     void	updateLnArea(const QRect &rect, int dy);
     void	onContentsChanged(int position, int charsRemoved, int charsAdded);
     void	onCurPosChanged();

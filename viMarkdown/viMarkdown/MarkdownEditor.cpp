@@ -405,6 +405,38 @@ void MarkdownEditor::inputMethodEvent(QInputMethodEvent *event) {
 	m_isComposing = !event->preeditString().isEmpty();
 	MarkdownBaseEdit::inputMethodEvent(event);
 }
+void MarkdownEditor::moveToNextWord(QTextCursor& cursor, bool shift) {
+	int pos = cursor.position();
+	QTextDocument *doc = document();
+	if (pos >= doc->characterCount() - 1) return;
+	CharType startType = getCharType(doc->characterAt(pos));
+	// 同じ種別の間は進む
+	while (pos < doc->characterCount() - 1 && getCharType(doc->characterAt(pos)) == startType) {
+		pos++;
+	}
+	if( startType != Type_Space ) {
+		while (pos < doc->characterCount() - 1 && getCharType(doc->characterAt(pos)) == Type_Space) {
+			pos++;
+		}
+	}
+	cursor.setPosition(pos, shift ? QTextCursor::KeepAnchor : QTextCursor::MoveAnchor);
+}
+void MarkdownEditor::moveToPrevWord(QTextCursor& cursor, bool shift) {
+	int pos = cursor.position();
+	QTextDocument *doc = document();
+	if (pos <= 0) return;
+	CharType startType = getCharType(doc->characterAt(pos - 1));
+	while (pos > 0 && getCharType(doc->characterAt(pos - 1)) == startType) {
+		pos--;
+	}
+	if( startType == Type_Space ) {
+		CharType startType = getCharType(doc->characterAt(pos - 1));
+		while (pos > 0 && getCharType(doc->characterAt(pos - 1)) == startType) {
+			pos--;
+		}
+	}
+	cursor.setPosition(pos, shift ? QTextCursor::KeepAnchor : QTextCursor::MoveAnchor);
+}
 void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	//static QRegularExpression re(R"(^\d[\.\)] )");
 	static QRegularExpression re(R"(^\d\. )");
@@ -460,7 +492,28 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 			setTextCursor(cursor);
 		}
 		return;
-	} else if( m_mainWindow->isKeisenMode() ) {
+	} else if (e->key() == Qt::Key_Delete && (e->modifiers() & Qt::ControlModifier) != 0) {
+		QTextCursor cursor = textCursor();
+		moveToNextWord(cursor, true);
+		cursor.deleteChar();
+		setTextCursor(cursor);
+		return;
+	} else if( !m_mainWindow->isKeisenMode() ) {		//	非罫線モードの場合
+		if( (e->modifiers() & Qt::ControlModifier) != 0 ) {
+			bool shift = (e->modifiers() & Qt::ShiftModifier) != 0;
+			if (e->key() == Qt::Key_Right ) {
+				QTextCursor cursor = textCursor();
+				moveToNextWord(cursor, shift);
+				setTextCursor(cursor);
+				return;
+			} else if (e->key() == Qt::Key_Left) {
+				QTextCursor cursor = textCursor();
+				moveToPrevWord(cursor, shift);
+				setTextCursor(cursor);
+				return;
+			}
+		}
+	} else {		//	罫線モードの場合
 		bool erase = (e->modifiers() & Qt::ShiftModifier) != 0;
 		if( (e->modifiers() & Qt::ControlModifier) != 0 /*|| erase*/ ) {
 			bool thickKeisen = m_mainWindow->isThickKeisenMode();
@@ -483,46 +536,6 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 				return;
 			}
 			m_processing = false;
-		}
-	} else {
-		if( (e->modifiers() & Qt::ControlModifier) != 0 ) {
-			if (e->key() == Qt::Key_Right ) {
-				QTextCursor cursor = textCursor();
-				int pos = cursor.position();
-				QTextDocument *doc = document();
-				if (pos >= doc->characterCount() - 1) return;
-				CharType startType = getCharType(doc->characterAt(pos));
-				// 同じ種別の間は進む
-				while (pos < doc->characterCount() - 1 && getCharType(doc->characterAt(pos)) == startType) {
-					pos++;
-				}
-				if( startType != Type_Space ) {
-					while (pos < doc->characterCount() - 1 && getCharType(doc->characterAt(pos)) == Type_Space) {
-						pos++;
-					}
-				}
-				cursor.setPosition(pos);
-				setTextCursor(cursor);
-				return;
-			} else if (e->key() == Qt::Key_Left) {
-				QTextCursor cursor = textCursor();
-				int pos = cursor.position();
-				QTextDocument *doc = document();
-				if (pos <= 0) return;
-				CharType startType = getCharType(doc->characterAt(pos - 1));
-				while (pos > 0 && getCharType(doc->characterAt(pos - 1)) == startType) {
-					pos--;
-				}
-				if( startType == Type_Space ) {
-					CharType startType = getCharType(doc->characterAt(pos - 1));
-					while (pos > 0 && getCharType(doc->characterAt(pos - 1)) == startType) {
-						pos--;
-					}
-				}
-				cursor.setPosition(pos);
-				setTextCursor(cursor);
-				return;
-			}
 		}
 	}
 	MarkdownBaseEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
