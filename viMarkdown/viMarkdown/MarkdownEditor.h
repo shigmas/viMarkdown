@@ -49,6 +49,10 @@ public:
     void	updateInlineColors();
     void	highlightSearchText(const QString &searchText);
     void	jumpToHeading(const QString &name);		//	見出し（name）行にカーソル設定
+	void	moveToNextWord(QTextCursor& cursor, bool select);
+	void	moveToPrevWord(QTextCursor& cursor, bool select);
+	void	moveToStartOfWord(QTextCursor& cursor, bool select);
+	void	moveToEndOfWord(QTextCursor& cursor, bool select);
 
 signals:
     void	tab_pressed();
@@ -74,8 +78,6 @@ protected:
     	e->ignore();
     }
 #endif
-	void	moveToNextWord(QTextCursor& cursor, bool select);
-	void	moveToPrevWord(QTextCursor& cursor, bool select);
     void	updateLnArea(const QRect &rect, int dy);
     void	onContentsChanged(int position, int charsRemoved, int charsAdded);
     void	onCurPosChanged();

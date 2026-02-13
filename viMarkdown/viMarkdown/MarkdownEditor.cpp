@@ -437,6 +437,27 @@ void MarkdownEditor::moveToPrevWord(QTextCursor& cursor, bool shift) {
 	}
 	cursor.setPosition(pos, shift ? QTextCursor::KeepAnchor : QTextCursor::MoveAnchor);
 }
+void MarkdownEditor::moveToStartOfWord(QTextCursor& cursor, bool shift) {
+	int pos = cursor.position();
+	QTextDocument *doc = document();
+	if (pos <= 0) return;
+	CharType startType = getCharType(doc->characterAt(pos));
+	while (pos > 0 && getCharType(doc->characterAt(pos - 1)) == startType) {
+		pos--;
+	}
+	cursor.setPosition(pos, shift ? QTextCursor::KeepAnchor : QTextCursor::MoveAnchor);
+}
+void MarkdownEditor::moveToEndOfWord(QTextCursor& cursor, bool shift) {
+	int pos = cursor.position();
+	QTextDocument *doc = document();
+	if (pos >= doc->characterCount() - 1) return;
+	CharType startType = getCharType(doc->characterAt(pos));
+	// 同じ種別の間は進む
+	while (pos < doc->characterCount() - 1 && getCharType(doc->characterAt(pos)) == startType) {
+		pos++;
+	}
+	cursor.setPosition(pos, shift ? QTextCursor::KeepAnchor : QTextCursor::MoveAnchor);
+}
 void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	//static QRegularExpression re(R"(^\d[\.\)] )");
 	static QRegularExpression re(R"(^\d\. )");
@@ -495,6 +516,12 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	} else if (e->key() == Qt::Key_Delete && (e->modifiers() & Qt::ControlModifier) != 0) {
 		QTextCursor cursor = textCursor();
 		moveToNextWord(cursor, true);
+		cursor.deleteChar();
+		setTextCursor(cursor);
+		return;
+	} else if (e->key() == Qt::Key_Backspace && (e->modifiers() & Qt::ControlModifier) != 0) {
+		QTextCursor cursor = textCursor();
+		moveToPrevWord(cursor, true);
 		cursor.deleteChar();
 		setTextCursor(cursor);
 		return;

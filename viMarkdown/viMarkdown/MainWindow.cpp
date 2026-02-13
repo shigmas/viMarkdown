@@ -335,8 +335,10 @@ void MainWindow::onAction_FindWord() {
 	MarkdownEditor *mdEditor = docWidget->m_editor;
 	QTextCursor cursor = mdEditor->textCursor();
 	if( !cursor.hasSelection() ) {
-		cursor.movePosition(QTextCursor::StartOfWord, QTextCursor::MoveAnchor);
-		cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
+		//cursor.movePosition(QTextCursor::StartOfWord, QTextCursor::MoveAnchor);
+		//cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
+		mdEditor->moveToStartOfWord(cursor, false);
+		mdEditor->moveToEndOfWord(cursor, /*selection:*/true);		
 		mdEditor->setTextCursor(cursor);
 	}
 	m_searchCB->setCurrentText(cursor.selectedText());
