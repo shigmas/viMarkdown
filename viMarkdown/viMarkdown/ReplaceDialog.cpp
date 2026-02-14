@@ -4,7 +4,7 @@
 
 extern Global g;
 
-ReplaceDialog::ReplaceDialog(const QStringList &hist, QWidget *parent)
+ReplaceDialog::ReplaceDialog(const QStringList &hist, const QStringList &replace, QWidget *parent)
 	: QDialog(parent)
 	, ui(new Ui::ReplaceDialogClass())
 {
@@ -13,6 +13,8 @@ ReplaceDialog::ReplaceDialog(const QStringList &hist, QWidget *parent)
 	//QStringList history = settings.value("search/history").toStringList();
     ui->searchCB->clear();
 	ui->searchCB->addItems(hist);
+    ui->replaceCB->clear();
+	ui->replaceCB->addItems(replace);
 	ui->ignoreCase->setCheckState(g.m_ignoreCase ? Qt::Checked : Qt::Unchecked);
 	connect(ui->searchPrev, &QPushButton::clicked, this, &ReplaceDialog::onSearchPrev);
 	connect(ui->searchNext, &QPushButton::clicked, this, &ReplaceDialog::onSearchNext);

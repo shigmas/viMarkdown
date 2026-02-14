@@ -206,6 +206,7 @@ private:
     QString		m_altTitle;				//	直前文書タイトル
     QString		m_srcText;				//	検索文字列
     QStringList	m_searchHist;			//	検索履歴、先頭が最新検索文字列
+    QStringList	m_replaceHist;			//	置換履歴、先頭が最新置換文字列
     class QLabel		*m_lcLabel;		//	行カラムラベル
     class QLabel		*m_encLabel;	//	文字エンコーディングラベル
     class QComboBox				*m_encodingCombo = nullptr;

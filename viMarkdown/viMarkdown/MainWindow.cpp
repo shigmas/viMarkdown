@@ -119,6 +119,7 @@ void MainWindow::insertSearchComboBox() {
 	connect(m_searchCB, &QComboBox::activated, this, &MainWindow::onSearchCBActivated);
 	QSettings settings;
 	m_searchHist = settings.value("search/history").toStringList();
+	m_replaceHist = settings.value("search/replace").toStringList();
     m_searchCB->clear();
     m_searchCB->addItems(m_searchHist);
     //	ついでに最近のファイル・ディレクトリをカレントディレクトリに設定
@@ -233,7 +234,7 @@ void MainWindow::onAction_NaviForward() {
 	m_processing = false;
 }
 void MainWindow::onAction_Replace() {
-	ReplaceDialog dlg(m_searchHist, this);
+	ReplaceDialog dlg(m_searchHist, m_replaceHist, this);
 	connect(&dlg, &ReplaceDialog::do_search, this, &MainWindow::do_search);
 	connect(&dlg, &ReplaceDialog::do_replace_next, this, &MainWindow::do_replace_next);
 	connect(&dlg, &ReplaceDialog::do_replace_all, this, &MainWindow::do_replace_all);
@@ -252,6 +253,8 @@ void MainWindow::do_replace_next(const QString srcText, const QString dstText) {
 	if( cursor.hasSelection() ) {
 		cursor.insertText(dstText);
 		mdEditor->setTextCursor(cursor);
+		m_replaceHist.push_front(dstText);
+		m_replaceHist.removeDuplicates();	//	重複削除
 	}
 	do_search(srcText, false);
 }
@@ -272,8 +275,11 @@ void MainWindow::do_replace_all(const QString srcText, const QString dstText) {
 	    replaced = true;
 	}
 	cursor.endEditBlock();
-	if( replaced )
+	if( replaced ) {
+		m_replaceHist.push_front(dstText);
+		m_replaceHist.removeDuplicates();	//	重複削除
 		mdEditor->setTextCursor(cursor);
+	}
 #else
 	QTextCursor cursor = mdEditor->textCursor();
 	for(;;) {
