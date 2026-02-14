@@ -288,6 +288,7 @@ void MarkdownPreview::do_body(QTextCursor& cursor) {
 }
 
 static QRegularExpression re_list(R"(^ *[-\*+] )");
+static QRegularExpression re_numlist(R"(^(\s*)(\d+)([.)]) )");
 
 int indexOfComment(QStringView buf, int start) {
 	for(int i = start; i < buf.size(); ++i) {
@@ -355,6 +356,9 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {
 		} else if( re_list.match(buf).hasMatch() ) {
 			do_body(cursor);
 			do_list(cursor, buf);
+		} else if( re_numlist.match(buf).hasMatch() ) {
+			do_body(cursor);
+			do_numlist(cursor, buf);
 		} else if( buf.startsWith("> ") ) {
 			do_body(cursor);
 			do_quote(cursor, buf);
@@ -696,6 +700,18 @@ void MarkdownPreview::do_quote(QTextCursor& cursor, QString buf) {
 	--m_ln;
 	m_nEmptyLines = 0;
 }
+void MarkdownPreview::do_numlist(QTextCursor& cursor, QString buf) {
+	while( ++m_ln < m_lst.size() ) {
+		if( !re_numlist.match(m_lst[m_ln]).hasMatch() ) break;			//	"1. " 連番行が終わった場合
+		buf += u'\n' + m_lst[m_ln];
+	}
+	cursor.insertMarkdown(buf);
+	cursor.insertBlock();
+	QTextBlockFormat blockFormat;
+	cursor.setBlockFormat(blockFormat);
+	--m_ln;
+	m_nEmptyLines = 0;
+}
 void MarkdownPreview::do_list(QTextCursor& cursor, QString buf) {
 	if( m_nEmptyLines >= 1 )
 		cursor.insertBlock();			//	新規ブロック
@@ -713,7 +729,7 @@ void MarkdownPreview::do_list(QTextCursor& cursor, QString buf) {
 	} else {
 		//static QRegularExpression re(R"(^( *)- )");
 		while( ++m_ln < m_lst.size() ) {
-			if( !re_list.match(m_lst[m_ln]).hasMatch() ) break;
+			if( !re_list.match(m_lst[m_ln]).hasMatch() ) break;			//	"- " リスト行が終わった場合
 			if( re_checkbox.match(m_lst[m_ln]).hasMatch() ) break;
 			buf += u'\n' + m_lst[m_ln];
 		}
