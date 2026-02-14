@@ -53,6 +53,7 @@ signals:
     void	textRemoved(int);
     void	BS_pressed();		//	BackSpace
     void	undo_triggered();
+    void	redo_triggered();
 
 protected:
     void	keyPressEvent(QKeyEvent *e) override;
