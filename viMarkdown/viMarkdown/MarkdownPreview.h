@@ -52,6 +52,7 @@ signals:
     void	textInserted(QString);
     void	textRemoved(int);
     void	BS_pressed();		//	BackSpace
+    void	undo_triggered();
 
 protected:
     void	keyPressEvent(QKeyEvent *e) override;

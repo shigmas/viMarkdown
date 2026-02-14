@@ -593,6 +593,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(markdownPreview, &MarkdownPreview::textInserted, this, &MainWindow::onTextInsertedAtPreview);
 	connect(markdownPreview, &MarkdownPreview::textRemoved, this, &MainWindow::onTextRemovedAtPreview);
 	connect(markdownPreview, &MarkdownPreview::BS_pressed, this, &MainWindow::onBS_pressed);
+	connect(markdownPreview, &MarkdownPreview::undo_triggered, this, &MainWindow::onUndoTriggered);
 	connect(markdownPreview, &MarkdownPreview::cursorPositionChanged, this, &MainWindow::onPreviewCurPosChanged);
 	splitter->addWidget(mdEditor);
 	splitter->addWidget(markdownPreview);
@@ -797,6 +798,11 @@ void MainWindow::onBS_pressed() {
 	cursor.deletePreviousChar();
 	docWidget->m_editor->setTextCursor(cursor);
 	syncPreviewCursorWithEditor();
+}
+void MainWindow::onUndoTriggered() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	docWidget->m_editor->undo();
 }
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 {

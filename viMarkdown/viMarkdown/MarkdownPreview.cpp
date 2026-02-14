@@ -160,6 +160,10 @@ void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 		emit BS_pressed();
 		return;
 	}
+	if (e->key() == Qt::Key_Z && (e->modifiers() & Qt::ControlModifier) != 0) {
+		emit undo_triggered();
+		return;
+	}
 	QTextEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
 }
 QString splitName(QString& anchor) {

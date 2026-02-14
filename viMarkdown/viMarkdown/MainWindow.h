@@ -125,6 +125,7 @@ protected:
     void	onChangeEditorFontSize(int);
     void	updateEditorFontSize(int);
     void	onSettingsChanged();
+    void	onUndoTriggered();
 
     void	onAction_New();
     void	onAction_NewTab();
