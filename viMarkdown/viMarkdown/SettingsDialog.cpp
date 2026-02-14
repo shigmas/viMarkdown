@@ -14,9 +14,10 @@ SettingsDialog::SettingsDialog(QWidget *parent)
         this->layout()->setSizeConstraint(QLayout::SetFixedSize);
     }
 	QSettings settings;
-	ui->editorFontSize->setValue(g.m_editorFontSize);
+	ui->fontSize->setValue(g.m_editorFontSize);
 	updateColorButtons();
 	//QColor color("#800000");
+	connect(ui->fontSize, &QSpinBox::valueChanged, this, &SettingsDialog::onFontSizeChanged);
 	connect(ui->headingsColorPB, &QPushButton::clicked, this, &SettingsDialog::onHeadingColorButtonClicked);
 	connect(ui->activeLineColorPB, &QPushButton::clicked, this, &SettingsDialog::onActiveLineColorButtonClicked);
 	connect(ui->inactiveLineColorPB, &QPushButton::clicked, this, &SettingsDialog::onInactiveLineColorButtonClicked);
@@ -99,7 +100,7 @@ void SettingsDialog::updateColorButtons() {
 
 void SettingsDialog::accept() {
 	QSettings settings;
-	settings.setValue(KEY_EDITOR_FONT_SIZE, ui->editorFontSize->value());
+	settings.setValue(KEY_EDITOR_FONT_SIZE, ui->fontSize->value());
 	QDialog::accept();
 }
 void SettingsDialog::pickColor(QColor &targetColor, const QString &title) {
@@ -109,6 +110,10 @@ void SettingsDialog::pickColor(QColor &targetColor, const QString &title) {
 		updateColorButtons();
 		emit settingsChanged();
 	}
+}
+void SettingsDialog::onFontSizeChanged(int sz) {
+	g.m_editorFontSize = sz;
+	emit settingsChanged();
 }
 void SettingsDialog::onActiveLineColorButtonClicked() {
 	pickColor(g.m_activeLnColor, "Active Line");

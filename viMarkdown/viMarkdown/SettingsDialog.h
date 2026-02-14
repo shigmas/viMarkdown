@@ -18,6 +18,7 @@ public:
 protected:
 	void accept() override;
 
+	void onFontSizeChanged(int);
 	void onHeadingColorButtonClicked();
 	void onActiveLineColorButtonClicked();
 	void onInactiveLineColorButtonClicked();
