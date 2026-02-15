@@ -187,7 +187,7 @@ void MarkdownPreview::mouseMoveEvent(QMouseEvent *me) {
         viewport()->setCursor(Qt::PointingHandCursor);
 		if( !anchor.endsWith(".md", Qt::CaseInsensitive) )
 			anchor += ".md";
-		QString fullPath = QDir::current().absoluteFilePath(anchor);
+		QString fullPath = QDir::cleanPath(QDir::current().absoluteFilePath(anchor));
         m_mainWindow->statusBar()->showMessage(fullPath);
     } else {	// それ以外なら通常（I型または矢印）
         viewport()->setCursor(Qt::IBeamCursor);
@@ -202,11 +202,11 @@ void MarkdownPreview::mouseReleaseEvent(QMouseEvent *me)
 			//qDebug() << "anchor = " << anchor;
 			QString fullPath = anchor;
 			if(!anchor.isEmpty() ) {
-				if( anchor.startsWith("./") || anchor.startsWith(".\\") )
-					anchor = anchor.mid(2);
+				//if( anchor.startsWith("./") || anchor.startsWith(".\\") )
+				//	anchor = anchor.mid(2);
 				if( !anchor.endsWith(".md", Qt::CaseInsensitive) )
 					anchor += ".md";
-				fullPath = QDir::current().absoluteFilePath(anchor);
+				fullPath = QDir::cleanPath(QDir::current().absoluteFilePath(anchor));
 			}
 			emit anchorClicked("", fullPath, name);
 		} else {
