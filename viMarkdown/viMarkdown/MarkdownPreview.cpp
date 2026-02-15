@@ -202,6 +202,8 @@ void MarkdownPreview::mouseReleaseEvent(QMouseEvent *me)
 			//qDebug() << "anchor = " << anchor;
 			QString fullPath = anchor;
 			if(!anchor.isEmpty() ) {
+				if( anchor.startsWith("./") || anchor.startsWith(".\\") )
+					anchor = anchor.mid(2);
 				if( !anchor.endsWith(".md", Qt::CaseInsensitive) )
 					anchor += ".md";
 				fullPath = QDir::current().absoluteFilePath(anchor);
