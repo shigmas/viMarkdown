@@ -22,7 +22,7 @@
 
 ## ドキュメント
 
-- [ヘルプ](help.md)
+- [ヘルプ](docs/ja/help.md)
 - [簡単な入門](docs/ja/quickstart.md)
 - [メニュー一覧](docs/ja/menu.md)
 
