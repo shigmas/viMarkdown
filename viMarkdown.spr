@@ -720,7 +720,7 @@
 0719 ◎ C 02/16 02/16 01106│問題│リンク先が ./ja/help.md の場合、docs/./ja/help.md となってしまう。./ は削除すべき
 0720 ◎ C 02/16 02/16 01106│問題│SaveAs で別ディレクトリに保存しても、アウトラインバーに表示されるフルパスが元のフルパスのまま
 0721 ● C 02/16            │問題│リスト行で Enter 押下すると、２行改行されてしまう
-0722 ● C 02/16            │ToDo│QString anchorToFullPath(const QString &anchor) を追加し、処理を共通化
+0722 ◎ C 02/16 02/16 01106│ToDo│QString anchorToFullPath(const QString &anchor) を追加し、処理を共通化
 0723 ● C 02/16            │ToDo│
 0724 ● C 02/16            │ToDo│
 0725 ● C 02/16            │ToDo│
