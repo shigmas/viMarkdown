@@ -40,7 +40,7 @@ void MarkdownPreview::onCurPosChanged() {
 	m_processing = true;
 	QTextCursor cursor = this->textCursor();
 	auto context = contextAt(cursor.position());
-	context.m_hBlockNum = prvToSrcHeading(context.m_hBlockNum);
+	context.m_srcHBlockNum = prvToSrcHeading(context.m_prvHBlockNum);
 	emit posContextChanged(context);
 	m_processing = false;
 }
@@ -883,7 +883,7 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 			break;
 		block = block.previous();
 	}
-	pc.m_hBlockNum = block.blockNumber();
+	pc.m_prvHBlockNum = block.blockNumber();
 	int count = 1;
 	int curPos = block.position();
 	for (int i = curPos; i < pos; ++i) {

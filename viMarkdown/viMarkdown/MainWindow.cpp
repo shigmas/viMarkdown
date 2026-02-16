@@ -679,10 +679,12 @@ void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソ
 	docWidget->m_preview->setCursorAtNthPat(blockNum, pat, nth, tail);
 	m_processing = false;
 }
+//	ビューワ → エディタ カーソル位置同期
 void MainWindow::onPosContextChanged(const PosContext& context) {
-	qDebug() << "onPosContextChanged()";
+	//qDebug() << "onPosContextChanged()";
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
+	docWidget->m_editor->setCursorByContext(context);
 }
 //	ビューワ → エディタ カーソル位置同期
 void MainWindow::onPreviewCurPosChanged() {		//	MarkdownPreview でカーソルが移動した

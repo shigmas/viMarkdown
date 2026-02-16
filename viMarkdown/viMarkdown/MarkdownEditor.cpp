@@ -635,8 +635,45 @@ void MarkdownEditor::jumpToHeading(const QString& name) {
 	}
 }
 void MarkdownEditor::setCursorByContext(const PosContext &context) {
-	QTextBlock block = document()->findBlockByNumber(context.m_hBlockNum);
+	if( m_processing ) return;		//	再入禁止
+	m_processing = true;
+	QTextBlock block = document()->findBlockByNumber(context.m_srcHBlockNum);
+	const QChar prev = context.m_chPrev;
+	const QChar next = context.m_chNext;
 	int nth = context.m_indexOfPrevNext;
+	int ix = 0;
+	while( block.isValid() ) {
+		const QString &buf = block.text();
+		if( prev == QChar() ) {		//	行頭の場合
+			if( buf.startsWith(next) ) {
+				if( --nth == 0 ) break;
+			}
+			block = block.next();
+			ix = 0;
+		} else {		//	非行頭の場合
+			ix = buf.indexOf(prev, ix);
+			//while( buf[ix] != prev ) {
+			//	if( ++ix >= buf.size() ) {
+			//		ix = -1;
+			//		break;
+			//	}
+			//}
+			if( ix < 0 || ix+1 >= buf.size() || buf[ix+1] != next ) {	//	非マッチ 
+				block = block.next();
+				ix = 0;
+			} else {
+				++ix;
+				if( --nth == 0 ) break;
+			}
+		}
+	}
+	if( block.isValid() ) {
+		QTextCursor cursor(block);		//	ブロック先頭位置
+		if( ix != 0 )
+			cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, ix);
+		setTextCursor(cursor);
+	}
+	m_processing = false;
 }
 void MarkdownEditor::setCursorAtNthPat(int srcHeadingBlockNum, QString pat, int nth, bool tail) {		//	nth: 見出し行から何番目か（>0）
 	qDebug() << QString("MarkdownEditor::setCursorAtNthPat(%1, '%2', %3,").arg(srcHeadingBlockNum).arg(pat).arg(nth) << tail << ")";
