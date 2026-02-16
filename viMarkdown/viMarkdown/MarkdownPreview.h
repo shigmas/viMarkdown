@@ -55,6 +55,7 @@ signals:
     void	BS_pressed();		//	BackSpace
     void	undo_triggered();
     void	redo_triggered();
+    void	posContextChanged(const PosContext &context);
 
 protected:
     void	keyPressEvent(QKeyEvent *e) override;

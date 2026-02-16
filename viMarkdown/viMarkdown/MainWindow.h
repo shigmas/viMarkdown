@@ -127,6 +127,7 @@ protected:
     void	onSettingsChanged();
     void	onUndoTriggered();
     void	onRedoTriggered();
+    void	onPosContextChanged(const struct PosContext&);
 
     void	onAction_New();
     void	onAction_NewTab();

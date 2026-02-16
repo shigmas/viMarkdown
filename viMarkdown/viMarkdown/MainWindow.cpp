@@ -597,6 +597,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(markdownPreview, &MarkdownPreview::undo_triggered, this, &MainWindow::onUndoTriggered);
 	connect(markdownPreview, &MarkdownPreview::redo_triggered, this, &MainWindow::onRedoTriggered);
 	connect(markdownPreview, &MarkdownPreview::cursorPositionChanged, this, &MainWindow::onPreviewCurPosChanged);
+	connect(markdownPreview, &MarkdownPreview::posContextChanged, this, &MainWindow::onPosContextChanged);
 	splitter->addWidget(mdEditor);
 	splitter->addWidget(markdownPreview);
 	splitter->setSizes(QList<int>() << 500 << 500);
@@ -677,6 +678,11 @@ void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソ
 	}
 	docWidget->m_preview->setCursorAtNthPat(blockNum, pat, nth, tail);
 	m_processing = false;
+}
+void MainWindow::onPosContextChanged(const PosContext& context) {
+	qDebug() << "onPosContextChanged()";
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
 }
 //	ビューワ → エディタ カーソル位置同期
 void MainWindow::onPreviewCurPosChanged() {		//	MarkdownPreview でカーソルが移動した

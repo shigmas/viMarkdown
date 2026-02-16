@@ -7,6 +7,7 @@
 #include <QScrollbar>
 #include <QDir>
 #include <qpainter.h>
+#include <assert.h>
 #include "MarkdownPreview.h"
 #include "MainWindow.h"
 
@@ -35,6 +36,13 @@ MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, QWidget* parent)
 }
 void MarkdownPreview::onCurPosChanged() {
 	viewport()->update();	//	強制再描画
+	if( m_processing ) return;		//	再入禁止
+	m_processing = true;
+	QTextCursor cursor = this->textCursor();
+	auto context = contextAt(cursor.position());
+	context.m_hBlockNumber = prvToSrcHeading(context.m_hBlockNumber);
+	emit posContextChanged(context);
+	m_processing = false;
 }
 void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int charsAdded) {
 	if( m_processing ) return;
@@ -193,15 +201,15 @@ void MarkdownPreview::mouseMoveEvent(QMouseEvent *me) {
 	QString name = splitName(anchor);
 	//qDebug() << "anchor = " << anchor << ", name = " << name;
 	if (!anchor.isEmpty() || !name.isEmpty() ) {	// リンクの上なら指差し
-        viewport()->setCursor(Qt::PointingHandCursor);
+		viewport()->setCursor(Qt::PointingHandCursor);
 		//if( !anchor.endsWith(".md", Qt::CaseInsensitive) )
 		//	anchor += ".md";
 		//QString fullPath = QDir::cleanPath(QDir::current().absoluteFilePath(anchor));
 		QString fullPath = anchorToFullPath(anchor);
-        m_mainWindow->statusBar()->showMessage(fullPath);
-    } else {	// それ以外なら通常（I型または矢印）
-        viewport()->setCursor(Qt::IBeamCursor);
-    }
+		m_mainWindow->statusBar()->showMessage(fullPath);
+	} else {	// それ以外なら通常（I型または矢印）
+		viewport()->setCursor(Qt::IBeamCursor);
+	}
 }
 void MarkdownPreview::mouseReleaseEvent(QMouseEvent *me)
 {
@@ -221,30 +229,30 @@ void MarkdownPreview::mouseReleaseEvent(QMouseEvent *me)
 			}
 			emit anchorClicked("", fullPath, name);
 		} else {
-		    QTextCursor cursor = cursorForPosition(me->pos());
-		    QTextCharFormat format = cursor.charFormat();
-		    if( format.isAnchor() ) {
-		    	qDebug() << "checkbox is clicked";
-		    }
-		    emit lineClicked(cursor.block().userState());
+			QTextCursor cursor = cursorForPosition(me->pos());
+			QTextCharFormat format = cursor.charFormat();
+			if( format.isAnchor() ) {
+				qDebug() << "checkbox is clicked";
+			}
+			emit lineClicked(cursor.block().userState());
 		}
 	}
-    QTextEdit::mouseReleaseEvent(me);
+	QTextEdit::mouseReleaseEvent(me);
 }
 void MarkdownPreview::paintEvent(QPaintEvent *e) {
 	QTextEdit::paintEvent(e); // 先にテキストを普通に描画
 	QPainter p(viewport());
 	//	行カーソル描画
 	QRect rect = cursorRect();
-    //QPen pen(hasFocus() ? Qt::red : Qt::gray, 1); // 赤色、太さ1px
-    //QPen pen(Qt::red, 1); // 赤色、太さ1px
-    QPen pen(hasFocus() ? g.m_activeLnColor: g.m_inactiveLnColor, 1); // 色、太さ1px
-    if( !hasFocus() ) pen.setStyle(Qt::DashLine);	//	破線
-    p.setPen(pen);
-    int y = rect.bottom();
-    int left = 0;	//-lnAreaWidth();
-    int right = viewport()->width();
-    p.drawLine(left, y, right, y);
+	//QPen pen(hasFocus() ? Qt::red : Qt::gray, 1); // 赤色、太さ1px
+	//QPen pen(Qt::red, 1); // 赤色、太さ1px
+	QPen pen(hasFocus() ? g.m_activeLnColor: g.m_inactiveLnColor, 1); // 色、太さ1px
+	if( !hasFocus() ) pen.setStyle(Qt::DashLine);	//	破線
+	p.setPen(pen);
+	int y = rect.bottom();
+	int left = 0;	//-lnAreaWidth();
+	int right = viewport()->width();
+	p.drawLine(left, y, right, y);
 }
 void MarkdownPreview::do_body_sub(QTextCursor& cursor, const QString &buf) {
 #if 1
@@ -331,14 +339,14 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {
 
 	m_processing = true;
 	this->clear();
-    QTextFrame *root = this->document()->rootFrame();
-    QTextFrameFormat rformat = root->frameFormat();
-    rformat.setTopMargin(9);
-    rformat.setBottomMargin(9);
-    rformat.setLeftMargin(9);
-    rformat.setRightMargin(9);
-    root->setFrameFormat(rformat);
-    m_bodyList.clear();
+	QTextFrame *root = this->document()->rootFrame();
+	QTextFrameFormat rformat = root->frameFormat();
+	rformat.setTopMargin(9);
+	rformat.setBottomMargin(9);
+	rformat.setLeftMargin(9);
+	rformat.setRightMargin(9);
+	root->setFrameFormat(rformat);
+	m_bodyList.clear();
 	QTextCursor cursor(this->document());
 	cursor.beginEditBlock();
 	cursor.movePosition(QTextCursor::Start);
@@ -416,28 +424,28 @@ void MarkdownPreview::do_table(QTextCursor& cursor) {
 	QTextTable *table = cursor.currentTable();
 	if (table) {
 		QColor headerBgColor(230, 240, 255); // #E6F0FF くらいの淡い青
-	    // 1行目（ヘッダ行）のすべての列をループ
-	    for (int col = 0; col < table->columns(); ++col) {
-	        QTextTableCell cell = table->cellAt(0, col);
-	        // --- 背景色の設定 ---
-	        QTextCharFormat cellFormat = cell.format();
-	        cellFormat.setBackground(headerBgColor);
-	        cell.setFormat(cellFormat);
-	        // --- センタリングの設定  ---
-	        QTextCursor cellCursor = cell.firstCursorPosition();
-	        QTextBlockFormat blockFormat = cellCursor.blockFormat();
-	        blockFormat.setAlignment(Qt::AlignCenter);
-	        cellCursor.setBlockFormat(blockFormat);
-	    }
+		// 1行目（ヘッダ行）のすべての列をループ
+		for (int col = 0; col < table->columns(); ++col) {
+			QTextTableCell cell = table->cellAt(0, col);
+			// --- 背景色の設定 ---
+			QTextCharFormat cellFormat = cell.format();
+			cellFormat.setBackground(headerBgColor);
+			cell.setFormat(cellFormat);
+			// --- センタリングの設定  ---
+			QTextCursor cellCursor = cell.firstCursorPosition();
+			QTextBlockFormat blockFormat = cellCursor.blockFormat();
+			blockFormat.setAlignment(Qt::AlignCenter);
+			cellCursor.setBlockFormat(blockFormat);
+		}
 		QColor cellBgColor(255, 255, 224);
-	    for (int row = 2; row < table->rows(); row+=2) {
-		    for (int col = 0; col < table->columns(); ++col) {
-		        QTextTableCell cell = table->cellAt(row, col);
-		        QTextCharFormat cellFormat = cell.format();
-		        cellFormat.setBackground(cellBgColor);
-		        cell.setFormat(cellFormat);
-		    }
-	    }
+		for (int row = 2; row < table->rows(); row+=2) {
+			for (int col = 0; col < table->columns(); ++col) {
+				QTextTableCell cell = table->cellAt(row, col);
+				QTextCharFormat cellFormat = cell.format();
+				cellFormat.setBackground(cellBgColor);
+				cell.setFormat(cellFormat);
+			}
+		}
 	}
 	cursor.movePosition(QTextCursor::Right);
 	cursor.insertBlock();
@@ -475,7 +483,7 @@ void MarkdownPreview::do_heading_sub(QTextCursor& cursor, QString buf, int h, in
 	if( h == 1 ) {		//	H1 の場合はセンタリング（viMarkdown 独自？仕様）
 		blockFormat.setAlignment(Qt::AlignCenter);
 	} else {
-		blockFormat.setTopMargin(12);    // 上側の余白（ピクセル）
+		blockFormat.setTopMargin(12);	 // 上側の余白（ピクセル）
 		blockFormat.setBottomMargin(12); // 下側の余白（ピクセル）
 	}
 	cursor.mergeBlockFormat(blockFormat);
@@ -488,70 +496,70 @@ void MarkdownPreview::do_heading_sub(QTextCursor& cursor, QString buf, int h, in
 	m_nEmptyLines = 0;
 }
 bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment, bool &commented) {
-    //QStringList fields;
-    commented = false;
-    int i = 0;
-    if( inComment ) {
-    	int ix = line.indexOf("-->");
-    	if( ix < 0 ) return inQuotes;
-    	inComment = false;
+	//QStringList fields;
+	commented = false;
+	int i = 0;
+	if( inComment ) {
+		int ix = line.indexOf("-->");
+		if( ix < 0 ) return inQuotes;
+		inComment = false;
 		if( (i = ix + 3) >= line.length() ) {	//	"-->" までスキップ
 			commented = fields.isEmpty();
 			return inQuotes;
 		}
 
-    }
-    QString currentField;
+	}
+	QString currentField;
 	if( !inQuotes ) {
 		fields.clear();
 	} else {
 		currentField = fields.back() + u'\n';
 		fields.pop_back();
 	}
-    //bool inQuotes = false;
-    for (; i < line.length(); ++i) {
-        if( line.mid(i).startsWith("<!--") ) {
-        	int ix = line.indexOf("-->", i + 4);
-        	if( ix > 0 ) {	//	コメント終了を発見
-        		if( (i = ix + 3) >= line.length() ) {	//	"-->" までスキップ
-        			commented = fields.isEmpty();
-        			return inQuotes;
-        		}
-        	} else {
-        		inComment = true;
-        		return inQuotes;
-        	}
-        }
-        QChar c = line.at(i);
-        if (c == '"') {
-            // ダブルクォートの中のダブルクォート（エスケープ）をチェック
-            if (inQuotes && i + 1 < line.length() && line.at(i + 1) == '"') {
-                currentField += '"';
-                i++; // 1文字飛ばす
-            } else {
-                // クォート状態の反転
-                inQuotes = !inQuotes;
-            }
-        } else if (c == ',' && !inQuotes) {
-            // クォートの外にあるカンマはセパレータ
-            fields.append(currentField.trimmed());
-            currentField.clear();
-        } else {
-            // 通常の文字
-            currentField += c;
-        }
-    }
-    // 最後のフィールドを追加
-    fields.append(currentField.trimmed());
-    return inQuotes;
+	//bool inQuotes = false;
+	for (; i < line.length(); ++i) {
+		if( line.mid(i).startsWith("<!--") ) {
+			int ix = line.indexOf("-->", i + 4);
+			if( ix > 0 ) {	//	コメント終了を発見
+				if( (i = ix + 3) >= line.length() ) {	//	"-->" までスキップ
+					commented = fields.isEmpty();
+					return inQuotes;
+				}
+			} else {
+				inComment = true;
+				return inQuotes;
+			}
+		}
+		QChar c = line.at(i);
+		if (c == '"') {
+			// ダブルクォートの中のダブルクォート（エスケープ）をチェック
+			if (inQuotes && i + 1 < line.length() && line.at(i + 1) == '"') {
+				currentField += '"';
+				i++; // 1文字飛ばす
+			} else {
+				// クォート状態の反転
+				inQuotes = !inQuotes;
+			}
+		} else if (c == ',' && !inQuotes) {
+			// クォートの外にあるカンマはセパレータ
+			fields.append(currentField.trimmed());
+			currentField.clear();
+		} else {
+			// 通常の文字
+			currentField += c;
+		}
+	}
+	// 最後のフィールドを追加
+	fields.append(currentField.trimmed());
+	return inQuotes;
 }
 void MarkdownPreview::do_CSV(QTextCursor& cursor) {
 	QList<QStringList> ll;
 	int max_clmn = 0;
-    bool inQuotes = false;
-    bool inComment = false;
-    bool commented = false;		//	行単位でコメントアウトされた
-    QStringList fields;
+	bool inQuotes = false;
+	bool inComment = false;
+	bool commented = false;		//	行単位でコメントアウトされた
+	QStringList fields;
 	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
 		inQuotes = parseCsvLine(fields, m_lst[m_ln], inQuotes, inComment, commented);
 		if( !inQuotes && !inComment && !commented ) {
@@ -567,30 +575,30 @@ void MarkdownPreview::do_CSV(QTextCursor& cursor) {
 		for(int col = 0; col < ll[row].size(); ++col) {
 			QTextTableCell cell = table->cellAt(row, col);
 			if (cell.isValid()) {
-			    QTextCursor cellCursor = cell.firstCursorPosition();
-			    QTextCharFormat charFormat;
-			    QTextBlockFormat blockFormat;
+				QTextCursor cellCursor = cell.firstCursorPosition();
+				QTextCharFormat charFormat;
+				QTextBlockFormat blockFormat;
 				if (row == 0) {
 					QTextTableCellFormat cellFormat;
-				    cellFormat.setBackground(g.m_CSVHeaderColor);
-				    cell.setFormat(cellFormat);
+					cellFormat.setBackground(g.m_CSVHeaderColor);
+					cell.setFormat(cellFormat);
 					charFormat.setFontWeight(QFont::Bold);
-				    blockFormat.setAlignment(Qt::AlignCenter); // ヘッダは中央
+					blockFormat.setAlignment(Qt::AlignCenter); // ヘッダは中央
 				} else {
 					QTextTableCellFormat cellFormat;
-				    cellFormat.setBackground((row % 2) != 0 ? g.m_CSVZebraColor1 : g.m_CSVZebraColor2);
-				    cell.setFormat(cellFormat);
+					cellFormat.setBackground((row % 2) != 0 ? g.m_CSVZebraColor1 : g.m_CSVZebraColor2);
+					cell.setFormat(cellFormat);
 					charFormat.setFontWeight(QFont::Normal);
 					if (re.match(ll[row][col]).hasMatch()) {
-					    blockFormat.setAlignment(Qt::AlignRight);  // 数値は右
+						blockFormat.setAlignment(Qt::AlignRight);  // 数値は右
 					} else {
-					    blockFormat.setAlignment(Qt::AlignLeft);   // その他は左
+						blockFormat.setAlignment(Qt::AlignLeft);   // その他は左
 					}
 				}
 				cellCursor.setCharFormat(charFormat);
 				cellCursor.setBlockFormat(blockFormat);
-			    //cellCursor.insertText(ll[row][col]);
-			    cellCursor.insertMarkdown(ll[row][col]);
+				//cellCursor.insertText(ll[row][col]);
+				cellCursor.insertMarkdown(ll[row][col]);
 			}
 		}
 	}
@@ -601,29 +609,29 @@ void MarkdownPreview::do_CSV(QTextCursor& cursor) {
 	//++m_ln;
 }
 void MarkdownPreview::do_code_keisen(QTextCursor& cursor) {
-    QFont font;
-    QStringView buf = m_lst[m_ln].mid(QString("```keisen").size());
-    QColor bgcolor("#c0f0c0");
-    QColor color("black");
-    for(;;) {
-	    while( !buf.isEmpty() && buf[0] == u' ' ) buf = buf.mid(1);		//	skip u' ';
-	    if( buf.startsWith(u"background-color:", Qt::CaseInsensitive) ) {
-	    	buf = buf.mid(QString(u"background-color:").size());
-		    while( !buf.isEmpty() && buf[0] == u' ' ) buf = buf.mid(1);		//	skip u' ';
-		    int ix = buf.indexOf(u';');
-		    if( ix < 0 ) break;
-		    bgcolor = QColor(buf.left(ix));
-		    buf = buf.mid(ix+1);
-	    } else if( buf.startsWith(u"color:", Qt::CaseInsensitive) ) {
-	    	buf = buf.mid(QString(u"color:").size());
-		    while( !buf.isEmpty() && buf[0] == u' ' ) buf = buf.mid(1);		//	skip u' ';
-		    int ix = buf.indexOf(u';');
-		    if( ix < 0 ) break;
-		    color = QColor(buf.left(ix));
-		    buf = buf.mid(ix+1);
-	    } else
-	    	break;
-    }
+	QFont font;
+	QStringView buf = m_lst[m_ln].mid(QString("```keisen").size());
+	QColor bgcolor("#c0f0c0");
+	QColor color("black");
+	for(;;) {
+		while( !buf.isEmpty() && buf[0] == u' ' ) buf = buf.mid(1);		//	skip u' ';
+		if( buf.startsWith(u"background-color:", Qt::CaseInsensitive) ) {
+			buf = buf.mid(QString(u"background-color:").size());
+			while( !buf.isEmpty() && buf[0] == u' ' ) buf = buf.mid(1);		//	skip u' ';
+			int ix = buf.indexOf(u';');
+			if( ix < 0 ) break;
+			bgcolor = QColor(buf.left(ix));
+			buf = buf.mid(ix+1);
+		} else if( buf.startsWith(u"color:", Qt::CaseInsensitive) ) {
+			buf = buf.mid(QString(u"color:").size());
+			while( !buf.isEmpty() && buf[0] == u' ' ) buf = buf.mid(1);		//	skip u' ';
+			int ix = buf.indexOf(u';');
+			if( ix < 0 ) break;
+			color = QColor(buf.left(ix));
+			buf = buf.mid(ix+1);
+		} else
+			break;
+	}
 	font.setFamilies({"MS Gothic", "MS UI Gothic", "Osaka-mono", "monospace"});
 	font.setFixedPitch(true);
 	font.setPointSizeF(12);
@@ -637,22 +645,22 @@ void MarkdownPreview::do_code_keisen(QTextCursor& cursor) {
 	
 	int height = lineHeight * (m_ln - m_ln0);
 	QImage img(width, height, QImage::Format_RGB32);
-    img.fill(bgcolor);
-    QPainter painter(&img);
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setFont(font);
-    painter.setPen(color);
-    for(int i = 0; i < m_ln - m_ln0; ++i)
-    	painter.drawText(5, lineHeight*i+fm.height(), m_lst[m_ln0+i]);
-    painter.end();
-    //
-    cursor.insertBlock();
-    QTextBlockFormat blockFormat;
+	img.fill(bgcolor);
+	QPainter painter(&img);
+	painter.setRenderHint(QPainter::Antialiasing);
+	painter.setFont(font);
+	painter.setPen(color);
+	for(int i = 0; i < m_ln - m_ln0; ++i)
+		painter.drawText(5, lineHeight*i+fm.height(), m_lst[m_ln0+i]);
+	painter.end();
+	//
+	cursor.insertBlock();
+	QTextBlockFormat blockFormat;
 	blockFormat.setTopMargin(lineHeight/2);
-    cursor.mergeBlockFormat(blockFormat);
-    cursor.insertImage(img);
-    cursor.insertBlock();
-    //cursor.setBlockFormat(QTextBlockFormat());		//	トップマージンリセット
+	cursor.mergeBlockFormat(blockFormat);
+	cursor.insertImage(img);
+	cursor.insertBlock();
+	//cursor.setBlockFormat(QTextBlockFormat());		//	トップマージンリセット
 }
 void MarkdownPreview::do_code(QTextCursor& cursor) {
 	QString buf;
@@ -662,11 +670,11 @@ void MarkdownPreview::do_code(QTextCursor& cursor) {
 	}
 	QTextCharFormat codeCharFormat;
 #if 0
-    codeCharFormat.setFontFamilies({"MS Gothic", "MS UI Gothic", "Osaka-mono", "monospace"});
-    codeCharFormat.setFontFixedPitch(true); // 等幅フォントであることを明示
-    codeCharFormat.setFontPointSize(10);    // 必要に応じてサイズを調整
+	codeCharFormat.setFontFamilies({"MS Gothic", "MS UI Gothic", "Osaka-mono", "monospace"});
+	codeCharFormat.setFontFixedPitch(true); // 等幅フォントであることを明示
+	codeCharFormat.setFontPointSize(10);	// 必要に応じてサイズを調整
 #else
-    QFont font;
+	QFont font;
 	// 2. フォントの基本属性を設定
 	font.setFamilies({"MS Gothic", "MS UI Gothic", "Osaka-mono", "monospace"});
 	font.setFixedPitch(true);
@@ -680,9 +688,9 @@ void MarkdownPreview::do_code(QTextCursor& cursor) {
 	// フレームの書式を設定
 	QTextFrameFormat frameFormat;
 	frameFormat.setBackground(QColor("#fffff0")); // 薄い黄色
-	frameFormat.setMargin(0);                     // 外側の余白
-	frameFormat.setPadding(10);                   // 内側の余白（文字と端の隙間）
-	frameFormat.setBorder(0);                     // 枠線はなし
+	frameFormat.setMargin(0);					  // 外側の余白
+	frameFormat.setPadding(10);					  // 内側の余白（文字と端の隙間）
+	frameFormat.setBorder(0);					  // 枠線はなし
 	// 2. フレームを挿入（この中にカーソルが入る）
 	cursor.insertFrame(frameFormat);
 
@@ -706,9 +714,9 @@ void MarkdownPreview::do_quote(QTextCursor& cursor, QString buf) {
 	// 1. フレームの書式を設定
 	QTextFrameFormat frameFormat;
 	frameFormat.setBackground(QColor("#f0f8ff")); // 薄い青
-	frameFormat.setMargin(0);                     // 外側の余白
-	frameFormat.setPadding(10);                   // 内側の余白（文字と端の隙間）
-	frameFormat.setBorder(0);                     // 枠線はなし
+	frameFormat.setMargin(0);					  // 外側の余白
+	frameFormat.setPadding(10);					  // 内側の余白（文字と端の隙間）
+	frameFormat.setBorder(0);					  // 枠線はなし
 	// 2. フレームを挿入（この中にカーソルが入る）
 	cursor.insertFrame(frameFormat);
 	// 3. フレームの中で Markdown を挿入
@@ -759,9 +767,9 @@ void MarkdownPreview::do_list(QTextCursor& cursor, QString buf) {
 	cursor.insertMarkdown(buf);
 	QTextBlock firstBlock = document()->findBlock(startPos);
 	if (firstBlock.isValid() && firstBlock.text().isEmpty()) {
-	    // ブロックが空なら削除する（バックスペース的な処理）
-	    QTextCursor helper(firstBlock);
-	    helper.deleteChar(); 
+		// ブロックが空なら削除する（バックスペース的な処理）
+		QTextCursor helper(firstBlock);
+		helper.deleteChar(); 
 	}
 	if( is_checkbox ) {
 		QTextBlock block = document()->findBlock(pos);
@@ -834,22 +842,35 @@ void MarkdownPreview::ensureLineVisible(int srcBlockNum) {
 		scrollToBlock(m_prvHeadingBlocks[i]);
 }
 void MarkdownPreview::scrollToBlock(int blockIndex) {
-    QTextBlock block = document()->findBlockByNumber(blockIndex);
-    if (!block.isValid()) return;
+	QTextBlock block = document()->findBlockByNumber(blockIndex);
+	if (!block.isValid()) return;
 #if 0
 	QTextCursor cursor = textCursor();
 	cursor.setPosition(block.position());
 	setTextCursor(cursor);
 	ensureCursorVisible();
 #else
-    int y = (int)document()->documentLayout()->blockBoundingRect(block).top();
-    verticalScrollBar()->setValue(y);
+	int y = (int)document()->documentLayout()->blockBoundingRect(block).top();
+	verticalScrollBar()->setValue(y);
 #endif
 }
 int MarkdownPreview::prvToSrcHeading(int blockNum) {
+	assert( m_prvHeadingBlocks.size() == m_srcHeadingBlocks.size() );
+#if 1
+	auto it = std::lower_bound(m_prvHeadingBlocks.begin(), m_prvHeadingBlocks.end(), blockNum);
+	if (it != m_prvHeadingBlocks.end()) {
+		size_t ix = std::distance(m_prvHeadingBlocks.begin(), it);
+		return m_srcHeadingBlocks[ix];
+	} else
+		return 0;
+#else
 	int ix = 0;
 	while( ix+1 < m_prvHeadingBlocks.size() && m_prvHeadingBlocks[ix] < blockNum ) ++ix;
-	return m_srcHeadingBlocks[ix];
+	if( ix < m_srcHeadingBlocks.size() )
+		return m_srcHeadingBlocks[ix];
+	else
+		return 0;
+#endif
 }
 PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext を構築
 	PosContext pc;
@@ -866,33 +887,33 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 	int count = 1;
 	int curPos = block.position();
 	for (int i = curPos; i < pos; ++i) {
-        // 1. 直前の文字 (prev) の取得
-        QChar chBefore;
-        if (i == block.position()) {
-            // ブロックの先頭なら QChar() 扱い
-            chBefore = QChar();
-        } else {
-            chBefore = doc->characterAt(i - 1);
-            // 改行記号なら行頭扱いにする
-            if (chBefore == QChar::ParagraphSeparator) {
-                chBefore = QChar();
-            }
-        }
-        // 2. 現在の位置の文字 (next) の取得
-        QChar chAt = doc->characterAt(i);
-        // 行末（改行記号）なら QChar() 扱いにする
-        if (chAt == QChar::ParagraphSeparator) {
-            chAt = QChar();
-        }
-        // 3. マッチ判定
-        if (chBefore == pc.m_chPrev && chAt == pc.m_chNext) {
-            count++;
-        }
-        // もし block を跨いだ場合は、ブロック先頭判定のために更新
-        if (i >= block.position() + block.length() - 1) {
-            block = block.next();
-        }
-    }
+		// 1. 直前の文字 (prev) の取得
+		QChar chBefore;
+		if (i == block.position()) {
+			// ブロックの先頭なら QChar() 扱い
+			chBefore = QChar();
+		} else {
+			chBefore = doc->characterAt(i - 1);
+			// 改行記号なら行頭扱いにする
+			if (chBefore == QChar::ParagraphSeparator) {
+				chBefore = QChar();
+			}
+		}
+		// 2. 現在の位置の文字 (next) の取得
+		QChar chAt = doc->characterAt(i);
+		// 行末（改行記号）なら QChar() 扱いにする
+		if (chAt == QChar::ParagraphSeparator) {
+			chAt = QChar();
+		}
+		// 3. マッチ判定
+		if (chBefore == pc.m_chPrev && chAt == pc.m_chNext) {
+			count++;
+		}
+		// もし block を跨いだ場合は、ブロック先頭判定のために更新
+		if (i >= block.position() + block.length() - 1) {
+			block = block.next();
+		}
+	}
 	pc.m_indexOfPrevNext = count;
 	return pc;
 }
