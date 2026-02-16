@@ -886,11 +886,12 @@ void MainWindow::onAboutToShow_RecentFiles() {
 	QStringList recentFilePaths = settings.value(KEY_RECENT_FILES).toStringList();
 	int k = 0;
 	QString key;
-	for(const QString &fullPath : recentFilePaths) {
+	for(const QString &fullPathRaw : recentFilePaths) {
 		if (++k <= 10)
 			key = QString::number(k % 10);
 		else
 			key = QChar(u'A' + k - 11);
+		QString fullPath = QDir::cleanPath(fullPathRaw);
 		QAction *act = ui->menu_RecentFiles->addAction("&" + key + " " + fullPath);
 		connect(act, &QAction::triggered, this, [this, fullPath]() {
 			QString pathArg = fullPath;
