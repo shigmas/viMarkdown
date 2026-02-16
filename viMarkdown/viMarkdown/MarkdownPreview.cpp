@@ -179,15 +179,25 @@ QString splitName(QString& anchor) {
 	}
 	return name;
 }
+QString anchorToFullPath(const QString &anchor) {
+	QString fullPath = anchor;
+	if( fullPath.startsWith("http://") || fullPath.startsWith("https://") )
+		return fullPath;
+	if( !anchor.endsWith(".md", Qt::CaseInsensitive) )
+		fullPath += ".md";
+	fullPath = QDir::cleanPath(QDir::current().absoluteFilePath(fullPath));
+	return fullPath;
+}
 void MarkdownPreview::mouseMoveEvent(QMouseEvent *me) {
 	QString anchor = anchorAt(me->pos());
 	QString name = splitName(anchor);
 	//qDebug() << "anchor = " << anchor << ", name = " << name;
 	if (!anchor.isEmpty() || !name.isEmpty() ) {	// リンクの上なら指差し
         viewport()->setCursor(Qt::PointingHandCursor);
-		if( !anchor.endsWith(".md", Qt::CaseInsensitive) )
-			anchor += ".md";
-		QString fullPath = QDir::cleanPath(QDir::current().absoluteFilePath(anchor));
+		//if( !anchor.endsWith(".md", Qt::CaseInsensitive) )
+		//	anchor += ".md";
+		//QString fullPath = QDir::cleanPath(QDir::current().absoluteFilePath(anchor));
+		QString fullPath = anchorToFullPath(anchor);
         m_mainWindow->statusBar()->showMessage(fullPath);
     } else {	// それ以外なら通常（I型または矢印）
         viewport()->setCursor(Qt::IBeamCursor);
@@ -204,9 +214,10 @@ void MarkdownPreview::mouseReleaseEvent(QMouseEvent *me)
 			if(!anchor.isEmpty() ) {
 				//if( anchor.startsWith("./") || anchor.startsWith(".\\") )
 				//	anchor = anchor.mid(2);
-				if( !anchor.endsWith(".md", Qt::CaseInsensitive) )
-					anchor += ".md";
-				fullPath = QDir::cleanPath(QDir::current().absoluteFilePath(anchor));
+				//if( !anchor.endsWith(".md", Qt::CaseInsensitive) )
+				//	anchor += ".md";
+				//fullPath = QDir::cleanPath(QDir::current().absoluteFilePath(anchor));
+				fullPath = anchorToFullPath(anchor);
 			}
 			emit anchorClicked("", fullPath, name);
 		} else {

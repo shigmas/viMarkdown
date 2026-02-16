@@ -19,6 +19,7 @@
 #include <QFileSystemWatcher>
 #include <QPrinter>
 #include <QPrintDialog>
+#include <QDesktopServices>
 
 #include "ver.h"
 #include "MainWindow.h"
@@ -1062,6 +1063,10 @@ bool hasBOM(QFile &file) {
 }
 bool MainWindow::do_open(const QString& title0, const QString& fullPath, const QString name) {
 	qDebug() << "do_open(" << title0 << ", " << fullPath << ")";
+	if (fullPath.startsWith("http://") || fullPath.startsWith("https://")) {
+        QDesktopServices::openUrl(QUrl(fullPath));
+        return true;
+	}
 	if( title0.isEmpty() && fullPath.isEmpty() ) {		//	現文書内ジャンプ
 		if( !name.isEmpty() ) {
 			DocWidget *docWidget = getCurDocWidget();;
