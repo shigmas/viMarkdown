@@ -728,5 +728,15 @@ SPR# 状 P Open Close ver     Type  概要
 0726 ◎ C 02/17 02/17 01107│ToDo│prvToSrcHeading()：アルゴリズムを線形探索→二分探索に変更
 0727 ◎ C 02/17 02/17 01107│ToDo│MarkdownPreview：カーソル移動時：PosContext を引数に、シグナル発行
 0728 ● C 02/17            │ToDo│MarkdownEditor::setCursorByContext(const PosContext &context); 実装
-0729 ● C 02/17            │ToDo│
-0730 ● C 02/17            │ToDo│
+0729 ◎ C 02/17 02/17 01107│ToDo│struct PosContext 定義は MainWindow.h に移動
+0730 ● C 02/17            │ToDo│PosContext::m_hBlockNum：ソースとプレビュー用に分ける
+0731 ● C 02/17            │ToDo│
+0732 ● C 02/17            │ToDo│
+0733 ● C 02/17            │ToDo│
+0734 ● C 02/17            │ToDo│
+0735 ● C 02/17            │ToDo│
+0736 ● C 02/17            │ToDo│
+0737 ● C 02/17            │ToDo│
+0738 ● C 02/17            │ToDo│
+0739 ● C 02/17            │ToDo│
+0740 ● C 02/17            │ToDo│

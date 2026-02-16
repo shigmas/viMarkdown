@@ -53,6 +53,7 @@ public:
 	void	moveToPrevWord(QTextCursor& cursor, bool select);
 	void	moveToStartOfWord(QTextCursor& cursor, bool select);
 	void	moveToEndOfWord(QTextCursor& cursor, bool select);
+	void	setCursorByContext(const struct PosContext &context);
 
 signals:
     void	tab_pressed();

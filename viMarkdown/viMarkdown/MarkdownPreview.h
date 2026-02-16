@@ -20,12 +20,14 @@ enum {
 	US_CHECKBOX,		//	チェックボックス
 };
 
+#if 0
 struct PosContext {
     QChar	m_chPrev;				//	現在位置直前文字、行頭の場合は QChar()
     QChar	m_chNext;				//	現在位置文字、行末の場合は QChar()
-    int		m_hBlockNumber = 0;		//	直前見出し行ブロック番号（0 org.）、見つからない場合は 0
+    int		m_hBlockNum = 0;		//	直前見出し行ブロック番号（0 org.）、見つからない場合は 0
     int		m_indexOfPrevNext;		//	直前見出し行先頭から現在位置までに {chPrev, chNext} を満たす箇所が何箇所あるか？
 };
+#endif
 class MarkdownPreview : public QTextEdit
 {
 	Q_OBJECT 
@@ -43,7 +45,7 @@ public:
     void	setCursorAtNthPat(int srcBlockNum, QString pat, int nth, bool=false);
     void	ensureLineVisible(int srcBlockNum);
     void	scrollToBlock(int blockIndex);
-    PosContext	contextAt(int pos);
+    struct PosContext	contextAt(int pos);
     int		prvToSrcHeading(int blockNum);		//	プレビューの見出し行番号（0 org.）をエディタのそれに変換
 
 signals:

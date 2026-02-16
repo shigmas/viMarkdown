@@ -634,6 +634,10 @@ void MarkdownEditor::jumpToHeading(const QString& name) {
 		block = block.next();
 	}
 }
+void MarkdownEditor::setCursorByContext(const PosContext &context) {
+	QTextBlock block = document()->findBlockByNumber(context.m_hBlockNum);
+	int nth = context.m_indexOfPrevNext;
+}
 void MarkdownEditor::setCursorAtNthPat(int srcHeadingBlockNum, QString pat, int nth, bool tail) {		//	nth: 見出し行から何番目か（>0）
 	qDebug() << QString("MarkdownEditor::setCursorAtNthPat(%1, '%2', %3,").arg(srcHeadingBlockNum).arg(pat).arg(nth) << tail << ")";
 	QTextBlock block = document()->findBlockByNumber(srcHeadingBlockNum);
