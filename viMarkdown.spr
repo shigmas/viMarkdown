@@ -723,7 +723,7 @@ SPR# 状 P Open Close ver     Type  概要
 0721 ● C 02/16            │問題│リスト行で Enter 押下すると、２行改行されてしまう
 0722 ◎ C 02/16 02/16 01106│ToDo│QString anchorToFullPath(const QString &anchor) を追加し、処理を共通化
 0723 ◎ C 02/17 02/17 01107│問題│File > Recent もパスを正規化して表示した方がよい
-0724 ● C 02/17            │ToDo│previewToEditorHeading(int blockNum) : int プレビューのヘッディング行番号（0 org.）をエディタのそれに変換関数追加
+0724 ◎ C 02/17 02/17 01107│ToDo│prvToSrcHeading(int blockNum) : int プレビューの見出し行番号（0 org.）をエディタのそれに変換関数追加
 0725 ◎ C 02/17 02/17 01107│ToDo│m_srcHeadingBlocks, m_prvHeadingBlocks を取得する関数名を統一的に変更
 0726 ● C 02/17            │ToDo│
 0727 ● C 02/17            │ToDo│

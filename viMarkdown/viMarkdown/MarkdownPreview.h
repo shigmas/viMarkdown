@@ -44,7 +44,7 @@ public:
     void	ensureLineVisible(int srcBlockNum);
     void	scrollToBlock(int blockIndex);
     PosContext	contextAt(int pos);
-    int		previewToEditorHeading(int blockNum);		//	プレビューのヘッディング行番号（0 org.）をエディタのそれに変換
+    int		prvToSrcHeading(int blockNum);		//	プレビューの見出し行番号（0 org.）をエディタのそれに変換
 
 signals:
     // クリックされたブロック番号を通知するシグナル

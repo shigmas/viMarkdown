@@ -846,7 +846,12 @@ void MarkdownPreview::scrollToBlock(int blockIndex) {
     verticalScrollBar()->setValue(y);
 #endif
 }
-PosContext MarkdownPreview::contextAt(int pos) {
+int MarkdownPreview::prvToSrcHeading(int blockNum) {
+	int ix = 0;
+	while( ix+1 < m_prvHeadingBlocks.size() && m_prvHeadingBlocks[ix] < blockNum ) ++ix;
+	return m_srcHeadingBlocks[ix];
+}
+PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext を構築
 	PosContext pc;
 	auto *doc = document();
 	QTextBlock block = doc->findBlock(pos);
