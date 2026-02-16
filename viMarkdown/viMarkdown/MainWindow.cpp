@@ -1126,7 +1126,12 @@ void MainWindow::onAction_Save() {
 	do_save();
 }
 void MainWindow::onAction_SaveAs() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	QTreeWidgetItem *top = findTopLevelItemByFullPath(docWidget->m_title, docWidget->m_fullPath);
 	do_save(true);
+	if( top != nullptr )
+		top->setToolTip(0, docWidget->m_fullPath);
 }
 void MainWindow::do_save(bool fDialog) {
 	int ix = ui->tabWidget->currentIndex();
@@ -1158,6 +1163,7 @@ void MainWindow::do_save(bool fDialog) {
 		title2.remove(QRegularExpression("\\.md$"));
 		docWidget->m_title = title2;
 		ui->tabWidget->setTabText(ix, docWidget->m_title);
+		ui->tabWidget->setTabToolTip(ix, fullPath);
 		QTreeWidgetItem *top = findTopLevelItemByFullPath(oldTitle, oldFullPath);
 		top->setText(0, docWidget->m_title);
 		if( !oldFullPath.isEmpty() && oldFullPath != fullPath )		//	ファイル名変更
