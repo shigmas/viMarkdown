@@ -1778,7 +1778,7 @@ void MainWindow::updateOutlineTree() {
 	vector<QTreeWidgetItem*> parents(10, nullptr);		//	各レベルごとの親アイテムリスト
 	parents[0] = item0;
 	const QStringList &lst = docWidget->m_preview->getHeadings();
-	const vector<int>& hLineNum = docWidget->m_preview->getHeadingsLineNum();
+	const vector<int>& hLineNum = docWidget->m_preview->getSrcHeadingsBlocks();
 	for(int i = 0; i != lst.size(); ++i) {
 		QTreeWidgetItem *item2 = new QTreeWidgetItem();
 		//bool ok;

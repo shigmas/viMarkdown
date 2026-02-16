@@ -37,13 +37,14 @@ public:
     bool	isProcessing() const { return m_processing; }
     void	setMarkdown(class QTextDocument*);
     const QStringList&	getHeadings() const { return m_headingList; }
-    const std::vector<int>&	getHeadingsLineNum() const { return m_srcHeadingBlocks; }
-    const std::vector<int>&	getHeadingsBlockNum() const { return m_prvHeadingBlocks; }
+    const std::vector<int>&	getSrcHeadingsBlocks() const { return m_srcHeadingBlocks; }
+    const std::vector<int>&	getPrvHeadingsBlocks() const { return m_prvHeadingBlocks; }		//	見出し行だけの行番号（0 org）リスト
     void	setCursorAt(int srcBlockNum, QString=QString(), int=0);
     void	setCursorAtNthPat(int srcBlockNum, QString pat, int nth, bool=false);
     void	ensureLineVisible(int srcBlockNum);
     void	scrollToBlock(int blockIndex);
     PosContext	contextAt(int pos);
+    int		previewToEditorHeading(int blockNum);		//	プレビューのヘッディング行番号（0 org.）をエディタのそれに変換
 
 signals:
     // クリックされたブロック番号を通知するシグナル

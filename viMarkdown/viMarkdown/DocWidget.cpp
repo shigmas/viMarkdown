@@ -30,7 +30,7 @@ QString DocWidget::getTitle() const {
 		++ln;
 		block = block.next();
 	}
-	auto hln = m_preview->getHeadingsLineNum();
+	auto hln = m_preview->getSrcHeadingsBlocks();
 	if( !hln.empty() && hln[0] == ln ) {		//	コメントを除いた最初の行が見出し行
 		title = block.text();
 		int i = 0;
