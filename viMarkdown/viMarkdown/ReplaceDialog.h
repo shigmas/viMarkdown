@@ -21,11 +21,15 @@ protected:
 	void	onReplaceNext();
 	void	onReplaceAll();
 	void	onCheckStateChanged(Qt::CheckState state);
+	void	onUndo();
+	void	onRedo();
 
 signals:
 	void	do_search(const QString, bool backward);
 	void	do_replace_next(const QString, const QString);
 	void	do_replace_all(const QString, const QString);
+	void	do_undo();
+	void	do_redo();
 
 private:
 	Ui::ReplaceDialogClass *ui;

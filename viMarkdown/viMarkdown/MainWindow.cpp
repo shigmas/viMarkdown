@@ -239,6 +239,8 @@ void MainWindow::onAction_Replace() {
 	connect(&dlg, &ReplaceDialog::do_search, this, &MainWindow::do_search);
 	connect(&dlg, &ReplaceDialog::do_replace_next, this, &MainWindow::do_replace_next);
 	connect(&dlg, &ReplaceDialog::do_replace_all, this, &MainWindow::do_replace_all);
+	connect(&dlg, &ReplaceDialog::do_undo, this, &MainWindow::do_undo_replaceDlg);
+	connect(&dlg, &ReplaceDialog::do_redo, this, &MainWindow::do_redo_replaceDlg);
 	if (dlg.exec() == QDialog::Accepted) {
 	}
 
@@ -329,6 +331,16 @@ void MainWindow::do_find(bool backward) {
 }
 void MainWindow::onSearchCBActivated() {
 	do_find();
+}
+void MainWindow::do_undo_replaceDlg() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	docWidget->m_editor->undo();
+}
+void MainWindow::do_redo_replaceDlg() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	docWidget->m_editor->redo();
 }
 void MainWindow::onAction_ForwardAgain() {
 	do_find();

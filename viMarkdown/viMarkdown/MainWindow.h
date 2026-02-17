@@ -108,6 +108,8 @@ protected:
     void	do_search(const QString txt, bool backward);
     void	do_replace_next(const QString, const QString);
     void	do_replace_all(const QString, const QString);
+    void	do_undo_replaceDlg();
+    void	do_redo_replaceDlg();
 
     void	onOutlineBarVisibilityChanged(bool visible);
     void	onTreeCurrentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);

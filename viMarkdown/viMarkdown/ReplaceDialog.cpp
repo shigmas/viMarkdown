@@ -20,6 +20,8 @@ ReplaceDialog::ReplaceDialog(const QStringList &hist, const QStringList &replace
 	connect(ui->searchNext, &QPushButton::clicked, this, &ReplaceDialog::onSearchNext);
 	connect(ui->replaceNext, &QPushButton::clicked, this, &ReplaceDialog::onReplaceNext);
 	connect(ui->replaceAll, &QPushButton::clicked, this, &ReplaceDialog::onReplaceAll);
+	connect(ui->undoPB, &QPushButton::clicked, this, &ReplaceDialog::onUndo);
+	connect(ui->redoPB, &QPushButton::clicked, this, &ReplaceDialog::onRedo);
 	connect(ui->ignoreCase, &QCheckBox::checkStateChanged, this, &ReplaceDialog::onCheckStateChanged);
 }
 
@@ -52,4 +54,10 @@ void ReplaceDialog::onReplaceAll() {
 void ReplaceDialog::onCheckStateChanged(Qt::CheckState state) {
 	g.m_ignoreCase = state == Qt::Checked;
 	qDebug() << "g.m_ignoreCase = " << g.m_ignoreCase;
+}
+void ReplaceDialog::onUndo() {
+	emit do_undo();
+}
+void ReplaceDialog::onRedo() {
+	emit do_redo();
 }
