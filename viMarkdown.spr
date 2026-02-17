@@ -745,7 +745,7 @@ SPR# 状 P Open Close ver     Type  概要
 0743 ● C 02/18            │問題│カーソルがリスト行の先頭にあると、プレビューからエディタへのカーソル同期処理が不良になる
 0744 ◎ C 02/18 02/18 01109│ToDo│PosContext MarkdownEditor::contextAt(int pos) const; とりあえず追加（行頭行末位置等では非正常動作）
 0745 ◎ C 02/18 02/18 01109│ToDo│MarkdownPreview::prvToSrcHeading(int blockNum)：DocWidget に移動
-0746 ● C 02/18            │ToDo│
+0746 ◎ C 02/18 02/18 01109│ToDo│DocWidget::srcToPrvHeading(int blockNum) 実装
 0747 ● C 02/18            │ToDo│
 0748 ● C 02/18            │ToDo│
 0749 ● C 02/18            │ToDo│

@@ -53,3 +53,12 @@ int DocWidget::prvToSrcHeading(int blockNum) {
 	} else
 		return 0;
 }
+int DocWidget::srcToPrvHeading(int blockNum) {
+	assert( m_prvHeadingBlocks.size() == m_srcHeadingBlocks.size() );
+	auto it = std::lower_bound(m_srcHeadingBlocks.begin(), m_srcHeadingBlocks.end(), blockNum);
+	if (it != m_srcHeadingBlocks.end()) {
+		size_t ix = std::distance(m_srcHeadingBlocks.begin(), it);
+		return m_prvHeadingBlocks[ix];
+	} else
+		return 0;
+}
