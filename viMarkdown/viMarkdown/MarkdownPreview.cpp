@@ -891,12 +891,13 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 	QTextBlock block = doc->findBlock(pos);
 	pc.m_chPrev = pos != block.position() ? doc->characterAt(pos-1) : QChar();
 	pc.m_chNext = doc->characterAt(pos) != QChar::ParagraphSeparator ? doc->characterAt(pos) : QChar();
-	while( block.userState() != US_HEADING ) {
+	while( block.userState() != US_HEADING ) {		//	直前の見出し行を探す
 		if( !block.previous().isValid() )
 			break;
 		block = block.previous();
 	}
 	pc.m_prvHBlockNum = block.blockNumber();
+	//	pos の {chPrev, chNext} が見出し行先頭から何番目かを計算
 	int count = 1;
 	int curPos = block.position();
 	for (int i = curPos; i < pos; ++i) {

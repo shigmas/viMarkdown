@@ -736,14 +736,14 @@ SPR# 状 P Open Close ver     Type  概要
 0734 ◎ C 02/17 02/17 01107│問題│プレビューで文字入力すると、カーソルが文書末？に移動してしまう（原因：ソースを全変換しているため）
 0735 ◎ C 02/17 02/17 01107│問題│エディタで文字入力すると、プレビューカーソルが文書末に移動してしまう
 0736 ● C 02/17            │ToDo│エディタposition → 対応するプレビューposition変換関数
-0737 ● C 02/17            │ToDo│m_srcHeadingBlocks, m_prvHeadingBlocks は DocWidget に移動？
+0737 ◎ C 02/17 02/18 01109│ToDo│m_srcHeadingBlocks, m_prvHeadingBlocks は DocWidget に移動？
 0738 ◎ A 02/17 02/17 01108│問題│エディタ：Shift + → などで文字列選択できない
 0739 ◎ C 02/17 02/17 01108│問題│"  - " 直後でEnter押下すると、行頭からの半角空白が残ってしまう
 0740 ◎ C 02/18 02/18 01109│ToDo│カーソル同期処理中を示すフラグ MainWindow::m_isCursorSyncing を追加
 0741 ◎ C 02/18 02/18 01109│問題│プレビュー：Shift + → などで文字列選択できない
 0742 ◎ C 02/18 02/18 01109│ToDo│MarkdownPreview, MarkdownEditor：DocWidget へのバックポインタも保持しておく
 0743 ● C 02/18            │問題│カーソルがリスト行の先頭にあると、プレビューからエディタへのカーソル同期処理が不良になる
-0744 ● C 02/18            │ToDo│PosContext MarkdownEditor::contextAt(int pos) const; 追加
+0744 ◎ C 02/18 02/18 01109│ToDo│PosContext MarkdownEditor::contextAt(int pos) const; とりあえず追加（行頭行末位置等では非正常動作）
 0745 ◎ C 02/18 02/18 01109│ToDo│MarkdownPreview::prvToSrcHeading(int blockNum)：DocWidget に移動
 0746 ● C 02/18            │ToDo│
 0747 ● C 02/18            │ToDo│
