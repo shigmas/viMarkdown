@@ -651,8 +651,10 @@ void MarkdownEditor::setCursorByContext(const PosContext &context) {
 			block = block.next();
 			ix = 0;
 		} else if( next == QChar() ) {		//	行末の場合
-			if( buf.endsWith(prev) ) {
-				ix = buf.size();
+			int i = buf.size();
+			while( --i >= 0 && buf[i] == u' ' ) {}
+			if( i >= 0 && buf[i] == prev ) {
+				ix = i + 1;
 				if( --nth == 0 ) break;
 			}
 			block = block.next();
