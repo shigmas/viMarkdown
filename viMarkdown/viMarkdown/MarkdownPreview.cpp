@@ -42,6 +42,7 @@ void MarkdownPreview::onCurPosChanged() {
 	auto context = contextAt(cursor.position());
 	context.m_srcHBlockNum = prvToSrcHeading(context.m_prvHBlockNum);
 	emit posContextChanged(context);
+	//setTextCursor(cursor);
 	m_processing = false;
 }
 void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int charsAdded) {
@@ -49,6 +50,7 @@ void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int char
 	m_processing = true;
 	if( charsAdded > 0 ) {
 		QTextCursor cursor = this->textCursor();
+		int pos0 = cursor.position();
 		cursor.setPosition(position);
 		QTextBlock block = cursor.block();
 		QString addedStr = block.text().mid(cursor.position() - block.position(), charsAdded);
@@ -56,6 +58,8 @@ void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int char
 			addedStr = "  \n";
 		qDebug() << "addedStr = " << addedStr;
 		emit textInserted(addedStr);
+		cursor.setPosition(pos0);
+		setTextCursor(cursor);
 	}
 	if( charsRemoved > 0 ) {
 		emit textRemoved(charsRemoved);
