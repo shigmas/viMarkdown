@@ -879,7 +879,7 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 	auto *doc = document();
 	QTextBlock block = doc->findBlock(pos);
 	pc.m_chPrev = pos != block.position() ? doc->characterAt(pos-1) : QChar();
-	pc.m_chNext = doc->characterAt(pos);
+	pc.m_chNext = doc->characterAt(pos) != QChar::ParagraphSeparator ? doc->characterAt(pos) : QChar();
 	while( block.userState() != US_HEADING ) {
 		if( !block.previous().isValid() )
 			break;

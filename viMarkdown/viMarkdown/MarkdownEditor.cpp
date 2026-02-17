@@ -650,14 +650,15 @@ void MarkdownEditor::setCursorByContext(const PosContext &context) {
 			}
 			block = block.next();
 			ix = 0;
+		} else if( next == QChar() ) {		//	行末の場合
+			if( buf.endsWith(prev) ) {
+				ix = buf.size();
+				if( --nth == 0 ) break;
+			}
+			block = block.next();
+			ix = 0;		//	ほんとは必要ないけど、なんとなく書いておく
 		} else {		//	非行頭の場合
 			ix = buf.indexOf(prev, ix);
-			//while( buf[ix] != prev ) {
-			//	if( ++ix >= buf.size() ) {
-			//		ix = -1;
-			//		break;
-			//	}
-			//}
 			if( ix < 0 || ix+1 >= buf.size() || buf[ix+1] != next ) {	//	非マッチ 
 				block = block.next();
 				ix = 0;
