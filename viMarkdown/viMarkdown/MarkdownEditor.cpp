@@ -1075,9 +1075,9 @@ QString getLeftDstString(bool erase, bool thickKeisen, const QString txt, int ix
 			if( txt[ix] == u'│' || txt[ix] == u'┃' ) {
 				auto bits = getConnectionBits(txt[ix]);
 				if( ix >= prev.size() || (getConnectionBits(prev[ix])&(Down|ThickDown)) == 0 )
-					bits ^= ~(Up|ThickUp);
+					bits &= ~(Up|ThickUp);
 				if( ix >= next.size() || (getConnectionBits(next[ix])&(Up|ThickUp)) == 0 )
-					bits ^= ~(Down|ThickDown);
+					bits &= ~(Down|ThickDown);
 				bits |= thickKeisen ? ThickRight : Right;
 				if( bits != 0 && bits < 0x100 )
 					return QString(revKeisenTable[bits]);
