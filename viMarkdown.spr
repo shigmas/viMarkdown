@@ -738,5 +738,15 @@ SPR# 状 P Open Close ver     Type  概要
 0736 ● C 02/17            │ToDo│エディタposition → 対応するプレビューposition変換関数
 0737 ● C 02/17            │ToDo│m_srcHeadingBlocks, m_prvHeadingBlocks は DocWidget に移動？
 0738 ◎ A 02/17 02/17 01108│問題│エディタ：Shift + → などで文字列選択できない
-0739 ● C 02/17            │ToDo│
+0739 ◎ C 02/17 02/17 01108│問題│"  - " 直後でEnter押下すると、行頭からの半角空白が残ってしまう
 0740 ● C 02/17            │ToDo│
+0741 ● C 02/17            │ToDo│
+0742 ● C 02/17            │ToDo│
+0743 ● C 02/17            │ToDo│
+0744 ● C 02/17            │ToDo│
+0745 ● C 02/17            │ToDo│
+0746 ● C 02/17            │ToDo│
+0747 ● C 02/17            │ToDo│
+0748 ● C 02/17            │ToDo│
+0749 ● C 02/17            │ToDo│
+0750 ● C 02/17            │ToDo│

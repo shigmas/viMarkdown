@@ -471,12 +471,13 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 			QString text = currentBlock.text();
 			int n = 0;
 			while( n < text.length() && text[n].isSpace() ) ++n;
-			QString atxt = text.left(n);
+			QString atxt = text.left(n);		//	オートインデントテキスト
 			const QString mtxt = text.mid(n);
 			if( mtxt == "- " || mtxt == "- [ ] " || mtxt == "- [x] " || mtxt == "- [X] " || mtxt == "1. " || mtxt == "1) " ) {
 				cursor.movePosition(QTextCursor::StartOfBlock);
 				cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
 				cursor.deleteChar();
+				atxt.clear();
 			} else if( mtxt.startsWith("- [ ] ") )
 				atxt += "- [ ] ";
 			else if( mtxt.startsWith("- [x] ") )
