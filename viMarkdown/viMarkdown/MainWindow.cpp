@@ -614,9 +614,10 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソルが移動した
 	if( m_processing ) return;		//	再入禁止
 	qDebug() << "MainWindow::syncPreviewCursorWithEditor()";
-	m_processing = true;
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
+	m_processing = true;
+	docWidget->m_editor->setProcessing(true);		//	再入禁止
 	QTextCursor cursor = docWidget->m_editor->textCursor();
 	QTextBlock block = cursor.block();
 	int i = 0;
@@ -626,6 +627,7 @@ void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソ
 		block = block.next();
 		if( !block.isValid() ) {
 			m_processing = false;
+			docWidget->m_editor->setProcessing(false);
 			return;
 		}
 		text = block.text();
@@ -677,6 +679,7 @@ void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソ
 		}
 	}
 	docWidget->m_preview->setCursorAtNthPat(blockNum, pat, nth, tail);
+	docWidget->m_editor->setProcessing(false);
 	m_processing = false;
 }
 //	ビューワ → エディタ カーソル位置同期
