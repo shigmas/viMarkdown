@@ -5,6 +5,7 @@
 #include "C:\Qt\6.10.0\msvc2022_64\include\QtWidgets\qtextedit.h"
 
 class MainWindow;
+class DocWidget;
 
 /*
 	マークダウンプレビューを表示するためのクラス
@@ -33,7 +34,7 @@ class MarkdownPreview : public QTextEdit
 	Q_OBJECT 
 
 public:
-    MarkdownPreview(const MainWindow*, QWidget* parent = nullptr);
+    MarkdownPreview(const MainWindow*, DocWidget*, QWidget* parent = nullptr);
 
 public:
     bool	isProcessing() const { return m_processing; }
@@ -105,6 +106,7 @@ private:
 	QList<QStringView>	m_tableTokens;
 	std::vector<char>	m_tableAlign;		//	各カラムの水平方向アライメント
 
+	class DocWidget	*m_docWidget;
     const MainWindow *m_mainWindow = nullptr;
 };
 

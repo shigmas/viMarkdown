@@ -7,6 +7,7 @@ enum class Align { Left, Center, Right };
 const int LN_WIDTH = 7;
 
 class MainWindow;
+class DocWidget;
 
 #define		MarkdownBaseEdit	QPlainTextEdit
 //#define		MarkdownBaseEdit	QTextEdit		//	QPlainTextEdit にしかないシグナルがあるため無理
@@ -15,7 +16,7 @@ class MarkdownEditor : public MarkdownBaseEdit
 {
 	Q_OBJECT
 public:
-	MarkdownEditor(const MainWindow* mainWindow, QWidget *parent = nullptr);
+	MarkdownEditor(const MainWindow* mainWindow, DocWidget*, QWidget *parent = nullptr);
 public:
 	void	scrollToTop(int lineNum) {		//	lineNum: 0 org.
 		verticalScrollBar()->setValue(lineNum);
@@ -104,6 +105,7 @@ private:
 	QString	m_lastCurBlockText;				//	事前のカーソルブロックテキスト
     class MarkdownHighlighter *m_highlighter;
 	class LnAreaWidget	*m_lnAreaWidget = nullptr;
+    DocWidget	*m_docWidget;
     const MainWindow *m_mainWindow = nullptr;
 };
 

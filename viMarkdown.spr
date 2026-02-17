@@ -741,7 +741,7 @@ SPR# 状 P Open Close ver     Type  概要
 0739 ◎ C 02/17 02/17 01108│問題│"  - " 直後でEnter押下すると、行頭からの半角空白が残ってしまう
 0740 ◎ C 02/18 02/18 01109│ToDo│カーソル同期処理中を示すフラグ MainWindow::m_isCursorSyncing を追加
 0741 ◎ C 02/18 02/18 01109│問題│プレビュー：Shift + → などで文字列選択できない
-0742 ● C 02/18            │ToDo│
+0742 ◎ C 02/18 02/18 01109│ToDo│MarkdownPreview, MarkdownEditor：DocWidget へのバックポインタも保持しておく
 0743 ● C 02/18            │ToDo│
 0744 ● C 02/18            │ToDo│
 0745 ● C 02/18            │ToDo│

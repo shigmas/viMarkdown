@@ -10,6 +10,7 @@
 #include <assert.h>
 #include "MarkdownPreview.h"
 #include "MainWindow.h"
+#include "DocWidget.h"
 
 using namespace std;
 
@@ -23,8 +24,8 @@ enum {
 	ALIGHN_LEFT = 1, ALIGHN_RIGHT = 2, ALIGHN_CENTER = ALIGHN_LEFT| ALIGHN_RIGHT,
 };
 
-MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, QWidget* parent)
-	: m_mainWindow(mainWindow), QTextEdit(parent)
+MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, DocWidget *docWidget, QWidget* parent)
+	: m_mainWindow(mainWindow), m_docWidget(docWidget), QTextEdit(parent)
 {
 	setUndoRedoEnabled(false);
 	setFrameStyle(QFrame::NoFrame);

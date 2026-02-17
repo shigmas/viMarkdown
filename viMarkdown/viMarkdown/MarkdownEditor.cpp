@@ -10,6 +10,7 @@
 #include <QDate>
 #include "MarkdownEditor.h"
 #include "MainWindow.h"
+#include "DocWidget.h"
 
 extern Global g;
 extern bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment, bool &commented);
@@ -349,8 +350,8 @@ private:
 	QRegularExpression m_strikethroughRegex;
 };
 //----------------------------------------------------------------------
-MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, QWidget *parent)
-	: m_mainWindow(mainWindow), MarkdownBaseEdit(parent)
+MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, DocWidget* docWidget, QWidget *parent)
+	: m_mainWindow(mainWindow), m_docWidget(docWidget), MarkdownBaseEdit(parent)
 {
 	m_highlighter = new MarkdownHighlighter(this->document());
 #if 0

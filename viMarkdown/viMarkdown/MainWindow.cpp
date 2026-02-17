@@ -566,7 +566,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	auto *docWidget = new DocWidget(title, fullPath);
 	//docWidget->setStyleSheet("font-size: 12pt; line-height: 200%;");
 	QSplitter *splitter = new QSplitter(Qt::Horizontal, docWidget);
-	MarkdownEditor *mdEditor = docWidget->m_editor = new MarkdownEditor(this, splitter);
+	MarkdownEditor *mdEditor = docWidget->m_editor = new MarkdownEditor(this, docWidget, splitter);
 	//mdEditor->setLineWrapMode(QPlainTextEdit::NoWrap);		//	折り返しモード OFF
 	//QFont font("MS Gothic");
 	//QFont font("Consolas");
@@ -596,7 +596,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 									"- リスト\n1. 連番\n"
 									"|見出し|見出し|\n|-----:|------|\n|   123|abc   |\n\n"
 									"```CSV\nCSV data...\n```\n");
-	MarkdownPreview *markdownPreview = docWidget->m_preview = new MarkdownPreview(this, splitter);
+	MarkdownPreview *markdownPreview = docWidget->m_preview = new MarkdownPreview(this, docWidget, splitter);
 	//##markdownPreview->setReadOnly(true); // プレビューなので読み取り専用に
 	markdownPreview->setMouseTracking(true); // マウスの動きを常に追跡
 	markdownPreview->setPlaceholderText("プレビュー画面");
