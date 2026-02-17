@@ -634,6 +634,12 @@ void MarkdownEditor::jumpToHeading(const QString& name) {
 		block = block.next();
 	}
 }
+bool isMatch(const QString& buf, int ix, QChar ch) {
+	if( ix < 0 ) return false;
+	++ix;
+	while( ix < buf.size() && (buf[ix] == u'*' || buf[ix] == u'_' || buf[ix] == u'~') ) ++ix;
+	return ix < buf.size() && buf[ix] == ch;
+}
 void MarkdownEditor::setCursorByContext(const PosContext &context) {
 	if( m_processing ) return;		//	再入禁止
 	m_processing = true;
@@ -661,12 +667,12 @@ void MarkdownEditor::setCursorByContext(const PosContext &context) {
 			ix = 0;		//	ほんとは必要ないけど、なんとなく書いておく
 		} else {		//	非行頭の場合
 			ix = buf.indexOf(prev, ix);
-			if( ix < 0 || ix+1 >= buf.size() || buf[ix+1] != next ) {	//	非マッチ 
-				block = block.next();
-				ix = 0;
-			} else {
+			if( isMatch(buf, ix, next) ) {
 				++ix;
 				if( --nth == 0 ) break;
+			} else {
+				block = block.next();
+				ix = 0;
 			}
 		}
 	}
