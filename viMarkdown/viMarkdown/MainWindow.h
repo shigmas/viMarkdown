@@ -73,6 +73,8 @@ public:
     bool	isThickKeisenMode() const { return m_thickKeisen; }
     //int		editorFontSize() const { return m_editorFontSize; }		//	暫定的
     const QString	srcText() const { return m_srcText; }
+    void	setCursorCyncing(bool b = true) const { m_isCursorSyncing = b; }
+    bool	isCursorCyncing() const { return m_isCursorSyncing; }
 
 protected:
     void	load_settings();
@@ -203,6 +205,7 @@ protected:
 
 private:
     bool	m_processing = false;
+    mutable bool	m_isCursorSyncing = false;		//	カーソル同期処理中
     bool	m_opening_file = false;
     bool	m_ignore_changed = false;
     bool	m_htmlMode = true;

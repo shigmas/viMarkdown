@@ -624,7 +624,9 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	return docWidget;
 }
 void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソルが移動した
-	if( m_processing ) return;		//	再入禁止
+	if( m_processing || isCursorCyncing() ) return;		//	再入禁止
+	m_processing = true;
+	setCursorCyncing();
 	qDebug() << "MainWindow::syncPreviewCursorWithEditor()";
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
@@ -638,6 +640,7 @@ void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソ
 	while( text.startsWith("```") ) {
 		block = block.next();
 		if( !block.isValid() ) {
+			setCursorCyncing(false);
 			m_processing = false;
 			docWidget->m_editor->setProcessing(false);
 			return;
@@ -693,6 +696,7 @@ void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソ
 	docWidget->m_preview->setCursorAtNthPat(blockNum, pat, nth, tail);
 	docWidget->m_editor->setProcessing(false);
 	m_processing = false;
+	setCursorCyncing(false);
 }
 //	ビューワ → エディタ カーソル位置同期
 void MainWindow::onPosContextChanged(const PosContext& context) {

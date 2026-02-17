@@ -36,13 +36,15 @@ MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, QWidget* parent)
 }
 void MarkdownPreview::onCurPosChanged() {
 	viewport()->update();	//	強制再描画
-	if( m_processing ) return;		//	再入禁止
+	if( m_processing || m_mainWindow->isCursorCyncing() ) return;		//	再入禁止
 	m_processing = true;
+	m_mainWindow->setCursorCyncing();
 	QTextCursor cursor = this->textCursor();
 	auto context = contextAt(cursor.position());
 	context.m_srcHBlockNum = prvToSrcHeading(context.m_prvHBlockNum);
 	emit posContextChanged(context);
 	//setTextCursor(cursor);
+	m_mainWindow->setCursorCyncing(false);
 	m_processing = false;
 }
 void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int charsAdded) {
