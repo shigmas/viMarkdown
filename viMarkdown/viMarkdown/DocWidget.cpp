@@ -30,7 +30,7 @@ QString DocWidget::getTitle() const {
 		++ln;
 		block = block.next();
 	}
-	auto hln = m_preview->getSrcHeadingsBlocks();
+	auto hln = getSrcHeadingsBlocks();
 	if( !hln.empty() && hln[0] == ln ) {		//	コメントを除いた最初の行が見出し行
 		title = block.text();
 		int i = 0;
@@ -43,4 +43,13 @@ QString DocWidget::getTitle() const {
 }
 int DocWidget::previewPosToEditorPos(int pos) {
 	return pos;
+}
+int DocWidget::prvToSrcHeading(int blockNum) {
+	assert( m_prvHeadingBlocks.size() == m_srcHeadingBlocks.size() );
+	auto it = std::lower_bound(m_prvHeadingBlocks.begin(), m_prvHeadingBlocks.end(), blockNum);
+	if (it != m_prvHeadingBlocks.end()) {
+		size_t ix = std::distance(m_prvHeadingBlocks.begin(), it);
+		return m_srcHeadingBlocks[ix];
+	} else
+		return 0;
 }

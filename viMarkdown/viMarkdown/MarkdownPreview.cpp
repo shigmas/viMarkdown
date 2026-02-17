@@ -42,7 +42,7 @@ void MarkdownPreview::onCurPosChanged() {
 	m_mainWindow->setCursorCyncing();
 	QTextCursor cursor = this->textCursor();
 	auto context = contextAt(cursor.position());
-	context.m_srcHBlockNum = prvToSrcHeading(context.m_prvHBlockNum);
+	context.m_srcHBlockNum = m_docWidget->prvToSrcHeading(context.m_prvHBlockNum);
 	emit posContextChanged(context);
 	//setTextCursor(cursor);
 	m_mainWindow->setCursorCyncing(false);
@@ -340,8 +340,8 @@ int indexOfComment(QStringView buf, int start) {
 
 void MarkdownPreview::setMarkdown(QTextDocument *doc) {
 	m_headingList.clear();
-	m_srcHeadingBlocks.clear();
-	m_prvHeadingBlocks.clear();
+	m_docWidget->m_srcHeadingBlocks.clear();
+	m_docWidget->m_prvHeadingBlocks.clear();
 	QString mdtext = doc->toPlainText();
 	QList<QStringView> tableTokens;
 	vector<char> tableAlign;
@@ -496,12 +496,12 @@ void MarkdownPreview::do_heading_sub(QTextCursor& cursor, QString buf, int h, in
 		blockFormat.setBottomMargin(12); // 下側の余白（ピクセル）
 	}
 	cursor.mergeBlockFormat(blockFormat);
-	m_prvHeadingBlocks.push_back(cursor.blockNumber());
+	m_docWidget->m_prvHeadingBlocks.push_back(cursor.blockNumber());
 
 	cursor.insertBlock(QTextBlockFormat(), QTextCharFormat());		//	新規ブロック
 
 	m_headingList.push_back(QChar(u'0'+h) + buf.remove("^ +"));
-	m_srcHeadingBlocks.push_back(ln);
+	m_docWidget->m_srcHeadingBlocks.push_back(ln);
 	m_nEmptyLines = 0;
 }
 bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment, bool &commented) {
@@ -798,9 +798,9 @@ void MarkdownPreview::do_list(QTextCursor& cursor, QString buf) {
 }
 void MarkdownPreview::setCursorAt(int srcBlockNum, QString srcText, int ix) {		//	ix: ブロック内カーソル位置
 	int i = 0;
-	while( i+1 < m_srcHeadingBlocks.size() && m_srcHeadingBlocks[i+1] <= srcBlockNum ) ++i;
-	if( i >= m_prvHeadingBlocks.size() ) return;
-	QTextBlock block = document()->findBlockByNumber(m_prvHeadingBlocks[i]);
+	while( i+1 < m_docWidget->m_srcHeadingBlocks.size() && m_docWidget->m_srcHeadingBlocks[i+1] <= srcBlockNum ) ++i;
+	if( i >= m_docWidget->m_prvHeadingBlocks.size() ) return;
+	QTextBlock block = document()->findBlockByNumber(m_docWidget->m_prvHeadingBlocks[i]);
 	QTextCursor cursor = textCursor();
 	cursor.setPosition(block.position());
 	if( !srcText.isEmpty() ) {
@@ -817,9 +817,9 @@ void MarkdownPreview::setCursorAt(int srcBlockNum, QString srcText, int ix) {		/
 void MarkdownPreview::setCursorAtNthPat(int srcBlockNum, QString pat, int nth, bool tail) {		//	nth: 何番目か（>0）
 	qDebug() << QString("MarkdownPreview::setCursorAtNthPat(%1, '%2', %3,").arg(srcBlockNum).arg(pat).arg(nth) << tail << ")";
 	int i = 0;
-	while( i+1 < m_srcHeadingBlocks.size() && m_srcHeadingBlocks[i+1] <= srcBlockNum ) ++i;
-	if( i >= m_prvHeadingBlocks.size() ) return;
-	QTextBlock block = document()->findBlockByNumber(m_prvHeadingBlocks[i]);
+	while( i+1 < m_docWidget->m_srcHeadingBlocks.size() && m_docWidget->m_srcHeadingBlocks[i+1] <= srcBlockNum ) ++i;
+	if( i >= m_docWidget->m_prvHeadingBlocks.size() ) return;
+	QTextBlock block = document()->findBlockByNumber(m_docWidget->m_prvHeadingBlocks[i]);
 	QTextCursor cursor = textCursor();
 	if( !tail ) {
 		cursor.setPosition(block.position());
@@ -848,9 +848,9 @@ void MarkdownPreview::setCursorAtNthPat(int srcBlockNum, QString pat, int nth, b
 void MarkdownPreview::ensureLineVisible(int srcBlockNum) {
 	//qDebug() << "srcBlockNum = " << srcBlockNum;
 	int i = 0;
-	while( i+1 < m_srcHeadingBlocks.size() && m_srcHeadingBlocks[i+1] <= srcBlockNum ) ++i;
-	if( i < m_prvHeadingBlocks.size() )
-		scrollToBlock(m_prvHeadingBlocks[i]);
+	while( i+1 < m_docWidget->m_srcHeadingBlocks.size() && m_docWidget->m_srcHeadingBlocks[i+1] <= srcBlockNum ) ++i;
+	if( i < m_docWidget->m_prvHeadingBlocks.size() )
+		scrollToBlock(m_docWidget->m_prvHeadingBlocks[i]);
 }
 void MarkdownPreview::scrollToBlock(int blockIndex) {
 	QTextBlock block = document()->findBlockByNumber(blockIndex);
@@ -865,24 +865,26 @@ void MarkdownPreview::scrollToBlock(int blockIndex) {
 	verticalScrollBar()->setValue(y);
 #endif
 }
+#if 0
 int MarkdownPreview::prvToSrcHeading(int blockNum) {
-	assert( m_prvHeadingBlocks.size() == m_srcHeadingBlocks.size() );
+	assert( m_docWidget->m_prvHeadingBlocks.size() == m_docWidget->m_srcHeadingBlocks.size() );
 #if 1
-	auto it = std::lower_bound(m_prvHeadingBlocks.begin(), m_prvHeadingBlocks.end(), blockNum);
-	if (it != m_prvHeadingBlocks.end()) {
-		size_t ix = std::distance(m_prvHeadingBlocks.begin(), it);
-		return m_srcHeadingBlocks[ix];
+	auto it = std::lower_bound(m_docWidget->m_prvHeadingBlocks.begin(), m_docWidget->m_prvHeadingBlocks.end(), blockNum);
+	if (it != m_docWidget->m_prvHeadingBlocks.end()) {
+		size_t ix = std::distance(m_docWidget->m_prvHeadingBlocks.begin(), it);
+		return m_docWidget->m_srcHeadingBlocks[ix];
 	} else
 		return 0;
 #else
 	int ix = 0;
-	while( ix+1 < m_prvHeadingBlocks.size() && m_prvHeadingBlocks[ix] < blockNum ) ++ix;
-	if( ix < m_srcHeadingBlocks.size() )
-		return m_srcHeadingBlocks[ix];
+	while( ix+1 < m_docWidget->m_prvHeadingBlocks.size() && m_docWidget->m_prvHeadingBlocks[ix] < blockNum ) ++ix;
+	if( ix < m_docWidget->m_srcHeadingBlocks.size() )
+		return m_docWidget->m_srcHeadingBlocks[ix];
 	else
 		return 0;
 #endif
 }
+#endif
 PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext を構築
 	PosContext pc;
 	auto *doc = document();

@@ -17,6 +17,10 @@ public:
 	void	setModified(bool);
 	QString	getTitle() const;
 	int		previewPosToEditorPos(int pos);		//	プレビュー position をエディタの対応 position に変換
+    const std::vector<int>&	getSrcHeadingsBlocks() const { return m_srcHeadingBlocks; }
+    const std::vector<int>&	getPrvHeadingsBlocks() const { return m_prvHeadingBlocks; }		//	見出し行だけの行番号（0 org）リスト
+    int		prvToSrcHeading(int blockNum);		//	プレビューの見出し行番号（0 org.）をエディタのそれに変換
+    int		srcToPrvHeading(int blockNum);		//	エディタの見出し行番号（0 org.）をプレビューのそれに変換
 
 public:
 	//bool	m_modified = false;		//	編集＆未保存状態

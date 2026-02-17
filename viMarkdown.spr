@@ -667,7 +667,7 @@ SPR# 状 P Open Close ver     Type  概要
 0665 ◎ C 02/11 02/11 01102│問題│preview と viewer が混在している→preview に統一？
 0666 ◎ C 02/11 02/11 01102│ToDo│class MarkdownViewer → MarkdownPreview に変更
 0667 ◎ C 02/11 02/11 01102│ToDo│DocWidget::m_mdEditor → m_editor, m_markdownPreview → m_preview にリネーム
-0668 ◎ C 02/11 02/11 01102│ToDo│MarkdownViewer::PosContext contextAt(int pos) const; 追加
+0668 ◎ C 02/11 02/11 01102│ToDo│PosContext MarkdownViewer::contextAt(int pos) const; 追加
 0669 ● C 02/11            │問題│文書開きっぱなしでも Alt + 左右 で文書を切り替えるとカーソルが先頭行に移動してしまう？
 0670 ◎ C 02/11 02/11 01102│問題│メニュー、メインツールバーが2行？なので、スペースを消費してしまう。無理やり1行にした方がよい？
 0671 ◎ C 02/11 02/11 01103│ToDo│PosContext：int m_indexOfPrevNext; 追加
@@ -742,9 +742,9 @@ SPR# 状 P Open Close ver     Type  概要
 0740 ◎ C 02/18 02/18 01109│ToDo│カーソル同期処理中を示すフラグ MainWindow::m_isCursorSyncing を追加
 0741 ◎ C 02/18 02/18 01109│問題│プレビュー：Shift + → などで文字列選択できない
 0742 ◎ C 02/18 02/18 01109│ToDo│MarkdownPreview, MarkdownEditor：DocWidget へのバックポインタも保持しておく
-0743 ● C 02/18            │ToDo│
-0744 ● C 02/18            │ToDo│
-0745 ● C 02/18            │ToDo│
+0743 ● C 02/18            │問題│カーソルがリスト行の先頭にあると、プレビューからエディタへのカーソル同期処理が不良になる
+0744 ● C 02/18            │ToDo│PosContext MarkdownEditor::contextAt(int pos) const; 追加
+0745 ◎ C 02/18 02/18 01109│ToDo│MarkdownPreview::prvToSrcHeading(int blockNum)：DocWidget に移動
 0746 ● C 02/18            │ToDo│
 0747 ● C 02/18            │ToDo│
 0748 ● C 02/18            │ToDo│
