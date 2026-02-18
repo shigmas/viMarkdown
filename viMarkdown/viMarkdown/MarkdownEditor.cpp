@@ -645,8 +645,8 @@ bool isMatch(const QString& buf, int ix, QChar ch) {
 int MarkdownEditor::findPosition(const PosContext &context) {
 	static QRegularExpression re("^(#+ *| *- )[\\*_~]*");
 	QTextBlock block = document()->findBlockByNumber(context.m_srcHBlockNum);
-	const QChar prev = context.m_chPrev;
-	const QChar next = context.m_chNext;
+	//const QChar prev = context.m_chPrev;
+	const QChar ch = context.m_charAt;
 	int nth = context.m_indexOfPrevNext;
 	int ix = 0;
 	int offset = 0;
@@ -654,6 +654,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 		QString buf = block.text();
 		buf.remove(re);				//	/# /, /- / などを削除
 		offset = block.text().size() - buf.size();
+#if 0
 		if( prev == QChar() ) {		//	行頭の場合
 			if( buf.startsWith(next) ) {
 				if( --nth == 0 ) {
@@ -663,18 +664,20 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			}
 			block = block.next();
 			ix = 0;
-		} else if( next == QChar() ) {		//	行末の場合
+		} else
+#endif
+		if( ch == QChar() ) {		//	行末の場合
 			int i = buf.size();
 			while( --i >= 0 && buf[i] == u' ' ) {}
-			if( i >= 0 && buf[i] == prev ) {
+			if( i >= 0 /*&& buf[i] == prev*/ ) {
 				ix = i + 1;
 				if( --nth == 0 ) break;
 			}
 			block = block.next();
 			ix = 0;		//	ほんとは必要ないけど、なんとなく書いておく
-		} else {		//	非行頭の場合
-			ix = buf.indexOf(prev, ix);
-			if( isMatch(buf, ix, next) ) {
+		} else {		//	非行末の場合
+			//ix = buf.indexOf(prev, ix);
+			if( isMatch(buf, ix, ch) ) {
 				++ix;
 				if( --nth == 0 ) break;
 			} else {
@@ -1846,6 +1849,7 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 	pc.m_srcHBlockNum = block.blockNumber();
 	//	pos の {chPrev, chNext} が見出し行先頭から何番目かを計算
 	int count = 1;
+#if 0
 	int curPos = block.position();
 	for (int i = curPos; i < pos; ++i) {
 		// 1. 直前の文字 (prev) の取得
@@ -1875,6 +1879,7 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			block = block.next();
 		}
 	}
+#endif
 	pc.m_indexOfPrevNext = count;
 	return pc;
 }

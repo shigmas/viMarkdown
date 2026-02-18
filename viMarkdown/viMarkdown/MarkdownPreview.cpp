@@ -891,8 +891,9 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 	PosContext pc;
 	auto *doc = document();
 	QTextBlock block = doc->findBlock(pos);
-	pc.m_chPrev = pos != block.position() ? doc->characterAt(pos-1) : QChar();
-	pc.m_chNext = doc->characterAt(pos) != QChar::ParagraphSeparator ? doc->characterAt(pos) : QChar();
+	//pc.m_chPrev = pos != block.position() ? doc->characterAt(pos-1) : QChar();
+	auto chat = doc->characterAt(pos);
+	pc.m_charAt = chat != QChar::ParagraphSeparator ? chat : QChar();
 	while( block.userState() != US_HEADING ) {		//	直前の見出し行を探す
 		if( !block.previous().isValid() )
 			break;
@@ -901,6 +902,23 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 	pc.m_prvHBlockNum = block.blockNumber();
 	//	pos の {chPrev, chNext} が見出し行先頭から何番目かを計算
 	int count = 1;
+	if( pc.m_charAt == QChar() ) {		//	行末の場合
+		while( block.isValid() ) {
+			if( block.position() + block.text().length() >= pos )
+				break;
+			++count;
+			block = block.next();
+		}
+	} else {
+		for (int i = block.position(); i < pos; ++i) {
+			QChar chAt = doc->characterAt(i);
+			if (chAt == QChar::ParagraphSeparator)		//	改行記号の場合
+				chAt = QChar();
+			if( chAt == pc.m_charAt )
+				++count;
+		}
+	}
+#if 0
 	int curPos = block.position();
 	for (int i = curPos; i < pos; ++i) {
 		// 1. 直前の文字 (prev) の取得
@@ -930,6 +948,7 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 			block = block.next();
 		}
 	}
+#endif
 	pc.m_indexOfPrevNext = count;
 	return pc;
 }
