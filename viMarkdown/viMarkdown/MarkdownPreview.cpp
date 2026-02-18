@@ -36,12 +36,14 @@ MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, DocWidget *docWid
 	connect(document(), &QTextDocument::contentsChange, this, &MarkdownPreview::onContentsChanged);
 }
 void MarkdownPreview::onCurPosChanged() {
+	QTextCursor cursor = this->textCursor();
+	m_lastCurBlockText = cursor.block().text();
 	viewport()->update();	//	強制再描画
 	//	カーソル同期処理
 	if( m_processing || m_mainWindow->isCursorCyncing() ) return;		//	再入禁止
 	m_processing = true;
 	m_mainWindow->setCursorCyncing();
-	QTextCursor cursor = this->textCursor();
+	//QTextCursor cursor = this->textCursor();
 	auto context = contextAt(cursor.position());
 	context.m_srcHBlockNum = m_docWidget->prvToSrcHeading(context.m_prvHBlockNum);
 	emit posContextChanged(context);

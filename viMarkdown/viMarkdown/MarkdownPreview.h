@@ -97,6 +97,7 @@ private:
     bool	m_hasBody = false;		//	do_body() で空文以外を出力したか？
     bool	m_inComment = false;
     bool	m_processing = false;	//	再入防止用フラグ
+	QString	m_lastCurBlockText;				//	事前のカーソルブロックテキスト
     //QString	m_bodyText;
     QStringList	m_bodyList;
 	QStringList	m_lst;
