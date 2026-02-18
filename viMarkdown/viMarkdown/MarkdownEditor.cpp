@@ -1839,13 +1839,21 @@ void MarkdownEditor::dropEvent(QDropEvent *e) {
 }
 PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext を構築
 	PosContext pc;
-	auto *doc = document();
+	auto* doc = document();
+	QTextBlock block = doc->findBlock(pos);
 	auto ch = doc->characterAt(pos);
-	if( ch == QChar::ParagraphSeparator ) ch = QChar();
-	//	Undone: 行末＆次が空行でない場合は、次の文字は ' ' に
+	if( pos > 0 && doc->characterAt(pos-1) != u'\\' ) {
+		while( ch == u'*' || ch == u'_' || ch == u'~' )
+			ch = doc->characterAt(++pos);
+	}
+	if( ch == QChar::ParagraphSeparator ) {
+		if( !block.next().isValid() || block.next().text().isEmpty() )
+			ch = QChar();
+		else
+			ch = u' ';
+	}
 	//	Undone: "  +\n" の場合も改行扱い
 	pc.m_charAt = ch;
-	QTextBlock block = doc->findBlock(pos);
 	while( !block.text().startsWith(u'#') ) {		//	直前の見出し行を探す
 		if( !block.previous().isValid() )
 			break;
