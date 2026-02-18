@@ -643,16 +643,23 @@ bool isMatch(const QString& buf, int ix, QChar ch) {
 	return ix < buf.size() && buf[ix] == ch;
 }
 int MarkdownEditor::findPosition(const PosContext &context) {
+	static QRegularExpression re("^(#+ *| *- )[\\*_~]*");
 	QTextBlock block = document()->findBlockByNumber(context.m_srcHBlockNum);
 	const QChar prev = context.m_chPrev;
 	const QChar next = context.m_chNext;
 	int nth = context.m_indexOfPrevNext;
 	int ix = 0;
+	int offset = 0;
 	while( block.isValid() ) {
-		const QString &buf = block.text();
+		QString buf = block.text();
+		buf.remove(re);				//	/# /, /- / などを削除
+		offset = block.text().size() - buf.size();
 		if( prev == QChar() ) {		//	行頭の場合
 			if( buf.startsWith(next) ) {
-				if( --nth == 0 ) break;
+				if( --nth == 0 ) {
+					//ix = offset;
+					break;
+				}
 			}
 			block = block.next();
 			ix = 0;
@@ -677,7 +684,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 		}
 	}
 	if( block.isValid() ) {
-		return block.position() + ix;
+		return block.position() + ix + offset;
 	} else
 		return -1;
 }

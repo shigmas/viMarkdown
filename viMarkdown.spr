@@ -742,7 +742,7 @@ SPR# 状 P Open Close ver     Type  概要
 0740 ◎ C 02/18 02/18 01109│ToDo│カーソル同期処理中を示すフラグ MainWindow::m_isCursorSyncing を追加
 0741 ◎ C 02/18 02/18 01109│問題│プレビュー：Shift + → などで文字列選択できない
 0742 ◎ C 02/18 02/18 01109│ToDo│MarkdownPreview, MarkdownEditor：DocWidget へのバックポインタも保持しておく
-0743 ● C 02/18            │問題│カーソルがリスト行の先頭にあると、プレビューからエディタへのカーソル同期処理が不良になる
+0743 ◎ C 02/18 02/18 01109│問題│プレビュー：カーソルがリスト行の先頭にあると、エディタへのカーソル同期処理が不良になる
 0744 ◎ C 02/18 02/18 01109│ToDo│PosContext MarkdownEditor::contextAt(int pos) const; とりあえず追加（行頭行末位置等では非正常動作）
 0745 ◎ C 02/18 02/18 01109│ToDo│MarkdownPreview::prvToSrcHeading(int blockNum)：DocWidget に移動
 0746 ◎ C 02/18 02/18 01109│ToDo│DocWidget::srcToPrvHeading(int blockNum) 実装
