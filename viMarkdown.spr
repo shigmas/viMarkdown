@@ -752,7 +752,7 @@ SPR# 状 P Open Close ver     Type  概要
 0750 ● C 02/18            │問題│MarkdownPreview：マウス押下＆ドラッグでテキストを選択できない
 0751 ◎ C 02/19 02/19 01110│ToDo│PosContext：直前文字情報保持をやめ、（m_chNext をリネームし）m_charAt だけにする
 0752 ◎ C 02/19 02/19 01110│ToDo│MainWindow::syncPreviewCursorWithEditor()：削除
-0753 ● C 02/19            │ToDo│
+0753 ◎ C 02/19 02/19 01110│ToDo│MainWindow::onSrcPosContextChanged(const PosContext& context) 実装
 0754 ● C 02/19            │ToDo│
 0755 ● C 02/19            │ToDo│
 0756 ● C 02/19            │ToDo│

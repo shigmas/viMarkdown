@@ -674,7 +674,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 				if( --nth == 0 ) break;
 			}
 			block = block.next();
-			ix = 0;		//	ほんとは必要ないけど、なんとなく書いておく
+			//ix = 0;		//	ほんとは必要ないけど、なんとなく書いておく
 		} else {		//	非行末の場合
 			//ix = buf.indexOf(prev, ix);
 			if( isMatch(buf, ix, ch) ) {
@@ -1840,6 +1840,8 @@ void MarkdownEditor::dropEvent(QDropEvent *e) {
 PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext を構築
 	PosContext pc;
 	auto *doc = document();
+	auto ch = doc->characterAt(pos);
+	pc.m_charAt = ch != QChar::ParagraphSeparator ? ch : QChar();
 	QTextBlock block = doc->findBlock(pos);
 	while( !block.text().startsWith(u'#') ) {		//	直前の見出し行を探す
 		if( !block.previous().isValid() )

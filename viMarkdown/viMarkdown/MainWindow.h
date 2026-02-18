@@ -140,7 +140,8 @@ protected:
     void	onSettingsChanged();
     void	onUndoTriggered();
     void	onRedoTriggered();
-    void	onPosContextChanged(const struct PosContext&);
+    void	onPrvPosContextChanged(const struct PosContext&);
+    void	onSrcPosContextChanged(const struct PosContext&);
 
     void	onAction_New();
     void	onAction_NewTab();

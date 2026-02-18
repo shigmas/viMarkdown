@@ -887,6 +887,43 @@ int MarkdownPreview::prvToSrcHeading(int blockNum) {
 #endif
 }
 #endif
+int MarkdownPreview::findPosition(const PosContext &context) {
+	QTextBlock block = document()->findBlockByNumber(context.m_prvHBlockNum);
+	const QChar ch = context.m_charAt;
+	int nth = context.m_indexOfPrevNext;
+	int ix = 0;
+	while( block.isValid() ) {
+		QString buf = block.text();
+		if( ch == QChar() ) {		//	行末の場合
+			ix = buf.size();
+			if( --nth == 0 ) break;
+			block = block.next();
+		} else {		//	非行末の場合
+			ix = buf.indexOf(ch, ix);
+			if( ix >= 0 ) {
+				if( --nth == 0 ) break;
+			} else {
+				block = block.next();
+				ix = 0;
+			}
+		}
+	}
+	if( block.isValid() ) {
+		return block.position() + ix;
+	} else
+		return -1;
+}
+void MarkdownPreview::setCursorByContext(const PosContext &context) {
+	if( m_processing ) return;		//	再入禁止
+	m_processing = true;
+	int pos = findPosition(context);
+	if( pos >= 0 ) {
+		QTextCursor cursor = textCursor();
+		cursor.setPosition(pos);
+		setTextCursor(cursor);
+	}
+	m_processing = false;
+}
 PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext を構築
 	PosContext pc;
 	auto *doc = document();

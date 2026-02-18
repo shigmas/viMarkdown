@@ -48,6 +48,8 @@ public:
     void	scrollToBlock(int blockIndex);
     struct PosContext	contextAt(int pos);
     int		prvToSrcHeading(int blockNum);		//	プレビューの見出し行番号（0 org.）をエディタのそれに変換
+	void	setCursorByContext(const struct PosContext &context);
+    int		findPosition(const struct PosContext&);
 
 signals:
     // クリックされたブロック番号を通知するシグナル

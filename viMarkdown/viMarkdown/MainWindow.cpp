@@ -588,6 +588,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onEditorCurPosChanged);
 	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::syncPreviewCursorWithEditor);
 	connect(mdEditor, &MarkdownEditor::changeFontSize, this, &MainWindow::onChangeEditorFontSize);
+	connect(mdEditor, &MarkdownEditor::posContextChanged, this, &MainWindow::onSrcPosContextChanged);
 	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
 	//QTextEdit *mdEditor = new QTextEdit(splitter);
 	mdEditor->setPlaceholderText("\nここにMarkdownを入力\n"
@@ -609,7 +610,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(markdownPreview, &MarkdownPreview::undo_triggered, this, &MainWindow::onUndoTriggered);
 	connect(markdownPreview, &MarkdownPreview::redo_triggered, this, &MainWindow::onRedoTriggered);
 	//connect(markdownPreview, &MarkdownPreview::cursorPositionChanged, this, &MainWindow::onPreviewCurPosChanged);
-	connect(markdownPreview, &MarkdownPreview::posContextChanged, this, &MainWindow::onPosContextChanged);
+	connect(markdownPreview, &MarkdownPreview::posContextChanged, this, &MainWindow::onPrvPosContextChanged);
 	splitter->addWidget(mdEditor);
 	splitter->addWidget(markdownPreview);
 	splitter->setSizes(QList<int>() << 500 << 500);
@@ -700,9 +701,15 @@ void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソ
 	setCursorCyncing(false);
 }
 #endif
-//	ビューワ → エディタ カーソル位置同期
-void MainWindow::onPosContextChanged(const PosContext& context) {
-	//qDebug() << "onPosContextChanged()";
+//	エディタ → プレビュー カーソル位置同期
+void MainWindow::onSrcPosContextChanged(const PosContext& context) {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	docWidget->m_preview->setCursorByContext(context);
+}
+//	プレビュー → エディタ カーソル位置同期
+void MainWindow::onPrvPosContextChanged(const PosContext& context) {
+	//qDebug() << "onPrvPosContextChanged()";
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	docWidget->m_editor->setCursorByContext(context);
