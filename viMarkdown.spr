@@ -735,7 +735,7 @@ SPR# 状 P Open Close ver     Type  概要
 0733 ◎ C 02/17 02/17 01107│問題│ソース：「a**b**\nab\n」のとき、最初の b の位置へのカーソル同期が動作不要（"*" 無視する必要がある）
 0734 ◎ C 02/17 02/17 01107│問題│プレビューで文字入力すると、カーソルが文書末？に移動してしまう（原因：ソースを全変換しているため）
 0735 ◎ C 02/17 02/17 01107│問題│エディタで文字入力すると、プレビューカーソルが文書末に移動してしまう
-0736 ● C 02/17            │ToDo│エディタposition → 対応するプレビューposition変換関数
+0736 ● C 02/17            │ToDo│MarkdownPreview::findPosition(PosContext)：エディタposition → 対応するプレビューposition変換関数
 0737 ◎ C 02/17 02/18 01109│ToDo│m_srcHeadingBlocks, m_prvHeadingBlocks は DocWidget に移動？
 0738 ◎ A 02/17 02/17 01108│問題│エディタ：Shift + → などで文字列選択できない
 0739 ◎ C 02/17 02/17 01108│問題│"  - " 直後でEnter押下すると、行頭からの半角空白が残ってしまう
@@ -748,5 +748,5 @@ SPR# 状 P Open Close ver     Type  概要
 0746 ◎ C 02/18 02/18 01109│ToDo│DocWidget::srcToPrvHeading(int blockNum) 実装
 0747 ◎ C 02/18 02/18 01109│ToDo│MarkdownEditor::onCurPosChanged()：PosContext を構築し、posContextChanged(context) を emit
 0748 ◎ C 02/18 02/18 01109│ToDo│MarkdownPreview::m_lastCurBlockText を追加し、onCurPosChanged() で更新
-0749 ● C 02/18            │ToDo│
+0749 ◎ C 02/18 02/18 01109│ToDo│MarkdownEditor::findPosition(PosContext)：プレビューposition → 対応するエディタposition変換関数
 0750 ● C 02/18            │ToDo│

@@ -57,6 +57,7 @@ public:
 	void	setCursorByContext(const struct PosContext &context);
     struct PosContext	contextAt(int pos);		//	pos 位置情報を構築
     //int		srcToPrvHeading(int blockNum);		//	エディタの見出し行番号（0 org.）をプレビューのそれに変換
+    int		findPosition(const struct PosContext&);
 
 signals:
     void	tab_pressed();

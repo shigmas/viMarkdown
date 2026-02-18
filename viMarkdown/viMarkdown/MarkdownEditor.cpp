@@ -642,9 +642,7 @@ bool isMatch(const QString& buf, int ix, QChar ch) {
 	while( ix < buf.size() && (buf[ix] == u'*' || buf[ix] == u'_' || buf[ix] == u'~') ) ++ix;
 	return ix < buf.size() && buf[ix] == ch;
 }
-void MarkdownEditor::setCursorByContext(const PosContext &context) {
-	if( m_processing ) return;		//	再入禁止
-	m_processing = true;
+int MarkdownEditor::findPosition(const PosContext &context) {
 	QTextBlock block = document()->findBlockByNumber(context.m_srcHBlockNum);
 	const QChar prev = context.m_chPrev;
 	const QChar next = context.m_chNext;
@@ -679,9 +677,17 @@ void MarkdownEditor::setCursorByContext(const PosContext &context) {
 		}
 	}
 	if( block.isValid() ) {
-		QTextCursor cursor(block);		//	ブロック先頭位置
-		if( ix != 0 )
-			cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, ix);
+		return block.position() + ix;
+	} else
+		return -1;
+}
+void MarkdownEditor::setCursorByContext(const PosContext &context) {
+	if( m_processing ) return;		//	再入禁止
+	m_processing = true;
+	int pos = findPosition(context);
+	if( pos >= 0 ) {
+		QTextCursor cursor = textCursor();
+		cursor.setPosition(pos);
 		setTextCursor(cursor);
 	}
 	m_processing = false;
