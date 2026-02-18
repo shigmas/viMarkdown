@@ -63,6 +63,7 @@ signals:
     void	esc_pressed();
     //void	title_clicked(const QString title, const QStrin);
     void	changeFontSize(int delta);
+    void	posContextChanged(const PosContext &context);
 
 protected:
     void	keyPressEvent(QKeyEvent *e) override;

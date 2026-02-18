@@ -37,6 +37,7 @@ MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, DocWidget *docWid
 }
 void MarkdownPreview::onCurPosChanged() {
 	viewport()->update();	//	強制再描画
+	//	カーソル同期処理
 	if( m_processing || m_mainWindow->isCursorCyncing() ) return;		//	再入禁止
 	m_processing = true;
 	m_mainWindow->setCursorCyncing();
@@ -44,7 +45,6 @@ void MarkdownPreview::onCurPosChanged() {
 	auto context = contextAt(cursor.position());
 	context.m_srcHBlockNum = m_docWidget->prvToSrcHeading(context.m_prvHBlockNum);
 	emit posContextChanged(context);
-	//setTextCursor(cursor);
 	m_mainWindow->setCursorCyncing(false);
 	m_processing = false;
 }

@@ -1550,6 +1550,16 @@ void MarkdownEditor::onCurPosChanged() {
 	m_lastCurBlockText = cursor.block().text();
 	viewport()->update();
 	//	Undone: プレビューの対応段落（見出し行＋本文）を画面内に
+	//	カーソル同期処理
+	if( m_processing || m_mainWindow->isCursorCyncing() ) return;		//	再入禁止
+	m_processing = true;
+	m_mainWindow->setCursorCyncing();
+	//QTextCursor cursor = this->textCursor();
+	auto context = contextAt(cursor.position());
+	context.m_prvHBlockNum = m_docWidget->srcToPrvHeading(context.m_srcHBlockNum);
+	emit posContextChanged(context);
+	m_mainWindow->setCursorCyncing(false);
+	m_processing = false;
 }
 int MarkdownEditor::getVisualLineNumber(const QTextCursor &cursor) const {
 	int visualLineNum = 0;

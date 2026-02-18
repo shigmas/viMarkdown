@@ -746,7 +746,7 @@ SPR# 状 P Open Close ver     Type  概要
 0744 ◎ C 02/18 02/18 01109│ToDo│PosContext MarkdownEditor::contextAt(int pos) const; とりあえず追加（行頭行末位置等では非正常動作）
 0745 ◎ C 02/18 02/18 01109│ToDo│MarkdownPreview::prvToSrcHeading(int blockNum)：DocWidget に移動
 0746 ◎ C 02/18 02/18 01109│ToDo│DocWidget::srcToPrvHeading(int blockNum) 実装
-0747 ● C 02/18            │ToDo│
-0748 ● C 02/18            │ToDo│
+0747 ◎ C 02/18 02/18 01109│ToDo│MarkdownEditor::onCurPosChanged()：PosContext を構築し、posContextChanged(context) を emit
+0748 ● C 02/18            │ToDo│MarkdownPreview::m_lastCurBlockText を追加し、onCurPosChanged() で更新
 0749 ● C 02/18            │ToDo│
 0750 ● C 02/18            │ToDo│
