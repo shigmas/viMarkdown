@@ -586,7 +586,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(mdEditor, &MarkdownEditor::esc_pressed, this, &MainWindow::onMdEditEscPressed);
 	//connect(mdEditor, &MarkdownEditor::title_clicked, this, &MainWindow::do_open);
 	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onEditorCurPosChanged);
-	connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::syncPreviewCursorWithEditor);
+	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::syncPreviewCursorWithEditor);
 	connect(mdEditor, &MarkdownEditor::changeFontSize, this, &MainWindow::onChangeEditorFontSize);
 	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
 	//QTextEdit *mdEditor = new QTextEdit(splitter);
@@ -623,6 +623,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	docWidget->setModified(false);
 	return docWidget;
 }
+#if 0
 void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソルが移動した
 	if( m_processing || isCursorCyncing() ) return;		//	再入禁止
 	m_processing = true;
@@ -698,6 +699,7 @@ void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソ
 	m_processing = false;
 	setCursorCyncing(false);
 }
+#endif
 //	ビューワ → エディタ カーソル位置同期
 void MainWindow::onPosContextChanged(const PosContext& context) {
 	//qDebug() << "onPosContextChanged()";
@@ -818,7 +820,7 @@ void MainWindow::onTextRemovedAtPreview(int charsRemoved) {
 	QTextCursor cursor = docWidget->m_editor->textCursor();
 	cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, charsRemoved);
 	cursor.removeSelectedText();
-	syncPreviewCursorWithEditor();
+	//syncPreviewCursorWithEditor();
 }
 void MainWindow::onBS_pressed() {
 	DocWidget *docWidget = getCurDocWidget();
@@ -826,7 +828,7 @@ void MainWindow::onBS_pressed() {
 	QTextCursor cursor = docWidget->m_editor->textCursor();
 	cursor.deletePreviousChar();
 	docWidget->m_editor->setTextCursor(cursor);
-	syncPreviewCursorWithEditor();
+	//syncPreviewCursorWithEditor();
 }
 void MainWindow::onUndoTriggered() {
 	DocWidget *docWidget = getCurDocWidget();
@@ -1846,7 +1848,7 @@ void MainWindow::onMDTextChanged() {
 	docWidget->m_preview->setMarkdown(mdEditor->document());
 	docWidget->m_preview->verticalScrollBar()->setValue(scrollPos);
 	docWidget->m_editor->setProcessing(false);
-	syncPreviewCursorWithEditor();
+	//syncPreviewCursorWithEditor();
 #else
 	auto &htmlComvertor = docWidget->m_htmlComvertor;
 	htmlComvertor.convert(mdEditor->document());

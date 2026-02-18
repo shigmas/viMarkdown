@@ -134,7 +134,7 @@ protected:
     void	onTextInsertedAtPreview(QString);
     void	onTextRemovedAtPreview(int);
     void	onBS_pressed();
-    void	syncPreviewCursorWithEditor();
+    //void	syncPreviewCursorWithEditor();
     void	onChangeEditorFontSize(int);
     void	updateEditorFontSize(int);
     void	onSettingsChanged();
