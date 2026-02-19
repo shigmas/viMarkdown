@@ -638,16 +638,26 @@ void MarkdownEditor::jumpToHeading(const QString& name) {
 }
 bool isMatch(const QString& buf, int ix, QChar ch) {
 	if( ix < 0 ) return false;
-	++ix;
+	//++ix;
 	while( ix < buf.size() && (buf[ix] == u'*' || buf[ix] == u'_' || buf[ix] == u'~') ) ++ix;
 	return ix < buf.size() && buf[ix] == ch;
+}
+int indexOf(const QString& buf, int ix, QChar ch) {
+	while( ix < buf.size() ) {
+		if( !(buf[ix] == u'*' || buf[ix] == u'_' || buf[ix] == u'~') ) {
+			if( buf[ix] == ch )
+				return ix;
+		}
+		++ix;
+	}
+	return -1;
 }
 int MarkdownEditor::findPosition(const PosContext &context) {
 	static QRegularExpression re("^(#+ *| *- )[\\*_~]*");
 	QTextBlock block = document()->findBlockByNumber(context.m_srcHBlockNum);
 	//const QChar prev = context.m_chPrev;
 	const QChar ch = context.m_charAt;
-	int nth = context.m_indexOfPrevNext;
+	int nth = context.m_nth;
 	int ix = 0;
 	int offset = 0;
 	while( block.isValid() ) {
@@ -676,14 +686,13 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			block = block.next();
 			//ix = 0;		//	ほんとは必要ないけど、なんとなく書いておく
 		} else {		//	非行末の場合
-			//ix = buf.indexOf(prev, ix);
-			if( isMatch(buf, ix, ch) ) {
-				++ix;
+			while( (ix = indexOf(buf, ix, ch)) >= 0 ) {
 				if( --nth == 0 ) break;
-			} else {
-				block = block.next();
-				ix = 0;
+				++ix;
 			}
+			if (nth == 0) break;
+			block = block.next();
+			ix = 0;
 		}
 	}
 	if( block.isValid() ) {
@@ -693,6 +702,8 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 }
 void MarkdownEditor::setCursorByContext(const PosContext &context) {
 	if( m_processing ) return;		//	再入禁止
+	qDebug() << "MarkdownEditor::setCursorByContext(context)";
+	qDebug() << ".charAt = " << context.m_charAt << ", nth = " << context.m_nth;
 	m_processing = true;
 	int pos = findPosition(context);
 	if( pos >= 0 ) {
@@ -1894,6 +1905,6 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 		}
 		block = block.next();
 	}
-	pc.m_indexOfPrevNext = count;
+	pc.m_nth = count;
 	return pc;
 }

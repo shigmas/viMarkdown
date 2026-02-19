@@ -895,7 +895,7 @@ int MarkdownPreview::prvToSrcHeading(int blockNum) {
 int MarkdownPreview::findPosition(const PosContext &context) {
 	QTextBlock block = document()->findBlockByNumber(context.m_prvHBlockNum);
 	const QChar ch = context.m_charAt;
-	int nth = context.m_indexOfPrevNext;
+	int nth = context.m_nth;
 	int ix = 0;
 	while( block.isValid() ) {
 		QString buf = block.text();
@@ -921,6 +921,8 @@ int MarkdownPreview::findPosition(const PosContext &context) {
 }
 void MarkdownPreview::setCursorByContext(const PosContext &context) {
 	if( m_processing ) return;		//	再入禁止
+	qDebug() << "MarkdownPreview::setCursorByContext(context)";
+	qDebug() << ".charAt = " << context.m_charAt << ", nth = " << context.m_nth;
 	m_processing = true;
 	int pos = findPosition(context);
 	if( pos >= 0 ) {
@@ -961,6 +963,6 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 				++count;
 		}
 	}
-	pc.m_indexOfPrevNext = count;
+	pc.m_nth = count;
 	return pc;
 }

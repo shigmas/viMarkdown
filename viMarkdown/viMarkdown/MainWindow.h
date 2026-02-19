@@ -26,9 +26,10 @@ struct PosContext {
     //QChar	m_chPrev;				//	現在位置直前文字、行頭の場合は QChar()
     //QChar	m_chNext;				//	現在位置文字、行末の場合は QChar()
     QChar	m_charAt;				//	現在位置文字、行末の場合は QChar()
+    int		m_nth;            		//	直前見出しからの m_charAt 出現回数 (1 org. 自分自身も含むため)
     int		m_srcHBlockNum = 0;		//	直前見出し行ブロック番号（0 org.）、見つからない場合は 0
     int		m_prvHBlockNum = 0;		//	直前見出し行ブロック番号（0 org.）、見つからない場合は 0
-    int		m_indexOfPrevNext;		//	直前見出し行先頭から現在位置までに {chPrev, chNext} を満たす箇所が何箇所あるか？
+    //int		m_indexOfPrevNext;		//	直前見出し行先頭から現在位置までに {chPrev, chNext} を満たす箇所が何箇所あるか？
 };
 
 class DocWidget;
