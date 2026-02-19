@@ -35,6 +35,10 @@ MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, DocWidget *docWid
 	connect(this, &MarkdownPreview::cursorPositionChanged, this, &MarkdownPreview::onCurPosChanged);
 	connect(document(), &QTextDocument::contentsChange, this, &MarkdownPreview::onContentsChanged);
 }
+void MarkdownPreview::inputMethodEvent(QInputMethodEvent *event) {
+	m_isComposing = !event->preeditString().isEmpty();
+	QTextEdit::inputMethodEvent(event);
+}
 void MarkdownPreview::onCurPosChanged() {
 	QTextCursor cursor = this->textCursor();
 	m_lastCurBlockText = cursor.block().text();
@@ -52,6 +56,7 @@ void MarkdownPreview::onCurPosChanged() {
 }
 void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int charsAdded) {
 	if( m_processing ) return;
+	if (m_isComposing) return;		//	IME変換中
 	m_processing = true;
 	if( charsAdded > 0 ) {
 		QTextCursor cursor = this->textCursor();

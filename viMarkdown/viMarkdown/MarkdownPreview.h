@@ -74,6 +74,8 @@ protected:
     void	dropEvent(QDropEvent *e) override {
     	e->ignore();
     }
+    void	inputMethodEvent(QInputMethodEvent *event) override;
+
     void	onCurPosChanged();
     void	onContentsChanged(int position, int charsRemoved, int charsAdded);
     //bool	isTableLine(const QString&);
@@ -99,6 +101,7 @@ private:
     bool	m_hasBody = false;		//	do_body() で空文以外を出力したか？
     bool	m_inComment = false;
     bool	m_processing = false;	//	再入防止用フラグ
+	bool	m_isComposing = false;			// IME入力中フラグ
 	QString	m_lastCurBlockText;				//	事前のカーソルブロックテキスト
     //QString	m_bodyText;
     QStringList	m_bodyList;
