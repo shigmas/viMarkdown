@@ -1692,9 +1692,13 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
 			}
 		}
 	}
-	//	行カーソル描画
+	//	カーソル描画
 	QRect rect = cursorRect();
-	//QPen pen(Qt::red, 1); // 赤色、太さ1px
+	if( !hasFocus() ) {
+		p.setPen(Qt::gray);
+		p.setBrush(Qt::gray);
+		p.drawRect(rect);
+	}
 	QPen pen(hasFocus() ? g.m_activeLnColor: g.m_inactiveLnColor, 1); // 色、太さ1px
 	if( !hasFocus() ) pen.setStyle(Qt::DashLine);	//	破線
 	p.setPen(pen);
@@ -1843,7 +1847,8 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 	QTextBlock block = doc->findBlock(pos);
 	//	Undone: block が見出し・リスト・連番・チェックボックス行で、pos が接頭辞内にある場合対応
 	static QRegularExpression re("^(#+ *| *- (\\[[ xX]\\] )?| *\\d+[\\.)] |^(> )+)");
-	if( block.text().indexOf(re) == 0 ) {
+	bool prefix = false;
+	if( (prefix = block.text().indexOf(re) == 0) ) {
 		auto buf = block.text();
 		buf.remove(re);
 		int offset = block.text().size() - buf.size();
@@ -1857,7 +1862,7 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			ch = doc->characterAt(++pos);
 	}
 	if( ch == QChar::ParagraphSeparator ) {
-		if( !block.next().isValid() || block.next().text().isEmpty() )
+		if( prefix || !block.next().isValid() || block.next().text().isEmpty() )
 			ch = QChar();
 		else
 			ch = u' ';
