@@ -31,6 +31,63 @@
 ## 基本操作
 ## Markdown仕様
 ## viMarkdown独自仕様
+### 罫線ブロック
+- 罫線文字を使用し、下図のようなクラス図・UIモックアップ等を容易に作図可能
+```keisen background-color: #f0f0f0;
+    ┏━━━━━━┓        ┌──────┐
+    ┃    User    ┃───→│    Data    │
+    ┗━━━━━━┛        └──────┘
+```
+- Tool > KeisenMode (Shift + F5)：罫線モード ON/OFF
+- 罫線モード：Ctrl + 上下左右矢印キー で罫線描画
+- 罫線モード：Ctrl Shift + 上下左右矢印キー で罫線消去
+- Tool > ThinKeisen：細罫線
+- Tool > ThickKeisen：太罫線
+- 編集位置右に罫線がある場合、罫線位置を維持（罫線保護機能）
+```keisen background-color: #f0f0f0;
+    ┏━━━━━━┓
+    ┃            ┃
+    ┗━━━━━━┛
+           │
+           │枠内に文字入力しても
+           │右側罫線がずれない（罫線保護）
+           ↓
+    ┏━━━━━━┓
+    ┃abcあ       ┃
+    ┗━━━━━━┛
+```
+- 罫線枠内でテキストを左右寄せ・センタリング
+```keisen background-color: #f0f0f0;
+    ┏━━━━━━┓
+    ┃abcあ       ┃
+    ┗━━━━━━┛
+           │
+           │右寄せ (Edit > Format > AlignRight)
+           ↓
+    ┏━━━━━━┓
+    ┃       abcあ┃
+    ┗━━━━━━┛
+```
+- Tool > OpenPrev (Shift + F7)：カーソル行の上に罫線を接続した行作成
+- Tool > OpenNext (F7)：カーソル行の下に罫線を接続した行作成
+```keisen background-color: #f0f0f0;
+    ┏━━━━━━━━┓
+    ┃  MarkdownEdit  ┃
+    ┠────────┨← この行にカーソルがある場合
+    ┠────────┨
+    ┗━━━━━━━━┛
+           │
+           │Tool > OpenNext (F7)
+           ↓
+    ┏━━━━━━━━┓
+    ┃  MarkdownEdit  ┃
+    ┠────────┨
+    ┃                ┃← 罫線を考慮した行が作成される
+    ┠────────┨
+    ┗━━━━━━━━┛
+```
+### CSVブロック
+### プレビュー内編集
 ## FAQ
 ```CSV
 , Questions & Answers
