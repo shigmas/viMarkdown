@@ -642,7 +642,7 @@ bool isMatch(const QString& buf, int ix, QChar ch) {
 	while( ix < buf.size() && (buf[ix] == u'*' || buf[ix] == u'_' || buf[ix] == u'~') ) ++ix;
 	return ix < buf.size() && buf[ix] == ch;
 }
-int indexOf(const QString& buf, int ix, QChar ch) {
+int indexOf(const QString& buf, int ix, QChar ch, bool isNextBlankLine) {
 	while( ix < buf.size() ) {
 		if( !(buf[ix] == u'*' || buf[ix] == u'_' || buf[ix] == u'~') ) {
 			if( buf[ix] == ch )
@@ -650,12 +650,12 @@ int indexOf(const QString& buf, int ix, QChar ch) {
 		}
 		++ix;
 	}
+	if( !isNextBlankLine && ch == u' ' ) return ix;
 	return -1;
 }
 int MarkdownEditor::findPosition(const PosContext &context) {
 	static QRegularExpression re("^(#+ *| *- )[\\*_~]*");
 	QTextBlock block = document()->findBlockByNumber(context.m_srcHBlockNum);
-	//const QChar prev = context.m_chPrev;
 	const QChar ch = context.m_charAt;
 	int nth = context.m_nth;
 	int ix = 0;
@@ -664,18 +664,6 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 		QString buf = block.text();
 		buf.remove(re);				//	/# /, /- / などを削除
 		offset = block.text().size() - buf.size();
-#if 0
-		if( prev == QChar() ) {		//	行頭の場合
-			if( buf.startsWith(next) ) {
-				if( --nth == 0 ) {
-					//ix = offset;
-					break;
-				}
-			}
-			block = block.next();
-			ix = 0;
-		} else
-#endif
 		if( ch == QChar() ) {		//	行末の場合
 			int i = buf.size();
 			while( --i >= 0 && buf[i] == u' ' ) {}
@@ -686,7 +674,8 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			block = block.next();
 			//ix = 0;		//	ほんとは必要ないけど、なんとなく書いておく
 		} else {		//	非行末の場合
-			while( (ix = indexOf(buf, ix, ch)) >= 0 ) {
+			bool isNextBlankLine = !block.next().isValid() || block.next().text().isEmpty();
+			while( (ix = indexOf(buf, ix, ch, isNextBlankLine)) >= 0 ) {
 				if( --nth == 0 ) break;
 				++ix;
 			}
