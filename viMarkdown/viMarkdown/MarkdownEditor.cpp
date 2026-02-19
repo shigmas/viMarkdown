@@ -1879,8 +1879,9 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 	int count = 1;
 	while( block.isValid() ) {
 		if( pc.m_charAt == QChar() ) {		//	行末の場合
-			if( !block.next().isValid() ) break;	//	最終行の場合
-			if( block.text().endsWith("  ") || block.next().text().isEmpty() ) {
+			if( !block.next().isValid() ) break;		//	最終行の場合
+			prefix = block.text().indexOf(re) == 0;		//	# 等の接頭辞？あり
+			if( prefix || block.text().endsWith("  ") || block.next().text().isEmpty() ) {
 				if( block.next().position() >= pos )
 					break;
 				++count;
