@@ -32,6 +32,7 @@ MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, DocWidget *docWid
 	setCursorWidth(2);
 	//QString css = "hr { height: 1px; border: none; background-color: #333; margin-top: 10px; margin-bottom: 10px; }";
 	//document()->setDefaultStyleSheet(css);
+	//setStyleSheet("QTextEdit { caret-color: red; }");
 	connect(this, &MarkdownPreview::cursorPositionChanged, this, &MarkdownPreview::onCurPosChanged);
 	connect(document(), &QTextDocument::contentsChange, this, &MarkdownPreview::onContentsChanged);
 }
@@ -897,7 +898,7 @@ int MarkdownPreview::prvToSrcHeading(int blockNum) {
 #endif
 int MarkdownPreview::findPosition(const PosContext &context) {
 	QTextBlock block = document()->findBlockByNumber(context.m_prvHBlockNum);
-	const QChar ch = context.m_charAt;
+	const QChar ch = context.m_anchorChar;
 	int nth = context.m_nth;
 	int ix = 0;
 	while( block.isValid() ) {
@@ -925,7 +926,7 @@ int MarkdownPreview::findPosition(const PosContext &context) {
 void MarkdownPreview::setCursorByContext(const PosContext &context) {
 	if( m_processing ) return;		//	再入禁止
 	qDebug() << "MarkdownPreview::setCursorByContext(context)";
-	qDebug() << ".charAt = " << context.m_charAt << ", nth = " << context.m_nth;
+	qDebug() << ".charAt = " << context.m_anchorChar << ", nth = " << context.m_nth;
 	m_processing = true;
 	int pos = findPosition(context);
 	if( pos >= 0 ) {
@@ -941,7 +942,7 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 	QTextBlock block = doc->findBlock(pos);
 	//pc.m_chPrev = pos != block.position() ? doc->characterAt(pos-1) : QChar();
 	auto chat = doc->characterAt(pos);
-	pc.m_charAt = chat != QChar::ParagraphSeparator ? chat : QChar();
+	pc.m_anchorChar = chat != QChar::ParagraphSeparator ? chat : QChar();
 	while( block.userState() != US_HEADING ) {		//	直前の見出し行を探す
 		if( !block.previous().isValid() )
 			break;
@@ -950,7 +951,7 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 	pc.m_prvHBlockNum = block.blockNumber();
 	//	pos の {chPrev, chNext} が見出し行先頭から何番目かを計算
 	int count = 1;
-	if( pc.m_charAt == QChar() ) {		//	行末の場合
+	if( pc.m_anchorChar == QChar() ) {		//	行末の場合
 		while( block.isValid() ) {
 			if( block.position() + block.text().length() >= pos )
 				break;
@@ -962,7 +963,7 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 			QChar chAt = doc->characterAt(i);
 			if (chAt == QChar::ParagraphSeparator)		//	改行記号の場合
 				chAt = QChar();
-			if( chAt == pc.m_charAt )
+			if( chAt == pc.m_anchorChar )
 				++count;
 		}
 	}

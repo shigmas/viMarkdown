@@ -23,13 +23,11 @@ QT_END_NAMESPACE
 #define	KEY_CSV_ZEBRA_COLOR2		u"CSVZebraColor2"
 
 struct PosContext {
-    //QChar	m_chPrev;				//	現在位置直前文字、行頭の場合は QChar()
-    //QChar	m_chNext;				//	現在位置文字、行末の場合は QChar()
-    QChar	m_charAt;				//	現在位置文字、行末の場合は QChar()
-    int		m_nth;            		//	直前見出しからの m_charAt 出現回数 (1 org. 自分自身も含むため)
+    QChar	m_anchorChar;			//	アンカー文字、行末の場合は QChar() かもしれない
+    int		m_nth;            		//	直前見出しからの m_anchorChar 出現回数 (1 org. 自分自身も含むため)
+    int		m_offset = 0;			//	m_anchorChar からカーソル位置までの距離（0以上）
     int		m_srcHBlockNum = 0;		//	直前見出し行ブロック番号（0 org.）、見つからない場合は 0
     int		m_prvHBlockNum = 0;		//	直前見出し行ブロック番号（0 org.）、見つからない場合は 0
-    //int		m_indexOfPrevNext;		//	直前見出し行先頭から現在位置までに {chPrev, chNext} を満たす箇所が何箇所あるか？
 };
 
 class DocWidget;

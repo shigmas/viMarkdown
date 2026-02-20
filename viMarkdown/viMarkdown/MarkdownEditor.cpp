@@ -367,6 +367,9 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, DocWidget* docWidge
 	this->setFont(font);
 	setCursorWidth(2);
 	setLineSpacing(150);
+	//QPalette pal = palette();
+	//pal.setColor(QPalette::TextCursor, Qt::red);
+	//setPalette(pal);
 	if( m_mainWindow->isKeisenMode() )
 		onKeisenMode(true);
 	setViewportMargins(lnAreaWidth(), 0, 0, 0);
@@ -656,7 +659,7 @@ int indexOf(const QString& buf, int ix, QChar ch, bool isNextBlankLine) {
 int MarkdownEditor::findPosition(const PosContext &context) {
 	static QRegularExpression re("^(#+ *| *- )[\\*_~]*");
 	QTextBlock block = document()->findBlockByNumber(context.m_srcHBlockNum);
-	const QChar ch = context.m_charAt;
+	const QChar ch = context.m_anchorChar;
 	int nth = context.m_nth;
 	int ix = 0;
 	int offset = 0;
@@ -692,7 +695,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 void MarkdownEditor::setCursorByContext(const PosContext &context) {
 	if( m_processing ) return;		//	再入禁止
 	qDebug() << "MarkdownEditor::setCursorByContext(context)";
-	qDebug() << ".charAt = " << context.m_charAt << ", nth = " << context.m_nth;
+	qDebug() << ".charAt = " << context.m_anchorChar << ", nth = " << context.m_nth;
 	m_processing = true;
 	int pos = findPosition(context);
 	if( pos >= 0 ) {
@@ -1868,7 +1871,7 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			ch = u' ';
 	}
 	//	Undone: "  +\n" の場合も改行扱い
-	pc.m_charAt = ch;
+	pc.m_anchorChar = ch;
 	while( !block.text().startsWith(u'#') ) {		//	直前の見出し行を探す
 		if( !block.previous().isValid() )
 			break;
@@ -1878,7 +1881,7 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 	//	pos の charAt が見出し行先頭から何番目かを計算
 	int count = 1;
 	while( block.isValid() ) {
-		if( pc.m_charAt == QChar() ) {		//	行末の場合
+		if( pc.m_anchorChar == QChar() ) {		//	行末の場合
 			if( !block.next().isValid() ) break;		//	最終行の場合
 			prefix = block.text().indexOf(re) == 0;		//	# 等の接頭辞？あり
 			if( prefix || block.text().endsWith("  ") || block.next().text().isEmpty() ) {
