@@ -3,6 +3,9 @@
 [[wikilink]]
 
 
+[copytodist.bat](file://c:/src/vs2026qt6/copytodist.bat)  
+[copytodist.bat](file:///c:/src/vs2026qt6/copytodist.bat)  
+[test keisen](file://test_keisen.md)  
 [test keisen](test_keisen.md)  
 本稿内ジャンプ [テキスト](#見出し)  
 [あいうえお](test_LINK)  
