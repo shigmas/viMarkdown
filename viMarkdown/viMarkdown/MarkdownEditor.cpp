@@ -688,7 +688,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 		}
 	}
 	if( block.isValid() ) {
-		return block.position() + ix + offset;
+		return block.position() + ix + offset + context.m_offset;
 	} else
 		return -1;
 }
@@ -1860,16 +1860,27 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 		}
 	}
 	auto ch = doc->characterAt(pos);
+	while( pos > 0 && ch == QChar::ParagraphSeparator ) {
+		pc.m_offset += 1;
+		ch = doc->characterAt(--pos);
+		while( pos > 0 && doc->characterAt(pos-1) != u'\\' &&
+			(ch == u'*' || ch == u'_' || ch == u'~') )
+		{
+			ch = doc->characterAt(--pos);
+		}
+	}
 	if( pos > 0 && doc->characterAt(pos-1) != u'\\' ) {
 		while( ch == u'*' || ch == u'_' || ch == u'~' )
 			ch = doc->characterAt(++pos);
 	}
+#if 0
 	if( ch == QChar::ParagraphSeparator ) {
 		if( prefix || !block.next().isValid() || block.next().text().isEmpty() )
 			ch = QChar();
 		else
 			ch = u' ';
 	}
+#endif
 	//	Undone: "  +\n" の場合も改行扱い
 	pc.m_anchorChar = ch;
 	while( !block.text().startsWith(u'#') ) {		//	直前の見出し行を探す

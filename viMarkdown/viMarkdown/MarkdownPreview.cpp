@@ -919,7 +919,7 @@ int MarkdownPreview::findPosition(const PosContext &context) {
 		}
 	}
 	if( block.isValid() ) {
-		return block.position() + ix;
+		return block.position() + ix + context.m_offset;
 	} else
 		return -1;
 }
@@ -942,7 +942,12 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 	QTextBlock block = doc->findBlock(pos);
 	//pc.m_chPrev = pos != block.position() ? doc->characterAt(pos-1) : QChar();
 	auto chat = doc->characterAt(pos);
+	while( pos > 0 && chat == QChar::ParagraphSeparator ) {
+		pc.m_offset += 1;
+		chat = doc->characterAt(--pos);
+	}
 	pc.m_anchorChar = chat != QChar::ParagraphSeparator ? chat : QChar();
+	//pc.m_anchorChar = chat;
 	while( block.userState() != US_HEADING ) {		//	直前の見出し行を探す
 		if( !block.previous().isValid() )
 			break;
