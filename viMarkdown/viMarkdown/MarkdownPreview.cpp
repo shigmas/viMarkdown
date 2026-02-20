@@ -926,7 +926,7 @@ int MarkdownPreview::findPosition(const PosContext &context) {
 void MarkdownPreview::setCursorByContext(const PosContext &context) {
 	if( m_processing ) return;		//	再入禁止
 	qDebug() << "MarkdownPreview::setCursorByContext(context)";
-	qDebug() << ".charAt = " << context.m_anchorChar << ", nth = " << context.m_nth;
+	qDebug() << ".ancharChar = " << context.m_anchorChar << ", nth = " << context.m_nth << ", offset = " << context.m_offset;
 	m_processing = true;
 	int pos = findPosition(context);
 	if( pos >= 0 ) {

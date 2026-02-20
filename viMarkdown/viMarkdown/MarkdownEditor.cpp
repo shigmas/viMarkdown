@@ -695,7 +695,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 void MarkdownEditor::setCursorByContext(const PosContext &context) {
 	if( m_processing ) return;		//	再入禁止
 	qDebug() << "MarkdownEditor::setCursorByContext(context)";
-	qDebug() << ".charAt = " << context.m_anchorChar << ", nth = " << context.m_nth;
+	qDebug() << ".ancharChar = " << context.m_anchorChar << ", nth = " << context.m_nth << ", offset = " << context.m_offset;
 	m_processing = true;
 	int pos = findPosition(context);
 	if( pos >= 0 ) {
@@ -1859,12 +1859,21 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			pos = block.position() + offset;
 		}
 	}
+	const QString text = block.text();
+	if( text.endsWith("  ") && pos - block.position() >= text.size() - 2 && pos > 0 ) {	//	行末 "  " にカーソルがある場合
+		int ix = --pos - block.position();
+		while( ix > 0 && text[ix] == u' ' ) {
+			--ix;
+			--pos;
+		}
+		pc.m_offset += 1;
+	}
 	auto ch = doc->characterAt(pos);
 	while( pos > 0 && ch == QChar::ParagraphSeparator ) {
 		pc.m_offset += 1;
 		ch = doc->characterAt(--pos);
 		while( pos > 0 && doc->characterAt(pos-1) != u'\\' &&
-			(ch == u'*' || ch == u'_' || ch == u'~') )
+			(/*ch == u' ' ||*/ ch == u'*' || ch == u'_' || ch == u'~') )
 		{
 			ch = doc->characterAt(--pos);
 		}
