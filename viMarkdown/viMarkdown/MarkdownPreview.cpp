@@ -59,6 +59,30 @@ void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int char
 	if( m_processing ) return;
 	if (m_isComposing) return;		//	IME変換中
 	m_processing = true;
+	QTextCursor cursor = this->textCursor();
+	const QString &text = cursor.block().text();		//	編集後ブロックテキスト
+	int cpos = cursor.position();
+	int bpos = position - cursor.block().position();	//	ブロック先頭からの編集位置
+	QString strAdded = text.mid(bpos, charsAdded);
+	QString strRemoved = m_lastCurBlockText.mid(bpos, charsRemoved);
+	charsRemoved = qMin(charsRemoved, strRemoved.size());		//	行末を超えている場合対応
+	charsAdded = qMin(charsAdded, strAdded.size());		//	行末を超えている場合対応
+	int c = 0;
+	while(charsAdded-c-1 > 0 && charsRemoved-c-1 > 0 &&
+		strAdded[charsAdded-c-1] == strRemoved[charsRemoved-c-1] )
+	{
+		++c;	//	末尾共通部分
+	}
+	charsRemoved -= c;
+	charsAdded -= c;
+	//	先頭共通部分削除
+	while( !strAdded.isEmpty() && !strRemoved.isEmpty() && strAdded[0] == strRemoved[0] ) {
+		--charsRemoved;
+		--charsAdded;
+		++position;
+		strAdded = strAdded.mid(1);
+		strRemoved = strRemoved.mid(1);
+	}
 	if( charsAdded > 0 ) {
 		QTextCursor cursor = this->textCursor();
 		int pos0 = cursor.position();
