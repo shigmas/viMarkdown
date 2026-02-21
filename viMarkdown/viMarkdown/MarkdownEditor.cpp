@@ -645,15 +645,25 @@ bool isMatch(const QString& buf, int ix, QChar ch) {
 	while( ix < buf.size() && (buf[ix] == u'*' || buf[ix] == u'_' || buf[ix] == u'~') ) ++ix;
 	return ix < buf.size() && buf[ix] == ch;
 }
-int indexOf(const QString& buf, int ix, QChar ch, bool isNextBlankLine) {
+int indexOf(bool &inComment, const QString& buf, int ix, QChar ch, bool isNextBlankLine) {
 	while( ix < buf.size() ) {
-		if( !(buf[ix] == u'*' || buf[ix] == u'_' || buf[ix] == u'~') ) {
-			if( buf[ix] == ch )
-				return ix;
+		if( inComment ) {
+			if( (ix = buf.indexOf("-->", ix)) < 0 ) {
+				return -1;
+			}
+			inComment = false;
+		} else if( QStringView(buf).mid(ix).startsWith(u"<!--") ) {
+			inComment = true;
+			ix += 4;
+		} else {
+			if( !(buf[ix] == u'*' || buf[ix] == u'_' || buf[ix] == u'~') ) {
+				if( buf[ix] == ch )
+					return ix;
+			}
+			++ix;
 		}
-		++ix;
 	}
-	if( !isNextBlankLine && ch == u' ' ) return ix;
+	if( !inComment && !isNextBlankLine && ch == u' ' ) return ix;
 	return -1;
 }
 int MarkdownEditor::findPosition(const PosContext &context) {
@@ -663,6 +673,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 	int nth = context.m_nth;
 	int ix = 0;
 	int offset = 0;
+	bool inComment = false;
 	while( block.isValid() ) {
 		QString buf = block.text();
 		buf.remove(re);				//	/# /, /- / などを削除
@@ -678,7 +689,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			//ix = 0;		//	ほんとは必要ないけど、なんとなく書いておく
 		} else {		//	非行末の場合
 			bool isNextBlankLine = !block.next().isValid() || block.next().text().isEmpty();
-			while( (ix = indexOf(buf, ix, ch, isNextBlankLine)) >= 0 ) {
+			while( (ix = indexOf(inComment, buf, ix, ch, isNextBlankLine)) >= 0 ) {
 				if( --nth == 0 ) break;
 				++ix;
 			}

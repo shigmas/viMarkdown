@@ -22,6 +22,15 @@ QT_END_NAMESPACE
 #define	KEY_CSV_ZEBRA_COLOR1		u"CSVZebraColor1"
 #define	KEY_CSV_ZEBRA_COLOR2		u"CSVZebraColor2"
 
+//	行フラグ
+enum {
+	US_DEFAULT = -1,	//	本文など
+	//US_BODY = 0,		//	本文など
+	US_HEADING,			//	タイトル・見出し
+	US_CHECKBOX,		//	チェックボックス
+	US_IN_COMMENT,		//	行頭がコメントブロック（<!-- -->）の中
+};
+
 struct PosContext {
     QChar	m_anchorChar;			//	アンカー文字、行末の場合は QChar() かもしれない
     int		m_nth;            		//	直前見出しからの m_anchorChar 出現回数 (1 org. 自分自身も含むため)

@@ -375,7 +375,7 @@ int indexOfComment(QStringView buf, int start) {
 	return -1;
 }
 
-void MarkdownPreview::setMarkdown(QTextDocument *doc) {
+void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソースドキュメント
 	m_headingList.clear();
 	m_docWidget->m_srcHeadingBlocks.clear();
 	m_docWidget->m_prvHeadingBlocks.clear();
