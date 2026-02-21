@@ -590,6 +590,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(mdEditor, &MarkdownEditor::changeFontSize, this, &MainWindow::onChangeEditorFontSize);
 	connect(mdEditor, &MarkdownEditor::posContextChanged, this, &MainWindow::onSrcPosContextChanged);
 	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
+	connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onSrcCursorPosChanged);
 	//QTextEdit *mdEditor = new QTextEdit(splitter);
 	mdEditor->setPlaceholderText("\nここにMarkdownを入力\n"
 									"\nマークダウン書式：\n# タイトル\n## 大見出し\n### 中見出し\n"
@@ -1847,6 +1848,25 @@ void MainWindow::onModificationChanged(bool b) {
 	QString title = docWidget->m_title;
 	if( b ) title += " *";
 	ui->tabWidget->setTabText(ui->tabWidget->currentIndex(), title);
+}
+void MainWindow::onSrcCursorPosChanged() {
+}
+void MainWindow::syncEditorPreviewScroll() {
+	DocWidget *docWidget = getCurDocWidget();
+	if (docWidget == nullptr) return;
+	QRect srcRect = docWidget->m_editor->cursorRect();
+    int srcCursorY = srcRect.y(); // ビューポート上端からの相対座標
+    int srcViewHeight = docWidget->m_editor->viewport()->height();
+    double ratio = (srcViewHeight > 0) ? (double)srcCursorY / srcViewHeight : 0.0;
+    //
+    QRect dstRect = docWidget->m_preview->cursorRect(); 
+    int dstCursorY = dstRect.y(); // 現在のビューポート上端からの相対Y
+    int dstViewHeight = docWidget->m_preview->viewport()->height();
+    int targetYInView = dstViewHeight * ratio;
+    int currentScroll = docWidget->m_preview->verticalScrollBar()->value();
+    int diff = dstCursorY - targetYInView;
+    if( abs(diff) >= 16 )
+	    docWidget->m_preview->verticalScrollBar()->setValue(currentScroll + diff);	//	スクロール
 }
 void MainWindow::onMDTextChanged() {
 	//qDebug() << "MainWindow::onMDTextChanged()";

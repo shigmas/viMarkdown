@@ -47,5 +47,6 @@
         <file>images/arrow_back_48.png</file>
         <file>images/arrow_forward_48.png</file>
         <file>images/favorite_48.png</file>
+        <file>images/help_48.png</file>
     </qresource>
 </RCC>

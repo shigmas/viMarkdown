@@ -151,6 +151,8 @@ protected:
     void	onRedoTriggered();
     void	onPrvPosContextChanged(const struct PosContext&);
     void	onSrcPosContextChanged(const struct PosContext&);
+    void	onSrcCursorPosChanged();
+    void	syncEditorPreviewScroll();
 
     void	onAction_New();
     void	onAction_NewTab();

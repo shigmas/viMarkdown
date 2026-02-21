@@ -165,6 +165,7 @@
      <string>&amp;Other</string>
     </property>
     <addaction name="action_Settings"/>
+    <addaction name="action_Help"/>
     <addaction name="action_AboutViMarkdown"/>
     <addaction name="separator"/>
    </widget>
@@ -887,6 +888,18 @@
    </property>
    <property name="shortcut">
     <string>F4</string>
+   </property>
+  </action>
+  <action name="action_Help">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/help_48.png</normaloff>:/MainWindow/images/help_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Help</string>
+   </property>
+   <property name="shortcut">
+    <string>F1</string>
    </property>
   </action>
  </widget>
