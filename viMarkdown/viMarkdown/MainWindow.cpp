@@ -1,4 +1,5 @@
-﻿#include <vector>
+﻿#include <windows.h>
+#include <vector>
 #include <qsplitter.h>
 #include <qplaintextedit>
 #include <qtextedit>
@@ -966,12 +967,14 @@ void MainWindow::onAction_AddThisFavorite() {
 }
 void MainWindow::onAction_Help() {
 	qDebug() << "appDir = " << QCoreApplication::applicationDirPath();
-	QDir dir = QCoreApplication::applicationDirPath();		//	viMarkdown/viMarkdown/x64/Debug
-#ifdef	_DEBUG
-	dir.cdUp();			//	viMarkdown/viMarkdown/x64
-	dir.cdUp();			//	viMarkdown/viMarkdown
-	dir.cdUp();			//	viMarkdown
-#endif
+	QDir dir = QCoreApplication::applicationDirPath();		//	viMarkdown/viMarkdown/x64/Debug or Release
+//#ifdef	_DEBUG
+	if( IsDebuggerPresent() ) {
+		dir.cdUp();			//	viMarkdown/viMarkdown/x64
+		dir.cdUp();			//	viMarkdown/viMarkdown
+		dir.cdUp();			//	viMarkdown
+	}
+//#endif
 	dir.cd("docs/ja");
 	qDebug() << "helpdir = " << dir.path();
 	do_open("", dir.path() + "/help.md");
