@@ -1,0 +1,20 @@
+name: Bug Report
+description: バグ報告はこちら
+title: "[Bug] "
+labels: ["bug"]
+
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: 概要
+      description: 何が起きましたか？
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 再現手順
+    validations:
+      required: true
