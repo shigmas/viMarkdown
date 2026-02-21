@@ -1,4 +1,5 @@
 #include <QSettings>
+#include <QLineEdit>
 #include "ReplaceDialog.h"
 #include "MainWindow.h"
 
@@ -13,6 +14,7 @@ ReplaceDialog::ReplaceDialog(const QStringList &hist, const QStringList &replace
 	//QStringList history = settings.value("search/history").toStringList();
     ui->searchCB->clear();
 	ui->searchCB->addItems(hist);
+	ui->searchCB->lineEdit()->selectAll();
     ui->replaceCB->clear();
 	ui->replaceCB->addItems(replace);
 	ui->ignoreCase->setCheckState(g.m_ignoreCase ? Qt::Checked : Qt::Unchecked);
