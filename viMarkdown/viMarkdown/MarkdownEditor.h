@@ -58,6 +58,7 @@ public:
     struct PosContext	contextAt(int pos);		//	pos 位置情報を構築
     //int		srcToPrvHeading(int blockNum);		//	エディタの見出し行番号（0 org.）をプレビューのそれに変換
     int		findPosition(const struct PosContext&);
+    void	syncEditorPreviewCursor();
 
 signals:
     void	tab_pressed();
@@ -86,7 +87,7 @@ protected:
 #endif
     void	updateLnArea(const QRect &rect, int dy);
     void	onContentsChanged(int position, int charsRemoved, int charsAdded);
-    void	onCurPosChanged();
+    void	onCursorPosChanged();
     int		nColumn(const QString&) const;		//	表示カラム数を計算
     void	setLineSpacing(int percentage);
 

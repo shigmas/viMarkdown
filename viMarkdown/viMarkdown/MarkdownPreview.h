@@ -50,6 +50,7 @@ signals:
     void	textInserted(QString);
     void	textRemoved(int);
     void	BS_pressed();		//	BackSpace
+    void	Del_pressed();		//	Delete
     void	undo_triggered();
     void	redo_triggered();
     void	posContextChanged(const PosContext &context);

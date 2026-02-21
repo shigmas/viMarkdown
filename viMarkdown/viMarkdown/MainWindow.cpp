@@ -607,6 +607,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(markdownPreview, &MarkdownPreview::textInserted, this, &MainWindow::onTextInsertedAtPreview);
 	connect(markdownPreview, &MarkdownPreview::textRemoved, this, &MainWindow::onTextRemovedAtPreview);
 	connect(markdownPreview, &MarkdownPreview::BS_pressed, this, &MainWindow::onBS_pressed);
+	connect(markdownPreview, &MarkdownPreview::Del_pressed, this, &MainWindow::onDel_pressed);
 	connect(markdownPreview, &MarkdownPreview::undo_triggered, this, &MainWindow::onUndoTriggered);
 	connect(markdownPreview, &MarkdownPreview::redo_triggered, this, &MainWindow::onRedoTriggered);
 	//connect(markdownPreview, &MarkdownPreview::cursorPositionChanged, this, &MainWindow::onPreviewCurPosChanged);
@@ -828,6 +829,13 @@ void MainWindow::onTextRemovedAtPreview(int charsRemoved) {
 	cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, charsRemoved);
 	cursor.removeSelectedText();
 	//syncPreviewCursorWithEditor();
+}
+void MainWindow::onDel_pressed() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	QTextCursor cursor = docWidget->m_editor->textCursor();
+	cursor.deleteChar();
+	docWidget->m_editor->setTextCursor(cursor);
 }
 void MainWindow::onBS_pressed() {
 	DocWidget *docWidget = getCurDocWidget();
@@ -1855,6 +1863,7 @@ void MainWindow::onMDTextChanged() {
 	docWidget->m_preview->setMarkdown(mdEditor->document());
 	docWidget->m_preview->verticalScrollBar()->setValue(scrollPos);
 	docWidget->m_editor->setProcessing(false);
+	docWidget->m_editor->syncEditorPreviewCursor();
 	//syncPreviewCursorWithEditor();
 #else
 	auto &htmlComvertor = docWidget->m_htmlComvertor;

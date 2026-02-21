@@ -375,7 +375,7 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, DocWidget* docWidge
 	setViewportMargins(lnAreaWidth(), 0, 0, 0);
 	m_lnAreaWidget = new LnAreaWidget(this);
 	connect(this, &MarkdownEditor::updateRequest, this, &MarkdownEditor::updateLnArea);
-	connect(this, &MarkdownEditor::cursorPositionChanged, this, &MarkdownEditor::onCurPosChanged);
+	connect(this, &MarkdownEditor::cursorPositionChanged, this, &MarkdownEditor::onCursorPosChanged);
 	connect(document(), &QTextDocument::contentsChange, this, &MarkdownEditor::onContentsChanged);
 }
 void MarkdownEditor::rehighlight() { m_highlighter->rehighlight(); }
@@ -1562,23 +1562,28 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 	}
 	//rehighlight();
 	highlightSearchText(m_mainWindow->srcText());
+	//syncEditorPreviewCursor();
 	m_processing = false;
 }
-void MarkdownEditor::onCurPosChanged() {
-	QTextCursor cursor = this->textCursor();
-	m_lastCurBlockText = cursor.block().text();
-	viewport()->update();
-	//	Undone: プレビューの対応段落（見出し行＋本文）を画面内に
 	//	カーソル同期処理
+void MarkdownEditor::syncEditorPreviewCursor() {
 	if( m_processing || m_mainWindow->isCursorCyncing() ) return;		//	再入禁止
 	m_processing = true;
-	m_mainWindow->setCursorCyncing();
+	m_mainWindow->setCursorCyncing();	//	同期処理中フラグON
 	//QTextCursor cursor = this->textCursor();
+	QTextCursor cursor = this->textCursor();
 	auto context = contextAt(cursor.position());
 	context.m_prvHBlockNum = m_docWidget->srcToPrvHeading(context.m_srcHBlockNum);
 	emit posContextChanged(context);
 	m_mainWindow->setCursorCyncing(false);
 	m_processing = false;
+}
+void MarkdownEditor::onCursorPosChanged() {
+	QTextCursor cursor = this->textCursor();
+	m_lastCurBlockText = cursor.block().text();
+	viewport()->update();
+	//	Undone: プレビューの対応段落（見出し行＋本文）を画面内に
+	syncEditorPreviewCursor();
 }
 int MarkdownEditor::getVisualLineNumber(const QTextCursor &cursor) const {
 	int visualLineNum = 0;
