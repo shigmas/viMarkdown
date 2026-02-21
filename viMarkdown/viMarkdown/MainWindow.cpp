@@ -377,6 +377,7 @@ void MainWindow::setup_connections() {
 	connect(m_watcher, &QFileSystemWatcher::fileChanged, this, &MainWindow::onFileChanged);
 	connect(ui->action_Exit, &QAction::triggered, this, &MainWindow::onAction_Exit);
 	connect(ui->action_Settings, &QAction::triggered, this, &MainWindow::onAction_Settings);
+	connect(ui->action_Help, &QAction::triggered, this, &MainWindow::onAction_Help);
 	connect(ui->action_AddThisFavorite, &QAction::triggered, this, &MainWindow::onAction_AddThisFavorite);
 	connect(ui->action_New, &QAction::triggered, this, &MainWindow::onAction_New);
 	connect(ui->action_NewTab, &QAction::triggered, this, &MainWindow::onAction_NewTab);
@@ -962,6 +963,18 @@ void MainWindow::onAction_AddThisFavorite() {
 	favoriteFilePaths.push_front(docWidget->m_fullPath);
 	while( favoriteFilePaths.size() > N_FAVORITE_FILES ) favoriteFilePaths.pop_back();
 	settings.setValue(KEY_FAVORITE_FILES, favoriteFilePaths);
+}
+void MainWindow::onAction_Help() {
+	qDebug() << "appDir = " << QCoreApplication::applicationDirPath();
+	QDir dir = QCoreApplication::applicationDirPath();		//	viMarkdown/viMarkdown/x64/Debug
+#ifdef	_DEBUG
+	dir.cdUp();			//	viMarkdown/viMarkdown/x64
+	dir.cdUp();			//	viMarkdown/viMarkdown
+	dir.cdUp();			//	viMarkdown
+#endif
+	dir.cd("docs/ja");
+	qDebug() << "helpdir = " << dir.path();
+	do_open("", dir.path() + "/help.md");
 }
 void MainWindow::onAction_Settings() {
 	Global g0 = g;

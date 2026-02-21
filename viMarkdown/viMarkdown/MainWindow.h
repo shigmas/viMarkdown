@@ -206,6 +206,7 @@ protected:
     void	onAction_About();
     void	onAction_AddThisFavorite();
     void	onAction_Settings();
+    void	onAction_Help();
     void	onAction_Exit();
 
     void	onAboutToShow_RecentFiles();
