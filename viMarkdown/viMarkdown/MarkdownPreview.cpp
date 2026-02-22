@@ -91,6 +91,8 @@ void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int char
 		cursor.setPosition(position);
 		QTextBlock block = cursor.block();
 		QString addedStr = block.text().mid(cursor.position() - block.position(), charsAdded);
+		addedStr.replace("\\", "\\\\").replace("#", "\\#").replace("-", "\\-").replace("<", "\\<")
+				.replace("`", "\\`").replace("[", "\\[").replace("*", "\\*").replace("_", "\\_").replace("~", "\\~");
 		if( addedStr.isEmpty() && charsRemoved == 0 && charsAdded == 1 )		//	改行が入力された場合
 			addedStr = "  \n";
 		qDebug() << "addedStr = " << addedStr;
