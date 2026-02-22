@@ -805,7 +805,7 @@ SPR# 状 P Open Close ver     Type  概要
 0803 ● d 02/23            │ToDo│F9 で tag jump（リンク先オープン）
 0804 ◎ C 02/23 02/23 01114│問題│アウトラインバーアイテム選択：エディタでは当該見出し行が最上部に表示されるが、プレビューも同様にすべき
 0805 ◎ C 02/23 02/23 01114│ToDo│MarkdownPreview::setMarkdown()：テーブル行フラグ設定
-0806 ● C 02/23            │ToDo│
+0806 ◎ C 02/23 02/23 01114│ToDo│MarkdownEditor::contextAt()：テーブル内、行頭 | の場合は、その次の文字の情報を格納
 0807 ● C 02/23            │ToDo│
 0808 ● C 02/23            │ToDo│
 0809 ● C 02/23            │ToDo│
