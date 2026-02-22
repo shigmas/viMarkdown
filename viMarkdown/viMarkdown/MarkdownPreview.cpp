@@ -153,10 +153,11 @@ bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign) {
 	while( ix < sv.size() ) {
 		char aln = 0;
 		while( ix < sv.size() && sv[ix] == u' ' ) ++ix;		//	空白スキップ
-		if( ix < sv.size() && sv[ix] == u':' ) aln = ALIGHN_LEFT;
+		if( ix < sv.size() && sv[ix] == u':' ) { aln = ALIGHN_LEFT; ++ix; }
 		while( ix < sv.size() && sv[ix] != u'|' ) {		//	次の'|' までループ
-			if( ix+1 < sv.size() && sv[ix] == u'\\' ) ix += 2;
-			else ++ix;
+			if( ix+1 < sv.size() && sv[ix] == u'\\' ) ++ix;
+			if( sv[ix] != u'-' && sv[ix] != u' ' ) return false;
+			++ix;
 		}
 		int i = ix - 1;
 		while( i >= 0 && sv[i] == u' ' ) --i;		//	空白スキップ

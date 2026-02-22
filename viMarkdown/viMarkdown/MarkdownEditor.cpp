@@ -17,6 +17,10 @@ extern bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes
 extern bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens);
 extern bool isTableLine(const QString& lnStr, QStringList &tableTokens);
 extern bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign);
+bool isTableHyphenLine(const QString& lnStr) {
+	std::vector<char> tableAlign;
+	return isTableHyphenLine(lnStr, tableAlign);
+}
 
 enum CharType {
 	Type_Other,
@@ -1874,8 +1878,12 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			}
 			block = block.next();
 		}
-	} else if( block.userState() == US_TABLE ) {
-		if( doc->characterAt(pos) == u'|' ) {
+	} else {
+		if( block.userState() == US_TABLE && isTableHyphenLine(block.text()) ) {
+			block = block.next();
+			pos = block.position();
+		}
+		if( block.userState() == US_TABLE && doc->characterAt(pos) == u'|' ) {
 			if( pos == block.position() )
 				++pos;
 			else {
