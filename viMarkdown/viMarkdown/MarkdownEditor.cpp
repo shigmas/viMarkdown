@@ -1862,17 +1862,28 @@ void MarkdownEditor::dropEvent(QDropEvent *e) {
 }
 PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext を構築
 	PosContext pc;
+	int offset = 0;
 	auto* doc = document();
 	QTextBlock block = doc->findBlock(pos);
+	if( block.userState() == US_IN_COMMENT ) {
+		while( block.isValid() ) {
+			if( (offset = block.text().indexOf("-->")) >= 0 ) {
+				offset += (int)strlen("-->");
+				pos = block.position() + offset;
+				break;
+			}
+			block = block.next();
+		}
+	}
 	//	Undone: block が見出し・リスト・連番・チェックボックス行で、pos が接頭辞内にある場合対応
 	static QRegularExpression re("^(#+ *| *- (\\[[ xX]\\] )?| *\\d+[\\.)] |(> )+)");
 	bool prefix = false;
-	if( (prefix = block.text().indexOf(re) == 0) ) {
+	if( offset ==0 && (prefix = block.text().indexOf(re) == 0) ) {
 		auto buf = block.text();
 		buf.remove(re);
-		int offset = block.text().size() - buf.size();
-		if( pos < block.position() + offset ) {	//	接頭辞内にある
-			pos = block.position() + offset;
+		int ofst = block.text().size() - buf.size();
+		if( pos < block.position() + ofst ) {	//	接頭辞内にある
+			pos = block.position() + ofst;
 		}
 	}
 	const QString text = block.text();
@@ -1928,10 +1939,10 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 		} else {
 			QString buf = block.text();
 			buf.remove(re);		//	接頭辞（#, - 等）部分を削除
-			int offset = block.text().size() - buf.size();
+			int ofst = block.text().size() - buf.size();
 			int ix = 0;
 			while( (ix = buf.indexOf(ch, ix)) >= 0 ) {
-				if( block.position() + ix + offset >= pos )
+				if( block.position() + ix + ofst >= pos )
 					break;
 				++count;
 				++ix;

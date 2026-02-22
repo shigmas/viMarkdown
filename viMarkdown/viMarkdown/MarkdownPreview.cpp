@@ -407,8 +407,11 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 	m_inComment = false;
 	for(m_ln = 0; m_ln < m_lst.size(); ++m_ln) {
 		bool bComment = false;		//	コメントがあった
-		QString buf = m_lst[m_ln];
+		//QString buf = m_lst[m_ln];
+		QTextBlock block = doc->findBlockByNumber(m_ln);
+		QString buf = block.text();
 		if( !m_inComment ) {
+			block.setUserState(US_DEFAULT);
 			int start = 0, ix;
 			while( (ix = indexOfComment(buf, start)) >= 0 ) {
 				bComment = true;
@@ -422,6 +425,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 			}
 			if( bComment && buf.isEmpty() ) continue;
 		} else {
+			block.setUserState(US_IN_COMMENT);
 			int ix = buf.indexOf("-->");
 			if( ix < 0 ) continue;
 			m_inComment = false;
