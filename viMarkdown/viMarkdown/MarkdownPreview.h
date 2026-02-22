@@ -88,7 +88,7 @@ protected:
     void	do_quote(QTextCursor&, QString buf);
     void	do_code(QTextCursor&);
     void	do_code_keisen(QTextCursor&);
-    void	do_CSV(QTextCursor&);
+    void	do_CSV(QTextBlock&, QTextCursor&);
 
 private:
     int		m_ln;

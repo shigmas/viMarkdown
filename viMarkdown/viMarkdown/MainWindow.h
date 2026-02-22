@@ -29,6 +29,7 @@ enum {
 	US_HEADING,			//	タイトル・見出し
 	US_CHECKBOX,		//	チェックボックス
 	US_IN_COMMENT,		//	行頭がコメントブロック（<!-- -->）の中
+	US_CSV_BLOCK,		//	CSVブロック内 ```CSV ～ ```
 };
 
 struct PosContext {

@@ -24,6 +24,8 @@ enum {
 	ALIGHN_LEFT = 1, ALIGHN_RIGHT = 2, ALIGHN_CENTER = ALIGHN_LEFT| ALIGHN_RIGHT,
 };
 
+const QChar endOfCell(0xfdd0);		//	セル終端文字
+
 MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, DocWidget *docWidget, QWidget* parent)
 	: m_mainWindow(mainWindow), m_docWidget(docWidget), QTextEdit(parent)
 {
@@ -449,7 +451,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 			do_quote(cursor, buf);
 		} else if( buf.startsWith("```CSV", Qt::CaseInsensitive) ) {
 			do_body(cursor);
-			do_CSV(cursor);
+			do_CSV(block, cursor);
 		} else if( buf.startsWith("```keisen", Qt::CaseInsensitive) ) {
 			do_body(cursor);
 			do_code_keisen(cursor);
@@ -609,7 +611,8 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 	fields.append(currentField.trimmed());
 	return inQuotes;
 }
-void MarkdownPreview::do_CSV(QTextCursor& cursor) {
+void MarkdownPreview::do_CSV(QTextBlock& block, QTextCursor& cursor) {		//	cursor: プレビューカーソル
+	block.setUserState(US_CSV_BLOCK);
 	QList<QStringList> ll;
 	int max_clmn = 0;
 	bool inQuotes = false;
@@ -617,12 +620,16 @@ void MarkdownPreview::do_CSV(QTextCursor& cursor) {
 	bool commented = false;		//	行単位でコメントアウトされた
 	QStringList fields;
 	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
+		block = block.next();
+		block.setUserState(US_CSV_BLOCK);
 		inQuotes = parseCsvLine(fields, m_lst[m_ln], inQuotes, inComment, commented);
 		if( !inQuotes && !inComment && !commented ) {
 			max_clmn = qMax(max_clmn, fields.size());
 			ll.push_back(fields);
 		}
 	}
+	if( block.isValid() )
+		block.setUserState(US_CSV_BLOCK);
 	if( ll.isEmpty() ) return;
 	static QRegularExpression re("^[+-]?(\\d+\\.\\d*|\\d+|\\.\\d+)$");
 	cursor.beginEditBlock();
@@ -978,9 +985,14 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 	QTextBlock block = doc->findBlock(pos);
 	//pc.m_chPrev = pos != block.position() ? doc->characterAt(pos-1) : QChar();
 	auto chat = doc->characterAt(pos);
-	while( pos > 0 && chat == QChar::ParagraphSeparator ) {
+	if( chat == endOfCell ) {
 		pc.m_offset += 1;
 		chat = doc->characterAt(--pos);
+	} else {
+		while( pos > 0 && chat == QChar::ParagraphSeparator ) {
+			pc.m_offset += 1;
+			chat = doc->characterAt(--pos);
+		}
 	}
 	pc.m_anchorChar = chat != QChar::ParagraphSeparator ? chat : QChar();
 	//pc.m_anchorChar = chat;
