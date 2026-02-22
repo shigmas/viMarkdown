@@ -66,6 +66,8 @@ void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int char
 	int cpos = cursor.position();
 	int bpos = position - cursor.block().position();	//	ブロック先頭からの編集位置
 	QString strAdded = text.mid(bpos, charsAdded);
+	if( charsAdded != 0 && strAdded.isEmpty() && document()->characterAt(position) == QChar::ParagraphSeparator )
+		strAdded = "  \n";
 	QString strRemoved = m_lastCurBlockText.mid(bpos, charsRemoved);
 	charsRemoved = qMin(charsRemoved, strRemoved.size());		//	行末を超えている場合対応
 	charsAdded = qMin(charsAdded, strAdded.size());		//	行末を超えている場合対応
