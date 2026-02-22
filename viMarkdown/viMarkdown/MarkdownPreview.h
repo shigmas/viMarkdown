@@ -87,7 +87,7 @@ protected:
 
     void	do_body(QTextCursor&);
     void	do_body_sub(QTextCursor&, const QString&);
-    void	do_table(QTextCursor&);
+    void	do_table(QTextBlock&, QTextCursor&);
     bool	do_underlineHeading(QTextCursor&, QString buf);
     void	do_heading(QTextCursor&, QString buf);
     void	do_heading_sub(QTextCursor&, QString buf, int h, int ln);

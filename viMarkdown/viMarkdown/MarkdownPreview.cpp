@@ -464,7 +464,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 			do_code(cursor);
 		} else if( isTableLine(buf, m_tableTokens) && m_ln + 1 < m_lst.size() && isTableHyphenLine(m_lst[m_ln+1], m_tableAlign) ) {
 			do_body(cursor);
-			do_table(cursor);
+			do_table(block, cursor);
 		} else {
 			if( isUnderlineHeading(buf) && do_underlineHeading(cursor, buf) )
 				continue;		//	アンダーライン見出しだった場合
@@ -475,11 +475,17 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 	cursor.endEditBlock();
 	m_processing = false;
 }
-void MarkdownPreview::do_table(QTextCursor& cursor) {
+void MarkdownPreview::do_table(QTextBlock& block, QTextCursor& cursor) {
 	QString buf = m_lst[m_ln] + "\n" + m_lst[m_ln+1] /*+ "\n"*/;
+	block.setUserState(US_TABLE);
+	block = block.next();
+	block.setUserState(US_TABLE);
+	block = block.next();
 	m_ln += 2;
 	while( m_ln < m_lst.size() && isTableLine(m_lst[m_ln], m_tableTokens) ) {
 		buf += "\n" + m_lst[m_ln++];
+		block.setUserState(US_TABLE);
+		block = block.next();
 	}
 	cursor.insertMarkdown(buf);
 	cursor.movePosition(QTextCursor::Left);
