@@ -247,6 +247,10 @@ QString anchorToFullPath(const QString &anchor) {
 	fullPath = QDir::cleanPath(QDir::current().absoluteFilePath(fullPath));
 	return fullPath;
 }
+void MarkdownPreview::mousePressEvent(QMouseEvent *me) {
+	m_processing = true;
+	QTextEdit::mousePressEvent(me);
+}
 void MarkdownPreview::mouseMoveEvent(QMouseEvent *me) {
 	QString anchor = anchorAt(me->pos());
 	QString name = splitName(anchor);
@@ -258,6 +262,7 @@ void MarkdownPreview::mouseMoveEvent(QMouseEvent *me) {
 	} else {	// それ以外なら通常（I型または矢印）
 		viewport()->setCursor(Qt::IBeamCursor);
 	}
+	QTextEdit::mouseMoveEvent(me);
 }
 void MarkdownPreview::mouseReleaseEvent(QMouseEvent *me)
 {
@@ -281,6 +286,7 @@ void MarkdownPreview::mouseReleaseEvent(QMouseEvent *me)
 		}
 	}
 	QTextEdit::mouseReleaseEvent(me);
+	m_processing = false;
 }
 void MarkdownPreview::paintEvent(QPaintEvent *e) {
 	QTextEdit::paintEvent(e); // 先にテキストを普通に描画
