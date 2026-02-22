@@ -1875,8 +1875,14 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			block = block.next();
 		}
 	} else if( block.userState() == US_TABLE ) {
-		if( pos == block.position() && doc->characterAt(pos) == u'|' )
-			++pos;
+		if( doc->characterAt(pos) == u'|' ) {
+			if( pos == block.position() )
+				++pos;
+			else {
+				--pos;
+				pc.m_offset += 1;
+			}
+		}
 	}
 	//	Undone: block が見出し・リスト・連番・チェックボックス行で、pos が接頭辞内にある場合対応
 	static QRegularExpression re("^(#+ *| *- (\\[[ xX]\\] )?| *\\d+[\\.)] |(> )+)");
