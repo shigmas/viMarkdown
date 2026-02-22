@@ -797,6 +797,6 @@ SPR# 状 P Open Close ver     Type  概要
 0795 ● C 02/22            │問題│F1 で開く help.md は編集禁止にした方がよい？
 0796 ◎ C 02/22 02/22 01113│ToDo│りりースビルドでもデバッガ実行の場合はプロジェクト内 help.md を開く方がよい
 0797 ◎ C 02/22 02/22 01114│ToDo│MarkdownPreview::setMarkdown()：コメント行フラグ設定
-0798 ● C 02/23            │ToDo│MarkdownPreview::setMarkdown()：CSV行フラグ設定
+0798 ◎ C 02/23 02/23 01114│ToDo│MarkdownPreview::setMarkdown()：CSV行フラグ設定
 0799 ● C 02/23            │ToDo│
 0800 ● C 02/23            │ToDo│
