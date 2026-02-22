@@ -2,6 +2,7 @@
 #include <vector>
 #include <QTextCursor>
 #include <QDragEnterEvent>
+#include <QScrollBar>
 #include "C:\Qt\6.10.0\msvc2022_64\include\QtWidgets\qtextedit.h"
 
 class MainWindow;
@@ -44,6 +45,13 @@ public:
     int		prvToSrcHeading(int blockNum);		//	プレビューの見出し行番号（0 org.）をエディタのそれに変換
 	void	setCursorByContext(const struct PosContext &context);
     int		findPosition(const struct PosContext&);
+#if 0
+	void	scrollToTop(int lineNum) {		//	lineNum: 0 org.
+		verticalScrollBar()->setValue(lineNum);
+	}
+	void	scrollToTop(const QTextCursor &cursor);
+	int getVisualLineNumber(const QTextCursor &cursor) const;
+#endif
 
 signals:
     // クリックされたブロック番号を通知するシグナル

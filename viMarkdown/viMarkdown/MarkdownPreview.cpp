@@ -924,6 +924,17 @@ void MarkdownPreview::scrollToBlock(int blockIndex) {
 #endif
 }
 #if 0
+void MarkdownPreview::scrollToTop(const QTextCursor &cursor) {
+	int visualLineNum = getVisualLineNumber(cursor);
+	this->scrollToTop(visualLineNum);
+}
+int MarkdownPreview::getVisualLineNumber(const QTextCursor &cursor) const {
+	//int visualLineNum = 0;
+	QTextBlock targetBlock = cursor.block();
+	return targetBlock.blockNumber();
+}
+#endif
+#if 0
 int MarkdownPreview::prvToSrcHeading(int blockNum) {
 	assert( m_docWidget->m_prvHeadingBlocks.size() == m_docWidget->m_srcHeadingBlocks.size() );
 #if 1

@@ -1779,6 +1779,9 @@ void MainWindow::onTreeCurrentItemChanged(QTreeWidgetItem *current, QTreeWidgetI
 			mdEditor->setTextCursor(cursor);
 			//mdEditor->ensureCursorVisible();
 			mdEditor->scrollToTop(cursor);
+			//cursor = docWidget->m_preview->textCursor();
+			//docWidget->m_preview->scrollToTop(cursor);
+			syncEditorPreviewScroll();
 		}
 	}
 }
