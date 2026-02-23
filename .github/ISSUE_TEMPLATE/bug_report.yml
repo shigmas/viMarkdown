@@ -7,7 +7,7 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: 概要
+      label: 問題詳細
       description: 何が起きましたか？
     validations:
       required: true

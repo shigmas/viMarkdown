@@ -809,4 +809,14 @@ SPR# 状 P Open Close ver     Type  概要
 0807 ◎ C 02/23 02/23 01114│ToDo│MarkdownEditor::contextAt()：テーブル内、非行頭 | の場合は、その直前文字情報を格納
 0808 ◎ C 02/23 02/23 01114│ToDo│MarkdownEditor::contextAt()：テーブル内 & --|-- 行にいる場合は、次行文字情報を格納
 0809 ◎ C 02/23 02/23 01114│問題│isTableHyphenLine()：ハイフンラインではない表ヘッダ行でも true を返してしまう
-0810 ● C 02/23            │ToDo│
+0810 ● C 02/23            │問題│MarkdownEditor::contextAt()：テーブル内、| の次の行末にいる場合は、その直前文字情報を格納した方がよい
+0811 ● C 02/23            │ToDo│
+0812 ● C 02/23            │ToDo│
+0813 ● C 02/23            │ToDo│
+0814 ● C 02/23            │ToDo│
+0815 ● C 02/23            │ToDo│
+0816 ● C 02/23            │ToDo│
+0817 ● C 02/23            │ToDo│
+0818 ● C 02/23            │ToDo│
+0819 ● C 02/23            │ToDo│
+0820 ● C 02/23            │ToDo│
