@@ -1423,7 +1423,11 @@ void MainWindow::onAction_Checkbox() {
 			}
 		} else {
 			if( !isCheckboxBlock(currentBlock) ) {
-				cursor.insertText("- [ ] ");
+				if( currentBlock.text().startsWith("- ") ) {
+					cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, 2);
+					cursor.insertText("[ ] ");
+				} else
+					cursor.insertText("- [ ] ");
 			}
 		}
 		currentBlock = currentBlock.next();		// 次のブロックへ

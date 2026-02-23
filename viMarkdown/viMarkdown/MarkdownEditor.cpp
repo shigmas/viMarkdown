@@ -1916,9 +1916,11 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 	while( pos > 0 && ch == QChar::ParagraphSeparator ) {
 		pc.m_offset += 1;
 		ch = doc->characterAt(--pos);
-		while( pos > 0 && doc->characterAt(pos-1) != u'\\' &&
-			(/*ch == u' ' ||*/ ch == u'*' || ch == u'_' || ch == u'~') )
-		{
+		if( pos > 0 && doc->characterAt(pos-1) != u'\\' && block.userState() == US_TABLE && ch == u'|' ) {
+			//pc.m_offset += 1;
+			ch = doc->characterAt(--pos);
+		}
+		while( pos > 0 && doc->characterAt(pos-1) != u'\\' && (ch == u'*' || ch == u'_' || ch == u'~' ) ) {
 			ch = doc->characterAt(--pos);
 		}
 	}
