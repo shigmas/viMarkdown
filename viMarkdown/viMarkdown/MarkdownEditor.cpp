@@ -1882,6 +1882,19 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			}
 			block = block.next();
 		}
+	} else if( block.userState() == US_CSV_BLOCK ) {
+		if( pos > 0 && doc->characterAt(pos) == u',' ) {
+			--pos,
+			pc.m_offset += 1;
+		}
+		while( pos > 0 && doc->characterAt(pos) == u' ' ) {
+			--pos,
+			pc.m_offset += 1;
+		}
+		if( pos > 0 && doc->characterAt(pos) == u'"' ) {
+			--pos,
+			pc.m_offset += 1;
+		}
 	} else if( block.userState() == US_KEISEN_BLOCK ) {
 		while( block.userState() == US_KEISEN_BLOCK ) {
 			if( !block.next().isValid() ) {
