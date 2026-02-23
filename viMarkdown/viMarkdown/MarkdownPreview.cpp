@@ -249,8 +249,8 @@ QString anchorToFullPath(const QString &anchor) {
 		if( fullPath.indexOf(re) == 0 )
 			fullPath = fullPath.mid(strlen("/"));
 	}
-	//if( !anchor.endsWith(".md", Qt::CaseInsensitive) && !QFile::exists(anchor) )
-	//	fullPath += ".md";
+	if( !anchor.endsWith(".md", Qt::CaseInsensitive) && !QFile::exists(anchor) )
+		fullPath += ".md";
 	fullPath = QDir::cleanPath(QDir::current().absoluteFilePath(fullPath));
 	return fullPath;
 }

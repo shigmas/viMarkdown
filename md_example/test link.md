@@ -9,10 +9,10 @@
 [test keisen](test_keisen.md)  
 本稿内ジャンプ [テキスト](#見出し)  
 [あいうえお](test_LINK)  
-[見出し２へジャンプ](test_LINK.md#見出し２)  
-[見出し３へジャンプ](test_LINK.md#見出し３)  
-[空白あり](test LINK.md)  
-[空白あり](test LINK.md#見出し)  
+外部ファイル .md 無し [見出し２へジャンプ](test_LINK#見出し２)  
+外部ファイル [見出し３へジャンプ](test_LINK.md#見出し３)  
+本文書 [空白あり](test LINK)  
+本文書 [空白あり#見出し](test LINK.md#見出し)  
 　
 
 ```CSV
@@ -28,5 +28,9 @@ bold, abc**bold**xyz
 
 
 ## 見出し
+
+## 見出し２
+
+## 見出し３
 
 
