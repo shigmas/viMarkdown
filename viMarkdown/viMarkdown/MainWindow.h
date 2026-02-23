@@ -30,6 +30,7 @@ enum {
 	US_CHECKBOX,		//	チェックボックス
 	US_IN_COMMENT,		//	行頭がコメントブロック（<!-- -->）の中
 	US_CSV_BLOCK,		//	CSVブロック内 ```CSV ～ ```
+	US_KEISEN_BLOCK,	//	罫線ブロック内 ```keisen ～ ```
 	US_TABLE,			//	マークダウンテーブル内
 };
 

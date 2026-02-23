@@ -95,7 +95,7 @@ protected:
     void	do_numlist(QTextCursor&, QString buf);
     void	do_quote(QTextCursor&, QString buf);
     void	do_code(QTextCursor&);
-    void	do_code_keisen(QTextCursor&);
+    void	do_keisen_block(QTextBlock&, QTextCursor&);
     void	do_CSV(QTextBlock&, QTextCursor&);
 
 private:

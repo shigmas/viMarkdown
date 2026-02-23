@@ -459,7 +459,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 			do_CSV(block, cursor);
 		} else if( buf.startsWith("```keisen", Qt::CaseInsensitive) ) {
 			do_body(cursor);
-			do_code_keisen(cursor);
+			do_keisen_block(block, cursor);
 		} else if( buf.startsWith("```") ) {
 			do_body(cursor);
 			do_code(cursor);
@@ -682,7 +682,8 @@ void MarkdownPreview::do_CSV(QTextBlock& block, QTextCursor& cursor) {		//	curso
 	cursor.endEditBlock();
 	//++m_ln;
 }
-void MarkdownPreview::do_code_keisen(QTextCursor& cursor) {
+void MarkdownPreview::do_keisen_block(QTextBlock& block, QTextCursor& cursor) {
+	block.setUserState(US_KEISEN_BLOCK);
 	QFont font;
 	QStringView buf = m_lst[m_ln].mid(QString("```keisen").size());
 	QColor bgcolor("#c0f0c0");
@@ -713,8 +714,12 @@ void MarkdownPreview::do_code_keisen(QTextCursor& cursor) {
 	int width = 100;
 	int m_ln0 = m_ln + 1;
 	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
+		block = block.next();
+		block.setUserState(US_KEISEN_BLOCK);
 		width = qMax(width, fm.horizontalAdvance(m_lst[m_ln])+10);
 	}
+	block = block.next();
+	block.setUserState(US_KEISEN_BLOCK);
 	int lineHeight = fm.lineSpacing(); // 行の間隔（高さ＋行間）
 	
 	int height = lineHeight * (m_ln - m_ln0);
