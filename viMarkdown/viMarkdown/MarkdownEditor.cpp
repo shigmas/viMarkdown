@@ -679,6 +679,10 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 	int offset = 0;
 	bool inComment = false;
 	while( block.isValid() ) {
+		if( block.userState() == US_KEISEN_BLOCK ) {
+			block = block.next();
+			continue;
+		}
 		QString buf = block.text();
 		buf.remove(re);				//	/# /, /- / などを削除
 		offset = block.text().size() - buf.size();
@@ -1878,6 +1882,15 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			}
 			block = block.next();
 		}
+	} else if( block.userState() == US_KEISEN_BLOCK ) {
+		while( block.userState() == US_KEISEN_BLOCK ) {
+			if( !block.next().isValid() ) {
+				pos = block.position() + block.text().size();
+				break;
+			}
+			block = block.next();
+			pos = block.position();
+		}
 	} else {
 		if( block.userState() == US_TABLE && isTableHyphenLine(block.text()) ) {
 			block = block.next();
@@ -1947,6 +1960,10 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 	//	pos の charAt が見出し行先頭から何番目かを計算
 	int count = 1;
 	while( block.isValid() ) {
+		if( block.userState() == US_KEISEN_BLOCK ) {
+			block = block.next();
+			continue;
+		}
 		if( pc.m_anchorChar == QChar() ) {		//	行末の場合
 			if( !block.next().isValid() ) break;		//	最終行の場合
 			prefix = block.text().indexOf(re) == 0;		//	# 等の接頭辞？あり
