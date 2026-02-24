@@ -11,6 +11,10 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("VisualSoftLab");
     QCoreApplication::setApplicationName("viMarkdown");
     MainWindow window;
+    if (app.arguments().count() > 1) {
+        QString filePath = app.arguments().at(1);
+        window.do_open("", filePath);
+    }
     window.show();
     return app.exec();
 }

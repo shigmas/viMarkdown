@@ -87,6 +87,7 @@ public:
     const QString	srcText() const { return m_srcText; }
     void	setCursorCyncing(bool b = true) const { m_isCursorSyncing = b; }
     bool	isCursorCyncing() const { return m_isCursorSyncing; }
+    bool	do_open(const QString& title, const QString& fullPath, const QString name = QString());
 
 protected:
     void	load_settings();
@@ -111,7 +112,6 @@ protected:
     void	insertInline(const QString&);
     QTreeWidgetItem* findTopLevelItemByFullPath(const QString& title, const QString fullPath);
     void	removeTopLevelItem(DocWidget*);
-    bool	do_open(const QString& title, const QString& fullPath, const QString name = QString());
     void	do_load(const QString&);
     void	close_empty_doc();
     void	do_save(bool fDialog = false);
