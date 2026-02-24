@@ -16,5 +16,5 @@ int main(int argc, char *argv[])
         window.do_open("", filePath);
     }
     window.show();
-    return app.exec();
+    return app.exec(); 
 }
