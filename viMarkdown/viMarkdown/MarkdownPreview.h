@@ -43,7 +43,7 @@ public:
     void	scrollToBlock(int blockIndex);
     struct PosContext	contextAt(int pos);
     int		prvToSrcHeading(int blockNum);		//	プレビューの見出し行番号（0 org.）をエディタのそれに変換
-	void	setCursorByContext(const struct PosContext &context);
+	void	setCursorByContext(const struct PosContext &context, const PosContext &acontext);
     int		findPosition(const struct PosContext&);
 #if 0
 	void	scrollToTop(int lineNum) {		//	lineNum: 0 org.
@@ -63,7 +63,7 @@ signals:
     void	Del_pressed();		//	Delete
     void	undo_triggered();
     void	redo_triggered();
-    void	posContextChanged(const PosContext &context);
+    void	posContextChanged(const PosContext &context, const PosContext &acontext);
 
 protected:
     void	keyPressEvent(QKeyEvent *e) override;

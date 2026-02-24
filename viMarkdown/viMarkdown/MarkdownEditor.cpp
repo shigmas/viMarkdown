@@ -732,16 +732,28 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 	} else
 		return -1;
 }
-void MarkdownEditor::setCursorByContext(const PosContext &context) {
+void MarkdownEditor::setCursorByContext(const PosContext &context, const PosContext &acontext) {
 	if( m_processing ) return;		//	再入禁止
 	qDebug() << "MarkdownEditor::setCursorByContext(context)";
 	qDebug() << ".ancharChar = " << context.m_anchorChar << ", nth = " << context.m_nth << ", offset = " << context.m_offset;
 	m_processing = true;
-	int pos = findPosition(context);
-	if( pos >= 0 ) {
-		QTextCursor cursor = textCursor();
-		cursor.setPosition(pos);
-		setTextCursor(cursor);
+	QTextCursor cursor = textCursor();
+	if( acontext.m_nth == 0 ) {		//	非選択状態
+		int pos = findPosition(context);
+		if( pos >= 0 ) {
+			cursor.setPosition(pos);
+			setTextCursor(cursor);
+		}
+	} else {
+		int pos = findPosition(acontext);
+		if( pos >= 0 ) {
+			cursor.setPosition(pos);
+			pos = findPosition(context);
+			if (pos >= 0) {
+				cursor.setPosition(pos, QTextCursor::KeepAnchor);
+				setTextCursor(cursor);
+			}
+		}
 	}
 	m_processing = false;
 }
@@ -1614,7 +1626,10 @@ void MarkdownEditor::syncEditorCursorFromPreview() {
 	QTextCursor cursor = this->textCursor();
 	auto context = contextAt(cursor.position());
 	context.m_prvHBlockNum = m_docWidget->srcToPrvHeading(context.m_srcHBlockNum);
-	emit posContextChanged(context);
+	PosContext ancontext;
+	if( cursor.hasSelection() )
+		ancontext = contextAt(cursor.anchor());
+	emit posContextChanged(context, ancontext);
 	m_mainWindow->setCursorCyncing(false);
 	m_processing = false;
 }

@@ -54,7 +54,7 @@ public:
 	void	moveToPrevWord(QTextCursor& cursor, bool select);
 	void	moveToStartOfWord(QTextCursor& cursor, bool select);
 	void	moveToEndOfWord(QTextCursor& cursor, bool select);
-	void	setCursorByContext(const struct PosContext &context);
+	void	setCursorByContext(const struct PosContext &context, const PosContext &acontext);
     struct PosContext	contextAt(int pos);		//	pos 位置情報を構築
     //int		srcToPrvHeading(int blockNum);		//	エディタの見出し行番号（0 org.）をプレビューのそれに変換
     int		findPosition(const struct PosContext&);
@@ -65,7 +65,7 @@ signals:
     void	esc_pressed();
     //void	title_clicked(const QString title, const QStrin);
     void	changeFontSize(int delta);
-    void	posContextChanged(const PosContext &context);
+    void	posContextChanged(const PosContext &context, const PosContext &acontext);
 
 protected:
     void	keyPressEvent(QKeyEvent *e) override;

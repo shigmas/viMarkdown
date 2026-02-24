@@ -36,7 +36,7 @@ enum {
 
 struct PosContext {
     QChar	m_anchorChar;			//	アンカー文字、行末の場合は QChar() かもしれない
-    int		m_nth;            		//	直前見出しからの m_anchorChar 出現回数 (1 org. 自分自身も含むため)
+    int		m_nth = 0;				//	直前見出しからの m_anchorChar 出現回数 (1 org. 自分自身も含むため)、0 for 無効
     int		m_offset = 0;			//	m_anchorChar からカーソル位置までの距離（0以上）
     int		m_srcHBlockNum = 0;		//	直前見出し行ブロック番号（0 org.）、見つからない場合は 0
     int		m_prvHBlockNum = 0;		//	直前見出し行ブロック番号（0 org.）、見つからない場合は 0
@@ -152,8 +152,8 @@ protected:
     void	onSettingsChanged();
     void	onUndoTriggered();
     void	onRedoTriggered();
-    void	onPrvPosContextChanged(const struct PosContext&);
-    void	onSrcPosContextChanged(const struct PosContext&);
+    void	onPrvPosContextChanged(const struct PosContext&, const PosContext &acontext);
+    void	onSrcPosContextChanged(const struct PosContext&, const PosContext &acontext);
     void	onSrcCursorPosChanged();
     void	syncEditorPreviewScroll();
 

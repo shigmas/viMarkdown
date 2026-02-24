@@ -714,17 +714,17 @@ void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソ
 }
 #endif
 //	エディタ → プレビュー カーソル位置同期
-void MainWindow::onSrcPosContextChanged(const PosContext& context) {
+void MainWindow::onSrcPosContextChanged(const PosContext& context, const PosContext &acontext) {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	docWidget->m_preview->setCursorByContext(context);
+	docWidget->m_preview->setCursorByContext(context, acontext);
 }
 //	プレビュー → エディタ カーソル位置同期
-void MainWindow::onPrvPosContextChanged(const PosContext& context) {
+void MainWindow::onPrvPosContextChanged(const PosContext& context, const PosContext &acontext) {
 	//qDebug() << "onPrvPosContextChanged()";
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	docWidget->m_editor->setCursorByContext(context);
+	docWidget->m_editor->setCursorByContext(context, acontext);
 }
 //	ビューワ → エディタ カーソル位置同期
 void MainWindow::onPreviewCurPosChanged() {		//	MarkdownPreview でカーソルが移動した
@@ -1919,7 +1919,7 @@ void MainWindow::onMDTextChanged() {
 	docWidget->m_preview->setMarkdown(mdEditor->document());
 	docWidget->m_preview->verticalScrollBar()->setValue(scrollPos);
 	docWidget->m_editor->setProcessing(false);
-	docWidget->m_editor->syncEditorPreviewCursor();
+	docWidget->m_editor->syncEditorCursorFromPreview();
 	//syncPreviewCursorWithEditor();
 #else
 	auto &htmlComvertor = docWidget->m_htmlComvertor;
