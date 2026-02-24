@@ -22,6 +22,16 @@ QT_END_NAMESPACE
 #define	KEY_CSV_ZEBRA_COLOR1		u"CSVZebraColor1"
 #define	KEY_CSV_ZEBRA_COLOR2		u"CSVZebraColor2"
 
+enum CharType {
+	Type_Other,
+	Type_Space,
+	Type_NewLine,
+	Type_Kanji,
+	Type_Hiragana,
+	Type_Katakana,
+	Type_HalfAlphaNum,
+	Type_FullSymbol
+};
 //	行フラグ
 enum {
 	US_DEFAULT = -1,	//	本文など

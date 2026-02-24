@@ -26,6 +26,8 @@ enum {
 
 const QChar endOfCell(0xfdd0);		//	セル終端文字
 
+extern CharType getCharType(QChar ch);
+
 MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, DocWidget *docWidget, QWidget* parent)
 	: m_mainWindow(mainWindow), m_docWidget(docWidget), QTextEdit(parent)
 {
@@ -223,15 +225,61 @@ void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 		emit Del_pressed();
 		return;
 	}
-	if (e->key() == Qt::Key_Z && (e->modifiers() & Qt::ControlModifier) != 0) {
-		emit undo_triggered();
-		return;
-	}
-	if (e->key() == Qt::Key_Y && (e->modifiers() & Qt::ControlModifier) != 0) {
-		emit redo_triggered();
-		return;
+	if( (e->modifiers() & Qt::ControlModifier) != 0 ) {		//	Ctrl +
+		bool shift = (e->modifiers() & Qt::ShiftModifier) != 0;
+		if (e->key() == Qt::Key_Right ) {
+			QTextCursor cursor = textCursor();
+			moveToNextWord(cursor, shift);
+			setTextCursor(cursor);
+			return;
+		} else if (e->key() == Qt::Key_Left) {
+			QTextCursor cursor = textCursor();
+			moveToPrevWord(cursor, shift);
+			setTextCursor(cursor);
+			return;
+		}
+		if (e->key() == Qt::Key_Z ) {
+			emit undo_triggered();
+			return;
+		}
+		if (e->key() == Qt::Key_Y ) {
+			emit redo_triggered();
+			return;
+		}
 	}
 	QTextEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
+}
+void MarkdownPreview::moveToNextWord(QTextCursor& cursor, bool shift) {
+	int pos = cursor.position();
+	QTextDocument *doc = document();
+	if (pos >= doc->characterCount() - 1) return;
+	CharType startType = getCharType(doc->characterAt(pos));
+	// 同じ種別の間は進む
+	while (pos < doc->characterCount() - 1 && getCharType(doc->characterAt(pos)) == startType) {
+		pos++;
+	}
+	if( startType != Type_Space ) {
+		while (pos < doc->characterCount() - 1 && getCharType(doc->characterAt(pos)) == Type_Space) {
+			pos++;
+		}
+	}
+	cursor.setPosition(pos, shift ? QTextCursor::KeepAnchor : QTextCursor::MoveAnchor);
+}
+void MarkdownPreview::moveToPrevWord(QTextCursor& cursor, bool shift) {
+	int pos = cursor.position();
+	QTextDocument *doc = document();
+	if (pos <= 0) return;
+	CharType startType = getCharType(doc->characterAt(pos - 1));
+	while (pos > 0 && getCharType(doc->characterAt(pos - 1)) == startType) {
+		pos--;
+	}
+	if( startType == Type_Space ) {
+		CharType startType = getCharType(doc->characterAt(pos - 1));
+		while (pos > 0 && getCharType(doc->characterAt(pos - 1)) == startType) {
+			pos--;
+		}
+	}
+	cursor.setPosition(pos, shift ? QTextCursor::KeepAnchor : QTextCursor::MoveAnchor);
 }
 QString splitName(QString& anchor) {
 	QString name;
@@ -299,6 +347,26 @@ void MarkdownPreview::mouseReleaseEvent(QMouseEvent *me)
 	QTextEdit::mouseReleaseEvent(me);
 	m_processing = false;
 	onCursorPosChanged();
+}
+void MarkdownPreview::mouseDoubleClickEvent(QMouseEvent *e) {
+	QTextCursor cursor = cursorForPosition(e->pos());
+	int pos = cursor.position();
+	QTextDocument *doc = document();
+	CharType type = getCharType(doc->characterAt(pos));
+	// 前方（左）への探索
+	int start = pos;
+	while (start > 0 && getCharType(doc->characterAt(start - 1)) == type) {
+		start--;
+	}
+	// 後方（右）への探索
+	int end = pos;
+	while (end < doc->characterCount() - 1 && getCharType(doc->characterAt(end)) == type) {
+		end++;
+	}
+	// 選択範囲を設定
+	cursor.setPosition(start);
+	cursor.setPosition(end, QTextCursor::KeepAnchor);
+	setTextCursor(cursor);
 }
 void MarkdownPreview::paintEvent(QPaintEvent *e) {
 	QTextEdit::paintEvent(e); // 先にテキストを普通に描画

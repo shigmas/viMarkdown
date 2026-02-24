@@ -45,6 +45,10 @@ public:
     int		prvToSrcHeading(int blockNum);		//	プレビューの見出し行番号（0 org.）をエディタのそれに変換
 	void	setCursorByContext(const struct PosContext &context, const PosContext &acontext);
     int		findPosition(const struct PosContext&);
+	void	moveToNextWord(QTextCursor& cursor, bool select);
+	void	moveToPrevWord(QTextCursor& cursor, bool select);
+	void	moveToStartOfWord(QTextCursor& cursor, bool select);
+	void	moveToEndOfWord(QTextCursor& cursor, bool select);
 #if 0
 	void	scrollToTop(int lineNum) {		//	lineNum: 0 org.
 		verticalScrollBar()->setValue(lineNum);
@@ -70,6 +74,7 @@ protected:
     void	mousePressEvent(QMouseEvent *e) override;
     void	mouseMoveEvent(QMouseEvent *e) override;
     void	mouseReleaseEvent(QMouseEvent *e) override;    // マウスクリックイベントをオーバーライド
+    void	mouseDoubleClickEvent(QMouseEvent *e) override;
     void	paintEvent(QPaintEvent *e) override;
     void	dragEnterEvent(QDragEnterEvent *e) override {
     	e->ignore();

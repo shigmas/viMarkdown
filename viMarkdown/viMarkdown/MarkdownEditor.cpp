@@ -25,6 +25,7 @@ bool isTableHyphenLine(const QString& lnStr) {
 	return isTableHyphenLine(lnStr, tableAlign);
 }
 
+#if 0
 enum CharType {
 	Type_Other,
 	Type_Space,
@@ -35,6 +36,7 @@ enum CharType {
 	Type_HalfAlphaNum,
 	Type_FullSymbol
 };
+#endif
 CharType getCharType(QChar ch) {
 	ushort uc = ch.unicode();
 	if( uc == 0x2028 || uc == 0x2029 ) return Type_NewLine;
