@@ -257,6 +257,7 @@ QString anchorToFullPath(const QString &anchor) {
 void MarkdownPreview::mousePressEvent(QMouseEvent *me) {
 	m_processing = true;
 	QTextEdit::mousePressEvent(me);
+	//onCurPosChanged();
 }
 void MarkdownPreview::mouseMoveEvent(QMouseEvent *me) {
 	QString anchor = anchorAt(me->pos());
@@ -294,6 +295,7 @@ void MarkdownPreview::mouseReleaseEvent(QMouseEvent *me)
 	}
 	QTextEdit::mouseReleaseEvent(me);
 	m_processing = false;
+	onCurPosChanged();
 }
 void MarkdownPreview::paintEvent(QPaintEvent *e) {
 	QTextEdit::paintEvent(e); // 先にテキストを普通に描画
