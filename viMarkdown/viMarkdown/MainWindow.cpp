@@ -21,6 +21,7 @@
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QDesktopServices>
+#include <QLineEdit>
 
 #include "ver.h"
 #include "MainWindow.h"
@@ -116,6 +117,12 @@ void MainWindow::insertSearchComboBox() {
 	m_searchCB->setMinimumWidth(160);				// 幅を少し広げる
 	m_searchCB->setPlaceholderText(tr("search text")); // プレースホルダー表示
 	m_searchCB->setFocusPolicy(Qt::ClickFocus); 	//	直接クリックのみでフォーカス取得
+	m_searchCB->lineEdit()->setClearButtonEnabled(true);	//	クリアボタン（Ｘ）設置
+	connect(m_searchCB->lineEdit(), &QLineEdit::textChanged, this, [=](const QString &text){
+	    if (text.isEmpty()) {
+			this->onAction_ClearSearchHighlights();
+	    }
+	});
 	//m_searchCB->setInsertPolicy(QComboBox::InsertAtTop); // 検索履歴を一番上に追加する設定
 	ui->mainToolBar->insertWidget(ui->action_List, m_searchCB);
 	connect(m_searchCB, &QComboBox::activated, this, &MainWindow::onSearchCBActivated);
