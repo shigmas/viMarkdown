@@ -35,14 +35,14 @@ MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, DocWidget *docWid
 	//QString css = "hr { height: 1px; border: none; background-color: #333; margin-top: 10px; margin-bottom: 10px; }";
 	//document()->setDefaultStyleSheet(css);
 	//setStyleSheet("QTextEdit { caret-color: red; }");
-	connect(this, &MarkdownPreview::cursorPositionChanged, this, &MarkdownPreview::onCurPosChanged);
+	connect(this, &MarkdownPreview::cursorPositionChanged, this, &MarkdownPreview::onCursorPosChanged);
 	connect(document(), &QTextDocument::contentsChange, this, &MarkdownPreview::onContentsChanged);
 }
 void MarkdownPreview::inputMethodEvent(QInputMethodEvent *event) {
 	m_isComposing = !event->preeditString().isEmpty();
 	QTextEdit::inputMethodEvent(event);
 }
-void MarkdownPreview::onCurPosChanged() {
+void MarkdownPreview::onCursorPosChanged() {
 	QTextCursor cursor = this->textCursor();
 	m_lastCurBlockText = cursor.block().text();
 	viewport()->update();	//	強制再描画
@@ -257,7 +257,7 @@ QString anchorToFullPath(const QString &anchor) {
 void MarkdownPreview::mousePressEvent(QMouseEvent *me) {
 	m_processing = true;
 	QTextEdit::mousePressEvent(me);
-	//onCurPosChanged();
+	//onCursorPosChanged();
 }
 void MarkdownPreview::mouseMoveEvent(QMouseEvent *me) {
 	QString anchor = anchorAt(me->pos());
@@ -295,7 +295,7 @@ void MarkdownPreview::mouseReleaseEvent(QMouseEvent *me)
 	}
 	QTextEdit::mouseReleaseEvent(me);
 	m_processing = false;
-	onCurPosChanged();
+	onCursorPosChanged();
 }
 void MarkdownPreview::paintEvent(QPaintEvent *e) {
 	QTextEdit::paintEvent(e); // 先にテキストを普通に描画

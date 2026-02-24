@@ -1602,11 +1602,11 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 	}
 	//rehighlight();
 	highlightSearchText(m_mainWindow->srcText());
-	//syncEditorPreviewCursor();
+	//syncEditorCursorFromPreview();
 	m_processing = false;
 }
 	//	カーソル同期処理
-void MarkdownEditor::syncEditorPreviewCursor() {
+void MarkdownEditor::syncEditorCursorFromPreview() {
 	if( m_processing || m_mainWindow->isCursorCyncing() ) return;		//	再入禁止
 	m_processing = true;
 	m_mainWindow->setCursorCyncing();	//	同期処理中フラグON
@@ -1623,7 +1623,7 @@ void MarkdownEditor::onCursorPosChanged() {
 	m_lastCurBlockText = cursor.block().text();
 	viewport()->update();
 	//	Undone: プレビューの対応段落（見出し行＋本文）を画面内に
-	syncEditorPreviewCursor();
+	syncEditorCursorFromPreview();
 }
 int MarkdownEditor::getVisualLineNumber(const QTextCursor &cursor) const {
 	int visualLineNum = 0;

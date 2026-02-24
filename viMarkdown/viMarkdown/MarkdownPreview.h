@@ -80,7 +80,7 @@ protected:
     }
     void	inputMethodEvent(QInputMethodEvent *event) override;
 
-    void	onCurPosChanged();
+    void	onCursorPosChanged();
     void	onContentsChanged(int position, int charsRemoved, int charsAdded);
     //bool	isTableLine(const QString&);
     //bool	isTableHyphenLine(const QString&);

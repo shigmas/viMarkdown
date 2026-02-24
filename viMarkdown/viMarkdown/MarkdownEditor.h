@@ -58,7 +58,7 @@ public:
     struct PosContext	contextAt(int pos);		//	pos 位置情報を構築
     //int		srcToPrvHeading(int blockNum);		//	エディタの見出し行番号（0 org.）をプレビューのそれに変換
     int		findPosition(const struct PosContext&);
-    void	syncEditorPreviewCursor();
+    void	syncEditorCursorFromPreview();
 
 signals:
     void	tab_pressed();
