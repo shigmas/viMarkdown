@@ -338,7 +338,7 @@ void MarkdownPreview::do_body(QTextCursor& cursor) {
 	if( m_bodyList.isEmpty() ) return;
 #if 1
 	//封印static QRegularExpression re("\\[\\[(.+?)\\]\\]");		//	[[タイトル]]
-	static QRegularExpression re("\\[([^\\]]+)\\]\\(([^)]+)\\)");		//	[タイトル](パス#見出し)
+	static QRegularExpression re("(?<!!)\\[([^\\]]+)\\]\\(([^)]+)\\)");		//	[タイトル](パス#見出し)
 	QString buf;
 	for(auto txt: m_bodyList) {
 		//封印txt.replace(re, "<a href=\"\\1\" class=\"wiki-link\">\\1</a>");

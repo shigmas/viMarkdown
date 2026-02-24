@@ -77,6 +77,7 @@ protected:
     void	paintEvent(QPaintEvent *e) override;
     void	resizeEvent(QResizeEvent *event) override;
     void	inputMethodEvent(QInputMethodEvent *event) override;
+    void	insertFromMimeData(const QMimeData *source) override;
 #if 0
     void	dragEnterEvent(QDragEnterEvent *e) override {
         e->acceptProposedAction();

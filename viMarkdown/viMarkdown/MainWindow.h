@@ -168,6 +168,7 @@ protected:
     void	onAction_Undo();
     void	onAction_Redo();
     void	onAction_SelectAll();
+    void	onAction_Paste();
     void	onAction_Heading();
     void	onAction_Bold();
     void	onAction_Italic();

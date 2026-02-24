@@ -8,6 +8,9 @@
 #include <QInputMethod>
 #include <QMouseEvent>
 #include <QDate>
+#include <QMimeData>
+#include <QFileInfo>
+#include <QDir>
 #include "MarkdownEditor.h"
 #include "MainWindow.h"
 #include "DocWidget.h"
@@ -412,6 +415,24 @@ void MarkdownEditor::setLineSpacing(int percentage) {
 void MarkdownEditor::inputMethodEvent(QInputMethodEvent *event) {
 	m_isComposing = !event->preeditString().isEmpty();
 	MarkdownBaseEdit::inputMethodEvent(event);
+}
+void MarkdownEditor::insertFromMimeData(const QMimeData *source) {
+	qDebug() << "MarkdownEditor::insertFromMimeData()";
+	if (source->hasImage()) {
+		if( m_docWidget->m_fullPath.isEmpty() ) {
+			qDebug() << "has not fullpath, please save first.";
+			return;
+		}
+		QImage image = qvariant_cast<QImage>(source->imageData());
+		QString fileName = "image_" + QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss") + ".png";
+		QFileInfo fi(m_docWidget->m_fullPath);
+        QString savePath = fi.absoluteDir().absolutePath() + "/" + fileName;
+        if (image.save(savePath, "PNG")) {
+            this->textCursor().insertText(QString("![画像](%1)").arg(fileName));
+        }
+		return;
+	}
+	QPlainTextEdit::insertFromMimeData(source);
 }
 void MarkdownEditor::moveToNextWord(QTextCursor& cursor, bool shift) {
 	int pos = cursor.position();
