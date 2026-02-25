@@ -22,7 +22,7 @@
 #include <QPrintDialog>
 #include <QDesktopServices>
 #include <QLineEdit>
-
+#include <QToolButton>
 #include "ver.h"
 #include "MainWindow.h"
 #include "DocWidget.h"
@@ -171,6 +171,15 @@ void MainWindow::setup_tabMenu() {
 	        		clipboard->setText(docWidget->m_title);
 	        }
 	    }
+	});
+	QToolButton *plusButton = new QToolButton(this);
+	//plusButton->setText("+");
+	plusButton->setIcon(QIcon(":/MainWindow/images/add_48.png"));
+	plusButton->setCursor(Qt::PointingHandCursor);
+	plusButton->setAutoRaise(true); // 背景を透明にし、ホバー時のみ枠を出す（ブラウザ風）
+	ui->tabWidget->setCornerWidget(plusButton, Qt::TopLeftCorner);
+	connect(plusButton, &QToolButton::clicked, this, [=](){
+		    this->onAction_NewTab();
 	});
 }
 void MainWindow::setup_encodingCombo() {
