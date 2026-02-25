@@ -29,6 +29,8 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 	connect(ui->CSVZebra1PB, &QPushButton::clicked, this, &SettingsDialog::onCSVZebraColor1ButtonClicked);
 	connect(ui->CSVZebra2PB, &QPushButton::clicked, this, &SettingsDialog::onCSVZebraColor2ButtonClicked);
 	connect(ui->quotePB, &QPushButton::clicked, this, &SettingsDialog::onQuoteColorButtonClicked);
+	connect(ui->codeBlockPB, &QPushButton::clicked, this, &SettingsDialog::onCodeBlockColorButtonClicked);
+	connect(ui->keisenBlockPB, &QPushButton::clicked, this, &SettingsDialog::onKeisenBlockColorButtonClicked);
 }
 
 SettingsDialog::~SettingsDialog()
@@ -56,6 +58,8 @@ void SettingsDialog::updateColorButtons() {
     setColorButtonStyle(ui->CSVZebra1PB,         g.m_CSVZebraColor1);
     setColorButtonStyle(ui->CSVZebra2PB,         g.m_CSVZebraColor2);
     setColorButtonStyle(ui->quotePB,             g.m_quoteColor);
+    setColorButtonStyle(ui->codeBlockPB,         g.m_codeBlockColor);
+    setColorButtonStyle(ui->keisenBlockPB,         g.m_keisenBlockColor);
 #else
 	ui->headingsColorPB->setStyleSheet(QString(
         "background-color: %1;" // 背景色をセット
@@ -150,4 +154,9 @@ void SettingsDialog::onCSVZebraColor2ButtonClicked() {
 void SettingsDialog::onQuoteColorButtonClicked() {
 	pickColor(g.m_quoteColor, "Quote ");
 }
-
+void SettingsDialog::onCodeBlockColorButtonClicked() {
+	pickColor(g.m_codeBlockColor, "Code Block ");
+}
+void SettingsDialog::onKeisenBlockColorButtonClicked() {
+	pickColor(g.m_keisenBlockColor, "Keisen Block ");
+}

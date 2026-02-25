@@ -30,6 +30,8 @@ protected:
 	void onCSVZebraColor1ButtonClicked();
 	void onCSVZebraColor2ButtonClicked();
 	void onQuoteColorButtonClicked();
+	void onCodeBlockColorButtonClicked();
+	void onKeisenBlockColorButtonClicked();
 	void	updateColorButtons();
 	void	pickColor(QColor &targetColor, const QString &title);
 

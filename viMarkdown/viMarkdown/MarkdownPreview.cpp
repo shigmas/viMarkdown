@@ -759,7 +759,7 @@ void MarkdownPreview::do_keisen_block(QTextBlock& block, QTextCursor& cursor) {
 	block.setUserState(US_KEISEN_BLOCK);
 	QFont font;
 	QStringView buf = m_lst[m_ln].mid(QString("```keisen").size());
-	QColor bgcolor("#c0f0c0");
+	QColor bgcolor = g.m_keisenBlockColor;
 	QColor color("black");
 	for(;;) {
 		while( !buf.isEmpty() && buf[0] == u' ' ) buf = buf.mid(1);		//	skip u' ';
@@ -839,7 +839,7 @@ void MarkdownPreview::do_code(QTextCursor& cursor) {
 #endif
 	// フレームの書式を設定
 	QTextFrameFormat frameFormat;
-	frameFormat.setBackground(QColor("#fffff0")); // 薄い黄色
+	frameFormat.setBackground(g.m_codeBlockColor);
 	frameFormat.setMargin(0);					  // 外側の余白
 	frameFormat.setPadding(10);					  // 内側の余白（文字と端の隙間）
 	frameFormat.setBorder(0);					  // 枠線はなし

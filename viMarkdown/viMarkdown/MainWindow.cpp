@@ -97,6 +97,8 @@ void MainWindow::load_settings() {
 	g.m_CSVZebraColor1 = settings.value(KEY_CSV_ZEBRA_COLOR1, QColor("white")).value<QColor>();
 	g.m_CSVZebraColor2 = settings.value(KEY_CSV_ZEBRA_COLOR2, QColor("lightyellow")).value<QColor>();
 	g.m_quoteColor = settings.value(KEY_QUOTE_COLOR, QColor("#f0f8ff")).value<QColor>();	// 薄い青
+	g.m_codeBlockColor = settings.value(KEY_CODE_BLOCK_COLOR, QColor("lightyellow")).value<QColor>();
+	g.m_keisenBlockColor = settings.value(KEY_KEISEN_BLOCK_COLOR, QColor("#c0f0c0")).value<QColor>();		//	淡い緑
 }
 void MainWindow::save_settings() {
     QSettings settings;
@@ -111,6 +113,8 @@ void MainWindow::save_settings() {
     settings.setValue(KEY_CSV_ZEBRA_COLOR1, g.m_CSVZebraColor1);
     settings.setValue(KEY_CSV_ZEBRA_COLOR2, g.m_CSVZebraColor2);
     settings.setValue(KEY_QUOTE_COLOR, g.m_quoteColor);
+    settings.setValue(KEY_CODE_BLOCK_COLOR, g.m_codeBlockColor);
+    settings.setValue(KEY_KEISEN_BLOCK_COLOR, g.m_keisenBlockColor);
 }
 void MainWindow::insertSearchComboBox() {
 	m_searchCB = new QComboBox;
