@@ -865,7 +865,7 @@ void MarkdownPreview::do_quote(QTextCursor& cursor, QString buf) {
 	//cursor.insertMarkdown(buf);
 	// 1. フレームの書式を設定
 	QTextFrameFormat frameFormat;
-	frameFormat.setBackground(QColor("#f0f8ff")); // 薄い青
+	frameFormat.setBackground(g.m_quoteColor);
 	frameFormat.setMargin(0);					  // 外側の余白
 	frameFormat.setPadding(10);					  // 内側の余白（文字と端の隙間）
 	frameFormat.setBorder(0);					  // 枠線はなし

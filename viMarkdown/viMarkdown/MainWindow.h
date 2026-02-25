@@ -21,6 +21,7 @@ QT_END_NAMESPACE
 #define	KEY_CSV_HEADER_COLOR		u"CSVHeadingsColor"
 #define	KEY_CSV_ZEBRA_COLOR1		u"CSVZebraColor1"
 #define	KEY_CSV_ZEBRA_COLOR2		u"CSVZebraColor2"
+#define	KEY_QUOTE_COLOR				u"QuoteColor"
 
 enum CharType {
 	Type_Other,
@@ -81,6 +82,7 @@ struct Global {
 	QColor	m_CSVHeaderColor;
 	QColor	m_CSVZebraColor1;		//	本体奇数行
 	QColor	m_CSVZebraColor2;		//	本体偶数行
+	QColor	m_quoteColor;			//	引用ブロック背景色
 };
 
 class MainWindow : public QMainWindow

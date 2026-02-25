@@ -28,6 +28,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 	connect(ui->CSVHeaderPB, &QPushButton::clicked, this, &SettingsDialog::onCSVHeaderColorButtonClicked);
 	connect(ui->CSVZebra1PB, &QPushButton::clicked, this, &SettingsDialog::onCSVZebraColor1ButtonClicked);
 	connect(ui->CSVZebra2PB, &QPushButton::clicked, this, &SettingsDialog::onCSVZebraColor2ButtonClicked);
+	connect(ui->quotePB, &QPushButton::clicked, this, &SettingsDialog::onQuoteColorButtonClicked);
 }
 
 SettingsDialog::~SettingsDialog()
@@ -54,6 +55,7 @@ void SettingsDialog::updateColorButtons() {
     setColorButtonStyle(ui->CSVHeaderPB,         g.m_CSVHeaderColor);
     setColorButtonStyle(ui->CSVZebra1PB,         g.m_CSVZebraColor1);
     setColorButtonStyle(ui->CSVZebra2PB,         g.m_CSVZebraColor2);
+    setColorButtonStyle(ui->quotePB,             g.m_quoteColor);
 #else
 	ui->headingsColorPB->setStyleSheet(QString(
         "background-color: %1;" // 背景色をセット
@@ -144,5 +146,8 @@ void SettingsDialog::onCSVZebraColor1ButtonClicked() {
 }
 void SettingsDialog::onCSVZebraColor2ButtonClicked() {
 	pickColor(g.m_CSVZebraColor2, "CSV Zebra-2 ");
+}
+void SettingsDialog::onQuoteColorButtonClicked() {
+	pickColor(g.m_quoteColor, "Quote ");
 }
 

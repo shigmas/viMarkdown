@@ -29,6 +29,7 @@ protected:
 	void onCSVHeaderColorButtonClicked();
 	void onCSVZebraColor1ButtonClicked();
 	void onCSVZebraColor2ButtonClicked();
+	void onQuoteColorButtonClicked();
 	void	updateColorButtons();
 	void	pickColor(QColor &targetColor, const QString &title);
 
