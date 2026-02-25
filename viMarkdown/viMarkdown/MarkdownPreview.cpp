@@ -54,11 +54,13 @@ void MarkdownPreview::onCursorPosChanged() {
 	m_mainWindow->setCursorCyncing();
 	//QTextCursor cursor = this->textCursor();
 	auto context = contextAt(cursor.position());
-	PosContext ancontext;
-	if( cursor.hasSelection() )
-		ancontext = contextAt(cursor.anchor());
 	context.m_srcHBlockNum = m_docWidget->prvToSrcHeading(context.m_prvHBlockNum);
-	emit posContextChanged(context, ancontext);
+	PosContext acontext;
+	if( cursor.hasSelection() ) {
+		acontext = contextAt(cursor.anchor());
+		acontext.m_srcHBlockNum = m_docWidget->prvToSrcHeading(acontext.m_prvHBlockNum);
+	}
+	emit posContextChanged(context, acontext);
 	m_mainWindow->setCursorCyncing(false);
 	m_processing = false;
 }
@@ -465,6 +467,8 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 	m_headingList.clear();
 	m_docWidget->m_srcHeadingBlocks.clear();
 	m_docWidget->m_prvHeadingBlocks.clear();
+	m_docWidget->m_srcHeadingBlocks.push_back(0);
+	m_docWidget->m_prvHeadingBlocks.push_back(0);
 	QString mdtext = doc->toPlainText();
 	QList<QStringView> tableTokens;
 	vector<char> tableAlign;
@@ -1069,7 +1073,10 @@ int MarkdownPreview::findPosition(const PosContext &context) {
 void MarkdownPreview::setCursorByContext(const PosContext &context, const PosContext &acontext) {
 	if( m_processing ) return;		//	再入禁止
 	qDebug() << "MarkdownPreview::setCursorByContext(context)";
-	qDebug() << ".ancharChar = " << context.m_anchorChar << ", nth = " << context.m_nth << ", offset = " << context.m_offset;
+	qDebug() << ".ancharChar = " << context.m_anchorChar << ", nth = " << context.m_nth << ", offset = " << context.m_offset <<
+					", srcHBNum = " << context.m_srcHBlockNum << ", prvHBNum = " << context.m_prvHBlockNum;
+	qDebug() << ".ancharChar = " << acontext.m_anchorChar << ", nth = " << acontext.m_nth << ", offset = " << acontext.m_offset <<
+					", srcHBNum = " << acontext.m_srcHBlockNum << ", prvHBNum = " << acontext.m_prvHBlockNum;
 	m_processing = true;
 	QTextCursor cursor = textCursor();
 	if( acontext.m_nth == 0 ) {		//	非選択状態

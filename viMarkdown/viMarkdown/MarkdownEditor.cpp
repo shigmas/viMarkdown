@@ -1628,10 +1628,12 @@ void MarkdownEditor::syncEditorCursorFromPreview() {
 	QTextCursor cursor = this->textCursor();
 	auto context = contextAt(cursor.position());
 	context.m_prvHBlockNum = m_docWidget->srcToPrvHeading(context.m_srcHBlockNum);
-	PosContext ancontext;
-	if( cursor.hasSelection() )
-		ancontext = contextAt(cursor.anchor());
-	emit posContextChanged(context, ancontext);
+	PosContext acontext;
+	if( cursor.hasSelection() ) {
+		acontext = contextAt(cursor.anchor());
+		acontext.m_prvHBlockNum = m_docWidget->srcToPrvHeading(acontext.m_srcHBlockNum);
+	}
+	emit posContextChanged(context, acontext);
 	m_mainWindow->setCursorCyncing(false);
 	m_processing = false;
 }
@@ -2007,6 +2009,7 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			break;
 		block = block.previous();
 	}
+	auto t = block.text();
 	pc.m_srcHBlockNum = block.blockNumber();
 	//	pos の charAt が見出し行先頭から何番目かを計算
 	int count = 1;
