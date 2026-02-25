@@ -504,7 +504,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 			while( n < text.length() && text[n].isSpace() ) ++n;
 			QString atxt = text.left(n);		//	オートインデントテキスト
 			const QString mtxt = text.mid(n);
-			if( mtxt == "- " || mtxt == "- [ ] " || mtxt == "- [x] " || mtxt == "- [X] " || mtxt == "1. " || mtxt == "1) " ) {
+			if( mtxt == "- " || mtxt == "- [ ] " || mtxt == "- [x] " || mtxt == "- [X] " || mtxt == "1. " || mtxt == "1) " || mtxt == "> ") {
 				cursor.movePosition(QTextCursor::StartOfBlock);
 				cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
 				cursor.deleteChar();
