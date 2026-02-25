@@ -1884,7 +1884,7 @@ void MainWindow::updateOutlineTree() {
 		item2->setText(0, lst[i].mid(1));	//	lst[i][0] は見出しレベル（'1'-'6'）
 		QString txt = lst[i].mid(1).remove(QRegularExpression("^ *[■●○◎★☆]\\s*"));
 		item2->setText(0, txt);
-		item2->setData(0, Qt::UserRole, hLineNum[i]);
+		item2->setData(0, Qt::UserRole, hLineNum[i+1]);
 		int k = val - 1;
 		while( parents[k] == nullptr ) --k;
 		parents[k]->addChild(item2);
