@@ -793,12 +793,20 @@ int MarkdownEditor::nColumn(const QString &text) const {
 	int fullWidth = fm.horizontalAdvance(text);
 	return fullWidth / halfWidth;
 }
+int getVisualColumn(const QString&text, QFont font) {
+	QFontMetrics fm(font);
+	int halfWidth = fm.horizontalAdvance("A"); 
+	int fullWidth = fm.horizontalAdvance(text);
+	return fullWidth / halfWidth;
+}
+#if 0
 int getVisualColumn(const QString&text, MarkdownBaseEdit *editor) {
 	QFontMetrics fm(editor->font());
 	int halfWidth = fm.horizontalAdvance("A"); 
 	int fullWidth = fm.horizontalAdvance(text);
 	return fullWidth / halfWidth;
 }
+#endif
 int getVisualColumn(QTextCursor cursor, MarkdownBaseEdit *editor) {
 	// 1. 行頭から現在のカーソル位置までのテキストを取得
 	QString text = cursor.block().text().left(cursor.positionInBlock());
@@ -1147,6 +1155,7 @@ QString getLeftDstString(bool erase, bool thickKeisen, const QString txt, int ix
 		if( ix < txt.size() ) {
 			if( txt[ix] == u'─' || txt[ix] == u'━' || txt[ix] == u'┌' || txt[ix] == u'┼')
 				return txt[ix];
+#if 0
 			if( txt[ix] == u'│' || txt[ix] == u'┃' ) {
 				auto bits = getConnectionBits(txt[ix]);
 				if( ix >= prev.size() || (getConnectionBits(prev[ix])&(Down|ThickDown)) == 0 )
@@ -1159,6 +1168,7 @@ QString getLeftDstString(bool erase, bool thickKeisen, const QString txt, int ix
 				else
 					return "←";
 			}
+#endif
 			if( txt[ix] == u'│' || txt[ix] == u'├' || txt[ix] == u'┝' ) return thickKeisen ? "┝" : "├";	//	縦：細罫線の場合
 			if( txt[ix] == u'┃' || txt[ix] == u'┠' || txt[ix] == u'┣' ) return thickKeisen ? "┣" : "┠";	//	縦：太罫線の場合
 			if( txt[ix] == u'↓' || txt[ix] == u'└' ) return "└";
@@ -1413,7 +1423,7 @@ void MarkdownEditor::openPrev() {
 	for(int i = 0; i < ctext.size(); ++i) {
 		ushort bits = getConnectionBits(ctext[i]);
 		if( (bits&(Up|ThickUp)) != 0 ) {
-			int vc = getVisualColumn(ctext.left(i), this);
+			int vc = getVisualColumn(ctext.left(i), this->font());
 			if( vc != vc0 )
 				text += QString(vc - vc0, u' ');
 			if( (bits&Up) != 0 )
@@ -1438,7 +1448,7 @@ void MarkdownEditor::openNext() {		//	罫線補完次行オープン
 	for(int i = 0; i < ctext.size(); ++i) {
 		ushort bits = getConnectionBits(ctext[i]);
 		if( (bits&(Down|ThickDown)) != 0 ) {
-			int vc = getVisualColumn(ctext.left(i), this);
+			int vc = getVisualColumn(ctext.left(i), this->font());
 			if( vc != vc0 )
 				text += QString(vc - vc0, u' ');
 			if( (bits&Down) != 0 )
@@ -1788,7 +1798,8 @@ void MarkdownEditor::highlightSearchText(const QString &searchText) {
 
 	// 検索時の書式設定
 	QTextCharFormat format;
-	format.setBackground(g.m_matchColor);		// 背景を設定色に
+	format.setBackground(Qt::yellow);		// 背景を設定色に
+	//format.setBackground(g.m_matchColor);		// 背景を設定色に
 	format.setForeground(Qt::black);		// 文字を黒に（必要に応じて）
 
 	// ドキュメント全体から検索

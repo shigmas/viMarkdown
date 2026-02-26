@@ -124,11 +124,22 @@ void MainWindow::insertSearchComboBox() {
 	m_searchCB->setPlaceholderText(tr("search text")); // プレースホルダー表示
 	m_searchCB->setFocusPolicy(Qt::ClickFocus); 	//	直接クリックのみでフォーカス取得
 	m_searchCB->lineEdit()->setClearButtonEnabled(true);	//	クリアボタン（Ｘ）設置
+	auto actions = m_searchCB->lineEdit()->findChildren<QAction*>();
+	if (!actions.isEmpty()) {
+	    QAction* clearAction = actions.at(0);
+	    connect(clearAction, &QAction::triggered, this, [this]() {
+			this->onAction_ClearSearchHighlights();
+	    });
+	}
+#if 0
 	connect(m_searchCB->lineEdit(), &QLineEdit::textChanged, this, [=](const QString &text){
-	    if (text.isEmpty()) {
+	    //if (text.isEmpty())
+	    if (m_searchCB->currentText().isEmpty())
+	    {
 			this->onAction_ClearSearchHighlights();
 	    }
 	});
+#endif
 	//m_searchCB->setInsertPolicy(QComboBox::InsertAtTop); // 検索履歴を一番上に追加する設定
 	ui->mainToolBar->insertWidget(ui->action_List, m_searchCB);
 	connect(m_searchCB, &QComboBox::activated, this, &MainWindow::onSearchCBActivated);
