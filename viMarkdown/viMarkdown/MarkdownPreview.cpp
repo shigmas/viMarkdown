@@ -339,11 +339,16 @@ void MarkdownPreview::mouseReleaseEvent(QMouseEvent *me)
 			emit anchorClicked("", fullPath, name);
 		} else {
 			QTextCursor cursor = cursorForPosition(me->pos());
+			QTextBlock block = cursor.block();
+			if( block.userState() == US_CHECKBOX )
+				emit lineClicked(block.blockNumber());
+#if 0
 			QTextCharFormat format = cursor.charFormat();
 			if( format.isAnchor() ) {
 				qDebug() << "checkbox is clicked";
 			}
 			emit lineClicked(cursor.block().userState());
+#endif
 		}
 	}
 	QTextEdit::mouseReleaseEvent(me);
@@ -524,7 +529,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 			do_heading(cursor, buf);
 		} else if( re_list.match(buf).hasMatch() ) {
 			do_body(cursor);
-			do_list(cursor, buf);
+			do_list(cursor, buf);		//	"- " or "- [ ] "
 		} else if( re_numlist.match(buf).hasMatch() ) {
 			do_body(cursor);
 			do_numlist(cursor, buf);
