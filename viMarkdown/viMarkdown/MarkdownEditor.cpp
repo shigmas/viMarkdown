@@ -20,6 +20,8 @@ extern bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes
 extern bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens);
 extern bool isTableLine(const QString& lnStr, QStringList &tableTokens);
 extern bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign);
+extern QString splitName(QString& anchor);
+extern QString anchorToFullPath(const QString &anchor);
 bool isTableHyphenLine(const QString& lnStr) {
 	std::vector<char> tableAlign;
 	return isTableHyphenLine(lnStr, tableAlign);
@@ -621,8 +623,9 @@ void MarkdownEditor::tagJump_sub(QTextCursor cursor) {
 			int start = closeIX + 1;
 			int end = indexOfNotEsc(text, u')', start);
 			if( end >= ix0 ) {
-				QString url = text.mid(start + 1, end - start - 1);
-				emit link_clicked("", url, "");
+				QString anchor = text.mid(start + 1, end - start - 1);
+				QString name = splitName(anchor);
+				emit link_clicked("", anchor, name);
 			}
 		}
 	}

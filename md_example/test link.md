@@ -3,6 +3,8 @@
 [[wikilink]]
 
 
+[viMarkdown](https://github.com/vivisuke/viMarkdown)  
+
 [copytodist.bat](file://c:/src/vs2026qt6/copytodist.bat)  
 [copytodist.bat](file:///c:/src/vs2026qt6/copytodist.bat)  
 [test keisen](file://test_keisen.md)  
