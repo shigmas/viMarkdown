@@ -599,7 +599,37 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	}
 	MarkdownBaseEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
 }
+int indexOfNotEsc(const QString &text, QChar ch, int ix) {
+	for(;;) {
+		ix = text.indexOf(ch, ix);
+		if( ix < 0 ) return -1;		//	not found
+		if( ix == 0 || text[ix-1] != u'\\' ) return ix;
+		++ix;
+	}
+}
 void MarkdownEditor::mouseReleaseEvent(QMouseEvent *event) {
+	if( (event->modifiers() & Qt::ControlModifier) != 0 ) {
+		auto pos = event->position();
+		QTextCursor cursor = cursorForPosition(pos.toPoint());
+		QTextBlock block = cursor.block();
+		QString text = block.text();
+		int ix0 = cursor.positionInBlock();
+		int ix = text.lastIndexOf(u'[', ix0);
+		while( ix > 0 && text[ix-1] == u'\\' )
+			ix = text.lastIndexOf(u'[', ix-1);
+		if( ix >= 0 ) {
+			int openIX = ix;
+			int closeIX = indexOfNotEsc(text, u']', openIX);
+			if( closeIX > 0 && closeIX < text.size() && text[closeIX+1] == u'(' ) {
+				int start = closeIX + 1;
+				int end = indexOfNotEsc(text, u')', start);
+				if( end >= ix0 ) {
+					QString url = text.mid(start + 1, end - start - 1);
+					emit link_clicked("", url, "");
+				}
+			}
+		}
+	}
 #if 0	//	[[ ]] は当面封印
 	if( (event->modifiers() & Qt::ControlModifier) == 0 ) return;
 	auto pos = event->position();

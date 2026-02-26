@@ -620,6 +620,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onMdEditCurPosChanged);
 	connect(mdEditor, &MarkdownEditor::tab_pressed, this, &MainWindow::onMdEditTabPressed);
 	connect(mdEditor, &MarkdownEditor::esc_pressed, this, &MainWindow::onMdEditEscPressed);
+	connect(mdEditor, &MarkdownEditor::link_clicked, this, &MainWindow::do_open);
 	//connect(mdEditor, &MarkdownEditor::title_clicked, this, &MainWindow::do_open);
 	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onEditorCurPosChanged);
 	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::syncPreviewCursorWithEditor);
