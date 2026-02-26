@@ -625,7 +625,8 @@ void MarkdownEditor::tagJump_sub(QTextCursor cursor) {
 			if( end >= ix0 ) {
 				QString anchor = text.mid(start + 1, end - start - 1);
 				QString name = splitName(anchor);
-				emit link_clicked("", anchor, name);
+				QString fullPath = anchorToFullPath(anchor);
+				emit link_clicked("", fullPath, name);
 			}
 		}
 	}
