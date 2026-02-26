@@ -59,6 +59,7 @@ public:
     //int		srcToPrvHeading(int blockNum);		//	エディタの見出し行番号（0 org.）をプレビューのそれに変換
     int		findPosition(const struct PosContext&);
     void	syncEditorCursorFromPreview();
+    void	tagJump();
 
 signals:
     void	tab_pressed();
@@ -92,6 +93,7 @@ protected:
     void	onCursorPosChanged();
     int		nColumn(const QString&) const;		//	表示カラム数を計算
     void	setLineSpacing(int percentage);
+    void	tagJump_sub(QTextCursor);
 
     void	do_keisen_left(bool erase = false, bool thickKeisen = false);
     void	do_keisen_right(bool erase = false, bool thickKeisen = false);

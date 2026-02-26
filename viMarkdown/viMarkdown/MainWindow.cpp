@@ -463,6 +463,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_PrevTab, &QAction::triggered, this, &MainWindow::onAction_PrevTab);
 	connect(ui->action_ToggleFocus, &QAction::triggered, this, &MainWindow::onAction_ToggleFocus);
 	connect(ui->action_SwitchToAltFile, &QAction::triggered, this, &MainWindow::onAction_SwitchToAltFile);
+	connect(ui->action_TagJump, &QAction::triggered, this, &MainWindow::onAction_TagJump);
 	connect(ui->outlineBar, &QDockWidget::visibilityChanged, this, &MainWindow::onOutlineBarVisibilityChanged);
 	connect(ui->treeWidget, &QTreeWidget::currentItemChanged, this, &MainWindow::onTreeCurrentItemChanged);
 	//connect(ui->treeWidget, &QTreeWidget::itemDoubleClicked, this, &MainWindow::onTreeItemDoubleClicked);
@@ -1745,6 +1746,11 @@ void MainWindow::onAction_Source(bool checked) {
 	m_htmlMode = !checked;
 	//updateHTMLModeCheck();
 	updatePreview();
+}
+void MainWindow::onAction_TagJump() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	docWidget->m_editor->tagJump();
 }
 void MainWindow::onAction_OutlineBar(bool checked) {
 	ui->outlineBar->setVisible(checked);

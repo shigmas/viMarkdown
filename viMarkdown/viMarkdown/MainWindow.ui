@@ -98,6 +98,7 @@
     <addaction name="action_SwitchToAltFile"/>
     <addaction name="action_NaviBack"/>
     <addaction name="action_NaviForward"/>
+    <addaction name="action_TagJump"/>
    </widget>
    <widget class="QMenu" name="menu_Edit">
     <property name="title">
@@ -900,6 +901,14 @@
    </property>
    <property name="shortcut">
     <string>F1</string>
+   </property>
+  </action>
+  <action name="action_TagJump">
+   <property name="text">
+    <string>&amp;TagJump</string>
+   </property>
+   <property name="shortcut">
+    <string>F9</string>
    </property>
   </action>
  </widget>

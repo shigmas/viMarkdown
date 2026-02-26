@@ -223,6 +223,7 @@ protected:
     void	onAction_PrevTab();
     void	onAction_ToggleFocus();
     void	onAction_SwitchToAltFile();
+    void	onAction_TagJump();
     void	onAction_About();
     void	onAction_AddThisFavorite();
     void	onAction_Settings();
