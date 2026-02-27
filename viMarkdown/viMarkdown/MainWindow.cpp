@@ -408,6 +408,7 @@ void MainWindow::setup_connections() {
 	connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainWindow::onCurrentTabChanged);
 	connect(ui->menu_RecentFiles, &QMenu::aboutToShow, this, &MainWindow::onAboutToShow_RecentFiles);
 	connect(ui->menu_FavoriteFiles, &QMenu::aboutToShow, this, &MainWindow::onAboutToShow_FavoriteFiles);
+	connect(ui->menu_Insert, &QMenu::aboutToShow, this, &MainWindow::onAboutToShow_Insert);
 	connect(m_watcher, &QFileSystemWatcher::fileChanged, this, &MainWindow::onFileChanged);
 	connect(ui->action_Exit, &QAction::triggered, this, &MainWindow::onAction_Exit);
 	connect(ui->action_Settings, &QAction::triggered, this, &MainWindow::onAction_Settings);
@@ -521,7 +522,7 @@ void MainWindow::onCurrentTabChanged(int ix) {
 	if( m_processing ) return;		//	再入禁止
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	//qDebug() << "MainWindow::onCurrentTabChanged()";
+	qDebug() << "MainWindow::onCurrentTabChanged()";
 	m_altFullPath = m_curFullPath;
 	m_altTitle = m_curTitle;
 	m_curFullPath = docWidget->m_fullPath;
@@ -929,6 +930,19 @@ DocWidget *MainWindow::getCurDocWidget() {
 //	}
 //}
 
+void MainWindow::onAboutToShow_Insert() {
+	QMenu *menu = qobject_cast<QMenu*>(sender());
+    if (!menu) return;
+    QList<QAction*> acts = menu->actions();
+    if( acts.size() >= 3 ) {
+		QString today = QDate::currentDate().toString("yyyy-MM-dd");
+		acts[0]->setText("&1 " + today);
+		today = QDate::currentDate().toString("MM-dd");
+		acts[1]->setText("&2 " + today);
+		today = QDate::currentDate().toString("dd-MMM-yyyy");
+		acts[2]->setText("&3 " + today);
+    }
+}
 void MainWindow::onAboutToShow_FavoriteFiles() {
 	//ui->menu_FavoriteFiles->clear();
 	QList<QAction*> actions = ui->menu_FavoriteFiles->actions();

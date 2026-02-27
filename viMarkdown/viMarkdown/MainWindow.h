@@ -232,6 +232,7 @@ protected:
 
     void	onAboutToShow_RecentFiles();
     void	onAboutToShow_FavoriteFiles();
+    void	onAboutToShow_Insert();
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event) override;

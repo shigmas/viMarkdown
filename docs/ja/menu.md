@@ -41,6 +41,8 @@
 "Edit > Format", "AlignRight", "罫線枠内右寄せ", ""
 "Edit", "Indent", "インデント", "Tab"
 "Edit", "Unindent", "逆インデント", "Shift + Tab"
+"Edit > Conver", "CSV -> Markdown Table", "CSV → Markdown表変換", ""
+"Edit > Conver", "Markdown Table -> CSV", "Markdown表 → CSV変換", ""
 ```
 
 ## Search メニュー
