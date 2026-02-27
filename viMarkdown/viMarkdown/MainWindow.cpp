@@ -634,12 +634,16 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	mdEditor->setPlaceholderText("\nここにMarkdownを入力\n"
 									"\nマークダウン書式：\n# タイトル\n## 大見出し\n### 中見出し\n"
 									"本文...（空行：段落区切り）\n行末に半角スペース2つ：強制改行\n"
+									"**ボールド** *イタリック* ~~打ち消し線~~\n"
 									"1. 連番\n- リスト\n- [ ] チェックボックス\n"
 									"リンク: [テキスト](url) or [テキスト](filename.md#見出し)\n"
 									"画像: ![テキスト](image.png) or 画像ペースト\n"
 									"表組み:\n"
 									"|見出し|見出し|\n|---|---|\n|123|abc|\n\n"
-									"```CSV\n見出し,見出し\n123,abc\n```\n");
+									"```CSV\n見出し,見出し\n123,abc\n```\n"
+									"罫線モード: Shift + F5\n　罫線描画: Ctrl + 上下左右キー\n"
+									"　罫線消去: Ctrl + Shift + 上下左右キー\n"
+								);
 	MarkdownPreview *markdownPreview = docWidget->m_preview = new MarkdownPreview(this, docWidget, splitter);
 	//##markdownPreview->setReadOnly(true); // プレビューなので読み取り専用に
 	markdownPreview->setMouseTracking(true); // マウスの動きを常に追跡
