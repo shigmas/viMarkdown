@@ -635,6 +635,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 									"\nマークダウン書式：\n# タイトル\n## 大見出し\n### 中見出し\n"
 									"本文...（空行：段落区切り）\n行末に半角スペース2つ：強制改行\n"
 									"- リスト\n1. 連番\n"
+									"link: [テキスト](url) or [テキスト](filename.md#見出し)\n"
 									"|見出し|見出し|\n|-----:|------|\n|   123|abc   |\n\n"
 									"```CSV\nCSV data...\n```\n");
 	MarkdownPreview *markdownPreview = docWidget->m_preview = new MarkdownPreview(this, docWidget, splitter);
