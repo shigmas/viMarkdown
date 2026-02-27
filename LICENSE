@@ -4,13 +4,21 @@ Copyright (c) 2025-2026 Nobuhide Tsuda
 
 本ソフトウェアは、以下の条件で利用可能です。
 
-1. 個人利用、教育・学習目的、学生による利用は無料です。
-2. 業務・商用目的で継続的に利用される場合は、ライセンス料（2,000～3,000円程度？）の支払いが必要です。
+1. 個人の非商用・非業務利用、学生による利用は無料です。
+2. 社会人の商用・業務目的で継続的に利用される場合は、ライセンス料（2,000～3,000円＋決済手数料）の支払いが必要です。
 3. ソースコードの閲覧・改変は自由ですが、改変したものを商用・非商用に限らず再配布することは禁止します（競合禁止条項）。
 
 This software may be used under the following conditions.
 
-1. Personal use, educational/learning purposes, and student use are free of charge.
-2. For ongoing use for business/commercial purposes, a license fee (around 2,000 to 3,000 yen?) must be paid.
-3. You are permitted to view and modify the source code. However, you may not redistribute modified versions of the software, 
-   whether for commercial or non-commercial purposes (non-compete clause).
+1. Free for Personal and Student Use:
+   Use for personal, non-commercial, and non-business purposes, 
+   as well as use by students, is completely free of charge.
+2. Commercial License Required for Business Use:
+   If you are a professional using this software continuously for commercial 
+   or business purposes, you are required to purchase a commercial license
+    ($15 - $20 USD + transaction fees).
+3. Modification Allowed, Redistribution Prohibited (Non-Compete Clause):
+   You are free to view and modify the source code for your own use. 
+   However, redistributing the modified software—whether for commercial or 
+   non-commercial purposes—is strictly prohibited.
+

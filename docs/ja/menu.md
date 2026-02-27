@@ -41,9 +41,38 @@
 "Edit > Format", "AlignRight", "罫線枠内右寄せ", ""
 "Edit", "Indent", "インデント", "Tab"
 "Edit", "Unindent", "逆インデント", "Shift + Tab"
+"Edit > Insert", "&1 yyyy-MM-dd", "今日の日付", ""
+"Edit > Insert", "&2 MM-dd", "今日の日付", ""
+"Edit > Insert", "&3 dd-MMM-yyyy", "今日の日付", ""
 "Edit > Conver", "CSV -> Markdown Table", "CSV → Markdown表変換", ""
 "Edit > Conver", "Markdown Table -> CSV", "Markdown表 → CSV変換", ""
 ```
 
 ## Search メニュー
+
+```CSV
+" カテゴリ ", " 項目 ", " 説明 ", " ショートカット "
+"Search", "Find", "", "Ctrl + F"
+```
+
+## View メニュー
+
+```CSV
+" カテゴリ ", " 項目 ", " 説明 ", " ショートカット "
+"View", "OutlineBar", "アウトラインバー表示・非表示", ""
+```
+
+## Tool メニュー
+
+```CSV
+" カテゴリ ", " 項目 ", " 説明 ", " ショートカット "
+"Tool", "KeisenMode", "編集を元に戻す", "Shift + F5"
+```
+
+## Other メニュー
+
+```CSV
+" カテゴリ ", " 項目 ", " 説明 ", " ショートカット "
+"Tool", "Settings...", "設定ダイアログ表示", "F8"
+```
 
