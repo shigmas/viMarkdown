@@ -52,7 +52,12 @@
 
 ```CSV
 " カテゴリ ", " 項目 ", " 説明 ", " ショートカット "
-"Search", "Find", "", "Ctrl + F"
+"Search", "Find", "検索ボックスにフォーカス移動", "Ctrl + F"
+"Search", "DorwardAgain", "次検索", "F3"
+"Search", "BackwardAgain", "前検索", "Shift + F3"
+"Search", "FindWord", "カーソル位置単語検索", "Ctrl + F3"
+"Search", "ClearSearchHighlight", "検索マッチ強調消去", "Alt + F3"
+"Search", "Replace...", "検索ダイアログ表示", "F4"
 ```
 
 ## View メニュー
@@ -60,19 +65,33 @@
 ```CSV
 " カテゴリ ", " 項目 ", " 説明 ", " ショートカット "
 "View", "OutlineBar", "アウトラインバー表示・非表示", ""
+"View", "FocusOutline", "アウトラインバーにフォーカスを移す", "Ctrl + Q"
+"View", "NextTab", "次のタブにフォーカスを移す", "Ctrl + Tab"
+"View", "PrevTab", "前のタブにフォーカスを移す", "Ctrl + Shift + Tab"
+"View", "ToggleFocus", "エディタ←→プレビューフォーカス移動", "Ctrl + \\"
+"View", "SwitchToAltFile", "直前ファイル切り替え", "Ctrl + ^"
+"View", "Back", "前履歴ファイル移動", "Alt + ←"
+"View", "Forward", "次履歴ファイル移動", "Alt + →"
+"View", "TagJump", "カーソルがリンク上にあればリンク先を開く", "F9"
 ```
 
 ## Tool メニュー
 
 ```CSV
 " カテゴリ ", " 項目 ", " 説明 ", " ショートカット "
-"Tool", "KeisenMode", "編集を元に戻す", "Shift + F5"
+"Tool", "KeisenMode", "罫線モード ON/OFF", "Shift + F5"
+"Tool", "ThinKeisen", "細罫線モード", ""
+"Tool", "ThickKeisen", "太罫線モード", ""
+"Tool", "OpenPrev", "カーソル行前に連結罫線空行挿入", "Shift + F7"
+"Tool", "OpenNext", "カーソル行次に連結罫線空行挿入", "F7"
 ```
 
 ## Other メニュー
 
 ```CSV
 " カテゴリ ", " 項目 ", " 説明 ", " ショートカット "
-"Tool", "Settings...", "設定ダイアログ表示", "F8"
+"Other", "Settings...", "設定ダイアログ表示", "F8"
+"Other", "Help", "ヘルプ文書表示", "F1"
+"Other", "About viMarkdown...", "About viMarkdown ダイアログ表示", "F1"
 ```
 
