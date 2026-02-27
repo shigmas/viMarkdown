@@ -987,19 +987,21 @@ void MarkdownEditor::do_keisen_up(bool erase, bool thickKeisen) {
 		cursor.movePosition(QTextCursor::Right);
 	
 	// 足りなければスペース補完（これで確実に vc0 に到達する）
-	int currentVc = getVisualColumn(cursor, this);
-	if( currentVc < vc0 ) cursor.insertText(QString(vc0 - currentVc, u' '));
+	int vc = getVisualColumn(cursor, this);
+	if( vc < vc0 ) cursor.insertText(QString(vc0 - vc, u' '));
 
 	// 3. 移動先の置換
-	QString padding;
+	QString pdLeft, pdRight;
 	while (getVisualColumn(cursor, this) > vc0) {
-		padding += u' ';
+		pdLeft += u' ';
 		cursor.movePosition(QTextCursor::Left);
 	}
 	ix = cursor.positionInBlock();
-	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc0 + 2)
+	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc0 + 2) {
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor); // 1文字だけ選択
-	cursor.insertText(padding + getUpDstString(erase, thickKeisen, cursor.block().text(), ix));	
+		if( vc > vc0 ) pdRight = u' ';
+	}
+	cursor.insertText(pdLeft + getUpDstString(erase, thickKeisen, cursor.block().text(), ix) + pdRight);	
 	while( getVisualColumn(cursor, this) > vc0 )
 		cursor.movePosition(QTextCursor::Left);
 	cursor.endEditBlock();
@@ -1145,15 +1147,21 @@ void MarkdownEditor::do_keisen_down(bool erase, bool thickKeisen) {
 	cursor.movePosition(QTextCursor::StartOfBlock);
 	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc0 )
 		cursor.movePosition(QTextCursor::Right);
-	int curVc = getVisualColumn(cursor, this);
-	if( curVc < vc0 ) cursor.insertText(QString(vc0 - curVc, u' ')); // 足りない分を補完
+	int vc = getVisualColumn(cursor, this);
+	if( vc < vc0 ) cursor.insertText(QString(vc0 - vc, u' ')); // 足りない分を補完
 
 	// 4. 移動先（下）の置換
+	QString pdLeft, pdRight;
+	while (getVisualColumn(cursor, this) > vc0) {
+		pdLeft += u' ';
+		cursor.movePosition(QTextCursor::Left);
+	}
 	ix = cursor.positionInBlock(); // 位置が確定してからインデックス取得
-	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc0 + 2 )
+	while( !cursor.atBlockEnd() && (vc = getVisualColumn(cursor, this)) < vc0 + 2 ) {
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-	cursor.insertText(getDownDstString(erase, thickKeisen, cursor.block().text(), ix));
-
+		if (vc > vc0) pdRight = u' ';
+	}
+	cursor.insertText(pdLeft + getDownDstString(erase, thickKeisen, cursor.block().text(), ix) + pdRight);
 	while( getVisualColumn(cursor, this) > vc0 )
 		cursor.movePosition(QTextCursor::Left);
 	cursor.endEditBlock();
