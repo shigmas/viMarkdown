@@ -991,10 +991,15 @@ void MarkdownEditor::do_keisen_up(bool erase, bool thickKeisen) {
 	if( currentVc < vc0 ) cursor.insertText(QString(vc0 - currentVc, u' '));
 
 	// 3. 移動先の置換
+	QString padding;
+	while (getVisualColumn(cursor, this) > vc0) {
+		padding += u' ';
+		cursor.movePosition(QTextCursor::Left);
+	}
 	ix = cursor.positionInBlock();
 	while( !cursor.atBlockEnd() && getVisualColumn(cursor, this) < vc0 + 2)
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor); // 1文字だけ選択
-	cursor.insertText(getUpDstString(erase, thickKeisen, cursor.block().text(), ix));	
+	cursor.insertText(padding + getUpDstString(erase, thickKeisen, cursor.block().text(), ix));	
 	while( getVisualColumn(cursor, this) > vc0 )
 		cursor.movePosition(QTextCursor::Left);
 	cursor.endEditBlock();
