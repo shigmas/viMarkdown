@@ -634,6 +634,23 @@ void MarkdownEditor::tagJump_sub(QTextCursor cursor) {
 void MarkdownEditor::tagJump() {
 	tagJump_sub(textCursor());
 }
+void MarkdownEditor::make_link() {
+	QTextCursor cursor = textCursor();
+	if( !cursor.hasSelection() ) {
+		//int start, end;
+		//getWordStartEnd(cursor, start, end);
+		//cursor.setPosition(start);
+		//cursor.setPosition(end, QTextCursor::KeepAnchor);
+		selectWordAt(cursor);
+		if( !cursor.hasSelection() ) return;
+	}
+	QString text = cursor.selectedText();
+	text = u'[' + text + u"](url)";
+	cursor.insertText(text);
+	cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, 4);		//	url 先頭まで移動
+	cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, 3);	//	url 選択
+	setTextCursor(cursor);
+}
 void MarkdownEditor::mouseReleaseEvent(QMouseEvent *event) {
 	if( (event->modifiers() & Qt::ControlModifier) != 0 ) {
 		auto pos = event->position();
@@ -659,8 +676,7 @@ void MarkdownEditor::mouseReleaseEvent(QMouseEvent *event) {
 #endif
 	MarkdownBaseEdit::mouseReleaseEvent(event);
 }
-void MarkdownEditor::mouseDoubleClickEvent(QMouseEvent *e) {
-	QTextCursor cursor = cursorForPosition(e->pos());
+void MarkdownEditor::selectWordAt(QTextCursor& cursor) {
 	int pos = cursor.position();
 	QTextDocument *doc = document();
 	CharType type = getCharType(doc->characterAt(pos));
@@ -677,12 +693,35 @@ void MarkdownEditor::mouseDoubleClickEvent(QMouseEvent *e) {
 	// 選択範囲を設定
 	cursor.setPosition(start);
 	cursor.setPosition(end, QTextCursor::KeepAnchor);
+}
+#if 0
+void MarkdownEditor::getWordStartEnd(QTextCursor cursor, int& start, int& end) {
+	int pos = cursor.position();
+	QTextDocument *doc = document();
+	CharType type = getCharType(doc->characterAt(pos));
+	// 前方（左）への探索
+	start = pos;
+	while (start > 0 && getCharType(doc->characterAt(start - 1)) == type) {
+		start--;
+	}
+	// 後方（右）への探索
+	end = pos;
+	while (end < doc->characterCount() - 1 && getCharType(doc->characterAt(end)) == type) {
+		end++;
+	}
+}
+#endif
+void MarkdownEditor::mouseDoubleClickEvent(QMouseEvent *e) {
+	QTextCursor cursor = cursorForPosition(e->pos());
+	//int start, end;
+	//getWordStartEnd(cursor, start, end);
+	selectWordAt(cursor);
 	setTextCursor(cursor);
 }
 void MarkdownEditor::wheelEvent(QWheelEvent *event) {
 	qDebug() << "MarkdownEditor::wheelEvent()";
 	qDebug() << "e->angleDelta() = " << event->angleDelta();
-	if (event->modifiers() & Qt::ControlModifier) {
+	if ((event->modifiers() & Qt::ControlModifier) != 0)  {
 		emit changeFontSize(event->angleDelta().y());
 		event->accept();
 	} else

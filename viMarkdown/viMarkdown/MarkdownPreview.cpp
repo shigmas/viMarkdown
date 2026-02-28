@@ -375,6 +375,15 @@ void MarkdownPreview::mouseDoubleClickEvent(QMouseEvent *e) {
 	cursor.setPosition(end, QTextCursor::KeepAnchor);
 	setTextCursor(cursor);
 }
+void MarkdownPreview::wheelEvent(QWheelEvent *event) {
+	qDebug() << "MarkdownPreview::wheelEvent()";
+	qDebug() << "e->angleDelta() = " << event->angleDelta();
+	if ((event->modifiers() & Qt::ControlModifier) != 0)  {
+		emit changeFontSize(event->angleDelta().y());
+		event->accept();
+	} else
+		QTextEdit::wheelEvent(event);
+}
 void MarkdownPreview::paintEvent(QPaintEvent *e) {
 	QTextEdit::paintEvent(e); // 先にテキストを普通に描画
 	QPainter p(viewport());

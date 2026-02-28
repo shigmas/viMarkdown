@@ -60,6 +60,7 @@ public:
     int		findPosition(const struct PosContext&);
     void	syncEditorCursorFromPreview();
     void	tagJump();
+	void	make_link();
 
 signals:
     void	tab_pressed();
@@ -94,6 +95,8 @@ protected:
     int		nColumn(const QString&) const;		//	表示カラム数を計算
     void	setLineSpacing(int percentage);
     void	tagJump_sub(QTextCursor);
+    //void	getWordStartEnd(QTextCursor, int& start, int&end);
+    void	selectWordAt(QTextCursor&);
 
     void	do_keisen_left(bool erase = false, bool thickKeisen = false);
     void	do_keisen_right(bool erase = false, bool thickKeisen = false);

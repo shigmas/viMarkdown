@@ -49,5 +49,6 @@
         <file>images/favorite_48.png</file>
         <file>images/help_48.png</file>
         <file>images/add_48.png</file>
+        <file>images/link_48.png</file>
     </qresource>
 </RCC>

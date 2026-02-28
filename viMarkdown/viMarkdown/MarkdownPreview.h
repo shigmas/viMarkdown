@@ -68,6 +68,7 @@ signals:
     void	undo_triggered();
     void	redo_triggered();
     void	posContextChanged(const PosContext &context, const PosContext &acontext);
+    void	changeFontSize(int delta);
 
 protected:
     void	keyPressEvent(QKeyEvent *e) override;
@@ -75,6 +76,7 @@ protected:
     void	mouseMoveEvent(QMouseEvent *e) override;
     void	mouseReleaseEvent(QMouseEvent *e) override;    // マウスクリックイベントをオーバーライド
     void	mouseDoubleClickEvent(QMouseEvent *e) override;
+    void	wheelEvent(QWheelEvent *event) override;
     void	paintEvent(QPaintEvent *e) override;
     void	dragEnterEvent(QDragEnterEvent *e) override {
     	e->ignore();

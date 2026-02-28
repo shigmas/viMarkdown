@@ -112,6 +112,7 @@
      <addaction name="action_Bold"/>
      <addaction name="action_Italic"/>
      <addaction name="action_Strikethrough"/>
+     <addaction name="action_Link"/>
     </widget>
     <widget class="QMenu" name="menublock">
      <property name="title">
@@ -235,6 +236,7 @@
    <addaction name="action_Bold"/>
    <addaction name="action_Italic"/>
    <addaction name="action_Strikethrough"/>
+   <addaction name="action_Link"/>
    <addaction name="separator"/>
    <addaction name="action_Indent"/>
    <addaction name="action_UnIndent"/>
@@ -909,6 +911,15 @@
    </property>
    <property name="shortcut">
     <string>F9</string>
+   </property>
+  </action>
+  <action name="action_Link">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/link_48.png</normaloff>:/MainWindow/images/link_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Link</string>
    </property>
   </action>
  </widget>

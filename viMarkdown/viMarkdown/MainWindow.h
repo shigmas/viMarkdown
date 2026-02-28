@@ -11,6 +11,7 @@ QT_END_NAMESPACE
 
 #define	KEY_IGNORE_CASE				u"ignoreCase"
 #define	KEY_EDITOR_FONT_SIZE		u"editorFontSize"
+#define	KEY_PREVIEW_FONT_SIZE		u"previewFontSize"
 #define	KEY_ACTIVA_LINE_COLOR		u"activeLineColor"
 #define	KEY_INACTIVA_LINE_COLOR		u"inactiveLineColor"
 #define	KEY_HEADINGS_COLOR			u"headingsColor"
@@ -74,6 +75,7 @@ public:
 struct Global {
 	bool	m_ignoreCase;			//	検索時：大文字小文字同一視
 	int		m_editorFontSize;
+	int		m_previewFontSize;
 	QColor	m_activeLnColor;		//	アクティブ時アンダーライン行カーソル色
 	QColor	m_inactiveLnColor;		//	非アクティブ時アンダーライン行カーソル色
 	QColor	m_headingsColor;
@@ -164,6 +166,7 @@ protected:
     void	onDel_pressed();
     //void	syncPreviewCursorWithEditor();
     void	onChangeEditorFontSize(int);
+    void	onChangePreviewFontSize(int);
     void	updateEditorFontSize(int);
     void	onSettingsChanged();
     void	onUndoTriggered();
@@ -189,6 +192,7 @@ protected:
     void	onAction_Bold();
     void	onAction_Italic();
     void	onAction_Strikethrough();
+    void	onAction_Link();
     void	onAction_List();
     void	onAction_NumList();
     void	onAction_Checkbox();

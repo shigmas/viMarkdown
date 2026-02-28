@@ -86,6 +86,7 @@ void MainWindow::load_settings() {
 	QSettings settings;
 	g.m_ignoreCase = settings.value(KEY_IGNORE_CASE, true).toBool();
 	g.m_editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE, 12).toInt();		//	デフォルト：12pt
+	g.m_previewFontSize = settings.value(KEY_EDITOR_FONT_SIZE, 12).toInt();		//	デフォルト：12pt
 	g.m_activeLnColor = settings.value(KEY_ACTIVA_LINE_COLOR, QColor("#ff0000")).value<QColor>();
 	g.m_inactiveLnColor = settings.value(KEY_INACTIVA_LINE_COLOR, QColor("#800000")).value<QColor>();
 	g.m_headingsColor = settings.value(KEY_HEADINGS_COLOR, QColor("#800000")).value<QColor>();		//	デフォルト：ダークレッド
@@ -104,6 +105,7 @@ void MainWindow::save_settings() {
     QSettings settings;
     settings.setValue(KEY_IGNORE_CASE, g.m_ignoreCase);
     settings.setValue(KEY_EDITOR_FONT_SIZE, g.m_editorFontSize);
+    settings.setValue(KEY_PREVIEW_FONT_SIZE, g.m_previewFontSize);
     settings.setValue(KEY_HEADINGS_COLOR, g.m_headingsColor);
     settings.setValue(KEY_BOLD_COLOR, g.m_boldColor);
     settings.setValue(KEY_ITALIC_COLOR, g.m_italicColor);
@@ -435,6 +437,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_Bold, &QAction::triggered, this, &MainWindow::onAction_Bold);
 	connect(ui->action_Italic, &QAction::triggered, this, &MainWindow::onAction_Italic);
 	connect(ui->action_Strikethrough, &QAction::triggered, this, &MainWindow::onAction_Strikethrough);
+	connect(ui->action_Link, &QAction::triggered, this, &MainWindow::onAction_Link);
 	connect(ui->action_AlignLeft, &QAction::triggered, this, &MainWindow::onAction_AlignLeft);
 	connect(ui->action_AlignCenter, &QAction::triggered, this, &MainWindow::onAction_AlignCenter);
 	connect(ui->action_AlignRight, &QAction::triggered, this, &MainWindow::onAction_AlignRight);
@@ -649,6 +652,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	markdownPreview->setMouseTracking(true); // マウスの動きを常に追跡
 	markdownPreview->setPlaceholderText("プレビュー画面　ここで簡単な編集もできるよ\n");
 	markdownPreview->setStyleSheet("font-size: 12pt;");
+	//markdownPreview->setStyleSheet("font-size: 12pt; ine-height: 2.0;");
 	connect(markdownPreview, &MarkdownPreview::lineClicked, this, &MainWindow::onMarkdownPreviewLineClicked);
 	connect(markdownPreview, &MarkdownPreview::anchorClicked, this, &MainWindow::do_open);
 	connect(markdownPreview, &MarkdownPreview::textInserted, this, &MainWindow::onTextInsertedAtPreview);
@@ -657,6 +661,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(markdownPreview, &MarkdownPreview::Del_pressed, this, &MainWindow::onDel_pressed);
 	connect(markdownPreview, &MarkdownPreview::undo_triggered, this, &MainWindow::onUndoTriggered);
 	connect(markdownPreview, &MarkdownPreview::redo_triggered, this, &MainWindow::onRedoTriggered);
+	connect(markdownPreview, &MarkdownPreview::changeFontSize, this, &MainWindow::onChangePreviewFontSize);
 	//connect(markdownPreview, &MarkdownPreview::cursorPositionChanged, this, &MainWindow::onPreviewCurPosChanged);
 	connect(markdownPreview, &MarkdownPreview::posContextChanged, this, &MainWindow::onPrvPosContextChanged);
 	splitter->addWidget(mdEditor);
@@ -821,6 +826,8 @@ void MainWindow::onChangeEditorFontSize(int delta) {
 	QSettings settings;
 	settings.setValue(KEY_EDITOR_FONT_SIZE, g.m_editorFontSize);
 	updateEditorFontSize(g.m_editorFontSize);
+}
+void MainWindow::onChangePreviewFontSize(int delta) {
 }
 void MainWindow::updateEditorFontSize(int sz) {
 	g.m_editorFontSize = sz;
@@ -1711,6 +1718,11 @@ void MainWindow::onAction_Italic() {
 }
 void MainWindow::onAction_Strikethrough() {
 	insertInline("~~");
+}
+void MainWindow::onAction_Link() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	docWidget->m_editor->make_link();
 }
 void MainWindow::onAction_AlignCenter() {
 	DocWidget *docWidget = getCurDocWidget();
