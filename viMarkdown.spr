@@ -425,7 +425,7 @@ SPR# 状 P Open Close ver     Type  概要
 0422 ◎ C 01/20 01/20 01014│問題│do_code_keisen()：テキスト draw 位置が上にずれている
 0423 ◎ C 01/20 01/20 01014│ToDo│'''keisen は大文字小文字同一視
 0424 ◎ C 01/20 01/20 01014│ToDo│'''keisen bgColor: #80808080; で、罫線ブロック背景色指定可能に？
-0425 ● C 01/20            │ToDo│''' background-color: lightgreen; もサポート
+0425 ○ C 01/20 03/01      │ToDo│''' background-color: lightgreen; もサポート → 0.2 ではNPTF, 0.3 で実装
 0426 ◎ C 01/20 01/20 01014│ToDo│'''keisen color: 色名; で、罫線ブロック内テキスト色指定可能に？
 0427 ◎ C 01/20 01/20 01014│ToDo│背景色指定は background-color: に変更
 0428 ◎ C 01/20 01/22 01015│ToDo│[[文書タイトル]] Ctrl + クリック で文書を開く
@@ -661,7 +661,7 @@ SPR# 状 P Open Close ver     Type  概要
 0659 ◎ C 02/10 02/10 01101│問題│文書オープン時に自動削除された空文書は文書履歴から削除すべき。そうでないと変なことになる。
 0660 ◎ C 02/10 02/10 01101│ToDo│文書削除：フルパスを持たない場合は、文書履歴から削除すべき
 0661 ◎ C 02/10 02/10 01101│ToDo│MainWindow::removeHistoryEntries(title, fullPath) 追加
-0662 ● C 02/10            │ToDo│エディタ：Ctrl + クリック でリンク先をオープン機能はとりあえず封印？
+0662 ○ C 02/10 03/01      │ToDo│エディタ：Ctrl + クリック でリンク先をオープン機能はとりあえず封印？→問題対処したので現状ママ
 0663 ◎ C 02/11 02/11 01103│ToDo│DocWidget::previewPosToEditorPos(int pos) : int 追加
 0664 ◎ C 02/11 02/11 01102│ToDo│README_ja.md：主な特徴に CSVブロックを追加
 0665 ◎ C 02/11 02/11 01102│問題│preview と viewer が混在している→preview に統一？
