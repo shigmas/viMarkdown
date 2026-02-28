@@ -1087,10 +1087,12 @@ int MarkdownPreview::findPosition(const PosContext &context) {
 void MarkdownPreview::setCursorByContext(const PosContext &context, const PosContext &acontext) {
 	if( m_processing ) return;		//	再入禁止
 	qDebug() << "MarkdownPreview::setCursorByContext(context)";
-	qDebug() << ".ancharChar = " << context.m_anchorChar << ", nth = " << context.m_nth << ", offset = " << context.m_offset <<
+	qDebug() << "context.ancharChar = " << context.m_anchorChar << ", nth = " << context.m_nth << ", offset = " << context.m_offset <<
 					", srcHBNum = " << context.m_srcHBlockNum << ", prvHBNum = " << context.m_prvHBlockNum;
-	qDebug() << ".ancharChar = " << acontext.m_anchorChar << ", nth = " << acontext.m_nth << ", offset = " << acontext.m_offset <<
+	if( acontext.m_nth != 0 ) {
+		qDebug() << "acontext.ancharChar = " << acontext.m_anchorChar << ", nth = " << acontext.m_nth << ", offset = " << acontext.m_offset <<
 					", srcHBNum = " << acontext.m_srcHBlockNum << ", prvHBNum = " << acontext.m_prvHBlockNum;
+	}
 	m_processing = true;
 	QTextCursor cursor = textCursor();
 	if( acontext.m_nth == 0 ) {		//	非選択状態
