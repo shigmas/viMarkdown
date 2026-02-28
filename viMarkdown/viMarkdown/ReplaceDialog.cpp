@@ -1,5 +1,6 @@
 #include <QSettings>
 #include <QLineEdit>
+#include <QShortcut>
 #include "ReplaceDialog.h"
 #include "MainWindow.h"
 
@@ -25,6 +26,14 @@ ReplaceDialog::ReplaceDialog(const QStringList &hist, const QStringList &replace
 	connect(ui->undoPB, &QPushButton::clicked, this, &ReplaceDialog::onUndo);
 	connect(ui->redoPB, &QPushButton::clicked, this, &ReplaceDialog::onRedo);
 	connect(ui->ignoreCase, &QCheckBox::checkStateChanged, this, &ReplaceDialog::onCheckStateChanged);
+	QShortcut *undoShortcut = new QShortcut(QKeySequence::Undo, this);
+		connect(undoShortcut, &QShortcut::activated, this, [this]() {
+		    emit do_undo(); 
+		});
+	QShortcut *redoShortcut = new QShortcut(QKeySequence::Redo, this);
+		connect(redoShortcut, &QShortcut::activated, this, [this]() {
+		    emit do_redo();
+		});
 }
 
 ReplaceDialog::~ReplaceDialog()
