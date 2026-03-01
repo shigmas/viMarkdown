@@ -642,8 +642,8 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 									"リンク: [テキスト](url) or [テキスト](filename.md#見出し)\n"
 									"画像: ![テキスト](image.png) or 画像ペースト\n"
 									"表組み:\n"
-									"|見出し|見出し|\n|---|---|\n|123|abc|\n\n"
-									"```CSV\n見出し,見出し\n123,abc\n```\n"
+									"|見出し|見出し|\n|-----:|------|\n|   123|abc   |\n\n"
+									"```CSV\n見出し, 見出し\n123, abc\n```\n"
 									"罫線モード: Shift + F5\n　罫線描画: Ctrl + 上下左右キー\n"
 									"　罫線消去: Ctrl + Shift + 上下左右キー\n"
 								);

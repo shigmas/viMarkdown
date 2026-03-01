@@ -506,10 +506,10 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 	for(m_ln = 0; m_ln < m_lst.size(); ++m_ln) {
 		bool bComment = false;		//	コメントがあった
 		//QString buf = m_lst[m_ln];
-		QTextBlock block = doc->findBlockByNumber(m_ln);
-		QString buf = block.text();
+		QTextBlock srcBlock = doc->findBlockByNumber(m_ln);
+		QString buf = srcBlock.text();
 		if( !m_inComment ) {
-			block.setUserState(US_DEFAULT);
+			srcBlock.setUserState(US_DEFAULT);
 			int start = 0, ix;
 			while( (ix = indexOfComment(buf, start)) >= 0 ) {
 				bComment = true;
@@ -523,7 +523,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 			}
 			if( bComment && buf.isEmpty() ) continue;
 		} else {
-			block.setUserState(US_IN_COMMENT);
+			srcBlock.setUserState(US_IN_COMMENT);
 			int ix = buf.indexOf("-->");
 			if( ix < 0 ) continue;
 			m_inComment = false;
@@ -547,16 +547,16 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 			do_quote(cursor, buf);
 		} else if( buf.startsWith("```CSV", Qt::CaseInsensitive) ) {
 			do_body(cursor);
-			do_CSV(block, cursor);
+			do_CSV(srcBlock, cursor);
 		} else if( buf.startsWith("```keisen", Qt::CaseInsensitive) ) {
 			do_body(cursor);
-			do_keisen_block(block, cursor);
+			do_keisen_block(srcBlock, cursor);
 		} else if( buf.startsWith("```") ) {
 			do_body(cursor);
 			do_code(cursor);
 		} else if( isTableLine(buf, m_tableTokens) && m_ln + 1 < m_lst.size() && isTableHyphenLine(m_lst[m_ln+1], m_tableAlign) ) {
 			do_body(cursor);
-			do_table(block, cursor);
+			do_table(srcBlock, cursor);
 		} else {
 			if( isUnderlineHeading(buf) && do_underlineHeading(cursor, buf) )
 				continue;		//	アンダーライン見出しだった場合
@@ -567,17 +567,17 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 	cursor.endEditBlock();
 	m_processing = false;
 }
-void MarkdownPreview::do_table(QTextBlock& block, QTextCursor& cursor) {
+void MarkdownPreview::do_table(QTextBlock& srcBlock, QTextCursor& cursor) {
 	QString buf = m_lst[m_ln] + "\n" + m_lst[m_ln+1] /*+ "\n"*/;
-	block.setUserState(US_TABLE);
-	block = block.next();
-	block.setUserState(US_TABLE);
-	block = block.next();
+	srcBlock.setUserState(US_TABLE);
+	srcBlock = srcBlock.next();
+	srcBlock.setUserState(US_TABLE);
+	srcBlock = srcBlock.next();
 	m_ln += 2;
 	while( m_ln < m_lst.size() && isTableLine(m_lst[m_ln], m_tableTokens) ) {
 		buf += "\n" + m_lst[m_ln++];
-		block.setUserState(US_TABLE);
-		block = block.next();
+		srcBlock.setUserState(US_TABLE);
+		srcBlock = srcBlock.next();
 	}
 	cursor.insertMarkdown(buf);
 	cursor.movePosition(QTextCursor::Left);
@@ -713,8 +713,8 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 	fields.append(currentField.trimmed());
 	return inQuotes;
 }
-void MarkdownPreview::do_CSV(QTextBlock& block, QTextCursor& cursor) {		//	cursor: プレビューカーソル
-	block.setUserState(US_CSV_BLOCK);
+void MarkdownPreview::do_CSV(QTextBlock& srcBlock, QTextCursor& cursor) {		//	cursor: プレビューカーソル
+	srcBlock.setUserState(US_CSV_BLOCK);
 	QList<QStringList> ll;
 	int max_clmn = 0;
 	bool inQuotes = false;
@@ -722,16 +722,16 @@ void MarkdownPreview::do_CSV(QTextBlock& block, QTextCursor& cursor) {		//	curso
 	bool commented = false;		//	行単位でコメントアウトされた
 	QStringList fields;
 	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
-		block = block.next();
-		block.setUserState(US_CSV_BLOCK);
+		srcBlock = srcBlock.next();
+		srcBlock.setUserState(US_CSV_BLOCK);
 		inQuotes = parseCsvLine(fields, m_lst[m_ln], inQuotes, inComment, commented);
 		if( !inQuotes && !inComment && !commented ) {
 			max_clmn = qMax(max_clmn, fields.size());
 			ll.push_back(fields);
 		}
 	}
-	if( block.isValid() )
-		block.setUserState(US_CSV_BLOCK);
+	if( srcBlock.isValid() )
+		srcBlock.setUserState(US_CSV_BLOCK);
 	if( ll.isEmpty() ) return;
 	static QRegularExpression re("^[+-]?(\\d+\\.\\d*|\\d+|\\.\\d+)$");
 	cursor.beginEditBlock();
@@ -773,8 +773,8 @@ void MarkdownPreview::do_CSV(QTextBlock& block, QTextCursor& cursor) {		//	curso
 	cursor.endEditBlock();
 	//++m_ln;
 }
-void MarkdownPreview::do_keisen_block(QTextBlock& block, QTextCursor& cursor) {
-	block.setUserState(US_KEISEN_BLOCK);
+void MarkdownPreview::do_keisen_block(QTextBlock& srcBlock, QTextCursor& cursor) {
+	srcBlock.setUserState(US_KEISEN_BLOCK);
 	QFont font;
 	QStringView buf = m_lst[m_ln].mid(QString("```keisen").size());
 	QColor bgcolor = g.m_keisenBlockColor;
@@ -805,12 +805,12 @@ void MarkdownPreview::do_keisen_block(QTextBlock& block, QTextCursor& cursor) {
 	int width = 100;
 	int m_ln0 = m_ln + 1;
 	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
-		block = block.next();
-		block.setUserState(US_KEISEN_BLOCK);
+		srcBlock = srcBlock.next();
+		srcBlock.setUserState(US_KEISEN_BLOCK);
 		width = qMax(width, fm.horizontalAdvance(m_lst[m_ln])+10);
 	}
-	block = block.next();
-	block.setUserState(US_KEISEN_BLOCK);
+	srcBlock = srcBlock.next();
+	srcBlock.setUserState(US_KEISEN_BLOCK);
 	int lineHeight = fm.lineSpacing(); // 行の間隔（高さ＋行間）
 	
 	int height = lineHeight * (m_ln - m_ln0);
@@ -825,6 +825,7 @@ void MarkdownPreview::do_keisen_block(QTextBlock& block, QTextCursor& cursor) {
 	painter.end();
 	//
 	cursor.insertBlock();
+	cursor.block().setUserState(US_KEISEN_BLOCK);
 	QTextBlockFormat blockFormat;
 	blockFormat.setTopMargin(lineHeight/2);
 	cursor.mergeBlockFormat(blockFormat);
@@ -944,11 +945,11 @@ void MarkdownPreview::do_list(QTextCursor& cursor, QString buf) {
 		helper.deleteChar(); 
 	}
 	if( is_checkbox ) {
-		QTextBlock block = document()->findBlock(pos);
+		QTextBlock srcBlock = document()->findBlock(pos);
 		for(int i = 0; i < n_item; ++i) {
-			//block.setUserState(ln++);
-			block.setUserState(US_CHECKBOX);
-			block = block.next();
+			//srcBlock.setUserState(ln++);
+			srcBlock.setUserState(US_CHECKBOX);
+			srcBlock = srcBlock.next();
 		}
 	}
 	cursor.insertBlock();
@@ -1118,18 +1119,22 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 	PosContext pc;
 	auto *doc = document();
 	QTextBlock block = doc->findBlock(pos);
-	//pc.m_chPrev = pos != block.position() ? doc->characterAt(pos-1) : QChar();
-	auto chat = doc->characterAt(pos);
-	if( pos > 0 && (chat == endOfCell || chat == u' ') ) {
-		pc.m_offset += 1;
-		chat = doc->characterAt(--pos);
+	if( block.userState() == US_KEISEN_BLOCK ) {
+		pc.m_anchorChar = QChar(U_KEISEN_BLOCK);
 	} else {
-		while( pos > 0 && chat == QChar::ParagraphSeparator ) {
+		//pc.m_chPrev = pos != block.position() ? doc->characterAt(pos-1) : QChar();
+		auto chat = doc->characterAt(pos);
+		if( pos > 0 && (chat == endOfCell || chat == u' ') ) {
 			pc.m_offset += 1;
 			chat = doc->characterAt(--pos);
+		} else {
+			while( pos > 0 && chat == QChar::ParagraphSeparator ) {
+				pc.m_offset += 1;
+				chat = doc->characterAt(--pos);
+			}
 		}
+		pc.m_anchorChar = chat != QChar::ParagraphSeparator ? chat : QChar();
 	}
-	pc.m_anchorChar = chat != QChar::ParagraphSeparator ? chat : QChar();
 	//pc.m_anchorChar = chat;
 	while( block.userState() != US_HEADING ) {		//	直前の見出し行を探す
 		if( !block.previous().isValid() )
@@ -1145,6 +1150,19 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 				break;
 			++count;
 			block = block.next();
+		}
+	} else if( pc.m_anchorChar == QChar(U_KEISEN_BLOCK) ) {		//	罫線ブロックの場合
+		while( block.isValid() ) {
+			if( block.userState() == U_KEISEN_BLOCK ) {
+				while( block.userState() == U_KEISEN_BLOCK ) {
+					block = block.next();
+					if( !block.isValid() ) break;
+				}
+				if( block.position() > pos )
+					break;
+				++count;
+			} else
+				block = block.next();
 		}
 	} else {
 		for (int i = block.position(); i < pos; ++i) {

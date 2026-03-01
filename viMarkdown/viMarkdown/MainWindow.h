@@ -55,6 +55,7 @@ struct PosContext {
     int		m_srcHBlockNum = 0;		//	直前見出し行ブロック番号（0 org.）、見つからない場合は 0
     int		m_prvHBlockNum = 0;		//	直前見出し行ブロック番号（0 org.）、見つからない場合は 0
 };
+#define		U_KEISEN_BLOCK	0xe000		//	罫線ブロック文字 ユニコード（PAU)
 
 class DocWidget;
 
