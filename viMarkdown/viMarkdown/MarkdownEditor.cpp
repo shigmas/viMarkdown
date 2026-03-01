@@ -2044,7 +2044,7 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 				pos = block.position() + block.text().size();
 				break;
 			}
-			block = block.next();
+			block = block.previous();
 			pos = block.position();
 		}
 	} else {
