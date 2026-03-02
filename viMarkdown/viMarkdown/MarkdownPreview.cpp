@@ -480,6 +480,7 @@ void MarkdownPreview::do_body(QTextCursor& cursor, bool last) {
 }
 
 static QRegularExpression re_list(R"(^ *[-\*+] )");
+static QRegularExpression re_block(R"(^ *[#`\s])");
 static QRegularExpression re_numlist(R"(^(\s*)(\d+)([.)]) )");
 
 int indexOfComment(QStringView buf, int start) {
@@ -936,19 +937,24 @@ void MarkdownPreview::do_list(QTextCursor& cursor, QString buf) {
 	int pos = cursor.position();
 	int n_item = 1;
 	int ln = m_ln;
-	bool is_checkbox = re_checkbox.match(buf).hasMatch();
+	bool is_checkbox = re_checkbox.match(buf).hasMatch();		//	チェックボックス（"- [ ] "）の場合
 	if( is_checkbox ) {
 		while( ++m_ln < m_lst.size() ) {
 			if( !re_checkbox.match(m_lst[m_ln]).hasMatch() ) break;
 			buf += u'\n' + m_lst[m_ln];
 			++n_item;
 		}
-	} else {
+	} else {		//	リストの場合
 		//static QRegularExpression re(R"(^( *)- )");
 		while( ++m_ln < m_lst.size() ) {
-			if( !re_list.match(m_lst[m_ln]).hasMatch() ) break;			//	"- " リスト行が終わった場合
-			if( re_checkbox.match(m_lst[m_ln]).hasMatch() ) break;
-			buf += u'\n' + m_lst[m_ln];
+			if( m_lst[m_ln].isEmpty() ) break;		//	空行だった場合
+			if( re_list.match(m_lst[m_ln]).hasMatch() )	//	リスト行
+				buf += u'\n' + m_lst[m_ln];
+			else {	//	非リスト行の場合
+				if( re_block.match(m_lst[m_ln]).hasMatch() )	//	ブロック行の場合
+					break;
+				buf += u"<br/>" + m_lst[m_ln];
+			}
 		}
 	}
 	int startPos = cursor.position();
