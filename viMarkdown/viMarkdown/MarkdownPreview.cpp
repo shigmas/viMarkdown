@@ -67,6 +67,7 @@ void MarkdownPreview::onCursorPosChanged() {
 void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int charsAdded) {
 	if( m_processing ) return;
 	if (m_isComposing) return;		//	IME変換中
+	qDebug() << "*** MarkdownPreview::onContentsChanged(" << position << ", " << charsRemoved << ", " << charsAdded << ")";
 	m_processing = true;
 	QTextCursor cursor = this->textCursor();
 	const QString &text = cursor.block().text();		//	編集後ブロックテキスト
@@ -96,15 +97,17 @@ void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int char
 	}
 	if( charsAdded > 0 ) {
 		QTextCursor cursor = this->textCursor();
-		int pos0 = cursor.position();
+		int pos0 = cursor.position();		//	文字挿入後プレビューカーソル位置
 		cursor.setPosition(position);
 		QTextBlock block = cursor.block();
 		QString addedStr = block.text().mid(cursor.position() - block.position(), charsAdded);
 		addedStr.replace("\\", "\\\\").replace("#", "\\#").replace("-", "\\-").replace("<", "\\<")
 				.replace("`", "\\`").replace("[", "\\[").replace("*", "\\*").replace("_", "\\_").replace("~", "\\~");
-		if( addedStr.isEmpty() && charsRemoved == 0 && charsAdded == 1 )		//	改行が入力された場合
+		if( addedStr.isEmpty() && charsRemoved == 0 && charsAdded == 1 ) {		//	改行が入力された場合
 			addedStr = "  \n";
-		qDebug() << "addedStr = " << addedStr;
+			++pos0;
+		}
+		qDebug() << "addedStr = " << addedStr << ", pos0 = " << pos0;
 		emit textInserted(addedStr);
 		cursor.setPosition(pos0);
 		setTextCursor(cursor);
@@ -423,7 +426,7 @@ void MarkdownPreview::do_body_sub(QTextCursor& cursor, const QString &buf) {
 	//cursor.insertMarkdown(buf);
 #endif
 }
-void MarkdownPreview::do_body(QTextCursor& cursor) {
+void MarkdownPreview::do_body(QTextCursor& cursor, bool last) {
 	if( m_bodyList.isEmpty() ) return;
 #if 1
 	//封印：static QRegularExpression re("\\[\\[(.+?)\\]\\]");		//	[[タイトル]]
@@ -439,6 +442,10 @@ void MarkdownPreview::do_body(QTextCursor& cursor) {
 		blockFormat.setAlignment(Qt::AlignJustify); // 左右両端揃え
 		cursor.mergeBlockFormat(blockFormat);
 		cursor.insertMarkdown(buf);
+	}
+	int sz = m_bodyList.size();
+	if( last && sz >= 2 && m_bodyList[sz-1].isEmpty() && m_bodyList[sz-2].endsWith("  ") ) {
+		cursor.insertBlock();
 	}
 	m_bodyList.clear();
 #else
@@ -563,7 +570,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 			m_bodyList += buf;
 		}
 	}
-	do_body(cursor);
+	do_body(cursor, true);
 	cursor.endEditBlock();
 	m_processing = false;
 }

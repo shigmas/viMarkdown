@@ -92,7 +92,7 @@ protected:
     //bool	isTableLine(const QString&);
     //bool	isTableHyphenLine(const QString&);
 
-    void	do_body(QTextCursor&);
+    void	do_body(QTextCursor&, bool = false);
     void	do_body_sub(QTextCursor&, const QString&);
     void	do_table(QTextBlock&, QTextCursor&);
     bool	do_underlineHeading(QTextCursor&, QString buf);
