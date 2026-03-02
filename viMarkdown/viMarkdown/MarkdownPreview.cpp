@@ -70,12 +70,16 @@ void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int char
 	qDebug() << "*** MarkdownPreview::onContentsChanged(" << position << ", " << charsRemoved << ", " << charsAdded << ")";
 	m_processing = true;
 	QTextCursor cursor = this->textCursor();
-	const QString &text = cursor.block().text();		//	編集後ブロックテキスト
+	QTextBlock block = cursor.block();
+	const QString &text = block.text();		//	編集後ブロックテキスト
 	int cpos = cursor.position();
 	int bpos = position - cursor.block().position();	//	ブロック先頭からの編集位置
 	QString strAdded = text.mid(bpos, charsAdded);
-	if( charsAdded != 0 && strAdded.isEmpty() && document()->characterAt(position) == QChar::ParagraphSeparator )
+	if( block.userState() == US_DEFAULT && charsAdded != 0 && strAdded.isEmpty() &&
+		document()->characterAt(position) == QChar::ParagraphSeparator )
+	{
 		strAdded = "  \n";
+	}
 	QString strRemoved = m_lastCurBlockText.mid(bpos, charsRemoved);
 	charsRemoved = qMin(charsRemoved, strRemoved.size());		//	行末を超えている場合対応
 	charsAdded = qMin(charsAdded, strAdded.size());		//	行末を超えている場合対応
@@ -103,8 +107,12 @@ void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int char
 		QString addedStr = block.text().mid(cursor.position() - block.position(), charsAdded);
 		addedStr.replace("\\", "\\\\").replace("#", "\\#").replace("-", "\\-").replace("<", "\\<")
 				.replace("`", "\\`").replace("[", "\\[").replace("*", "\\*").replace("_", "\\_").replace("~", "\\~");
-		if( addedStr.isEmpty() && charsRemoved == 0 && charsAdded == 1 ) {		//	改行が入力された場合
-			addedStr = "  \n";
+		if( addedStr.isEmpty() && charsRemoved == 0 && charsAdded == 1  )
+		{		//	改行が入力された場合
+			if( block.userState() == US_DEFAULT )
+				addedStr = "  \n";
+			else
+				addedStr = "\n";
 			++pos0;
 		}
 		qDebug() << "addedStr = " << addedStr << ", pos0 = " << pos0;
