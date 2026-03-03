@@ -480,7 +480,7 @@ void MarkdownPreview::do_body(QTextCursor& cursor, bool last) {
 }
 
 static QRegularExpression re_list(R"(^ *[-\*+] )");
-static QRegularExpression re_block(R"(^ *[#`\s])");
+static QRegularExpression re_block(R"(^ *[#`\d])");
 static QRegularExpression re_numlist(R"(^(\s*)(\d+)([.)]) )");
 
 int indexOfComment(QStringView buf, int start) {
@@ -946,14 +946,22 @@ void MarkdownPreview::do_list(QTextCursor& cursor, QString buf) {
 		}
 	} else {		//	リストの場合
 		//static QRegularExpression re(R"(^( *)- )");
+		bool isPrevlist = true;
 		while( ++m_ln < m_lst.size() ) {
-			if( m_lst[m_ln].isEmpty() ) break;		//	空行だった場合
-			if( re_list.match(m_lst[m_ln]).hasMatch() )	//	リスト行
-				buf += u'\n' + m_lst[m_ln];
-			else {	//	非リスト行の場合
-				if( re_block.match(m_lst[m_ln]).hasMatch() )	//	ブロック行の場合
+			QString text = m_lst[m_ln];
+			if( text.isEmpty() ) break;		//	空行だった場合
+			if( re_list.match(text).hasMatch() ) {	//	リスト行
+				buf += u'\n' + text;
+				isPrevlist = true;
+			} else {	//	非リスト行の場合
+				if( re_block.match(text).hasMatch() )	//	ブロック行の場合
 					break;
-				buf += u"<br/>" + m_lst[m_ln];
+				text = text.trimmed();
+				if( isPrevlist )
+					buf += u"<br/>" + text;
+				else
+					buf += u"\n" + text;
+				isPrevlist = false;
 			}
 		}
 	}
