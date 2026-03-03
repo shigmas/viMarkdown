@@ -22,6 +22,7 @@ protected:
 	void onHeadingColorButtonClicked();
 	void onActiveLineColorButtonClicked();
 	void onInactiveLineColorButtonClicked();
+	void onBoldItalicColorButtonClicked();
 	void onBoldColorButtonClicked();
 	void onItalicColorButtonClicked();
 	void onStrikethroughColorButtonClicked();

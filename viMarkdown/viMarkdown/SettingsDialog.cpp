@@ -21,6 +21,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 	connect(ui->headingsColorPB, &QPushButton::clicked, this, &SettingsDialog::onHeadingColorButtonClicked);
 	connect(ui->activeLineColorPB, &QPushButton::clicked, this, &SettingsDialog::onActiveLineColorButtonClicked);
 	connect(ui->inactiveLineColorPB, &QPushButton::clicked, this, &SettingsDialog::onInactiveLineColorButtonClicked);
+	connect(ui->boldItalicColorPB, &QPushButton::clicked, this, &SettingsDialog::onBoldItalicColorButtonClicked);
 	connect(ui->boldColorPB, &QPushButton::clicked, this, &SettingsDialog::onBoldColorButtonClicked);
 	connect(ui->italicColorPB, &QPushButton::clicked, this, &SettingsDialog::onItalicColorButtonClicked);
 	connect(ui->strikethroughColorPB, &QPushButton::clicked, this, &SettingsDialog::onStrikethroughColorButtonClicked);
@@ -50,6 +51,7 @@ void SettingsDialog::updateColorButtons() {
 	setColorButtonStyle(ui->headingsColorPB,     g.m_headingsColor);
     setColorButtonStyle(ui->activeLineColorPB,   g.m_activeLnColor);
     setColorButtonStyle(ui->inactiveLineColorPB, g.m_inactiveLnColor);
+    setColorButtonStyle(ui->boldItalicColorPB,   g.m_boldItalicColor);
     setColorButtonStyle(ui->boldColorPB,         g.m_boldColor);
     setColorButtonStyle(ui->italicColorPB,       g.m_italicColor);
     setColorButtonStyle(ui->strikethroughColorPB, g.m_strikethroughColor);
@@ -59,7 +61,7 @@ void SettingsDialog::updateColorButtons() {
     setColorButtonStyle(ui->CSVZebra2PB,         g.m_CSVZebraColor2);
     setColorButtonStyle(ui->quotePB,             g.m_quoteColor);
     setColorButtonStyle(ui->codeBlockPB,         g.m_codeBlockColor);
-    setColorButtonStyle(ui->keisenBlockPB,         g.m_keisenBlockColor);
+    setColorButtonStyle(ui->keisenBlockPB,       g.m_keisenBlockColor);
 #else
 	ui->headingsColorPB->setStyleSheet(QString(
         "background-color: %1;" // 背景色をセット
@@ -129,6 +131,9 @@ void SettingsDialog::onInactiveLineColorButtonClicked() {
 }
 void SettingsDialog::onHeadingColorButtonClicked() {
 	pickColor(g.m_headingsColor, "Heading");
+}
+void SettingsDialog::onBoldItalicColorButtonClicked() {
+	pickColor(g.m_boldItalicColor, "BoldItalic");
 }
 void SettingsDialog::onBoldColorButtonClicked() {
 	pickColor(g.m_boldColor, "Bold");

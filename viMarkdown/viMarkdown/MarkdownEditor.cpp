@@ -308,11 +308,13 @@ class MarkdownHighlighter : public QSyntaxHighlighter {
 public:
 	MarkdownHighlighter(QTextDocument *parent) : QSyntaxHighlighter(parent)
 	{
+		m_boldItalicFormat.setForeground(g.m_boldItalicColor);
 		//m_boldFormat.setFontWeight(QFont::Bold);
 		m_boldFormat.setForeground(g.m_boldColor);
 		m_italicFormat.setForeground(g.m_italicColor);
 		m_strikethroughFormat.setForeground(g.m_strikethroughColor);
-		m_boldRegex = QRegularExpression(R"(\*\*([^\*]+)\*\*)");
+		m_boldItalicRegex = QRegularExpression(R"(\*\*\*([^\*]+)\*\*\*)");
+		m_boldRegex = QRegularExpression(R"([^\*]\*\*([^\*]+)\*\*[^\*])");
 		m_italicRegex = QRegularExpression(R"([^\*]\*([^\*]+)\*[^\*])");
 		m_strikethroughRegex = QRegularExpression(R"(\~\~([^\*]+)\~\~)");
 	}
@@ -321,6 +323,7 @@ public:
 	//	  rehighlight(); // これを呼ぶことでドキュメント全体の highlightBlock が再実行される
 	//}
 	void updateInlineColors() {
+		m_boldItalicFormat.setForeground(g.m_boldItalicColor);
 		m_boldFormat.setForeground(g.m_boldColor);
 		m_italicFormat.setForeground(g.m_italicColor);
 		m_strikethroughFormat.setForeground(g.m_strikethroughColor);
@@ -335,7 +338,12 @@ protected:
 		} else {
 			// デフォルトの色（黒）
 			setFormat(0, text.length(), QColor("black"));
-			auto it = m_boldRegex.globalMatch(text);
+			auto it = m_boldItalicRegex.globalMatch(text);
+			while (it.hasNext()) {
+				QRegularExpressionMatch match = it.next();
+				setFormat(match.capturedStart(), match.capturedLength(), m_boldItalicFormat);
+			}
+			it = m_boldRegex.globalMatch(text);
 			while (it.hasNext()) {
 				QRegularExpressionMatch match = it.next();
 				setFormat(match.capturedStart(), match.capturedLength(), m_boldFormat);
@@ -353,9 +361,11 @@ protected:
 		}
 	}
 private:
+	QTextCharFormat m_boldItalicFormat;
 	QTextCharFormat m_boldFormat;
 	QTextCharFormat m_italicFormat;
 	QTextCharFormat m_strikethroughFormat;
+	QRegularExpression m_boldItalicRegex;
 	QRegularExpression m_boldRegex;
 	QRegularExpression m_italicRegex;
 	QRegularExpression m_strikethroughRegex;

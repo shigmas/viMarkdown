@@ -81,6 +81,7 @@ struct Global {
 	QColor	m_activeLnColor;		//	アクティブ時アンダーライン行カーソル色
 	QColor	m_inactiveLnColor;		//	非アクティブ時アンダーライン行カーソル色
 	QColor	m_headingsColor;
+	QColor	m_boldItalicColor;
 	QColor	m_boldColor;
 	QColor	m_italicColor;
 	QColor	m_strikethroughColor;

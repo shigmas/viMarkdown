@@ -90,6 +90,7 @@ void MainWindow::load_settings() {
 	g.m_activeLnColor = settings.value(KEY_ACTIVA_LINE_COLOR, QColor("#ff0000")).value<QColor>();
 	g.m_inactiveLnColor = settings.value(KEY_INACTIVA_LINE_COLOR, QColor("#800000")).value<QColor>();
 	g.m_headingsColor = settings.value(KEY_HEADINGS_COLOR, QColor("#800000")).value<QColor>();		//	デフォルト：ダークレッド
+	g.m_boldItalicColor = settings.value(KEY_BOLD_ITALIC_COLOR, QColor("#FF00FF")).value<QColor>();		//	紫
 	g.m_boldColor = settings.value(KEY_BOLD_COLOR, QColor("#00FF00")).value<QColor>();
 	g.m_italicColor = settings.value(KEY_ITALIC_COLOR, QColor("#0000FF")).value<QColor>();
 	g.m_strikethroughColor = settings.value(KEY_STRIKETHROUGH_COLOR, QColor("#00ffff")).value<QColor>();
