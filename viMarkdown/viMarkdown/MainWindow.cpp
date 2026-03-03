@@ -108,6 +108,7 @@ void MainWindow::save_settings() {
     settings.setValue(KEY_EDITOR_FONT_SIZE, g.m_editorFontSize);
     settings.setValue(KEY_PREVIEW_FONT_SIZE, g.m_previewFontSize);
     settings.setValue(KEY_HEADINGS_COLOR, g.m_headingsColor);
+    settings.setValue(KEY_BOLD_ITALIC_COLOR, g.m_boldItalicColor);
     settings.setValue(KEY_BOLD_COLOR, g.m_boldColor);
     settings.setValue(KEY_ITALIC_COLOR, g.m_italicColor);
     settings.setValue(KEY_STRIKETHROUGH_COLOR, g.m_strikethroughColor);
