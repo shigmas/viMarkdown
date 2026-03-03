@@ -947,6 +947,7 @@ void MarkdownPreview::do_list(QTextCursor& cursor, QString buf) {
 	} else {		//	リストの場合
 		//static QRegularExpression re(R"(^( *)- )");
 		bool isPrevlist = true;
+		bool spc2Prev = false;
 		while( ++m_ln < m_lst.size() ) {
 			QString text = m_lst[m_ln];
 			if( text.isEmpty() ) break;		//	空行だった場合
@@ -956,12 +957,14 @@ void MarkdownPreview::do_list(QTextCursor& cursor, QString buf) {
 			} else {	//	非リスト行の場合
 				if( re_block.match(text).hasMatch() )	//	ブロック行の場合
 					break;
+				bool spc2 = text.endsWith("  ");
 				text = text.trimmed();
-				if( isPrevlist )
+				if( isPrevlist || spc2Prev )
 					buf += u"<br/>" + text;
 				else
 					buf += u"\n" + text;
 				isPrevlist = false;
+				spc2Prev = spc2;
 			}
 		}
 	}
