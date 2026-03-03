@@ -90,7 +90,7 @@
 
 ```CSV
 " カテゴリ ", " 項目 ", " 説明 ", " ショートカット "
-"Other", "Settings...", "設定ダイアログ表示", "F8"
+"Other", "Settings...", "[設定ダイアログ](dialogs.md#設定ダイアログ)表示", "F8"
 "Other", "Help", "ヘルプ文書表示", "F1"
 "Other", "About viMarkdown...", "About viMarkdown ダイアログ表示", "F1"
 ```
