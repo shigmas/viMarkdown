@@ -73,7 +73,7 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
+          <item row="3" column="0">
            <widget class="QLabel" name="label_6">
             <property name="text">
              <string>Bold color:</string>
@@ -83,7 +83,7 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
+          <item row="3" column="1">
            <widget class="QPushButton" name="boldColorPB">
             <property name="maximumSize">
              <size>
@@ -96,14 +96,14 @@
             </property>
            </widget>
           </item>
-          <item row="7" column="0">
+          <item row="8" column="0">
            <widget class="QLabel" name="label_9">
             <property name="text">
              <string>Match color:</string>
             </property>
            </widget>
           </item>
-          <item row="7" column="1">
+          <item row="8" column="1">
            <widget class="QPushButton" name="matchColorPB">
             <property name="maximumSize">
              <size>
@@ -116,21 +116,21 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="0">
+          <item row="4" column="0">
            <widget class="QLabel" name="label_10">
             <property name="text">
              <string>Italic color:</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="0">
+          <item row="5" column="0">
            <widget class="QLabel" name="label_11">
             <property name="text">
              <string>strikethrough:</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="1">
+          <item row="4" column="1">
            <widget class="QPushButton" name="italicColorPB">
             <property name="maximumSize">
              <size>
@@ -143,8 +143,28 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="1">
+          <item row="5" column="1">
            <widget class="QPushButton" name="strikethroughColorPB">
+            <property name="maximumSize">
+             <size>
+              <width>100</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_15">
+            <property name="text">
+             <string>Bold Italic color:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QPushButton" name="boldItalicColorPB">
             <property name="maximumSize">
              <size>
               <width>100</width>
@@ -400,6 +420,25 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>fontSize</tabstop>
+  <tabstop>headingsColorPB</tabstop>
+  <tabstop>boldItalicColorPB</tabstop>
+  <tabstop>boldColorPB</tabstop>
+  <tabstop>italicColorPB</tabstop>
+  <tabstop>strikethroughColorPB</tabstop>
+  <tabstop>matchColorPB</tabstop>
+  <tabstop>CSVHeaderPB</tabstop>
+  <tabstop>CSVZebra1PB</tabstop>
+  <tabstop>CSVZebra2PB</tabstop>
+  <tabstop>quotePB</tabstop>
+  <tabstop>codeBlockPB</tabstop>
+  <tabstop>keisenBlockPB</tabstop>
+  <tabstop>activeLineColorPB</tabstop>
+  <tabstop>inactiveLineColorPB</tabstop>
+  <tabstop>pushButton</tabstop>
+  <tabstop>pushButton_2</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

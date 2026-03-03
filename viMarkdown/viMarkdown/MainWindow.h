@@ -15,6 +15,7 @@ QT_END_NAMESPACE
 #define	KEY_ACTIVA_LINE_COLOR		u"activeLineColor"
 #define	KEY_INACTIVA_LINE_COLOR		u"inactiveLineColor"
 #define	KEY_HEADINGS_COLOR			u"headingsColor"
+#define	KEY_BOLD_ITALIC_COLOR		u"boldItalicColor"
 #define	KEY_BOLD_COLOR				u"boldColor"
 #define	KEY_ITALIC_COLOR			u"italicColor"
 #define	KEY_STRIKETHROUGH_COLOR		u"strikethroughColor"
