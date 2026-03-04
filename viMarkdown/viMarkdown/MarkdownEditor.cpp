@@ -2030,6 +2030,29 @@ void MarkdownEditor::dragEnterEvent(QDragEnterEvent *e) {
 void MarkdownEditor::dropEvent(QDropEvent *e) {
    	e->ignore();
 }
+bool MarkdownEditor::isInComment(int pos) const {		//	指定位置がコメント内か？
+	auto* doc = document();
+	QTextBlock block = doc->findBlock(pos);
+	bool inComment = block.userState() == US_IN_COMMENT;
+	const QStringView buf = block.text();
+	int ip = pos - block.position();
+	for(int ix = 0; ix < ip; ) {
+		if( inComment ) {
+			if( buf.mid(ix).startsWith(u"-->") ) {
+				ix += 3;
+				inComment = false;
+			} else
+				++ix;
+		} else {
+			if( buf.mid(ix).startsWith(u"<!--") ) {
+				ix += 4;
+				inComment = true;
+			} else
+				++ix;
+		}
+	}
+	return inComment;
+}
 PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext を構築
 	PosContext pc;
 	int offset = 0;

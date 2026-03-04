@@ -1,9 +1,4 @@
-﻿## head1
+﻿# test_comment
 
-abc
+hoge <!-- commented --> fuga
 
-<!--
-## head2
--->
-
-abc
