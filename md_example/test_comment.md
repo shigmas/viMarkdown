@@ -1,4 +1,5 @@
 ﻿# test_comment
 
-hoge <!-- commented --> fuga
+h<!-- commented -->fuga
+h <!-- commented --> fuga
 
