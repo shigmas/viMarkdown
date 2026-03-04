@@ -103,7 +103,8 @@ protected:
     void	do_keisen_up(bool erase = false, bool thickKeisen = false);
     void	do_keisen_down(bool erase = false, bool thickKeisen = false);
 	void	applyAlignment(Align align);
-	bool	isInComment(int position) const;
+	bool	isInComment(int pos) const;
+	bool	isInLinkURL(int pos, int& closeIX) const;
 
 private:
 	bool	m_processing = false;			//	罫線保護処理中

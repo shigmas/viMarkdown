@@ -3,7 +3,7 @@
 [[wikilink]]
 
 
-[viMarkdown](https://github.com/vivisuke/viMarkdown)  
+Github [viMarkdown](https://github.com/vivisuke/viMarkdown) Github
 
 [copytodist.bat](file://c:/src/vs2026qt6/copytodist.bat)  
 [copytodist.bat](file:///c:/src/vs2026qt6/copytodist.bat)  
