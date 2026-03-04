@@ -876,7 +876,7 @@ SPR# 状 P Open Close ver     Type  概要
 0864 ◎ C 03/03 03/03 01121│問題│設定ダイアログ：Tab を押したときに選択される順序（タブオーダー）が不正
 0865 ◎ C 03/03 03/03 01121│問題│行頭から **i** または行末が **i** の場合、エディタでイタリック強調されない
 0866 ◎ C 03/05 03/05 01122│ToDo│実装：MarkdownEditor::isInComment(int position) 指定位置がコメント内か？
-0867 ● C 03/05            │ToDo│
-0868 ● C 03/05            │ToDo│
+0867 ◎ C 03/05 03/05 01122│問題│MarkdownEditor::isInComment(int position)："<!--" 先頭位置の場合は true を返した方がよい
+0868 ● C 03/05            │問題│
 0869 ● C 03/05            │ToDo│
 0870 ● C 03/05            │ToDo│

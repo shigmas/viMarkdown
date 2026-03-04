@@ -2044,7 +2044,7 @@ bool MarkdownEditor::isInComment(int pos) const {		//	指定位置がコメン�
 			ix = ix2 + 3;
 		} else {
 			int ix2 = buf.indexOf(u"<!--", ix);
-			if( ix2 < 0 || ix2 >= ip ) break;
+			if( ix2 < 0 || ix2 > ip ) break;
 			inComment = true;
 			ix = ix2 + 4;
 		}
