@@ -712,7 +712,7 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 			if (inQuotes && i + 1 < line.length() && line.at(i + 1) == '"') {
 				currentField += '"';
 				i++; // 1文字飛ばす
-			} else if( currentField.isEmpty() || i + 1 < line.length() && line.at(i + 1) == ',') {
+			} else if( currentField.isEmpty() || i + 1 == line.length() || line.at(i + 1) == ',') {
 				inQuotes = !inQuotes; // クォート状態の反転
 			} else {
 				currentField += '"';
