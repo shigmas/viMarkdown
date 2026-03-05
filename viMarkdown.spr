@@ -879,4 +879,14 @@ SPR# 状 P Open Close ver     Type  概要
 0867 ◎ C 03/05 03/05 01122│問題│MarkdownEditor::isInComment(int position)："<!--" 先頭位置の場合は true を返した方がよい
 0868 ◎ C 03/05 03/05 01122│ToDo│MarkdownEditor::isInLinkURL(int pos)：実装
 0869 ◎ C 03/05 03/05 01122│問題│エディタ→プレビューカーソル位置同期：[title](url) の url 部分にカーソルがある場合は、url 直後と解釈するべき
-0870 ● C 03/05            │ToDo│
+0870 ● C 03/05            │問題│MarkdownEditor::contextAt()：[title](url) の url 部分が無視されない（nthの値が不正になる）
+0871 ◎ C 03/05 03/05 01122│問題│Esc 押下：エディタの選択解除されるが、プレビューでは選択解除されない
+0872 ● C 03/05            │ToDo│
+0873 ● C 03/05            │ToDo│
+0874 ● C 03/05            │ToDo│
+0875 ● C 03/05            │ToDo│
+0876 ● C 03/05            │ToDo│
+0877 ● C 03/05            │ToDo│
+0878 ● C 03/05            │ToDo│
+0879 ● C 03/05            │ToDo│
+0880 ● C 03/05            │ToDo│

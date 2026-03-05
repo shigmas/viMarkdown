@@ -2027,6 +2027,13 @@ void MainWindow::onMdEditTabPressed() {
 	onAction_Indent();
 }
 void MainWindow::onMdEditEscPressed() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	QTextCursor cursor = docWidget->m_preview->textCursor();
+	if( cursor.hasSelection() ) {
+		cursor.setPosition(cursor.position()); // 現在位置にセットし直すことで選択が消える
+		docWidget->m_preview->setTextCursor(cursor);
+	}
 	ui->action_KeisenMode->setChecked(false);
 }
 #if 0
