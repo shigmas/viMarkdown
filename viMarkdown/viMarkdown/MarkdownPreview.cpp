@@ -717,13 +717,12 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 			} else {
 				currentField += '"';
 			}
-		} else if (c == ',' && !inQuotes) {
-			// クォートの外にあるカンマはセパレータ
+		} else if (c == ',' && !inQuotes) {		// クォートの外にあるカンマはセパレータ
 			fields.append(currentField.trimmed());
 			currentField.clear();
-		} else {
-			// 通常の文字
-			currentField += c;
+		} else { // 通常の文字
+			if( c != ' ' || !currentField.isEmpty() )
+		currentField += c;
 		}
 	}
 	// 最後のフィールドを追加
