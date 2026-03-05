@@ -55,6 +55,7 @@ public:
 	void	moveToStartOfWord(QTextCursor& cursor, bool select);
 	void	moveToEndOfWord(QTextCursor& cursor, bool select);
 	void	setCursorByContext(const struct PosContext &context, const PosContext &acontext);
+    int		countCharUntil(QTextBlock block, int pos, QChar ch) const;
     struct PosContext	contextAt(int pos);		//	pos 位置情報を構築
     //int		srcToPrvHeading(int blockNum);		//	エディタの見出し行番号（0 org.）をプレビューのそれに変換
     int		findPosition(const struct PosContext&);
