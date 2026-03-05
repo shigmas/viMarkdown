@@ -882,11 +882,11 @@ SPR# 状 P Open Close ver     Type  概要
 0870 ● C 03/05            │問題│MarkdownEditor::contextAt()：[title](url) の url 部分が無視されない（nthの値が不正になる）
 0871 ◎ C 03/05 03/05 01122│問題│Esc 押下：エディタの選択解除されるが、プレビューでは選択解除されない
 0872 ◎ C 03/05 03/06 01122│ToDo│MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) 実装
-0873 ● C 03/05            │ToDo│
-0874 ● C 03/05            │ToDo│
-0875 ● C 03/05            │ToDo│
-0876 ● C 03/05            │ToDo│
-0877 ● C 03/05            │ToDo│
-0878 ● C 03/05            │ToDo│
-0879 ● C 03/05            │ToDo│
-0880 ● C 03/05            │ToDo│
+0873 ◎ C 03/06 03/06 01122│問題│CSV：ダブルクォートに囲まれていないセルに "" が入力されても、それがプレビューに表示されない
+0874 ● C 03/06            │ToDo│
+0875 ● C 03/06            │ToDo│
+0876 ● C 03/06            │ToDo│
+0877 ● C 03/06            │ToDo│
+0878 ● C 03/06            │ToDo│
+0879 ● C 03/06            │ToDo│
+0880 ● C 03/06            │ToDo│

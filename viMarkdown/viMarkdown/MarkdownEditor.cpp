@@ -2212,6 +2212,7 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const	//
 			}
 		} else {
 			bool inComment = block.userState() == US_IN_COMMENT;
+			bool inCSVBlock = block.userState() == US_CSV_BLOCK;
 			bool finished = false;		//	pos まで探索した
 			const QString buf = block.text();
 			int ix = 0;
@@ -2220,7 +2221,7 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const	//
 			if( match.hasMatch() )
 				ix = match.capturedLength();
 			while( ix < buf.size() ) {
-				if( inComment ) {	//	行頭がコメントブロック中
+				if( inComment ) {	//	コメントブロック中
 					int ix2 = buf.indexOf(u"-->", ix);
 					if( ix2 >= 0 ) {
 						inComment = false;
@@ -2228,7 +2229,7 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const	//
 						continue;
 					} else
 						break;
-				} else {	//	行頭が非コメントブロック中
+				} else {	//	非コメントブロック中
 					if( QStringView(buf).mid(ix).startsWith(u"<!--") ) {
 						inComment = true;
 						ix += 4;	//	skip "<!--"
