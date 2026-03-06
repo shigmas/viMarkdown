@@ -879,7 +879,7 @@ SPR# 状 P Open Close ver     Type  概要
 0867 ◎ C 03/05 03/05 01122│問題│MarkdownEditor::isInComment(int position)："<!--" 先頭位置の場合は true を返した方がよい
 0868 ◎ C 03/05 03/05 01122│ToDo│MarkdownEditor::isInLinkURL(int pos)：実装
 0869 ◎ C 03/05 03/05 01122│問題│エディタ→プレビューカーソル位置同期：[title](url) の url 部分にカーソルがある場合は、url 直後と解釈するべき
-0870 ● C 03/05            │問題│MarkdownEditor::contextAt()：[title](url) の url 部分が無視されない（nthの値が不正になる）
+0870 ◎ C 03/05 03/06 01122│問題│MarkdownEditor::contextAt()：[title](url) の url 部分が無視されない（nthの値が不正になる）
 0871 ◎ C 03/05 03/05 01122│問題│Esc 押下：エディタの選択解除されるが、プレビューでは選択解除されない
 0872 ◎ C 03/05 03/06 01122│ToDo│MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) 実装
 0873 ◎ C 03/06 03/06 01122│問題│CSV：ダブルクォートに囲まれていないセルに "" が入力されても、それがプレビューに表示されない

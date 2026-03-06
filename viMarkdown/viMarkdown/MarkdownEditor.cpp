@@ -2056,11 +2056,14 @@ bool MarkdownEditor::isInLinkURL(int pos, int& closeIX) const {
     QTextBlock block = doc->findBlock(pos);
     const QString text = block.text();
     int ip = pos - block.position(); // ブロック内の相対カーソル位置
-    int openParen = text.lastIndexOf(u'(', ip - 1);
+    int openParen = text.lastIndexOf(u'(', ip - 1);		//	'(' を逆方向探索
     if (openParen < 0) return false; // '(' が無ければURL内ではない
     if (openParen == 0 || text.at(openParen - 1) != u']') {
         return false;
     }
+    int openBracket = text.lastIndexOf(u'[', openParen);		//	'[' を逆方向探索
+    if (openBracket < 0) return false; // '[' が無ければURL内ではない
+    if( ip < openBracket ) return false;	//	pos が [title](url) より前
     closeIX = text.indexOf(u')', openParen);
     if (closeIX < 0 || closeIX >= 0 && ip > closeIX) {
         return false;
