@@ -2062,7 +2062,7 @@ bool MarkdownEditor::isInLinkURL(int pos, int& closeIX) const {
         return false;
     }
     closeIX = text.indexOf(u')', openParen);
-    if (closeIX >= 0 && ip > closeIX) {
+    if (closeIX < 0 || closeIX >= 0 && ip > closeIX) {
         return false;
     }
     return true;
@@ -2237,8 +2237,8 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const	//
 					} else {
 						int closeIX;
 						if( isInLinkURL(block.position() + ix, closeIX) ) {
-							while( ++ix < buf.size() && buf[ix] != ')' ) {}
-							++ix;
+							//while( ++ix < buf.size() && buf[ix] != ')' ) {}
+							ix = closeIX;
 						}
 						if( block.position() + ix >= pos ) {
 							finished = true;

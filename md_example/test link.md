@@ -1,8 +1,5 @@
 ﻿# test LINK
-
-[[wikilink]]
-
-
+u [t](url) u
 Github [viMarkdown](https://github.com/vivisuke/viMarkdown) Github
 
 [copytodist.bat](file://c:/src/vs2026qt6/copytodist.bat)  
@@ -24,6 +21,7 @@ hoge, fuga
 bold, abc**bold**xyz
 ```
 
+[[wikilink]]
 
 |hhhh|kkkkk|
 |----|-----|
