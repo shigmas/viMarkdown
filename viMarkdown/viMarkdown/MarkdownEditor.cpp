@@ -2230,16 +2230,21 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const	//
 					} else
 						break;
 				} else {	//	非コメントブロック中
-					if( QStringView(buf).mid(ix).startsWith(u"<!--") ) {
+					if( QStringView(buf).mid(ix).startsWith(u"<!--") ) {	//	コメントブロック開始
 						inComment = true;
 						ix += 4;	//	skip "<!--"
 						continue;
 					} else {
+						int closeIX;
+						if( isInLinkURL(block.position() + ix, closeIX) ) {
+							while( ++ix < buf.size() && buf[ix] != ')' ) {}
+							++ix;
+						}
 						if( block.position() + ix >= pos ) {
 							finished = true;
 							break;
 						}
-						if( buf[ix] == ch )
+						if( ix < buf.size() && buf[ix] == ch )
 							++count;
 						++ix;
 					}
