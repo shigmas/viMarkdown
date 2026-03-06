@@ -521,6 +521,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 				cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
 				cursor.deleteChar();
 				atxt.clear();
+				return;
 			} else if( mtxt.startsWith("- [ ] ") )
 				atxt += "- [ ] ";
 			else if( mtxt.startsWith("- [x] ") )

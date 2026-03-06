@@ -54,6 +54,7 @@
 - 大文字小文字同一視（Ignore Case）：
 検索時に大文字小文字を同一視するか？
 - 【 前検索（Search Prev）】
+
 - 【 次検索（Search Next）】
 - 【 置換・次検索（Replace Next）】
 - 【 全置換（Replace All）】
