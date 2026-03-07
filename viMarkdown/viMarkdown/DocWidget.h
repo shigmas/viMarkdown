@@ -27,6 +27,7 @@ public:
 	bool	m_saving = false;
 	bool	m_hasSaved = false;		//	保存直後
 	bool	m_withBOM = true;		//	BOM付き
+	bool	m_readOnly = false;
 	QStringConverter::Encoding m_encoding = QStringConverter::Utf8;
 	QString	m_title;				//	タブタイトル
 	QString	m_fullPath;

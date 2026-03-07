@@ -67,7 +67,7 @@ signals:
     void	tab_pressed();
     void	esc_pressed();
     //void	title_clicked(const QString title, const QStrin);
-    void	link_clicked(const QString& title, const QString&, const QString&);
+    void	link_clicked(const QString& title, const QString&, const QString&, bool readOnly = false);
     void	changeFontSize(int delta);
     void	posContextChanged(const PosContext &context, const PosContext &acontext);
 

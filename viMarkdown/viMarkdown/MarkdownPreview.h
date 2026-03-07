@@ -60,7 +60,7 @@ public:
 signals:
     // クリックされたブロック番号を通知するシグナル
     void	lineClicked(int blockNumber);
-    void	anchorClicked(const QString &title, const QString &anchor, const QString name);
+    void	anchorClicked(const QString &title, const QString &anchor, const QString name, bool readOnly = false);
     void	textInserted(QString);
     void	textRemoved(int);
     void	BS_pressed();		//	BackSpace

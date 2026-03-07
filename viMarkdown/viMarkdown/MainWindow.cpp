@@ -604,12 +604,13 @@ void MainWindow::updateHTMLModeCheck() {
 	ui->action_Source->setChecked(!m_htmlMode);
 }
 #endif
-DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPath) {
+DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPath, bool readOnly) {
 	//auto containerWidget = new QWidget;
 	auto *docWidget = new DocWidget(title, fullPath);
 	//docWidget->setStyleSheet("font-size: 12pt; line-height: 200%;");
 	QSplitter *splitter = new QSplitter(Qt::Horizontal, docWidget);
 	MarkdownEditor *mdEditor = docWidget->m_editor = new MarkdownEditor(this, docWidget, splitter);
+	mdEditor->setReadOnly(readOnly);
 	//mdEditor->setLineWrapMode(QPlainTextEdit::NoWrap);		//	折り返しモード OFF
 	//QFont font("MS Gothic");
 	//QFont font("Consolas");
@@ -650,7 +651,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 									"　罫線消去: Ctrl + Shift + 上下左右キー\n"
 								);
 	MarkdownPreview *markdownPreview = docWidget->m_preview = new MarkdownPreview(this, docWidget, splitter);
-	//##markdownPreview->setReadOnly(true); // プレビューなので読み取り専用に
+	markdownPreview->setReadOnly(readOnly);
 	markdownPreview->setMouseTracking(true); // マウスの動きを常に追跡
 	markdownPreview->setPlaceholderText("プレビュー画面　ここで簡単な編集もできるよ\n");
 	markdownPreview->setStyleSheet("font-size: 12pt;");
@@ -1043,7 +1044,7 @@ void MainWindow::onAction_Help() {
 //#endif
 	dir.cd("docs/ja");
 	qDebug() << "helpdir = " << dir.path();
-	do_open("", dir.path() + "/help.md");
+	do_open("", dir.path() + "/help.md", QString(), true);
 }
 void MainWindow::onAction_Settings() {
 	Global g0 = g;
@@ -1084,11 +1085,13 @@ void MainWindow::onAction_NewTab() {
 	addTab(QString("vmd-%1").arg(++m_tab_number));
 }
 void MainWindow::addTab(const QString &title, const QString fullPath, const QString txt,
-							bool withBOM, QStringConverter::Encoding encoding)
+							bool withBOM, QStringConverter::Encoding encoding,
+							bool readOnly)
 {
-	auto docWidget = newTabWidget(title, fullPath);		//	新規タブ生成
+	auto docWidget = newTabWidget(title, fullPath, readOnly);		//	新規タブ生成
 	docWidget->m_withBOM = withBOM;
 	docWidget->m_encoding = encoding;
+	docWidget->m_readOnly = readOnly;
 	int ix = ui->tabWidget->addTab(docWidget, title);		//	新規タブを追加
 	ui->tabWidget->setCurrentIndex(ix);				//	新規タブをカレントに
 	if( !fullPath.isEmpty() ) 
@@ -1189,7 +1192,7 @@ bool hasBOM(QFile &file) {
 	return header.startsWith("\xEF\xBB\xBF") ||		//	UTF-8
 			header.startsWith("\xFF\xFE") || header.startsWith("\xFE\xFF");		//	UTF-16 BE, LE
 }
-bool MainWindow::do_open(const QString& title0, const QString& fullPath, const QString name) {
+bool MainWindow::do_open(const QString& title0, const QString& fullPath, const QString name, bool readOnly) {
 	qDebug() << "do_open(" << title0 << ", " << fullPath << ")";
 	if (fullPath.startsWith("http://") || fullPath.startsWith("https://")) {
         QDesktopServices::openUrl(QUrl(fullPath));
@@ -1242,7 +1245,7 @@ bool MainWindow::do_open(const QString& title0, const QString& fullPath, const Q
 	QFileInfo fileInfo(fullPath);
 	QString title = fileInfo.fileName();
 	title.remove(QRegularExpression("\\.md$"));
-	addTab(title, fullPath, content, withBOM, encoding);
+	addTab(title, fullPath, content, withBOM, encoding, readOnly);
 	updateOutlineTree();
 	QDir::setCurrent(fileInfo.path());
 	m_watcher->addPath(fullPath);

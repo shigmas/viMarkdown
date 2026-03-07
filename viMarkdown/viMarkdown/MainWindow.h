@@ -108,7 +108,7 @@ public:
     const QString	srcText() const { return m_srcText; }
     void	setCursorCyncing(bool b = true) const { m_isCursorSyncing = b; }
     bool	isCursorCyncing() const { return m_isCursorSyncing; }
-    bool	do_open(const QString& title, const QString& fullPath, const QString name = QString());
+    bool	do_open(const QString& title, const QString& fullPath, const QString name = QString(), bool readOnly = false);
 
 protected:
     void	load_settings();
@@ -117,14 +117,14 @@ protected:
     void	setup_tabMenu();
     void	setup_encodingCombo();
     void	restore_win();
-    DocWidget	*newTabWidget(const QString& title, const QString& fullPath);
+    DocWidget	*newTabWidget(const QString& title, const QString& fullPath, bool readOnly = false);
     void	onMDTextChanged();
     QSplitter	*getCurTabSplitter();
     DocWidget	*getCurDocWidget();
     //DocWidget	*findDocWidget(const QString& fullPath);
     int		tabIndexOf(const QString& title, const QString& fullPath);
     void	addTab(const QString& title, const QString fullPath = "", const QString txt = "",
-    				bool=true, QStringConverter::Encoding encoding = QStringConverter::Utf8);
+    				bool=true, QStringConverter::Encoding encoding = QStringConverter::Utf8, bool readOnly = false);
     void	addTopItemToTreeWidget(const QString& title, const QString fullPath);
     void	updateHTMLModeCheck();
     void	updateThinThickCheck();
