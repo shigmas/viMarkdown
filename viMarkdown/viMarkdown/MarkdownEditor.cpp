@@ -1882,25 +1882,22 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
 			}
 		}
 	}
-	//	カーソル描画
-	QRect rect = cursorRect();
-	if( !hasFocus() && !isReadOnly() ) {
-		p.setPen(Qt::gray);
-		p.setBrush(Qt::gray);
-		p.drawRect(rect);
+	if( !isReadOnly() ) {
+		//	カーソル描画
+		QRect rect = cursorRect();
+		if( !hasFocus() ) {
+			p.setPen(Qt::gray);
+			p.setBrush(Qt::gray);
+			p.drawRect(rect);
+		}
+		QPen pen(hasFocus() ? g.m_activeLnColor: g.m_inactiveLnColor, 1); // 色、太さ1px
+		if( !hasFocus() ) pen.setStyle(Qt::DashLine);	//	破線
+		p.setPen(pen);
+		int y = rect.bottom();
+		int left = 0;	//-lnAreaWidth();
+		int right = viewport()->width();
+		p.drawLine(left, y, right, y);
 	}
-	QPen pen(hasFocus() ? g.m_activeLnColor: g.m_inactiveLnColor, 1); // 色、太さ1px
-	if( !hasFocus() ) pen.setStyle(Qt::DashLine);	//	破線
-	p.setPen(pen);
-	int y = rect.bottom();
-	int left = 0;	//-lnAreaWidth();
-	int right = viewport()->width();
-	p.drawLine(left, y, right, y);
-#if 0
-	QPainter p2(m_lnAreaWidget);
-	p2.setPen(pen);
-	p2.drawLine(0, y, lnAreaWidth(), y);
-#endif
 }
 void MarkdownEditor::highlightSearchText(const QString &searchText) {
 	QList<QTextEdit::ExtraSelection> extraSelections;
@@ -1969,17 +1966,19 @@ void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
 		bottom = top + (int) blockBoundingRect(block).height();
 		++blockNumber;
 	}
-	//	行カーソル描画
-	QRect rect = cursorRect();
-	//QPen pen(hasFocus() ? Qt::red : Qt::gray, 1); // 赤色、太さ1px
-	//QPen pen(Qt::red, 1); // 赤色、太さ1px
-	QPen pen(hasFocus() ? g.m_activeLnColor: g.m_inactiveLnColor, 1); // 色、太さ1px
-	if( !hasFocus() ) pen.setStyle(Qt::DashLine);	//	破線
-	painter.setPen(pen);
-	int y = rect.bottom();
-	int left = 0;
-	int right = lnAreaWidth();
-	painter.drawLine(left, y, right, y);
+	if( !isReadOnly() ) {
+		//	行カーソル描画
+		QRect rect = cursorRect();
+		//QPen pen(hasFocus() ? Qt::red : Qt::gray, 1); // 赤色、太さ1px
+		//QPen pen(Qt::red, 1); // 赤色、太さ1px
+		QPen pen(hasFocus() ? g.m_activeLnColor: g.m_inactiveLnColor, 1); // 色、太さ1px
+		if( !hasFocus() ) pen.setStyle(Qt::DashLine);	//	破線
+		painter.setPen(pen);
+		int y = rect.bottom();
+		int left = 0;
+		int right = lnAreaWidth();
+		painter.drawLine(left, y, right, y);
+	}
 }
 void MarkdownEditor::lnAreaMousePressEvent(QMouseEvent *event) {
 	auto pos = event->position();

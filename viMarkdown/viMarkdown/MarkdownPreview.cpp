@@ -400,19 +400,21 @@ void MarkdownPreview::paintEvent(QPaintEvent *e) {
 	QTextEdit::paintEvent(e); // 先にテキストを普通に描画
 	QPainter p(viewport());
 	//	カーソル描画
-	QRect rect = cursorRect();
-	if( !hasFocus() && !isReadOnly()) {
-		p.setPen(Qt::gray);
-		p.setBrush(Qt::gray);
-		p.drawRect(rect);
+	if( !isReadOnly() ) {
+		QRect rect = cursorRect();
+		if( !hasFocus() ) {
+			p.setPen(Qt::gray);
+			p.setBrush(Qt::gray);
+			p.drawRect(rect);
+		}
+		QPen pen(hasFocus() ? g.m_activeLnColor: g.m_inactiveLnColor, 1); // 色、太さ1px
+		if( !hasFocus() ) pen.setStyle(Qt::DashLine);	//	破線
+		p.setPen(pen);
+		int y = rect.bottom();
+		int left = 0;	//-lnAreaWidth();
+		int right = viewport()->width();
+		p.drawLine(left, y, right, y);
 	}
-	QPen pen(hasFocus() ? g.m_activeLnColor: g.m_inactiveLnColor, 1); // 色、太さ1px
-	if( !hasFocus() ) pen.setStyle(Qt::DashLine);	//	破線
-	p.setPen(pen);
-	int y = rect.bottom();
-	int left = 0;	//-lnAreaWidth();
-	int right = viewport()->width();
-	p.drawLine(left, y, right, y);
 }
 void MarkdownPreview::do_body_sub(QTextCursor& cursor, const QString &buf) {
 #if 1
