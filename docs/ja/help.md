@@ -48,6 +48,9 @@
     - 打ち消し戦
     - リンク
     - 画像## viMarkdown独自仕様
+
+## viMarkdown独自仕様
+
 ### 罫線ブロック
 - 罫線文字を使用し、下図のようなクラス図・UIモックアップ等を容易に作図可能
 ```keisen background-color: #f0f0f0;

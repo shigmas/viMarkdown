@@ -349,6 +349,9 @@ void MarkdownPreview::mouseReleaseEvent(QMouseEvent *me)
 				fullPath = anchorToFullPath(anchor);
 			}
 			emit anchorClicked("", fullPath, name);
+			QTextEdit::mouseReleaseEvent(me);
+			m_processing = false;
+			return;
 		} else {
 			QTextCursor cursor = cursorForPosition(me->pos());
 			QTextBlock block = cursor.block();
