@@ -16,7 +16,7 @@ class MarkdownEditor : public MarkdownBaseEdit
 {
 	Q_OBJECT
 public:
-	MarkdownEditor(const MainWindow* mainWindow, DocWidget*, QWidget *parent = nullptr);
+	MarkdownEditor(const MainWindow* mainWindow, DocWidget*, QWidget *parent = nullptr, bool readOnly = false);
 public:
 	void	scrollToTop(int lineNum) {		//	lineNum: 0 org.
 		verticalScrollBar()->setValue(lineNum);

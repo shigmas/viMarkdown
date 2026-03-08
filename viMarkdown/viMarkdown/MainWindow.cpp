@@ -650,8 +650,8 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 									"罫線モード: Shift + F5\n　罫線描画: Ctrl + 上下左右キー\n"
 									"　罫線消去: Ctrl + Shift + 上下左右キー\n"
 								);
-	MarkdownPreview *markdownPreview = docWidget->m_preview = new MarkdownPreview(this, docWidget, splitter);
-	markdownPreview->setReadOnly(readOnly);
+	MarkdownPreview *markdownPreview = docWidget->m_preview = new MarkdownPreview(this, docWidget, splitter, readOnly);
+	//markdownPreview->setReadOnly(readOnly);
 	markdownPreview->setMouseTracking(true); // マウスの動きを常に追跡
 	markdownPreview->setPlaceholderText("プレビュー画面　ここで簡単な編集もできるよ\n");
 	markdownPreview->setStyleSheet("font-size: 12pt;");

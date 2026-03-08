@@ -371,9 +371,10 @@ private:
 	QRegularExpression m_strikethroughRegex;
 };
 //----------------------------------------------------------------------
-MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, DocWidget* docWidget, QWidget *parent)
+MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, DocWidget* docWidget, QWidget *parent, bool readOnly)
 	: m_mainWindow(mainWindow), m_docWidget(docWidget), MarkdownBaseEdit(parent)
 {
+	setReadOnly(readOnly);
 	m_highlighter = new MarkdownHighlighter(this->document());
 #if 0
 	QTextCursor cursor = this->textCursor();
@@ -1883,7 +1884,7 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
 	}
 	//	カーソル描画
 	QRect rect = cursorRect();
-	if( !hasFocus() ) {
+	if( !hasFocus() && !isReadOnly() ) {
 		p.setPen(Qt::gray);
 		p.setBrush(Qt::gray);
 		p.drawRect(rect);

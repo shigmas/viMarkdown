@@ -28,9 +28,10 @@ const QChar endOfCell(0xfdd0);		//	セル終端文字
 
 extern CharType getCharType(QChar ch);
 
-MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, DocWidget *docWidget, QWidget* parent)
+MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, DocWidget *docWidget, QWidget* parent, bool readOnly)
 	: m_mainWindow(mainWindow), m_docWidget(docWidget), QTextEdit(parent)
 {
+	setReadOnly(readOnly);
 	setUndoRedoEnabled(false);
 	setFrameStyle(QFrame::NoFrame);
 	setCursorWidth(2);
@@ -400,7 +401,7 @@ void MarkdownPreview::paintEvent(QPaintEvent *e) {
 	QPainter p(viewport());
 	//	カーソル描画
 	QRect rect = cursorRect();
-	if( !hasFocus() ) {
+	if( !hasFocus() && !isReadOnly()) {
 		p.setPen(Qt::gray);
 		p.setBrush(Qt::gray);
 		p.drawRect(rect);

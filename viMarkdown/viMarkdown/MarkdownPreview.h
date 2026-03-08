@@ -29,7 +29,7 @@ class MarkdownPreview : public QTextEdit
 	Q_OBJECT 
 
 public:
-    MarkdownPreview(const MainWindow*, DocWidget*, QWidget* parent = nullptr);
+    MarkdownPreview(const MainWindow*, DocWidget*, QWidget* parent = nullptr, bool readOnly = false);
 
 public:
     bool	isProcessing() const { return m_processing; }
