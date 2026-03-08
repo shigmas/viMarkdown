@@ -305,6 +305,8 @@ QString splitName(QString& anchor) {
 	return name;
 }
 QString anchorToFullPath(const QString &anchor) {
+	if( anchor.isEmpty() )		//	文書内ジャンプ
+		return anchor;
 	QString fullPath = anchor;
 	if( fullPath.startsWith("http://") || fullPath.startsWith("https://") )
 		return fullPath;
