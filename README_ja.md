@@ -7,7 +7,8 @@
 **viMarkdown** は、プレビューを見ながら編集可能な Markdown エディタです。Qt6 および C++ 採用により動作が軽くパフォーマンスに優れています。  
 効率性を追求する 研究者・エンジニア・ライター・理系学生 に向けて設計されています。
 
-<img width="700" alt="image" src="./screen.png" />
+<!--<img width="700" alt="image" src="./screen.png" />-->
+![image](screen.png)
 
 
 ## 主な特徴
