@@ -546,7 +546,7 @@ void MainWindow::onCurrentTabChanged(int ix) {
 	m_curTitle = docWidget->m_title;
 	//int curBlockNum = docWidget->m_editor->textCursor().blockNumber();
 	int curPos = docWidget->m_editor->textCursor().position();
-	appendToDocLoc(m_curTitle, m_curFullPath, curPos);
+	appendToDocLoc(m_curTitle, m_curFullPath, curPos);		//	現在位置をリストに追加
 	//QString mess = QString("encoding = %1").arg((int)docWidget->m_encoding);
 	//QString mess = docWidget->m_encoding.nema();
 	if( !docWidget->m_fullPath.isEmpty() ) {
@@ -1216,8 +1216,9 @@ bool MainWindow::do_open(const QString& title0, const QString& fullPath, const Q
 		if( !name.isEmpty() ) {
 			DocWidget *docWidget = getCurDocWidget();;
 			if( docWidget != nullptr ) {
-				appendToDocLoc(docWidget->m_title, docWidget->m_fullPath, docWidget->m_editor->linkClickedPos());
+				appendToDocLoc(docWidget->m_title, docWidget->m_fullPath, docWidget->m_editor->linkClickedPos());	//	ジャンプ前位置
 				docWidget->m_editor->jumpToHeading(name);
+				//appendToDocLoc(docWidget->m_title, docWidget->m_fullPath, docWidget->m_editor->textCursor().position());	//	ジャンプ後位置
 			}
 		}
 		return true;
