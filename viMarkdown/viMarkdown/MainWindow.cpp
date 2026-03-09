@@ -2060,7 +2060,7 @@ void MainWindow::onMdEditCurPosChanged() {
 	MarkdownEditor *editor = (MarkdownEditor*)sender();
 	QTextCursor cursor = editor->textCursor();
 	int clmn = cursor.position() - cursor.block().position();
-	m_lcLabel->setText(QString("%1:%2").arg(cursor.blockNumber()+1).arg(clmn+1));
+	m_lcLabel->setText(QString("%1:%2 (pos = %3)").arg(cursor.blockNumber()+1).arg(clmn+1).arg(cursor.position()));
 #else
 	qDebug() << "MainWindow::onMdEditCurPosChanged()";
 	MarkdownEditor *mdEditor = (MarkdownEditor*)sender();
