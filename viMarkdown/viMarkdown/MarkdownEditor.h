@@ -62,6 +62,7 @@ public:
     void	syncEditorCursorFromPreview();
     void	tagJump();
 	void	make_link();
+	int		linkClickedPos() const { return m_linkClickedPos; }
 
 signals:
     void	tab_pressed();
@@ -117,6 +118,7 @@ private:
 	int		m_curBlockNum = 0;
 	int		m_selStart = 0;
 	int		m_selEnd = 0;
+	int		m_linkClickedPos = -1;			//	リンククリック位置
 	QString	m_lastCurBlockText;				//	事前のカーソルブロックテキスト
     class MarkdownHighlighter *m_highlighter;
 	class LnAreaWidget	*m_lnAreaWidget = nullptr;

@@ -259,8 +259,8 @@ void MainWindow::onAction_MarkdownTable_CSV() {
 	docWidget->m_editor->convert_MarkdownTable_CSV();
 }
 void MainWindow::onAction_NaviBack() {
-	if( m_docLocIX - 1 < 0 ) return;
-	const auto &item = m_docLocHist[--m_docLocIX];
+	if( m_docLocIX < 0 ) return;
+	const auto &item = m_docLocHist[m_docLocIX--];
 	m_processing = true;
 	do_open(item.m_title, item.m_fullPath, item.m_title);
 	if( item.m_position >= 0 ) {
@@ -1216,7 +1216,7 @@ bool MainWindow::do_open(const QString& title0, const QString& fullPath, const Q
 		if( !name.isEmpty() ) {
 			DocWidget *docWidget = getCurDocWidget();;
 			if( docWidget != nullptr ) {
-				appendToDocLoc(docWidget->m_title, docWidget->m_fullPath, docWidget->m_editor->textCursor().position());
+				appendToDocLoc(docWidget->m_title, docWidget->m_fullPath, docWidget->m_editor->linkClickedPos());
 				docWidget->m_editor->jumpToHeading(name);
 			}
 		}
