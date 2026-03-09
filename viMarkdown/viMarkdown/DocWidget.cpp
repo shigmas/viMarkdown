@@ -62,3 +62,9 @@ int DocWidget::srcToPrvHeading(int blockNum) {
 	} else
 		return 0;
 }
+void DocWidget::setEditorCurPos(int pos) {
+	QTextCursor cursor = m_editor->textCursor();
+	cursor.setPosition(pos);
+	m_editor->setTextCursor(cursor);
+	m_editor->ensureCursorVisible();
+}

@@ -263,6 +263,12 @@ void MainWindow::onAction_NaviBack() {
 	const auto &item = m_docLocHist[--m_docLocIX];
 	m_processing = true;
 	do_open(item.m_title, item.m_fullPath, item.m_title);
+	if( item.m_position >= 0 ) {
+		DocWidget *docWidget = getCurDocWidget();
+		if( docWidget != nullptr ) {
+			docWidget->setEditorCurPos(item.m_position);
+		}
+	}
 	m_processing = false;
 }
 void MainWindow::onAction_NaviForward() {
@@ -270,6 +276,12 @@ void MainWindow::onAction_NaviForward() {
 	const auto &item = m_docLocHist[++m_docLocIX];
 	m_processing = true;
 	do_open(item.m_title, item.m_fullPath, item.m_title);
+	if( item.m_position >= 0 ) {
+		DocWidget *docWidget = getCurDocWidget();
+		if( docWidget != nullptr ) {
+			docWidget->setEditorCurPos(item.m_position);
+		}
+	}
 	m_processing = false;
 }
 void MainWindow::onAction_Replace() {
@@ -532,8 +544,9 @@ void MainWindow::onCurrentTabChanged(int ix) {
 	m_altTitle = m_curTitle;
 	m_curFullPath = docWidget->m_fullPath;
 	m_curTitle = docWidget->m_title;
-	int curBlockNum = docWidget->m_editor->textCursor().blockNumber();
-	appendToDocLoc(m_curTitle, m_curFullPath, curBlockNum);
+	//int curBlockNum = docWidget->m_editor->textCursor().blockNumber();
+	int curPos = docWidget->m_editor->textCursor().position();
+	appendToDocLoc(m_curTitle, m_curFullPath, curPos);
 	//QString mess = QString("encoding = %1").arg((int)docWidget->m_encoding);
 	//QString mess = docWidget->m_encoding.nema();
 	if( !docWidget->m_fullPath.isEmpty() ) {
@@ -560,20 +573,20 @@ void MainWindow::onCurrentTabChanged(int ix) {
 	m_encLabel->setText(mess);
 #endif
 }
-void MainWindow::removeHistoryEntries(const QString& title, const QString& fullPath) {
+void MainWindow::removeHistoryEntries(const QString& title, const QString& fullPath, int pos) {
 	for(int i = m_docLocHist.size(); --i >= 0; ) {		//	重複削除
 		if( !fullPath.isEmpty() && m_docLocHist[i].m_fullPath == fullPath ||
-			m_docLocHist[i].m_fullPath.isEmpty() && m_docLocHist[i].m_title == title )
+			m_docLocHist[i].m_fullPath.isEmpty() && m_docLocHist[i].m_title == title && m_docLocHist[i].m_position == pos )
 		{
 			m_docLocHist.removeAt(i);
 		}
 	}
 }
-void MainWindow::appendToDocLoc(const QString& title, const QString& fullPath, int curBlockNum) {
+void MainWindow::appendToDocLoc(const QString& title, const QString& fullPath, int pos) {
 	while( m_docLocHist.size()-1 > m_docLocIX)
 		m_docLocHist.pop_back();
-	removeHistoryEntries(title, fullPath);
-	m_docLocHist.push_back(DocLocation(title, fullPath, curBlockNum));
+	removeHistoryEntries(title, fullPath, pos);
+	m_docLocHist.push_back(DocLocation(title, fullPath, pos));
 	while( m_docLocHist.size() > MAX_DOC_LOC_HIST_SIZE )
 		m_docLocHist.pop_front();
 	m_docLocIX = m_docLocHist.size() - 1;		//	最後要素index
@@ -625,7 +638,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	//QFontMetrics fm(mdEditor->font());
 	//int lnAreaWidth = fm.horizontalAdvance('9') * 8;
 	//mdEditor->setViewportMargins(lnAreaWidth, 0, 0, 0);
-	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onMdEditCurPosChanged);
+	connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onMdEditCurPosChanged);
 	connect(mdEditor, &MarkdownEditor::tab_pressed, this, &MainWindow::onMdEditTabPressed);
 	connect(mdEditor, &MarkdownEditor::esc_pressed, this, &MainWindow::onMdEditEscPressed);
 	connect(mdEditor, &MarkdownEditor::link_clicked, this, &MainWindow::do_open);
@@ -1179,7 +1192,8 @@ void MainWindow::close_empty_doc() {
 		DocWidget *docWidget = (DocWidget*)ui->tabWidget->widget(ix);
 		if( docWidget != nullptr && docWidget->m_fullPath.isEmpty() && !docWidget->isModified()) {
 			if( docWidget->m_editor->toPlainText().isEmpty() ) {
-				removeHistoryEntries(docWidget->m_title, docWidget->m_fullPath);		//	履歴から削除
+				removeHistoryEntries(docWidget->m_title, docWidget->m_fullPath,
+										docWidget->m_editor->textCursor().position());		//	履歴から削除
 				ui->tabWidget->removeTab(ix);		//	空の無名ドキュメントを削除
 				--ix;
 				removeTopLevelItem(docWidget);
@@ -1201,8 +1215,10 @@ bool MainWindow::do_open(const QString& title0, const QString& fullPath, const Q
 	if( title0.isEmpty() && fullPath.isEmpty() ) {		//	現文書内ジャンプ
 		if( !name.isEmpty() ) {
 			DocWidget *docWidget = getCurDocWidget();;
-			if( docWidget != nullptr )
+			if( docWidget != nullptr ) {
+				appendToDocLoc(docWidget->m_title, docWidget->m_fullPath, docWidget->m_editor->textCursor().position());
 				docWidget->m_editor->jumpToHeading(name);
+			}
 		}
 		return true;
 	}
@@ -2039,8 +2055,13 @@ void MainWindow::onMdEditEscPressed() {
 	}
 	ui->action_KeisenMode->setChecked(false);
 }
-#if 0
 void MainWindow::onMdEditCurPosChanged() {
+#if 1
+	MarkdownEditor *editor = (MarkdownEditor*)sender();
+	QTextCursor cursor = editor->textCursor();
+	int clmn = cursor.position() - cursor.block().position();
+	m_lcLabel->setText(QString("%1:%2").arg(cursor.blockNumber()+1).arg(clmn+1));
+#else
 	qDebug() << "MainWindow::onMdEditCurPosChanged()";
 	MarkdownEditor *mdEditor = (MarkdownEditor*)sender();
 	QTextCursor cursor = mdEditor->textCursor();
@@ -2057,8 +2078,8 @@ void MainWindow::onMdEditCurPosChanged() {
 		QString mess = QString("html line = %1").arg(v[cursor.blockNumber()]);
 		statusBar()->showMessage(mess);
 	}
-}
 #endif
+}
 void MainWindow::onAction_About() {
 	qDebug() << "MainWindow::onAction_About()";
 

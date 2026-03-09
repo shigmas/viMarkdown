@@ -66,10 +66,11 @@ class DocWidget;
 struct DocLocation {		//	Alt + 左右 ナビゲーション用
 	QString	m_title;
 	QString	m_fullPath;
-	int		m_cursorLine;		//	0 オリジンブロック番号
+	//int		m_cursorLine;		//	0 オリジンブロック番号
+	int		m_position;		//	カーソル位置
 public:
-	DocLocation(const QString title = QString(), const QString fullPath = QString(), int bn = 0)
-		: m_title(title), m_fullPath(fullPath), m_cursorLine(bn)
+	DocLocation(const QString title = QString(), const QString fullPath = QString(), int pos = -1)
+		: m_title(title), m_fullPath(fullPath), m_position(pos)
 	{
 	}
 };
@@ -161,7 +162,7 @@ protected:
     //void	onAnchorClicked(const QString&);
     void	onCurrentTabChanged(int);
     void	appendToDocLoc(const QString&, const QString&, int);
-    void	removeHistoryEntries(const QString&, const QString&);
+    void	removeHistoryEntries(const QString&, const QString&, int);
     void	onEncodingChanged(int);
     void	onTextInsertedAtPreview(QString);
     void	onTextRemovedAtPreview(int);
