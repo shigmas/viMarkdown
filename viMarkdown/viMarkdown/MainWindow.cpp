@@ -667,8 +667,8 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	//markdownPreview->setReadOnly(readOnly);
 	markdownPreview->setMouseTracking(true); // マウスの動きを常に追跡
 	markdownPreview->setPlaceholderText("プレビュー画面　ここで簡単な編集もできるよ\n");
-	markdownPreview->setStyleSheet("font-size: 12pt;");
-	//markdownPreview->setStyleSheet("font-size: 12pt; ine-height: 2.0;");
+	//markdownPreview->setStyleSheet("font-size: 12pt;");
+	markdownPreview->setStyleSheet("font-size: 12pt; line-height: 2.0;");
 	connect(markdownPreview, &MarkdownPreview::lineClicked, this, &MainWindow::onMarkdownPreviewLineClicked);
 	connect(markdownPreview, &MarkdownPreview::anchorClicked, this, &MainWindow::do_open);
 	connect(markdownPreview, &MarkdownPreview::textInserted, this, &MainWindow::onTextInsertedAtPreview);
@@ -1219,6 +1219,7 @@ bool MainWindow::do_open(const QString& title0, const QString& fullPath, const Q
 				appendToDocLoc(docWidget->m_title, docWidget->m_fullPath, docWidget->m_editor->linkClickedPos());	//	ジャンプ前位置
 				docWidget->m_editor->jumpToHeading(name);
 				//appendToDocLoc(docWidget->m_title, docWidget->m_fullPath, docWidget->m_editor->textCursor().position());	//	ジャンプ後位置
+				docWidget->m_editor->scrollToTop(docWidget->m_editor->textCursor());
 			}
 		}
 		return true;
