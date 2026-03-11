@@ -35,7 +35,7 @@ It is designed for developers and writers who love efficiency.
 | Ver. | Features / Overview | Schedule |
 | :--- | :--- | :--- |
 | 0.2 | Basic editor features, Basic Markdown, Ruled-line (Keisen) blocks, CSV blocks | Scheduled for release around April 2026 |
-| 0.4 | vi commands, Japanese language support (UI/menus), Usability improvements, Performance optimizations | Dev version starts April 2026; Release date TBD |
+| 0.4 | Vi key bindings, Japanese localization for menus and UI, regex search, grep, rectangular selection, SVG blocks?, usability improvements, performance improvements, migration to CMake (Qt Creator / Mac / Linux? support) | Dev version starting around Apr 2026, Alpha version around Jul 2026, Stable release (Win/Mac) planned for Oct-Dec 2026. |
 | 0.6 | Math formulas, Mind maps, Page view, Presentation mode? | TBD |
 | 0.8 | Mermaid diagrams?, Direct editing in the previewer? | TBD |
 
@@ -53,11 +53,12 @@ The project is currently developed and tested on **Windows 11** using **Visual S
 
 **Build Instructions:**
 1. Clone the repository.
-2. Open `viMarkdown.sln` in Visual Studio.
+2. Open `viMarkdown.slnx` in Visual Studio.
 3. If prompted, configure the Qt Version in the Qt VS Tools settings to match your installed Qt SDK.
 4. **Build Solution** (Ctrl+Shift+B).
 
-### Linux / macOS / Qt Creator
-**Help Wanted:**
-Currently, build verification on Linux, macOS, or using Qt Creator (via `.pro` or `CMakeLists.txt`) is **untested**.
-If you are using these environments, you may need to generate the project files manually. Contributions to add `CMake` or `qmake` support are highly welcome!
+### QtCreator / macOS / Linux
+**Call for Contributors:**
+Currently, build verification using Linux, macOS, or QtCreator (via `CMakeLists.txt`) has **not been performed**.  
+When using these environments, you may need to manually generate the CMakeLists.txt files.  
+I highly appreciate your contributions (help and pull requests) regarding CMake support!
