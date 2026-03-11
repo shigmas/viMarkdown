@@ -808,6 +808,28 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			continue;
 		}
 		QString buf = block.text();
+		if( block.userState() == US_CSV_BLOCK ) {
+			bool inQuotes = false;
+			bool commented = false;
+			QStringList fields;
+			//QString buf2 = buf;
+			//if( block.next().isValid() && block.next().position() > pos) {
+			//	buf2 = buf2.left(pos - block.position());
+			//	finished = true;
+			//}
+			parseCsvLine(fields, buf, inQuotes, inComment, commented);
+			if( !fields.isEmpty() ) {
+				for(auto txt: fields) {
+					for(int i = 0; i < txt.size(); ++i) {
+						if( txt[i] == ch ) {
+							if( --nth == 0 ) {
+							}
+						}
+					}
+				}
+			}
+			continue;
+		}
 		buf.remove(re);				//	/# /, /- / などを削除
 		offset = block.text().size() - buf.size();
 		if( ch == QChar() ) {		//	行末の場合
@@ -2221,37 +2243,55 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const	//
 			bool finished = false;		//	pos まで探索した
 			const QString buf = block.text();
 			int ix = 0;
-			//	Undone: 接頭辞部分を削除
-			auto match = re_prefix.match(buf);
-			if( match.hasMatch() )
-				ix = match.capturedLength();
-			while( ix < buf.size() ) {
-				if( inComment ) {	//	コメントブロック中
-					int ix2 = buf.indexOf(u"-->", ix);
-					if( ix2 >= 0 ) {
-						inComment = false;
-						ix = ix2 + 3;	//	skip "-->"
-						continue;
-					} else
-						break;
-				} else {	//	非コメントブロック中
-					if( QStringView(buf).mid(ix).startsWith(u"<!--") ) {	//	コメントブロック開始
-						inComment = true;
-						ix += 4;	//	skip "<!--"
-						continue;
-					} else {
-						int openIX, closeIX;
-						if( isInLinkURL(block.position() + ix, openIX, closeIX) && ix >= openIX - 1 ) {		//	"](" 以降
-							//while( ++ix < buf.size() && buf[ix] != ')' ) {}
-							ix = closeIX;
-						}
-						if( block.position() + ix >= pos ) {
-							finished = true;
+			if( inCSVBlock ) {
+				bool inQuotes = false;
+				bool commented = false;
+				QStringList fields;
+				QString buf2 = buf;
+				if( block.next().isValid() && block.next().position() > pos) {
+					buf2 = buf2.left(pos - block.position());
+					finished = true;
+				}
+				parseCsvLine(fields, buf2, inQuotes, inComment, commented);
+				if( !fields.isEmpty() ) {
+					for(auto txt: fields) {
+						for(int i = 0; i < txt.size(); ++i)
+							if( txt[i] == ch ) ++count;
+					}
+				}
+			} else {
+				//	Undone: 接頭辞部分を削除
+				auto match = re_prefix.match(buf);
+				if( match.hasMatch() )
+					ix = match.capturedLength();
+				while( ix < buf.size() ) {
+					if( inComment ) {	//	コメントブロック中
+						int ix2 = buf.indexOf(u"-->", ix);
+						if( ix2 >= 0 ) {
+							inComment = false;
+							ix = ix2 + 3;	//	skip "-->"
+							continue;
+						} else
 							break;
+					} else {	//	非コメントブロック中
+						if( QStringView(buf).mid(ix).startsWith(u"<!--") ) {	//	コメントブロック開始
+							inComment = true;
+							ix += 4;	//	skip "<!--"
+							continue;
+						} else {
+							int openIX, closeIX;
+							if( isInLinkURL(block.position() + ix, openIX, closeIX) && ix >= openIX - 1 ) {		//	"](" 以降
+								//while( ++ix < buf.size() && buf[ix] != ')' ) {}
+								ix = closeIX;
+							}
+							if( block.position() + ix >= pos ) {
+								finished = true;
+								break;
+							}
+							if( ix < buf.size() && buf[ix] == ch )
+								++count;
+							++ix;
 						}
-						if( ix < buf.size() && buf[ix] == ch )
-							++count;
-						++ix;
 					}
 				}
 			}

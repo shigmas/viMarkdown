@@ -1220,6 +1220,7 @@ bool MainWindow::do_open(const QString& title0, const QString& fullPath, const Q
 				docWidget->m_editor->jumpToHeading(name);
 				//appendToDocLoc(docWidget->m_title, docWidget->m_fullPath, docWidget->m_editor->textCursor().position());	//	ジャンプ後位置
 				docWidget->m_editor->scrollToTop(docWidget->m_editor->textCursor());
+				syncEditorPreviewScroll();
 			}
 		}
 		return true;

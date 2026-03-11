@@ -532,6 +532,13 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 		//QString buf = m_lst[m_ln];
 		QTextBlock srcBlock = doc->findBlockByNumber(m_ln);
 		QString buf = srcBlock.text();
+		BlockData* data = static_cast<BlockData*>(srcBlock.userData());
+		if (!data) {
+		    data = new BlockData();
+			srcBlock.setUserData(data);
+		}
+		data->m_flags.resize(buf.size());
+		data->m_flags.fill(0);
 		if( !m_inComment ) {
 			srcBlock.setUserState(US_DEFAULT);
 			int start = 0, ix;

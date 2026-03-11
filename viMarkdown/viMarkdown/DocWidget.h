@@ -8,6 +8,12 @@ class MarkdownEditor;
 class QTextEdit;
 class MarkdownPreview;
 
+class BlockData : public QTextBlockUserData
+{
+public:
+    QByteArray m_flags;   // 1 char = 1 byte
+};
+
 class DocWidget : public QWidget
 {
 public:
