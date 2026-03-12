@@ -808,6 +808,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			continue;
 		}
 		QString buf = block.text();
+#if 0
 		if( block.userState() == US_CSV_BLOCK ) {
 			bool inQuotes = false;
 			bool commented = false;
@@ -823,6 +824,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 					for(int i = 0; i < txt.size(); ++i) {
 						if( txt[i] == ch ) {
 							if( --nth == 0 ) {
+								return block.position() + ix;
 							}
 						}
 					}
@@ -830,6 +832,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			}
 			continue;
 		}
+#endif
 		buf.remove(re);				//	/# /, /- / などを削除
 		offset = block.text().size() - buf.size();
 		if( ch == QChar() ) {		//	行末の場合

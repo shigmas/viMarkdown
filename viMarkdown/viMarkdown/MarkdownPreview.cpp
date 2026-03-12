@@ -700,6 +700,8 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 		}
 
 	}
+	if( line.startsWith("```csv", Qt::CaseInsensitive) )
+		return inQuotes;
 	QString currentField;
 	if( !inQuotes ) {
 		fields.clear();
@@ -1172,8 +1174,10 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 		//pc.m_chPrev = pos != block.position() ? doc->characterAt(pos-1) : QChar();
 		auto chat = doc->characterAt(pos);
 		if( pos > 0 && (chat == endOfCell || chat == u' ') ) {
-			pc.m_offset += 1;
-			chat = doc->characterAt(--pos);
+			//while( pos > 0 && (chat == endOfCell || chat == u' ') ) {
+				pc.m_offset += 1;
+				chat = doc->characterAt(--pos);
+			//}
 		} else {
 			while( pos > 0 && chat == QChar::ParagraphSeparator ) {
 				pc.m_offset += 1;
