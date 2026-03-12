@@ -1173,6 +1173,11 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 	} else {
 		//pc.m_chPrev = pos != block.position() ? doc->characterAt(pos-1) : QChar();
 		auto chat = doc->characterAt(pos);
+		while( pos > 0 && (chat == endOfCell || chat == u' ' || chat == QChar::ParagraphSeparator) ) {
+			pc.m_offset += 1;
+			chat = doc->characterAt(--pos);
+		}
+#if 0
 		if( pos > 0 && (chat == endOfCell || chat == u' ') ) {
 			//while( pos > 0 && (chat == endOfCell || chat == u' ') ) {
 				pc.m_offset += 1;
@@ -1184,6 +1189,7 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 				chat = doc->characterAt(--pos);
 			}
 		}
+#endif
 		pc.m_anchorChar = chat != QChar::ParagraphSeparator ? chat : QChar();
 	}
 	//pc.m_anchorChar = chat;
