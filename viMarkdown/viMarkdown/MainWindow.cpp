@@ -316,14 +316,14 @@ void MainWindow::do_replace_all(const QString srcText, const QString dstText) {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	MarkdownEditor *mdEditor = docWidget->m_editor;
-#if 1
 	QTextDocument *doc = mdEditor->document();
-	QTextCursor cursor(doc);
+	QTextCursor cursor(doc), cursor2;
 	cursor.beginEditBlock();
 	bool replaced = false;
 	for (;;) {
-	    if( (cursor = doc->find(srcText, cursor)) .isNull() )
+	    if( (cursor2 = doc->find(srcText, cursor)) .isNull() )
 	    	break;
+	    cursor = cursor2;
 	    cursor.insertText(dstText);
 	    replaced = true;
 	}
@@ -333,15 +333,6 @@ void MainWindow::do_replace_all(const QString srcText, const QString dstText) {
 		m_replaceHist.removeDuplicates();	//	重複削除
 		mdEditor->setTextCursor(cursor);
 	}
-#else
-	QTextCursor cursor = mdEditor->textCursor();
-	for(;;) {
-		do_search(srcText, false);
-		if( !cursor.hasSelection() ) break;
-		cursor.insertText(dstText);
-	}
-	mdEditor->setTextCursor(cursor);
-#endif
 }
 void MainWindow::do_search(const QString srcText, bool backward) {
 	DocWidget *docWidget = getCurDocWidget();
