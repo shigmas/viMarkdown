@@ -904,7 +904,15 @@ void MainWindow::onDel_pressed() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	QTextCursor cursor = docWidget->m_editor->textCursor();
-	cursor.deleteChar();
+	if( cursor.hasSelection() ) {
+		cursor.deleteChar();
+	} else {
+		auto pos = cursor.position();
+		if( pos > 0 && docWidget->m_editor->document()->characterAt(pos-1) == '\\' ) {
+			cursor.deletePreviousChar();
+		}
+		cursor.deleteChar();
+	}
 	docWidget->m_editor->setTextCursor(cursor);
 }
 void MainWindow::onBS_pressed() {
