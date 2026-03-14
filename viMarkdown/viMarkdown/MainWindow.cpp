@@ -259,8 +259,8 @@ void MainWindow::onAction_MarkdownTable_CSV() {
 	docWidget->m_editor->convert_MarkdownTable_CSV();
 }
 void MainWindow::onAction_NaviBack() {
-	if( m_docLocIX < 0 ) return;
-	const auto &item = m_docLocHist[m_docLocIX--];
+	if( m_docLocIX < 1 ) return;
+	const auto &item = m_docLocHist[--m_docLocIX];
 	m_processing = true;
 	do_open(item.m_title, item.m_fullPath, item.m_title);
 	if( item.m_position >= 0 ) {
@@ -270,6 +270,7 @@ void MainWindow::onAction_NaviBack() {
 		}
 	}
 	m_processing = false;
+	printDocLocHist();
 }
 void MainWindow::onAction_NaviForward() {
 	if( m_docLocIX + 1 >= m_docLocHist.size() ) return;
@@ -283,6 +284,7 @@ void MainWindow::onAction_NaviForward() {
 		}
 	}
 	m_processing = false;
+	printDocLocHist();
 }
 void MainWindow::onAction_Replace() {
 	ReplaceDialog dlg(m_searchHist, m_replaceHist, this);
@@ -581,6 +583,12 @@ void MainWindow::appendToDocLoc(const QString& title, const QString& fullPath, i
 	while( m_docLocHist.size() > MAX_DOC_LOC_HIST_SIZE )
 		m_docLocHist.pop_front();
 	m_docLocIX = m_docLocHist.size() - 1;		//	最後要素index
+	printDocLocHist();
+}
+void MainWindow::printDocLocHist() const {
+	for(int i = 0; i < m_docLocHist.size(); ++i)
+		qDebug() << i << ": " << m_docLocHist[i].m_title << ", " << m_docLocHist[i].m_fullPath << ", " << m_docLocHist[i].m_position;
+	qDebug() << "m_docLocIX = " << m_docLocIX;
 }
 void MainWindow::onFileChanged(const QString& fullPath) {
 	statusBar()->showMessage("file changed: " + fullPath, 3000);
@@ -1121,8 +1129,9 @@ void MainWindow::addTab(const QString &title, const QString fullPath, const QStr
 	if( !txt.isEmpty() )
 		mdEditor->setPlainText(txt);
 	mdEditor->setFocus();
-
 	addTopItemToTreeWidget(title, fullPath);
+	appendToDocLoc(docWidget->m_title, docWidget->m_fullPath, mdEditor->textCursor().position());
+	printDocLocHist();
 }
 void MainWindow::addTopItemToTreeWidget(const QString &title, const QString fullPath) {
 	QTreeWidgetItem *item = new QTreeWidgetItem();

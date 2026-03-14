@@ -161,6 +161,7 @@ protected:
     void	onPreviewCurPosChanged();
     //void	onAnchorClicked(const QString&);
     void	onCurrentTabChanged(int);
+    void	printDocLocHist() const;
     void	appendToDocLoc(const QString&, const QString&, int);
     void	removeHistoryEntries(const QString&, const QString&, int);
     void	onEncodingChanged(int);
@@ -273,8 +274,8 @@ private:
     class QComboBox				*m_searchCB = nullptr;
     class QFileSystemWatcher	*m_watcher;
     //QList<QStringPair>			m_pathTitleList;
-    int							m_docLocIX = -1;
-    QList<DocLocation>			m_docLocHist;
+    int							m_docLocIX = -1;	//	m_docLocHist の現文書インデックス
+    QList<DocLocation>			m_docLocHist;		//	文書履歴、新しい文書情報を末尾に置く（push_back）
 
     Ui::MainWindowClass *ui;
 };
