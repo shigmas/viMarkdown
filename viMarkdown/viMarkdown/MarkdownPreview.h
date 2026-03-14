@@ -60,6 +60,7 @@ public:
 signals:
     // クリックされたブロック番号を通知するシグナル
     void	lineClicked(int blockNumber);
+    void	checkboxLineClicked(int nth, bool checked);
     void	anchorClicked(const QString &title, const QString &anchor, const QString name, bool readOnly = false);
     void	textInserted(QString);
     void	textRemoved(int);
@@ -91,6 +92,7 @@ protected:
     void	onContentsChanged(int position, int charsRemoved, int charsAdded);
     //bool	isTableLine(const QString&);
     //bool	isTableHyphenLine(const QString&);
+    int		countCheckBox(QTextBlock block);
 
     void	do_body(QTextCursor&, bool = false);
     void	do_body_sub(QTextCursor&, const QString&);

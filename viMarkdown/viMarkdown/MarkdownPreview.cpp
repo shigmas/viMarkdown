@@ -339,6 +339,15 @@ void MarkdownPreview::mouseMoveEvent(QMouseEvent *me) {
 	}
 	QTextEdit::mouseMoveEvent(me);
 }
+int MarkdownPreview::countCheckBox(QTextBlock block) {
+	int count = 1;
+	while( (block = block.previous()).isValid() ) {
+		auto t = block.userState();
+		if( t == US_HEADING ) break;
+		if( t == US_CSV_BLOCK ) ++count;
+	}
+	return count;
+}
 void MarkdownPreview::mouseReleaseEvent(QMouseEvent *me)
 {
 	if (me->button() == Qt::LeftButton) {
@@ -357,8 +366,18 @@ void MarkdownPreview::mouseReleaseEvent(QMouseEvent *me)
 		} else {
 			QTextCursor cursor = cursorForPosition(me->pos());
 			QTextBlock block = cursor.block();
-			if( block.userState() == US_CHECKBOX )
-				emit lineClicked(block.blockNumber());
+			if (block.userState() == US_CHECKBOX) {
+				QTextEdit::mouseReleaseEvent(me);
+				m_processing = false;
+				onCursorPosChanged();
+				QTextBlockFormat fmt = block.blockFormat();
+				bool checked = fmt.marker() == QTextBlockFormat::MarkerType::Checked;
+				qDebug() << "checked = " << checked;
+				//emit lineClicked(block.blockNumber());
+				int nth = countCheckBox(block);
+				emit checkboxLineClicked(nth, checked);
+				return;
+			}
 #if 0
 			QTextCharFormat format = cursor.charFormat();
 			if( format.isAnchor() ) {

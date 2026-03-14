@@ -156,7 +156,7 @@ protected:
     void	onFileChanged(const QString&);
     void	onModificationChanged(bool);
     void	onSearchCBActivated();
-    void	onMarkdownPreviewLineClicked(int);
+    void	onMarkdownPreviewLineClicked(int, bool);
     void	onEditorCurPosChanged();
     void	onPreviewCurPosChanged();
     //void	onAnchorClicked(const QString&);

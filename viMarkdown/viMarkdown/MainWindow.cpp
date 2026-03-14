@@ -660,7 +660,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	markdownPreview->setPlaceholderText("プレビュー画面　ここで簡単な編集もできるよ\n");
 	//markdownPreview->setStyleSheet("font-size: 12pt;");
 	markdownPreview->setStyleSheet("font-size: 12pt; line-height: 2.0;");
-	connect(markdownPreview, &MarkdownPreview::lineClicked, this, &MainWindow::onMarkdownPreviewLineClicked);
+	connect(markdownPreview, &MarkdownPreview::checkboxLineClicked, this, &MainWindow::onMarkdownPreviewLineClicked);
 	connect(markdownPreview, &MarkdownPreview::anchorClicked, this, &MainWindow::do_open);
 	connect(markdownPreview, &MarkdownPreview::textInserted, this, &MainWindow::onTextInsertedAtPreview);
 	connect(markdownPreview, &MarkdownPreview::textRemoved, this, &MainWindow::onTextRemovedAtPreview);
@@ -853,11 +853,11 @@ void MainWindow::updateEditorFontSize(int sz) {
 		docWidget->m_editor->viewport()->update();		//	再表示
 	}
 }
-void MainWindow::onMarkdownPreviewLineClicked(int bln) {
-	qDebug() << "MainWindow::onMarkdownPreviewLineClicked(" << bln << ")";
+void MainWindow::onMarkdownPreviewLineClicked(int nth, bool checked) {
+	qDebug() << "MainWindow::onMarkdownPreviewLineClicked(" << nth << ")";
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	QTextBlock block = docWidget->m_editor->document()->findBlockByNumber(bln);
+	QTextBlock block = docWidget->m_editor->textCursor().block();
 	if (!block.isValid()) return;
 	QTextCursor cursor(block);
 	QString text = block.text();
@@ -865,7 +865,8 @@ void MainWindow::onMarkdownPreviewLineClicked(int bln) {
 	if( ix < 0 ) return;
 	cursor.setPosition(block.position() + ix + 3);
 	cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-	cursor.insertText(text[ix+3] == u' ' ? "x" : " ");
+	//cursor.insertText(text[ix+3] == u' ' ? "x" : " ");
+	cursor.insertText(checked ? "x" : " ");
 	// undone: 完了時は (YYYY-MM-DD) を付加？
 #if 0
 	statusBar()->showMessage(QString("html block num = %1").arg(bln));
