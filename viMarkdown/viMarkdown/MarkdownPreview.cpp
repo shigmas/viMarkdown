@@ -40,6 +40,9 @@ MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, DocWidget *docWid
 	//setStyleSheet("QTextEdit { caret-color: red; }");
 	connect(this, &MarkdownPreview::cursorPositionChanged, this, &MarkdownPreview::onCursorPosChanged);
 	connect(document(), &QTextDocument::contentsChange, this, &MarkdownPreview::onContentsChanged);
+	QFont font = this->font();
+	font.setPointSize(12);
+	setFont(font);
 }
 void MarkdownPreview::inputMethodEvent(QInputMethodEvent *event) {
 	m_isComposing = !event->preeditString().isEmpty();
@@ -413,15 +416,21 @@ void MarkdownPreview::mouseDoubleClickEvent(QMouseEvent *e) {
 	cursor.setPosition(end, QTextCursor::KeepAnchor);
 	setTextCursor(cursor);
 }
+#if 1
 void MarkdownPreview::wheelEvent(QWheelEvent *event) {
 	qDebug() << "MarkdownPreview::wheelEvent()";
 	qDebug() << "e->angleDelta() = " << event->angleDelta();
 	if ((event->modifiers() & Qt::ControlModifier) != 0)  {
-		emit changeFontSize(event->angleDelta().y());
+		//emit changeFontSize(event->angleDelta().y());
+		if (event->angleDelta().y() > 0)
+            zoomIn();
+        else
+            zoomOut();
 		event->accept();
 	} else
 		QTextEdit::wheelEvent(event);
 }
+#endif
 void MarkdownPreview::paintEvent(QPaintEvent *e) {
 	QTextEdit::paintEvent(e); // 先にテキストを普通に描画
 	QPainter p(viewport());
@@ -903,7 +912,7 @@ void MarkdownPreview::do_code(QTextCursor& cursor) {
 	// 2. フォントの基本属性を設定
 	font.setFamilies({"MS Gothic", "MS UI Gothic", "Osaka-mono", "monospace"});
 	font.setFixedPitch(true);
-	font.setPointSizeF(10); // 精密な計算のために setPointSize より setPointSizeF がおすすめ
+	font.setPointSizeF(12); // 精密な計算のために setPointSize より setPointSizeF がおすすめ
 	// 3. レタースペーシング（文字間隔）を設定
 	// 100% よりわずかに小さくすることで、PDF出力時の隙間を埋めます
 	font.setLetterSpacing(QFont::PercentageSpacing, 99.5);
