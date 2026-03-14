@@ -339,6 +339,7 @@ void MarkdownPreview::mouseMoveEvent(QMouseEvent *me) {
 	}
 	QTextEdit::mouseMoveEvent(me);
 }
+#if 0
 int MarkdownPreview::countCheckBox(QTextBlock block) {
 	int count = 1;
 	while( (block = block.previous()).isValid() ) {
@@ -348,6 +349,7 @@ int MarkdownPreview::countCheckBox(QTextBlock block) {
 	}
 	return count;
 }
+#endif
 void MarkdownPreview::mouseReleaseEvent(QMouseEvent *me)
 {
 	if (me->button() == Qt::LeftButton) {
@@ -374,8 +376,8 @@ void MarkdownPreview::mouseReleaseEvent(QMouseEvent *me)
 				bool checked = fmt.marker() == QTextBlockFormat::MarkerType::Checked;
 				qDebug() << "checked = " << checked;
 				//emit lineClicked(block.blockNumber());
-				int nth = countCheckBox(block);
-				emit checkboxLineClicked(nth, checked);
+				//int nth = countCheckBox(block);
+				emit checkboxLineClicked(/*nth,*/ checked);
 				return;
 			}
 #if 0

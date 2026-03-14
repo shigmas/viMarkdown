@@ -60,7 +60,7 @@ public:
 signals:
     // クリックされたブロック番号を通知するシグナル
     void	lineClicked(int blockNumber);
-    void	checkboxLineClicked(int nth, bool checked);
+    void	checkboxLineClicked(/*int nth,*/ bool checked);
     void	anchorClicked(const QString &title, const QString &anchor, const QString name, bool readOnly = false);
     void	textInserted(QString);
     void	textRemoved(int);

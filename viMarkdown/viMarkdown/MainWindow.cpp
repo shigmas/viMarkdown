@@ -853,8 +853,8 @@ void MainWindow::updateEditorFontSize(int sz) {
 		docWidget->m_editor->viewport()->update();		//	再表示
 	}
 }
-void MainWindow::onMarkdownPreviewLineClicked(int nth, bool checked) {
-	qDebug() << "MainWindow::onMarkdownPreviewLineClicked(" << nth << ")";
+void MainWindow::onMarkdownPreviewLineClicked(/*int nth,*/ bool checked) {
+	//qDebug() << "MainWindow::onMarkdownPreviewLineClicked(" << nth << ")";
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	QTextBlock block = docWidget->m_editor->textCursor().block();
