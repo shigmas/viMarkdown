@@ -568,8 +568,8 @@ void MainWindow::onCurrentTabChanged(int ix) {
 }
 void MainWindow::removeHistoryEntries(const QString& title, const QString& fullPath, int pos) {
 	for(int i = m_docLocHist.size(); --i >= 0; ) {		//	重複削除
-		if( !fullPath.isEmpty() && m_docLocHist[i].m_fullPath == fullPath ||
-			m_docLocHist[i].m_fullPath.isEmpty() && m_docLocHist[i].m_title == title && m_docLocHist[i].m_position == pos )
+		if( (!fullPath.isEmpty() && m_docLocHist[i].m_fullPath == fullPath || m_docLocHist[i].m_fullPath.isEmpty()) &&
+				m_docLocHist[i].m_title == title && m_docLocHist[i].m_position == pos )
 		{
 			m_docLocHist.removeAt(i);
 		}
@@ -1233,11 +1233,12 @@ bool MainWindow::do_open(const QString& title0, const QString& fullPath, const Q
 		if( !name.isEmpty() ) {
 			DocWidget *docWidget = getCurDocWidget();;
 			if( docWidget != nullptr ) {
-				appendToDocLoc(docWidget->m_title, docWidget->m_fullPath, docWidget->m_editor->linkClickedPos());	//	ジャンプ前位置
+				//appendToDocLoc(docWidget->m_title, docWidget->m_fullPath, docWidget->m_editor->linkClickedPos());	//	ジャンプ前位置
 				docWidget->m_editor->jumpToHeading(name);
-				//appendToDocLoc(docWidget->m_title, docWidget->m_fullPath, docWidget->m_editor->textCursor().position());	//	ジャンプ後位置
+				appendToDocLoc(docWidget->m_title, docWidget->m_fullPath, docWidget->m_editor->textCursor().position());	//	ジャンプ後位置
 				docWidget->m_editor->scrollToTop(docWidget->m_editor->textCursor());
 				syncEditorPreviewScroll();
+				printDocLocHist();
 			}
 		}
 		return true;
