@@ -586,9 +586,11 @@ void MainWindow::appendToDocLoc(const QString& title, const QString& fullPath, i
 	printDocLocHist();
 }
 void MainWindow::printDocLocHist() const {
+#ifdef	_DEBUG
 	for(int i = 0; i < m_docLocHist.size(); ++i)
 		qDebug() << i << ": " << m_docLocHist[i].m_title << ", " << m_docLocHist[i].m_fullPath << ", " << m_docLocHist[i].m_position;
 	qDebug() << "m_docLocIX = " << m_docLocIX;
+#endif
 }
 void MainWindow::onFileChanged(const QString& fullPath) {
 	statusBar()->showMessage("file changed: " + fullPath, 3000);

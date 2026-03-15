@@ -2193,8 +2193,11 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 		pc.m_offset += 1;
 	}
 	auto ch = doc->characterAt(pos);
-	while( pos > 0 && ch == QChar::ParagraphSeparator ) {
-		block = block.previous();
+	while( pos > 0 && ch == QChar::ParagraphSeparator ) {	//	改行位置にいる場合
+		if( pos == block.position() ) {		//	空行の場合
+			if( !block.previous().isValid() ) break;
+			block = block.previous();
+		}
 		ch = doc->characterAt(--pos);
 		if( ch != QChar::ParagraphSeparator || pos > block.position() )
 			pc.m_offset += 1;		//	空行が続かない場合
