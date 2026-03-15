@@ -2199,6 +2199,12 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			block = block.previous();
 		}
 		ch = doc->characterAt(--pos);
+		int ix = pos - block.position();
+		int openIX, closeIX;
+		if( isInLinkURL(pos, openIX, closeIX) && ix >= openIX - 1 ) {		//	"](" 以降
+			pos = block.position() + openIX - 2;	//	']' 直前位置
+			ch = doc->characterAt(pos);
+		}
 		if( ch != QChar::ParagraphSeparator || pos > block.position() )
 			pc.m_offset += 1;		//	空行が続かない場合
 		if( pos > 0 && doc->characterAt(pos-1) != u'\\' && block.userState() == US_TABLE && ch == u'|' ) {
@@ -2208,6 +2214,12 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 		while( pos > 0 && doc->characterAt(pos-1) != u'\\' && (ch == u'*' || ch == u'_' || ch == u'~' ) ) {
 			ch = doc->characterAt(--pos);
 		}
+	}
+	int ix = pos - block.position();
+	//int openIX, closeIX;
+	if( isInLinkURL(pos, openIX, closeIX) && ix >= openIX - 1 ) {		//	"](" 以降
+		pos = block.position() + openIX - 2;	//	']' 直前位置
+		ch = doc->characterAt(pos);
 	}
 	if( pos > 0 && doc->characterAt(pos-1) != u'\\' ) {
 		while( ch == u'*' || ch == u'_' || ch == u'~' )
