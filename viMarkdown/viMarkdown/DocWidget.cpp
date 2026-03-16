@@ -3,6 +3,17 @@
 #include "DocWidget.h"
 #include "MarkdownPreview.h"
 
+BlockData* getBlockData(QTextBlock srcBlock) {
+	BlockData* data = static_cast<BlockData*>(srcBlock.userData());
+	if (!data) {
+	    data = new BlockData();
+		srcBlock.setUserData(data);
+	}
+	data->m_charFlags.resize(srcBlock.text().size());
+	data->m_charFlags.fill(0);
+	return data;
+}
+//----------------------------------------------------------------------
 DocWidget::DocWidget(const QString& title, const QString& fullPath, QWidget *parent)
 	: m_title(title)
 	, m_fullPath(fullPath)

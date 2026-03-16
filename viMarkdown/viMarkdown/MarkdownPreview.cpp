@@ -530,7 +530,6 @@ int indexOfComment(QStringView buf, int start) {
 	}
 	return -1;
 }
-
 void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソースドキュメント
 	m_headingList.clear();
 	m_docWidget->m_srcHeadingBlocks.clear();
@@ -562,13 +561,6 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 		//QString buf = m_lst[m_ln];
 		QTextBlock srcBlock = doc->findBlockByNumber(m_ln);
 		QString buf = srcBlock.text();
-		BlockData* data = static_cast<BlockData*>(srcBlock.userData());
-		if (!data) {
-		    data = new BlockData();
-			srcBlock.setUserData(data);
-		}
-		data->m_flags.resize(buf.size());
-		data->m_flags.fill(0);
 		if( !m_inComment ) {
 			srcBlock.setUserState(US_DEFAULT);
 			int start = 0, ix;
@@ -599,7 +591,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 			do_heading(cursor, buf);
 		} else if( re_list.match(buf).hasMatch() ) {
 			do_body(cursor);
-			do_list(cursor, buf);		//	"- " or "- [ ] "
+			do_list(cursor, buf, srcBlock);		//	"- " or "- [ ] "
 		} else if( re_numlist.match(buf).hasMatch() ) {
 			do_body(cursor);
 			do_numlist(cursor, buf);
@@ -975,7 +967,7 @@ void MarkdownPreview::do_numlist(QTextCursor& cursor, QString buf) {
 	--m_ln;
 	m_nEmptyLines = 0;
 }
-void MarkdownPreview::do_list(QTextCursor& cursor, QString buf) {
+void MarkdownPreview::do_list(QTextCursor& cursor, QString buf, QTextBlock srcBlock) {
 	if( m_nEmptyLines >= 1 )
 		cursor.insertBlock();			//	新規ブロック
 	if( m_nSpaces > 0 )
@@ -993,14 +985,24 @@ void MarkdownPreview::do_list(QTextCursor& cursor, QString buf) {
 		}
 	} else {		//	リストの場合
 		//static QRegularExpression re(R"(^( *)- )");
+		auto mch = re_list.match(srcBlock.text());
+		BlockData* data = getBlockData(srcBlock);
+		for(int i = 0; i < mch.capturedLength(); ++i)
+			data->m_charFlags[i] = PCF_LIST_MARK;
 		bool isPrevlist = true;
 		bool spc2Prev = false;
 		while( ++m_ln < m_lst.size() ) {
+			srcBlock = srcBlock.next();
 			QString text = m_lst[m_ln];
 			if( text.isEmpty() ) break;		//	空行だった場合
-			if( re_list.match(text).hasMatch() ) {	//	リスト行
+			auto mch = re_list.match(text);
+			if( mch.hasMatch() ) {	//	リスト行
 				buf += u'\n' + text;
 				isPrevlist = true;
+				//int length = mch.capturedLength();
+				BlockData* data = getBlockData(srcBlock);
+				for(int i = 0; i < mch.capturedLength(); ++i)
+					data->m_charFlags[i] = PCF_LIST_MARK;
 			} else {	//	非リスト行の場合
 				if( re_block.match(text).hasMatch() )	//	ブロック行の場合
 					break;

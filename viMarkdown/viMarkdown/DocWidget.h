@@ -8,11 +8,17 @@ class MarkdownEditor;
 class QTextEdit;
 class MarkdownPreview;
 
+enum {
+    PCF_VISIBLE = 0,      // プレビューに表示される
+    PCF_LIST_MARK = 1     // "- " などリストマーカー
+};
 class BlockData : public QTextBlockUserData
 {
 public:
-    QByteArray m_flags;   // 1 char = 1 byte
+    QByteArray m_charFlags;   // 1 char = 1 byte
 };
+
+BlockData* getBlockData(QTextBlock srcBlock);
 
 class DocWidget : public QWidget
 {

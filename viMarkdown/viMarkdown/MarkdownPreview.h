@@ -100,7 +100,7 @@ protected:
     bool	do_underlineHeading(QTextCursor&, QString buf);
     void	do_heading(QTextCursor&, QString buf);
     void	do_heading_sub(QTextCursor&, QString buf, int h, int ln);
-    void	do_list(QTextCursor&, QString buf);
+    void	do_list(QTextCursor&, QString buf, QTextBlock srcBlock);
     void	do_numlist(QTextCursor&, QString buf);
     void	do_quote(QTextCursor&, QString buf);
     void	do_code(QTextCursor&);

@@ -2119,37 +2119,11 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 		offset = closeIX + 1;
 		pos = block.position() + offset;
 	}
-#if 0
-	if( block.userState() == US_IN_COMMENT ) {
-		while( block.isValid() ) {
-			if( (offset = block.text().indexOf("-->")) >= 0 ) {
-				offset += (int)strlen("-->");
-				pos = block.position() + offset;
-				break;
-			}
-			block = block.next();
-		}
-	} else
-#endif
 	if( block.userState() == US_CSV_BLOCK ) {
 		while( pos > 0 && (doc->characterAt(pos) == u',' || doc->characterAt(pos) == u' ' || doc->characterAt(pos) == u'"') ) {
 			--pos,
 			pc.m_offset += 1;
 		}
-#if 0
-		if( pos > 0 && doc->characterAt(pos) == u',' ) {
-			--pos,
-			pc.m_offset += 1;
-		}
-		while( pos > 0 && doc->characterAt(pos) == u' ' ) {
-			--pos,
-			pc.m_offset += 1;
-		}
-		if( pos > 0 && doc->characterAt(pos) == u'"' ) {
-			--pos,
-			pc.m_offset += 1;
-		}
-#endif
 	} else if( block.userState() == US_KEISEN_BLOCK ) {
 		while( block.userState() == US_KEISEN_BLOCK ) {
 			if( !block.next().isValid() ) {
