@@ -989,6 +989,7 @@ void MarkdownPreview::do_list(QTextCursor& cursor, QString buf, QTextBlock srcBl
 		BlockData* data = getBlockData(srcBlock);
 		for(int i = 0; i < mch.capturedLength(); ++i)
 			data->m_charFlags[i] = PCF_LIST_MARK;
+		srcBlock.setUserData(data);
 		bool isPrevlist = true;
 		bool spc2Prev = false;
 		while( ++m_ln < m_lst.size() ) {
@@ -1003,6 +1004,7 @@ void MarkdownPreview::do_list(QTextCursor& cursor, QString buf, QTextBlock srcBl
 				BlockData* data = getBlockData(srcBlock);
 				for(int i = 0; i < mch.capturedLength(); ++i)
 					data->m_charFlags[i] = PCF_LIST_MARK;
+				srcBlock.setUserData(data);
 			} else {	//	非リスト行の場合
 				if( re_block.match(text).hasMatch() )	//	ブロック行の場合
 					break;

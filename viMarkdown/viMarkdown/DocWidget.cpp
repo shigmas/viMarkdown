@@ -8,9 +8,10 @@ BlockData* getBlockData(QTextBlock srcBlock) {
 	if (!data) {
 	    data = new BlockData();
 		srcBlock.setUserData(data);
-	}
-	data->m_charFlags.resize(srcBlock.text().size());
-	data->m_charFlags.fill(0);
+		data->m_charFlags.resize(srcBlock.text().size());
+		data->m_charFlags.fill(0);
+	} else
+		data->m_charFlags.resize(srcBlock.text().size());	//	念のため
 	return data;
 }
 //----------------------------------------------------------------------

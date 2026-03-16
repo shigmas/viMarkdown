@@ -2151,6 +2151,22 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			}
 		}
 	}
+	int ix = pos - block.position();
+	while( ix < 0 ) {
+		block = block.previous();
+		ix = pos - block.position();
+	}
+	const BlockData* data = getBlockData(block);
+	while( ix >= 0 && (ix >= data->m_charFlags.size() || data->m_charFlags[ix] != PCF_VISIBLE) ) {
+		if( ix == data->m_charFlags.size() )
+			pc.m_offset += 1;
+		--pos;
+		if( --ix < 0 ) {
+			block = block.previous();
+			ix = pos - block.position();
+			data = getBlockData(block);
+		}
+	}
 	//	Undone: block が見出し・リスト・連番・チェックボックス行で、pos が接頭辞内にある場合対応
 	bool prefix = false;
 	if( offset ==0 && (prefix = block.text().indexOf(re_prefix) == 0) ) {
@@ -2193,7 +2209,7 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			ch = doc->characterAt(--pos);
 		}
 	}
-	int ix = pos - block.position();
+	ix = pos - block.position();
 	//int openIX, closeIX;
 	if( isInLinkURL(pos, openIX, closeIX) && ix >= openIX - 1 ) {		//	"](" 以降
 		pos = block.position() + openIX - 2;	//	']' 直前位置
