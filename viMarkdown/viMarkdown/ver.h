@@ -2,13 +2,13 @@
 //
 //			File:			"ver.h"
 //			Created:		19-Dec-2025
-//			Author:			vivisuke
+//			Author:			N.Tsuda
 //			Description:
 //
 //----------------------------------------------------------------------
 
 #pragma once
 
-#define		VER_STR			QString("ver 0.1.203 beta")
+#define		VER_STR			QString("ver 0.1.204 beta")
 
 
