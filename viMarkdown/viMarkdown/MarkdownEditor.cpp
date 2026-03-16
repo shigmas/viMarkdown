@@ -507,7 +507,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	static QRegularExpression re(R"(^\d\. )");
 	static QRegularExpression re2(R"(^\d\) )");
 	QTextCursor cursor = this->textCursor();
-	if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {
+	if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {		//	改行入力
 		QTextBlock currentBlock = cursor.block();
 		if( (e->modifiers() & Qt::ShiftModifier) == 0 &&		//	Shift + Enter でない
 			cursor.position() != currentBlock.position())		//	行頭にいない場合
@@ -537,10 +537,14 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 				atxt += "1) ";
 			else if( mtxt.startsWith("> ") )
 				atxt += "> ";
-			//cursor.insertText("\n" + atxt);
+#if 1
+			cursor.insertText("\n" + atxt);
+			setTextCursor(cursor);
+#else
 			MarkdownBaseEdit::keyPressEvent(e);		//	改行挿入
 			if( !atxt.isEmpty() )
 				cursor.insertText(atxt);
+#endif
 			// カーソル位置を画面内に維持
 			this->ensureCursorVisible();
 			return;
