@@ -453,6 +453,7 @@ void MarkdownPreview::paintEvent(QPaintEvent *e) {
 }
 
 static QRegularExpression image_re(R"((?<!\\)!\[([^\]]+)\]\(([^)]+)\))");
+static QRegularExpression link_re(R"((?<![!\\])\[([^\]]+)\]\(([^)]+)\))");
 #if 0
 void MarkdownPreview::do_body_sub(QTextCursor& cursor, const QString &buf) {
 #if 1
@@ -493,6 +494,7 @@ void MarkdownPreview::do_body_sub(QTextCursor& cursor, const QString &buf) {
 void MarkdownPreview::do_body(QTextBlock srcBlock, QTextCursor& cursor, bool last) {
 	if( m_bodyList.isEmpty() ) return;
 #if 1
+	qDebug() << "srcBlock.blockNumber() = " << srcBlock.blockNumber();
 	//封印：static QRegularExpression re("\\[\\[(.+?)\\]\\]");		//	[[タイトル]]
 	static QRegularExpression re("(?<!!)\\[([^\\]]+)\\]\\(([^)]+)\\)");		//	[タイトル](パス#見出し)
 	QString buf;
@@ -507,6 +509,17 @@ void MarkdownPreview::do_body(QTextBlock srcBlock, QTextCursor& cursor, bool las
 		    for(int i = start; i < start + length; ++i)
 		    	data->m_charFlags[i] = PCF_IMAGE;
 			match = image_re.match(txt, start + length);
+		}
+		match = link_re.match(txt);		//	![title](image.png) を含むか？
+		while( match.hasMatch() ) {
+			modified = true;
+			int start = match.capturedStart(); // マッチした最初の位置（'['）
+		    int length = match.capturedLength(); // マッチした全体の長さ
+		    data->m_charFlags[start] = PCF_LINK;
+		    int ix = txt.indexOf(']', start);
+		    for(int i = ix; i < start + length && i < data->m_charFlags.size(); ++i)
+		    	data->m_charFlags[i] = PCF_LINK;
+			match = link_re.match(txt, start + length);
 		}
 		int ix = 0;
 		while( (ix = txt.indexOf(u'\\', ix)) >= 0 ) {
@@ -598,6 +611,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 	m_lst = mdtext.split(u'\n');
 	m_nEmptyLines = 0;
 	m_inComment = false;
+	QTextBlock srcBlock0;
 	for(m_ln = 0; m_ln < m_lst.size(); ++m_ln) {
 		bool bComment = false;		//	コメントがあった
 		//QString buf = m_lst[m_ln];
@@ -629,34 +643,36 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 		while( m_nSpaces < buf.size() && buf[m_nSpaces] == u' ' ) ++m_nSpaces;
 		if( m_nSpaces > 0 ) buf = buf.mid(m_nSpaces);
 		if( buf.startsWith('#') ) {
-			do_body(srcBlock, cursor);
+			do_body(srcBlock0, cursor);
 			do_heading(srcBlock, cursor, buf);
 		} else if( re_list.match(buf).hasMatch() ) {
-			do_body(srcBlock, cursor);
+			do_body(srcBlock0, cursor);
 			do_list(srcBlock, cursor, buf);		//	"- " or "- [ ] "
 		} else if( re_numlist.match(buf).hasMatch() ) {
-			do_body(srcBlock, cursor);
+			do_body(srcBlock0, cursor);
 			do_numlist(srcBlock, cursor, buf);
 		} else if( buf.startsWith("> ") ) {
-			do_body(srcBlock, cursor);
+			do_body(srcBlock0, cursor);
 			do_quote(srcBlock, cursor, buf);
 		} else if( buf.startsWith("```CSV", Qt::CaseInsensitive) ) {
-			do_body(srcBlock, cursor);
+			do_body(srcBlock0, cursor);
 			do_CSV(srcBlock, cursor);
 		} else if( buf.startsWith("```keisen", Qt::CaseInsensitive) ) {
-			do_body(srcBlock, cursor);
+			do_body(srcBlock0, cursor);
 			do_keisen_block(srcBlock, cursor);
 		} else if( buf.startsWith("```") ) {
-			do_body(srcBlock, cursor);
+			do_body(srcBlock0, cursor);
 			do_code(cursor);
 		} else if( isTableLine(buf, m_tableTokens) && m_ln + 1 < m_lst.size() && isTableHyphenLine(m_lst[m_ln+1], m_tableAlign) ) {
-			do_body(srcBlock, cursor);
+			do_body(srcBlock0, cursor);
 			do_table(srcBlock, cursor);
 		} else {
 			if( isUnderlineHeading(buf) && do_underlineHeading(cursor, buf) )
 				continue;		//	アンダーライン見出しだった場合
-			if( m_bodyList.isEmpty() )
+			if( m_bodyList.isEmpty() ) {
 				m_bodyLineNum = m_ln;
+				srcBlock0 = srcBlock;
+			}
 			m_bodyList += buf;
 		}
 	}

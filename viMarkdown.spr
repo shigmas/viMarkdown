@@ -957,7 +957,7 @@ SPR# 状 P Open Close ver     Type  概要
 0951 ● C 03/17            │問題│エディタ：[title](url) の [ 部分にカーソルがあると、カーソル同期処理が不正になる
 0952 ◎ C 03/17 03/18 01205│問題│[text](url) の時、m_charFlags[] の要素がマイナスになることがある
 									再現手順："- " に続けて、IME で「あいうえお」など、２文字以上入力すると発生する
-0953 ● C 03/17            │ToDo│[text](url) の場合も m_charFlags[] フラグを立てておく
+0953 ◎ C 03/17 03/18 01205│ToDo│[text](url) の場合も m_charFlags[] フラグを立てておく
 0954 ● C 03/18            │ToDo│help.md > viMarkdown独自仕様 > CSV：とりあえず完成させる
 0955 ● C 03/18            │ToDo│help.md > viMarkdown独自仕様 > プレビュー内編集：とりあえず完成させる
 0956 ● C 03/18            │ToDo│

@@ -15,6 +15,7 @@ enum {
     PCF_LIST_MARK,		// "- " などリストマーカー
     PCF_NUM_LIST,		//	"1. " 連番
     PCF_QUOTE,
+    PCF_LINK,
     PCF_IMAGE,
 };
 class BlockData : public QTextBlockUserData

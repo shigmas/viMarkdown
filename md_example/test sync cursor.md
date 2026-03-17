@@ -1,6 +1,6 @@
 ﻿# test sync cursor
 
-[vm](https://github.com/vivisuke/viMarkdown)
+[vm](https://github.com/)
 
 1. abc
 1. xyz
