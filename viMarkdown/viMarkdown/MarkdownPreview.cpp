@@ -639,7 +639,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 			do_numlist(cursor, buf);
 		} else if( buf.startsWith("> ") ) {
 			do_body(srcBlock, cursor);
-			do_quote(cursor, buf);
+			do_quote(srcBlock, cursor, buf);
 		} else if( buf.startsWith("```CSV", Qt::CaseInsensitive) ) {
 			do_body(srcBlock, cursor);
 			do_CSV(srcBlock, cursor);
@@ -979,7 +979,11 @@ void MarkdownPreview::do_code(QTextCursor& cursor) {
 	//--m_ln;
 	m_nEmptyLines = 0;
 }
-void MarkdownPreview::do_quote(QTextCursor& cursor, QString buf) {
+void MarkdownPreview::do_quote(QTextBlock &srcBlock, QTextCursor& cursor, QString buf) {
+	BlockData* data = getBlockData(srcBlock);
+	//for(int i = 0; i < mch.capturedLength(); ++i)
+	data->m_charFlags[0] = data->m_charFlags[1] = PCF_QUOTE;	//	"> " 固定
+	srcBlock.setUserData(data);
 	buf = buf.mid(2);
 	while( ++m_ln < m_lst.size() ) {
 		if( !m_lst[m_ln].startsWith("> ") ) break;

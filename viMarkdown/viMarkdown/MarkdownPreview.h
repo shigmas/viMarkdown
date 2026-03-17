@@ -102,7 +102,7 @@ protected:
     void	do_heading_sub(QTextCursor&, QString buf, int h, int ln);
     void	do_list(QTextCursor&, QString buf, QTextBlock srcBlock);
     void	do_numlist(QTextCursor&, QString buf);
-    void	do_quote(QTextCursor&, QString buf);
+    void	do_quote(QTextBlock&, QTextCursor&, QString buf);
     void	do_code(QTextCursor&);
     void	do_keisen_block(QTextBlock&, QTextCursor&);
     void	do_CSV(QTextBlock&, QTextCursor&);
