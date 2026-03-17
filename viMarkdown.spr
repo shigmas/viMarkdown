@@ -939,7 +939,7 @@ SPR# 状 P Open Close ver     Type  概要
 0933 ◎ C 03/17 03/17 01204│ToDo│getBlockData() は DocWidget.cpp に移動
 0934 ◎ C 03/17 03/17 01204│問題│オートテキスト挿入前にマークダウン変換処理がコールされている
 0935 ◎ C 03/17 03/17 01204│問題│BlockData* getBlockData()：常に m_charFlags[] の値が 0 にリセットされている
-0936 ● C 03/17            │ToDo│リストだけでなく、連番、チェックボックスの場合も、ブロックデータの m_charFlags[] フラグを立てておく
+0936 ◎ C 03/17 03/17 01204│ToDo│リストだけでなく、連番の場合も、ブロックデータの m_charFlags[] フラグを立てておく
 0937 ◎ C 03/17 03/17 01204│ToDo│![title](image.png) の場合も、ブロックデータの m_charFlags[] フラグを立てておく
 0938 ● C 03/17            │ToDo│* ** ~~ も、ブロックデータの m_charFlags[] フラグを立てておく
 0939 ● C 03/17            │ToDo│CSVブロック内：ブロックデータの m_charFlags[] フラグを立てておく
@@ -950,7 +950,7 @@ SPR# 状 P Open Close ver     Type  概要
 0944 ◎ C 03/17 03/17 01204│問題│arkdownEditor::countCharUntil() が m_charFlags[] に対応していない
 0945 ◎ C 03/17 03/17 01204│ToDo│デバッグ用に printCharFlags(block) 実装
 0946 ◎ C 03/17 03/17 01204│ToDo│MarkdownEditor::findPosition(const PosContext &context)：m_charFlags[] 対応
-0947 ● C 03/17            │ToDo│
+0947 ● C 03/17            │ToDo│チェックボックスの場合も、ブロックデータの m_charFlags[] フラグを立てておく
 0948 ● C 03/17            │ToDo│
 0949 ● C 03/17            │ToDo│
 0950 ● C 03/17            │ToDo│

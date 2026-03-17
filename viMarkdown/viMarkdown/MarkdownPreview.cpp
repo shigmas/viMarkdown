@@ -633,10 +633,10 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 			do_heading(srcBlock, cursor, buf);
 		} else if( re_list.match(buf).hasMatch() ) {
 			do_body(srcBlock, cursor);
-			do_list(cursor, buf, srcBlock);		//	"- " or "- [ ] "
+			do_list(srcBlock, cursor, buf);		//	"- " or "- [ ] "
 		} else if( re_numlist.match(buf).hasMatch() ) {
 			do_body(srcBlock, cursor);
-			do_numlist(cursor, buf);
+			do_numlist(srcBlock, cursor, buf);
 		} else if( buf.startsWith("> ") ) {
 			do_body(srcBlock, cursor);
 			do_quote(srcBlock, cursor, buf);
@@ -1008,11 +1008,28 @@ void MarkdownPreview::do_quote(QTextBlock &srcBlock, QTextCursor& cursor, QStrin
 	--m_ln;
 	m_nEmptyLines = 0;
 }
-void MarkdownPreview::do_numlist(QTextCursor& cursor, QString buf) {
+void MarkdownPreview::do_numlist(QTextBlock srcBlock, QTextCursor& cursor, QString buf) {
+	bool init = true;
+	auto match = re_numlist.match(m_lst[m_ln]);
+	while( match.hasMatch() ) {
+		BlockData* data = getBlockData(srcBlock);
+		for(int i = 0; i < match.capturedLength(); ++i)
+			data->m_charFlags[i] = PCF_NUM_LIST;
+		srcBlock.setUserData(data);
+		if( !init )
+			buf += u'\n' + m_lst[m_ln];
+		if( ++m_ln >= m_lst.size() ) break;
+		srcBlock = srcBlock.next();
+		init = false;
+		match = re_numlist.match(m_lst[m_ln]);
+	}
+#if 0
 	while( ++m_ln < m_lst.size() ) {
 		if( !re_numlist.match(m_lst[m_ln]).hasMatch() ) break;			//	"1. " 連番行が終わった場合
+		srcBlock = srcBlock.next();
 		buf += u'\n' + m_lst[m_ln];
 	}
+#endif
 	cursor.insertMarkdown(buf);
 	cursor.insertBlock();
 	QTextBlockFormat blockFormat;
@@ -1020,7 +1037,7 @@ void MarkdownPreview::do_numlist(QTextCursor& cursor, QString buf) {
 	--m_ln;
 	m_nEmptyLines = 0;
 }
-void MarkdownPreview::do_list(QTextCursor& cursor, QString buf, QTextBlock srcBlock) {
+void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString buf) {
 	if( m_nEmptyLines >= 1 )
 		cursor.insertBlock();			//	新規ブロック
 	if( m_nSpaces > 0 )

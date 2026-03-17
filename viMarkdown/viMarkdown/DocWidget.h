@@ -13,6 +13,7 @@ enum {
     PCF_ESCAPE,			//	エスケープ文字
     PCF_HEADING,		//	タイトル・見出し行
     PCF_LIST_MARK,		// "- " などリストマーカー
+    PCF_NUM_LIST,		//	"1. " 連番
     PCF_QUOTE,
     PCF_IMAGE,
 };

@@ -100,8 +100,8 @@ protected:
     bool	do_underlineHeading(QTextCursor&, QString buf);
     void	do_heading(QTextBlock&, QTextCursor&, QString buf);
     void	do_heading_sub(QTextCursor&, QString buf, int h, int ln);
-    void	do_list(QTextCursor&, QString buf, QTextBlock srcBlock);
-    void	do_numlist(QTextCursor&, QString buf);
+    void	do_list(QTextBlock srcBlock, QTextCursor&, QString buf);
+    void	do_numlist(QTextBlock srcBlock, QTextCursor&, QString buf);
     void	do_quote(QTextBlock&, QTextCursor&, QString buf);
     void	do_code(QTextCursor&);
     void	do_keisen_block(QTextBlock&, QTextCursor&);
