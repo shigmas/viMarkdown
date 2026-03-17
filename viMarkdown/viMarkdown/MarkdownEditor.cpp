@@ -2133,6 +2133,12 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 		ix = pos - block.position();
 	}
 	const BlockData* data = getBlockData(block);
+	if( block.userState() == US_HEADING ) {
+		while( ix < data->m_charFlags.size() && data->m_charFlags[ix] != PCF_VISIBLE ) {
+			++pos;
+			++ix;
+		}
+	}
 	while( ix >= 0 && (ix >= data->m_charFlags.size() || data->m_charFlags[ix] != PCF_VISIBLE) ) {
 		if( ix == data->m_charFlags.size() )
 			pc.m_offset += 1;

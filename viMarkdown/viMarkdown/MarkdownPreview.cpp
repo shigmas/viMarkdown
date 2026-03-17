@@ -734,6 +734,7 @@ void MarkdownPreview::do_heading(QTextBlock& srcBlock, QTextCursor& cursor, QStr
 	for(int k = 0; k < i; ++k)
 		data->m_charFlags[k] = PCF_HEADING;
 	srcBlock.setUserData(data);
+	srcBlock.setUserState(US_HEADING);
 	do_heading_sub(cursor, buf.mid(i), h, m_ln);
 }
 void MarkdownPreview::do_heading_sub(QTextCursor& cursor, QString buf, int h, int ln) {
