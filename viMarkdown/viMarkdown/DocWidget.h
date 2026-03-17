@@ -20,6 +20,8 @@ public:
 };
 
 BlockData* getBlockData(QTextBlock srcBlock, int length = 0);
+void printCharFlags(QTextBlock block);
+void printCharFlags(const BlockData*);
 
 class DocWidget : public QWidget
 {

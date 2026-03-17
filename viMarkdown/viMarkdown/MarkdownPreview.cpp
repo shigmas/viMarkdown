@@ -490,32 +490,35 @@ void MarkdownPreview::do_body_sub(QTextCursor& cursor, const QString &buf) {
 #endif
 }
 #endif
-void MarkdownPreview::do_body(QTextCursor& cursor, bool last) {
+void MarkdownPreview::do_body(QTextCursor& cursor, QTextBlock srcBlock, bool last) {
 	if( m_bodyList.isEmpty() ) return;
 #if 1
 	//封印：static QRegularExpression re("\\[\\[(.+?)\\]\\]");		//	[[タイトル]]
 	static QRegularExpression re("(?<!!)\\[([^\\]]+)\\]\\(([^)]+)\\)");		//	[タイトル](パス#見出し)
 	QString buf;
 	for(auto txt: m_bodyList) {
-		//封印：txt.replace(re, "<a href=\"\\1\" class=\"wiki-link\">\\1</a>");
-		txt.replace(re, "<a href=\"\\2\">\\1</a>");
-		buf += txt + "\n";
-	}
-	if( !buf.isEmpty() ) {
-		QTextBlock block = cursor.block();
-		BlockData *data = getBlockData(block, buf.size());
+		BlockData *data = getBlockData(srcBlock);
 		bool modified = false;
-		auto match = image_re.match(buf);		//	![title](image.png) か？
+		auto match = image_re.match(txt);		//	![title](image.png) を含むか？
 		while( match.hasMatch() ) {
 			modified = true;
 			int start = match.capturedStart(); // マッチした最初の位置
 		    int length = match.capturedLength(); // マッチした全体の長さ
 		    for(int i = start; i < start + length; ++i)
 		    	data->m_charFlags[i] = PCF_IMAGE;
-			match = image_re.match(buf, start + length);
+			match = image_re.match(txt, start + length);
 		}
-		if( modified )
-			block.setUserData(data);
+		if( modified ) {
+			srcBlock.setUserData(data);
+			printCharFlags(srcBlock);
+		}
+		//封印：txt.replace(re, "<a href=\"\\1\" class=\"wiki-link\">\\1</a>");
+		txt.replace(re, "<a href=\"\\2\">\\1</a>");
+		//	undone: charFlags 設定はこっちに移動
+		buf += txt + "\n";
+	}
+	if( !buf.isEmpty() ) {
+		//QTextBlock block = cursor.block();
 		QTextBlockFormat blockFormat;
 		blockFormat.setAlignment(Qt::AlignJustify); // 左右両端揃え
 		cursor.mergeBlockFormat(blockFormat);
@@ -619,28 +622,28 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 		while( m_nSpaces < buf.size() && buf[m_nSpaces] == u' ' ) ++m_nSpaces;
 		if( m_nSpaces > 0 ) buf = buf.mid(m_nSpaces);
 		if( buf.startsWith('#') ) {
-			do_body(cursor);
+			do_body(cursor, srcBlock);
 			do_heading(cursor, buf);
 		} else if( re_list.match(buf).hasMatch() ) {
-			do_body(cursor);
+			do_body(cursor, srcBlock);
 			do_list(cursor, buf, srcBlock);		//	"- " or "- [ ] "
 		} else if( re_numlist.match(buf).hasMatch() ) {
-			do_body(cursor);
+			do_body(cursor, srcBlock);
 			do_numlist(cursor, buf);
 		} else if( buf.startsWith("> ") ) {
-			do_body(cursor);
+			do_body(cursor, srcBlock);
 			do_quote(cursor, buf);
 		} else if( buf.startsWith("```CSV", Qt::CaseInsensitive) ) {
-			do_body(cursor);
+			do_body(cursor, srcBlock);
 			do_CSV(srcBlock, cursor);
 		} else if( buf.startsWith("```keisen", Qt::CaseInsensitive) ) {
-			do_body(cursor);
+			do_body(cursor, srcBlock);
 			do_keisen_block(srcBlock, cursor);
 		} else if( buf.startsWith("```") ) {
-			do_body(cursor);
+			do_body(cursor, srcBlock);
 			do_code(cursor);
 		} else if( isTableLine(buf, m_tableTokens) && m_ln + 1 < m_lst.size() && isTableHyphenLine(m_lst[m_ln+1], m_tableAlign) ) {
-			do_body(cursor);
+			do_body(cursor, srcBlock);
 			do_table(srcBlock, cursor);
 		} else {
 			if( isUnderlineHeading(buf) && do_underlineHeading(cursor, buf) )
@@ -648,7 +651,8 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 			m_bodyList += buf;
 		}
 	}
-	do_body(cursor, true);
+	QTextBlock srcBlock = doc->findBlockByNumber(m_ln-1);
+	do_body(cursor, srcBlock, true);
 	cursor.endEditBlock();
 	m_processing = false;
 }
@@ -1022,6 +1026,7 @@ void MarkdownPreview::do_list(QTextCursor& cursor, QString buf, QTextBlock srcBl
 		for(int i = 0; i < mch.capturedLength(); ++i)
 			data->m_charFlags[i] = PCF_LIST_MARK;
 		srcBlock.setUserData(data);
+		printCharFlags(srcBlock);
 		bool isPrevlist = true;
 		bool spc2Prev = false;
 		while( ++m_ln < m_lst.size() ) {
@@ -1037,6 +1042,7 @@ void MarkdownPreview::do_list(QTextCursor& cursor, QString buf, QTextBlock srcBl
 				for(int i = 0; i < mch.capturedLength(); ++i)
 					data->m_charFlags[i] = PCF_LIST_MARK;
 				srcBlock.setUserData(data);
+				printCharFlags(srcBlock);
 			} else {	//	非リスト行の場合
 				if( re_block.match(text).hasMatch() )	//	ブロック行の場合
 					break;

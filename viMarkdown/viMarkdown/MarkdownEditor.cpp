@@ -2244,6 +2244,8 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const	//
 	//static QRegularExpression re("^(#+ *| *- (\\[[ xX]\\] )?| *\\d+[\\.)] |(> )+)");
 	int count = 1;
 	while( block.isValid() ) {
+		const BlockData *data = getBlockData(block);
+		printCharFlags(block);
 		if( block.userState() == US_KEISEN_BLOCK ) {
 			block = block.next();
 			continue;
@@ -2307,7 +2309,7 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const	//
 								finished = true;
 								break;
 							}
-							if( ix < buf.size() && buf[ix] == ch )
+							if( ix < buf.size() && buf[ix] == ch && data->m_charFlags[ix] == PCF_VISIBLE )
 								++count;
 							++ix;
 						}

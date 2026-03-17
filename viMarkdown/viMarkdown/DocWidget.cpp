@@ -15,6 +15,14 @@ BlockData* getBlockData(QTextBlock srcBlock, int length) {
 		data->m_charFlags.resize(length);	//	念のため
 	return data;
 }
+void printCharFlags(QTextBlock block) {
+	qDebug() << "blockNumber = " << block.blockNumber();
+	BlockData* data = getBlockData(block);
+	QString txt;
+	for(int i = 0; i < data->m_charFlags.size(); ++i)
+		txt += QString::number((int)data->m_charFlags[i]) + u' ';
+	qDebug() << txt;
+}
 //----------------------------------------------------------------------
 DocWidget::DocWidget(const QString& title, const QString& fullPath, QWidget *parent)
 	: m_title(title)
