@@ -63,6 +63,7 @@ public:
     void	tagJump();
 	void	make_link();
 	int		linkClickedPos() const { return m_linkClickedPos; }
+	bool	isComposing() const { return m_isComposing; }
 
 signals:
     void	tab_pressed();

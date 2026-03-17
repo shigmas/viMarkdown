@@ -2024,13 +2024,15 @@ void MainWindow::onMDTextChanged() {
 	MarkdownEditor *mdEditor = docWidget->m_editor;
 	//m_plainText = mdEditor->toPlainText();
 #if 1
-	int scrollPos = docWidget->m_preview->verticalScrollBar()->value();
-	docWidget->m_editor->setProcessing(true);
-	docWidget->m_preview->setMarkdown(mdEditor->document());
-	docWidget->m_preview->verticalScrollBar()->setValue(scrollPos);
-	docWidget->m_editor->setProcessing(false);
-	docWidget->m_editor->syncEditorCursorFromPreview();
-	//syncPreviewCursorWithEditor();
+	if( !mdEditor->isComposing() ) {
+		int scrollPos = docWidget->m_preview->verticalScrollBar()->value();
+		docWidget->m_editor->setProcessing(true);
+		docWidget->m_preview->setMarkdown(mdEditor->document());
+		docWidget->m_preview->verticalScrollBar()->setValue(scrollPos);
+		docWidget->m_editor->setProcessing(false);
+		docWidget->m_editor->syncEditorCursorFromPreview();
+		//syncPreviewCursorWithEditor();
+	}
 #else
 	auto &htmlComvertor = docWidget->m_htmlComvertor;
 	htmlComvertor.convert(mdEditor->document());

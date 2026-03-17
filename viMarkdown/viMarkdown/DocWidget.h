@@ -23,7 +23,7 @@ public:
     QByteArray m_charFlags;   // 1 char = 1 byte
 };
 
-BlockData* getBlockData(QTextBlock srcBlock, int length = 0);
+BlockData* getBlockData(QTextBlock srcBlock /*, int length = 0*/);
 const QByteArray& getCharFlags(QTextBlock srcBlock);
 void printCharFlags(QTextBlock block);
 void printCharFlags(const BlockData*);
