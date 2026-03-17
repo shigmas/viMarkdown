@@ -490,7 +490,7 @@ void MarkdownPreview::do_body_sub(QTextCursor& cursor, const QString &buf) {
 #endif
 }
 #endif
-void MarkdownPreview::do_body(QTextCursor& cursor, QTextBlock srcBlock, bool last) {
+void MarkdownPreview::do_body(QTextBlock srcBlock, QTextCursor& cursor, bool last) {
 	if( m_bodyList.isEmpty() ) return;
 #if 1
 	//封印：static QRegularExpression re("\\[\\[(.+?)\\]\\]");		//	[[タイトル]]
@@ -629,28 +629,28 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 		while( m_nSpaces < buf.size() && buf[m_nSpaces] == u' ' ) ++m_nSpaces;
 		if( m_nSpaces > 0 ) buf = buf.mid(m_nSpaces);
 		if( buf.startsWith('#') ) {
-			do_body(cursor, srcBlock);
-			do_heading(cursor, buf);
+			do_body(srcBlock, cursor);
+			do_heading(srcBlock, cursor, buf);
 		} else if( re_list.match(buf).hasMatch() ) {
-			do_body(cursor, srcBlock);
+			do_body(srcBlock, cursor);
 			do_list(cursor, buf, srcBlock);		//	"- " or "- [ ] "
 		} else if( re_numlist.match(buf).hasMatch() ) {
-			do_body(cursor, srcBlock);
+			do_body(srcBlock, cursor);
 			do_numlist(cursor, buf);
 		} else if( buf.startsWith("> ") ) {
-			do_body(cursor, srcBlock);
+			do_body(srcBlock, cursor);
 			do_quote(cursor, buf);
 		} else if( buf.startsWith("```CSV", Qt::CaseInsensitive) ) {
-			do_body(cursor, srcBlock);
+			do_body(srcBlock, cursor);
 			do_CSV(srcBlock, cursor);
 		} else if( buf.startsWith("```keisen", Qt::CaseInsensitive) ) {
-			do_body(cursor, srcBlock);
+			do_body(srcBlock, cursor);
 			do_keisen_block(srcBlock, cursor);
 		} else if( buf.startsWith("```") ) {
-			do_body(cursor, srcBlock);
+			do_body(srcBlock, cursor);
 			do_code(cursor);
 		} else if( isTableLine(buf, m_tableTokens) && m_ln + 1 < m_lst.size() && isTableHyphenLine(m_lst[m_ln+1], m_tableAlign) ) {
-			do_body(cursor, srcBlock);
+			do_body(srcBlock, cursor);
 			do_table(srcBlock, cursor);
 		} else {
 			if( isUnderlineHeading(buf) && do_underlineHeading(cursor, buf) )
@@ -661,7 +661,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 		}
 	}
 	QTextBlock srcBlock = doc->findBlockByNumber(m_bodyLineNum);
-	do_body(cursor, srcBlock, true);
+	do_body(srcBlock, cursor, true);
 	cursor.endEditBlock();
 	m_processing = false;
 }
@@ -725,11 +725,15 @@ bool MarkdownPreview::do_underlineHeading(QTextCursor& cursor, QString buf) {
 }
 int h_font_size[] = {12, 26*4, 22*4, 18, 16, 14, 12};		//	body, h1, h2, h3 ... h6
 
-void MarkdownPreview::do_heading(QTextCursor& cursor, QString buf) {
+void MarkdownPreview::do_heading(QTextBlock& srcBlock, QTextCursor& cursor, QString buf) {
 	int i = 1;
 	while( i < buf.size() && buf[i] == '#' ) ++i;
 	int h = std::min(6, i);		//	[1, 6]
 	while( i < buf.size() && buf[i] == u' ' ) ++i;
+	BlockData *data = getBlockData(srcBlock);
+	for(int k = 0; k < i; ++k)
+		data->m_charFlags[k] = PCF_HEADING;
+	srcBlock.setUserData(data);
 	do_heading_sub(cursor, buf.mid(i), h, m_ln);
 }
 void MarkdownPreview::do_heading_sub(QTextCursor& cursor, QString buf, int h, int ln) {

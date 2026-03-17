@@ -94,11 +94,11 @@ protected:
     //bool	isTableHyphenLine(const QString&);
     int		countCheckBox(QTextBlock block);
 
-    void	do_body(QTextCursor&, QTextBlock srcBlock, bool = false);
+    void	do_body(QTextBlock srcBlock, QTextCursor&, bool = false);
     void	do_body_sub(QTextCursor&, const QString&);
     void	do_table(QTextBlock&, QTextCursor&);
     bool	do_underlineHeading(QTextCursor&, QString buf);
-    void	do_heading(QTextCursor&, QString buf);
+    void	do_heading(QTextBlock&, QTextCursor&, QString buf);
     void	do_heading_sub(QTextCursor&, QString buf, int h, int ln);
     void	do_list(QTextCursor&, QString buf, QTextBlock srcBlock);
     void	do_numlist(QTextCursor&, QString buf);
