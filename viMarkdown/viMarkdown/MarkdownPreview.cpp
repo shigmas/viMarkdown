@@ -1046,13 +1046,28 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 	int pos = cursor.position();
 	int n_item = 1;
 	int ln = m_ln;
-	bool is_checkbox = re_checkbox.match(buf).hasMatch();		//	チェックボックス（"- [ ] "）の場合
+	auto match = re_checkbox.match(buf);
+	bool is_checkbox = match.hasMatch();		//	チェックボックス（"- [ ] "）の場合
 	if( is_checkbox ) {
+		for(;;) {
+			BlockData* data = getBlockData(srcBlock);
+			for(int i = 0; i < match.capturedLength(); ++i)
+				data->m_charFlags[i] = PCF_LIST_MARK;
+			srcBlock.setUserData(data);
+			if( ++m_ln >= m_lst.size() ) break;
+			match = re_checkbox.match(buf);
+			if( !match.hasMatch() ) break;
+			srcBlock = srcBlock.next();
+			buf += u'\n' + m_lst[m_ln];
+			++n_item;
+		}
+#if 0
 		while( ++m_ln < m_lst.size() ) {
 			if( !re_checkbox.match(m_lst[m_ln]).hasMatch() ) break;
 			buf += u'\n' + m_lst[m_ln];
 			++n_item;
 		}
+#endif
 	} else {		//	リストの場合
 		//static QRegularExpression re(R"(^( *)- )");
 		auto mch = re_list.match(srcBlock.text());
