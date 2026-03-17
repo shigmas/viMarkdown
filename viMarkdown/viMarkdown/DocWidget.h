@@ -17,6 +17,8 @@ enum {
     PCF_QUOTE,
     PCF_LINK,
     PCF_IMAGE,
+    PCF_CSV,
+    PCF_KEISEN,
 };
 class BlockData : public QTextBlockUserData
 {
@@ -28,6 +30,8 @@ BlockData* getBlockData(QTextBlock srcBlock /*, int length = 0*/);
 const QByteArray& getCharFlags(QTextBlock srcBlock);
 void printCharFlags(QTextBlock block);
 void printCharFlags(const BlockData*);
+
+bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment, bool &commented, BlockData* = nullptr);
 
 class DocWidget : public QWidget
 {

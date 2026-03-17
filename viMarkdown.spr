@@ -942,7 +942,7 @@ SPR# 状 P Open Close ver     Type  概要
 0936 ◎ C 03/17 03/17 01204│ToDo│リストだけでなく、連番の場合も、ブロックデータの m_charFlags[] フラグを立てておく
 0937 ◎ C 03/17 03/17 01204│ToDo│![title](image.png) の場合も、ブロックデータの m_charFlags[] フラグを立てておく
 0938 ● C 03/17            │ToDo│* ** ~~ も、ブロックデータの m_charFlags[] フラグを立てておく
-0939 ● C 03/17            │ToDo│CSVブロック内：ブロックデータの m_charFlags[] フラグを立てておく
+0939 ◎ C 03/17 03/18 01205│ToDo│CSVブロック内：ブロックデータの m_charFlags[] フラグを立てておく
 0940 ◎ C 03/17 03/17 01204│ToDo│引用ブロック内："> " 部分の m_charFlags[] フラグを立てておく
 0941 ◎ C 03/17 03/17 01204│ToDo│見出し：# 部分の m_charFlags[] フラグを立てておく
 0942 ◎ C 03/17 03/17 01204│ToDo│本文：\文字 部分の m_charFlags[] フラグを立てておく
@@ -960,7 +960,7 @@ SPR# 状 P Open Close ver     Type  概要
 0953 ◎ C 03/17 03/18 01205│ToDo│[text](url) の場合も m_charFlags[] フラグを立てておく
 0954 ● C 03/18            │ToDo│help.md > viMarkdown独自仕様 > CSV：とりあえず完成させる
 0955 ● C 03/18            │ToDo│help.md > viMarkdown独自仕様 > プレビュー内編集：とりあえず完成させる
-0956 ● C 03/18            │ToDo│
+0956 ◎ C 03/18 03/18 01205│ToDo│parseCsvLine() は DocWidget.cpp に移動
 0957 ● C 03/18            │ToDo│
 0958 ● C 03/18            │ToDo│
 0959 ● C 03/18            │ToDo│

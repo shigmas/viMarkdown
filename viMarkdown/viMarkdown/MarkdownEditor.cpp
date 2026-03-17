@@ -16,7 +16,7 @@
 #include "DocWidget.h"
 
 extern Global g;
-extern bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment, bool &commented);
+//extern bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment, bool &commented);
 extern bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens);
 extern bool isTableLine(const QString& lnStr, QStringList &tableTokens);
 extern bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign);

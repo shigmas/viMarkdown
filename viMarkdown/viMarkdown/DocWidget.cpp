@@ -38,6 +38,72 @@ void printCharFlags(QTextBlock block) {
 	qDebug() << txt;
 #endif
 }
+bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment, bool &commented, BlockData* data) {
+	//QStringList fields;
+	if( data != nullptr )
+		qDebug() << "data != nullptr";
+	commented = false;
+	int i = 0;
+	if( inComment ) {
+		int ix = line.indexOf("-->");
+		if( ix < 0 ) return inQuotes;
+		inComment = false;
+		if( (i = ix + 3) >= line.length() ) {	//	"-->" までスキップ
+			commented = fields.isEmpty();
+			return inQuotes;
+		}
+
+	}
+	if( line.startsWith("```csv", Qt::CaseInsensitive) )
+		return inQuotes;
+	QString currentField;
+	if( !inQuotes ) {
+		fields.clear();
+	} else {
+		currentField = fields.back() + u'\n';
+		fields.pop_back();
+	}
+	//bool inQuotes = false;
+	for (; i < line.length(); ++i) {
+		if( line.mid(i).startsWith("<!--") ) {
+			int ix = line.indexOf("-->", i + 4);
+			if( ix > 0 ) {	//	コメント終了を発見
+				if( (i = ix + 3) >= line.length() ) {	//	"-->" までスキップ
+					commented = fields.isEmpty();
+					return inQuotes;
+				}
+			} else {
+				inComment = true;
+				return inQuotes;
+			}
+		}
+		QChar c = line.at(i);
+		if (c == '"') {
+			if( data != nullptr )
+				data->m_charFlags[i] = PCF_CSV;
+			// ダブルクォートの中のダブルクォート（エスケープ）をチェック
+			if (inQuotes && i + 1 < line.length() && line.at(i + 1) == '"') {
+				currentField += '"';
+				i++; // 1文字飛ばす
+			} else if( currentField.isEmpty() || i + 1 == line.length() || line.at(i + 1) == ',') {
+				inQuotes = !inQuotes; // クォート状態の反転
+			} else {
+				currentField += '"';
+			}
+		} else if (c == ',' && !inQuotes) {		// クォートの外にあるカンマはセパレータ
+			fields.append(currentField.trimmed());
+			currentField.clear();
+			if( data != nullptr )
+				data->m_charFlags[i] = PCF_CSV;
+		} else { // 通常の文字
+			if( c != ' ' || !currentField.isEmpty() )
+				currentField += c;
+		}
+	}
+	// 最後のフィールドを追加
+	fields.append(currentField.trimmed());
+	return inQuotes;
+}
 //----------------------------------------------------------------------
 DocWidget::DocWidget(const QString& title, const QString& fullPath, QWidget *parent)
 	: m_title(title)

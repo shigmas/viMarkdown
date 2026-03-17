@@ -774,68 +774,11 @@ void MarkdownPreview::do_heading_sub(QTextCursor& cursor, QString buf, int h, in
 	m_docWidget->m_srcHeadingBlocks.push_back(ln);
 	m_nEmptyLines = 0;
 }
-bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment, bool &commented) {
-	//QStringList fields;
-	commented = false;
-	int i = 0;
-	if( inComment ) {
-		int ix = line.indexOf("-->");
-		if( ix < 0 ) return inQuotes;
-		inComment = false;
-		if( (i = ix + 3) >= line.length() ) {	//	"-->" までスキップ
-			commented = fields.isEmpty();
-			return inQuotes;
-		}
-
-	}
-	if( line.startsWith("```csv", Qt::CaseInsensitive) )
-		return inQuotes;
-	QString currentField;
-	if( !inQuotes ) {
-		fields.clear();
-	} else {
-		currentField = fields.back() + u'\n';
-		fields.pop_back();
-	}
-	//bool inQuotes = false;
-	for (; i < line.length(); ++i) {
-		if( line.mid(i).startsWith("<!--") ) {
-			int ix = line.indexOf("-->", i + 4);
-			if( ix > 0 ) {	//	コメント終了を発見
-				if( (i = ix + 3) >= line.length() ) {	//	"-->" までスキップ
-					commented = fields.isEmpty();
-					return inQuotes;
-				}
-			} else {
-				inComment = true;
-				return inQuotes;
-			}
-		}
-		QChar c = line.at(i);
-		if (c == '"') {
-			// ダブルクォートの中のダブルクォート（エスケープ）をチェック
-			if (inQuotes && i + 1 < line.length() && line.at(i + 1) == '"') {
-				currentField += '"';
-				i++; // 1文字飛ばす
-			} else if( currentField.isEmpty() || i + 1 == line.length() || line.at(i + 1) == ',') {
-				inQuotes = !inQuotes; // クォート状態の反転
-			} else {
-				currentField += '"';
-			}
-		} else if (c == ',' && !inQuotes) {		// クォートの外にあるカンマはセパレータ
-			fields.append(currentField.trimmed());
-			currentField.clear();
-		} else { // 通常の文字
-			if( c != ' ' || !currentField.isEmpty() )
-		currentField += c;
-		}
-	}
-	// 最後のフィールドを追加
-	fields.append(currentField.trimmed());
-	return inQuotes;
-}
 void MarkdownPreview::do_CSV(QTextBlock& srcBlock, QTextCursor& cursor) {		//	cursor: プレビューカーソル
 	srcBlock.setUserState(US_CSV_BLOCK);
+	BlockData *data = getBlockData(srcBlock);
+	data->m_charFlags.fill(PCF_CSV);
+	srcBlock.setUserData(data);
 	QList<QStringList> ll;
 	int max_clmn = 0;
 	bool inQuotes = false;
@@ -845,14 +788,20 @@ void MarkdownPreview::do_CSV(QTextBlock& srcBlock, QTextCursor& cursor) {		//	cu
 	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
 		srcBlock = srcBlock.next();
 		srcBlock.setUserState(US_CSV_BLOCK);
-		inQuotes = parseCsvLine(fields, m_lst[m_ln], inQuotes, inComment, commented);
+		data = getBlockData(srcBlock);
+		inQuotes = parseCsvLine(fields, m_lst[m_ln], inQuotes, inComment, commented, data);
 		if( !inQuotes && !inComment && !commented ) {
 			max_clmn = qMax(max_clmn, fields.size());
 			ll.push_back(fields);
+			srcBlock.setUserData(data);
 		}
 	}
-	if( srcBlock.isValid() )
+	if( srcBlock.isValid() ) {
 		srcBlock.setUserState(US_CSV_BLOCK);
+		BlockData *data = getBlockData(srcBlock);
+		data->m_charFlags.fill(PCF_CSV);
+		srcBlock.setUserData(data);
+	}
 	if( ll.isEmpty() ) return;
 	static QRegularExpression re("^[+-]?(\\d+\\.\\d*|\\d+|\\.\\d+)$");
 	cursor.beginEditBlock();
