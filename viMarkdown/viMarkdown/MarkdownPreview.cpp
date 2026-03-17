@@ -508,6 +508,12 @@ void MarkdownPreview::do_body(QTextCursor& cursor, QTextBlock srcBlock, bool las
 		    	data->m_charFlags[i] = PCF_IMAGE;
 			match = image_re.match(txt, start + length);
 		}
+		int ix = 0;
+		while( (ix = txt.indexOf(u'\\', ix)) >= 0 ) {
+			modified = true;
+			data->m_charFlags[ix] = PCF_ESCAPE;
+			ix += 2;
+		}
 		if( modified ) {
 			srcBlock.setUserData(data);
 			printCharFlags(srcBlock);
@@ -516,6 +522,7 @@ void MarkdownPreview::do_body(QTextCursor& cursor, QTextBlock srcBlock, bool las
 		txt.replace(re, "<a href=\"\\2\">\\1</a>");
 		//	undone: charFlags 設定はこっちに移動
 		buf += txt + "\n";
+		srcBlock = srcBlock.next();
 	}
 	if( !buf.isEmpty() ) {
 		//QTextBlock block = cursor.block();
@@ -648,10 +655,12 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 		} else {
 			if( isUnderlineHeading(buf) && do_underlineHeading(cursor, buf) )
 				continue;		//	アンダーライン見出しだった場合
+			if( m_bodyList.isEmpty() )
+				m_bodyLineNum = m_ln;
 			m_bodyList += buf;
 		}
 	}
-	QTextBlock srcBlock = doc->findBlockByNumber(m_ln-1);
+	QTextBlock srcBlock = doc->findBlockByNumber(m_bodyLineNum);
 	do_body(cursor, srcBlock, true);
 	cursor.endEditBlock();
 	m_processing = false;

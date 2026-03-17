@@ -10,6 +10,7 @@ class MarkdownPreview;
 
 enum {
     PCF_VISIBLE = 0,	// プレビューに表示される
+    PCF_ESCAPE,			//	エスケープ文字
     PCF_LIST_MARK,		// "- " などリストマーカー
     PCF_IMAGE,
 };

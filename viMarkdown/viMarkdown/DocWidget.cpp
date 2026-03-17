@@ -20,12 +20,14 @@ const QByteArray& getCharFlags(QTextBlock block) {
 	return data->m_charFlags;
 }
 void printCharFlags(QTextBlock block) {
+#ifdef _DEBUG
 	qDebug() << "blockNumber = " << block.blockNumber();
 	const BlockData* data = getBlockData(block);
 	QString txt;
 	for(int i = 0; i < data->m_charFlags.size(); ++i)
 		txt += QString::number((int)data->m_charFlags[i]) + u' ';
 	qDebug() << txt;
+#endif
 }
 //----------------------------------------------------------------------
 DocWidget::DocWidget(const QString& title, const QString& fullPath, QWidget *parent)

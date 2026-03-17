@@ -117,6 +117,7 @@ private:
 	bool	m_isComposing = false;			// IME入力中フラグ
 	QString	m_lastCurBlockText;				//	事前のカーソルブロックテキスト
     //QString	m_bodyText;
+    int		m_bodyLineNum = -1;		//	m_bodyList に入っている最初の行のソース行番号
     QStringList	m_bodyList;
 	QStringList	m_lst;
 	QStringList	m_headingList;		//	見出しレベル（1～9）＋見出し文字列
