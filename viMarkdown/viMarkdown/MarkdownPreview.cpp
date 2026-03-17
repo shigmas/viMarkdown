@@ -1055,9 +1055,10 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 				data->m_charFlags[i] = PCF_LIST_MARK;
 			srcBlock.setUserData(data);
 			if( ++m_ln >= m_lst.size() ) break;
-			match = re_checkbox.match(buf);
+			match = re_checkbox.match(m_lst[m_ln]);
 			if( !match.hasMatch() ) break;
 			srcBlock = srcBlock.next();
+			//data = getBlockData(srcBlock);
 			buf += u'\n' + m_lst[m_ln];
 			++n_item;
 		}

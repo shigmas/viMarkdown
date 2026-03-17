@@ -951,6 +951,16 @@ SPR# 状 P Open Close ver     Type  概要
 0945 ◎ C 03/17 03/17 01204│ToDo│デバッグ用に printCharFlags(block) 実装
 0946 ◎ C 03/17 03/17 01204│ToDo│MarkdownEditor::findPosition(const PosContext &context)：m_charFlags[] 対応
 0947 ◎ C 03/17 03/17 01204│ToDo│チェックボックスの場合も、ブロックデータの m_charFlags[] フラグを立てておく
-0948 ● C 03/17            │ToDo│
-0949 ● C 03/17            │ToDo│
+0948 ● C 03/17            │ToDo│getBlockData()：すでにデータがあり、データを増やす場合は 0 に初期化
+0949 ◎ A 03/17 03/17 01204│問題│"- [ ] " 直後で Enter 押下でクラッシュした
 0950 ● C 03/17            │ToDo│
+0951 ● C 03/17            │ToDo│
+0952 ● C 03/17            │ToDo│
+0953 ● C 03/17            │ToDo│
+0954 ● C 03/17            │ToDo│
+0955 ● C 03/17            │ToDo│
+0956 ● C 03/17            │ToDo│
+0957 ● C 03/17            │ToDo│
+0958 ● C 03/17            │ToDo│
+0959 ● C 03/17            │ToDo│
+0960 ● C 03/17            │ToDo│
