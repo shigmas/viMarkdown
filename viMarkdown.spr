@@ -939,14 +939,14 @@ SPR# 状 P Open Close ver     Type  概要
 0933 ◎ C 03/17 03/17 01204│ToDo│getBlockData() は DocWidget.cpp に移動
 0934 ◎ C 03/17 03/17 01204│問題│オートテキスト挿入前にマークダウン変換処理がコールされている
 0935 ◎ C 03/17 03/17 01204│問題│BlockData* getBlockData()：常に m_charFlags[] の値が 0 にリセットされている
-0936 ● C 03/17            │ToDo│リストだけでなく、見出し、連番、チェックボックスの場合も、ブロックデータの m_charFlags[] フラグを立てておく
-0937 ● C 03/17            │ToDo│![title](image.png) の場合も、ブロックデータの m_charFlags[] フラグを立てておく
+0936 ● C 03/17            │ToDo│リストだけでなく、連番、チェックボックスの場合も、ブロックデータの m_charFlags[] フラグを立てておく
+0937 ◎ C 03/17 03/17 01204│ToDo│![title](image.png) の場合も、ブロックデータの m_charFlags[] フラグを立てておく
 0938 ● C 03/17            │ToDo│* ** ~~ も、ブロックデータの m_charFlags[] フラグを立てておく
 0939 ● C 03/17            │ToDo│CSVブロック内：ブロックデータの m_charFlags[] フラグを立てておく
-0940 ● C 03/17            │ToDo│
-0941 ● C 03/17            │ToDo│
-0942 ● C 03/17            │ToDo│
-0943 ● C 03/17            │ToDo│
+0940 ● C 03/17            │ToDo│引用ブロック内："> " 部分の m_charFlags[] フラグを立てておく
+0941 ● C 03/17            │ToDo│見出し：# 部分の m_charFlags[] フラグを立てておく
+0942 ● C 03/17            │ToDo│本文：\文字 部分の m_charFlags[] フラグを立てておく
+0943 ◎ C 03/17 03/17 01204│ToDo│getBlockData()：文字列挿入前にも対応するため、第２引数に行長指定可能に
 0944 ● C 03/17            │ToDo│
 0945 ● C 03/17            │ToDo│
 0946 ● C 03/17            │ToDo│

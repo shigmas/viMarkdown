@@ -3,15 +3,16 @@
 #include "DocWidget.h"
 #include "MarkdownPreview.h"
 
-BlockData* getBlockData(QTextBlock srcBlock) {
+BlockData* getBlockData(QTextBlock srcBlock, int length) {
 	BlockData* data = static_cast<BlockData*>(srcBlock.userData());
+	if( !length ) length = srcBlock.text().size();
 	if (!data) {
 	    data = new BlockData();
 		srcBlock.setUserData(data);
-		data->m_charFlags.resize(srcBlock.text().size());
+		data->m_charFlags.resize(length);
 		data->m_charFlags.fill(0);
 	} else
-		data->m_charFlags.resize(srcBlock.text().size());	//	念のため
+		data->m_charFlags.resize(length);	//	念のため
 	return data;
 }
 //----------------------------------------------------------------------
