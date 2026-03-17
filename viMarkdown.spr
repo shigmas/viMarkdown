@@ -949,7 +949,7 @@ SPR# 状 P Open Close ver     Type  概要
 0943 ◎ C 03/17 03/17 01204│ToDo│getBlockData()：文字列挿入前にも対応するため、第２引数に行長指定可能に
 0944 ◎ C 03/17 03/17 01204│問題│arkdownEditor::countCharUntil() が m_charFlags[] に対応していない
 0945 ◎ C 03/17 03/17 01204│ToDo│デバッグ用に printCharFlags(block) 実装
-0946 ● C 03/17            │ToDo│
+0946 ◎ C 03/17 03/17 01204│ToDo│MarkdownEditor::findPosition(const PosContext &context)：m_charFlags[] 対応
 0947 ● C 03/17            │ToDo│
 0948 ● C 03/17            │ToDo│
 0949 ● C 03/17            │ToDo│

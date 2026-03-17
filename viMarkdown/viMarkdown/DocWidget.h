@@ -20,6 +20,7 @@ public:
 };
 
 BlockData* getBlockData(QTextBlock srcBlock, int length = 0);
+const QByteArray& getCharFlags(QTextBlock srcBlock);
 void printCharFlags(QTextBlock block);
 void printCharFlags(const BlockData*);
 

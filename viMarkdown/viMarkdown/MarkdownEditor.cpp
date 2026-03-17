@@ -811,32 +811,8 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			block = block.next();
 			continue;
 		}
+		const auto charFlags = getCharFlags(block);
 		QString buf = block.text();
-#if 0
-		if( block.userState() == US_CSV_BLOCK ) {
-			bool inQuotes = false;
-			bool commented = false;
-			QStringList fields;
-			//QString buf2 = buf;
-			//if( block.next().isValid() && block.next().position() > pos) {
-			//	buf2 = buf2.left(pos - block.position());
-			//	finished = true;
-			//}
-			parseCsvLine(fields, buf, inQuotes, inComment, commented);
-			if( !fields.isEmpty() ) {
-				for(auto txt: fields) {
-					for(int i = 0; i < txt.size(); ++i) {
-						if( txt[i] == ch ) {
-							if( --nth == 0 ) {
-								return block.position() + ix;
-							}
-						}
-					}
-				}
-			}
-			continue;
-		}
-#endif
 		buf.remove(re);				//	/# /, /- / などを削除
 		offset = block.text().size() - buf.size();
 		if( ch == QChar() ) {		//	行末の場合
@@ -851,7 +827,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 		} else {		//	非行末の場合
 			bool isNextBlankLine = !block.next().isValid() || block.next().text().isEmpty();
 			while( (ix = indexOf(inComment, buf, ix, ch, isNextBlankLine)) >= 0 ) {
-				if( --nth == 0 ) break;
+				if( charFlags[ix] == PCF_VISIBLE && --nth == 0 ) break;
 				++ix;
 			}
 			if (nth == 0) break;

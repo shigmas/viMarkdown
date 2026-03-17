@@ -15,9 +15,13 @@ BlockData* getBlockData(QTextBlock srcBlock, int length) {
 		data->m_charFlags.resize(length);	//	念のため
 	return data;
 }
+const QByteArray& getCharFlags(QTextBlock block) {
+	const BlockData* data = getBlockData(block);
+	return data->m_charFlags;
+}
 void printCharFlags(QTextBlock block) {
 	qDebug() << "blockNumber = " << block.blockNumber();
-	BlockData* data = getBlockData(block);
+	const BlockData* data = getBlockData(block);
 	QString txt;
 	for(int i = 0; i < data->m_charFlags.size(); ++i)
 		txt += QString::number((int)data->m_charFlags[i]) + u' ';
