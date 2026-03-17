@@ -959,7 +959,7 @@ SPR# 状 P Open Close ver     Type  概要
 									再現手順："- " に続けて、IME で「あいうえお」など、２文字以上入力すると発生する
 0953 ◎ C 03/17 03/18 01205│ToDo│[text](url) の場合も m_charFlags[] フラグを立てておく
 0954 ● C 03/18            │ToDo│help.md > viMarkdown独自仕様 > CSV：とりあえず完成させる
-0955 ● C 03/18            │ToDo│help.md > viMarkdown独自仕様 > プレビュー内編集：とりあえず完成させる
+0955 ◎ C 03/18 03/18 01205│ToDo│help.md > viMarkdown独自仕様 > プレビュー内編集：とりあえず完成させる
 0956 ◎ C 03/18 03/18 01205│ToDo│parseCsvLine() は DocWidget.cpp に移動
 0957 ● C 03/18            │ToDo│
 0958 ● C 03/18            │ToDo│
