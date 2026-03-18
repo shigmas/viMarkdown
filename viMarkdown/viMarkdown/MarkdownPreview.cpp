@@ -583,7 +583,7 @@ static QRegularExpression re_numlist(R"(^(\s*)(\d+)([.)]) )");
 
 int indexOfComment(QStringView buf, int start) {
 	for(int i = start; i < buf.size(); ++i) {
-		if( buf[i] == u'\\' && i+1 < buf.size() )
+		if( buf[i] == u'\\' && i+1 < buf.size() )	//	エスケープされた文字をスキップ
 			++i;
 		else if( buf.mid(i).startsWith(u"<!--") )
 			return i;
@@ -625,22 +625,42 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 		QString buf = srcBlock.text();
 		if( !m_inComment ) {
 			srcBlock.setUserState(US_DEFAULT);
+			BlockData *data = getBlockData(srcBlock);
 			int start = 0, ix;
-			while( (ix = indexOfComment(buf, start)) >= 0 ) {
+			QString buf2;
+			bool modified = false;
+			while( (ix = indexOfComment(buf, start)) >= 0 ) {	//	"<!--" 有り
 				bComment = true;
+				modified = true;
 				int ix2 = buf.indexOf("-->", ix + 4);
-				if( ix2 < 0 ) {
-					buf = buf.left(ix);
+				if( ix2 < 0 ) {		//	"-->" 無し
+					for(int i = ix; i < data->m_charFlags.size(); ++i)
+						data->m_charFlags[i] = PCF_COMMENTED;
+					buf2 += buf.mid(start, ix-start);
 					m_inComment = true;
 					break;
+				} else {			//	"-->" 有り
+					buf2 += buf.mid(start, ix-start) + buf.mid(ix2+3);
+					for(int i = ix; i < ix2+3; ++i)
+						data->m_charFlags[i] = PCF_COMMENTED;
+					start = ix2+3;
 				}
-				buf = buf.left(ix) + buf.mid(ix2+3);
 			}
+			if( modified ) buf = buf2;
+			srcBlock.setUserData(data);
 			if( bComment && buf.isEmpty() ) continue;
 		} else {
 			srcBlock.setUserState(US_IN_COMMENT);
+			BlockData *data = getBlockData(srcBlock);
 			int ix = buf.indexOf("-->");
-			if( ix < 0 ) continue;
+			if( ix < 0 ) {
+				data->m_charFlags.fill(PCF_COMMENTED);
+				srcBlock.setUserData(data);
+				continue;
+			}
+			for(int i = 0; i < ix + 3; ++i)
+				data->m_charFlags[i] = PCF_COMMENTED;
+			srcBlock.setUserData(data);
 			m_inComment = false;
 			buf = buf.mid(ix+3);
 			if( buf.isEmpty() ) continue;
