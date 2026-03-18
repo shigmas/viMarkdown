@@ -20,6 +20,7 @@ enum {
     PCF_IMAGE,
     PCF_CSV,
     PCF_KEISEN,
+    PCF_EMPHASIZED,		//	ボールド、イタリック等
 };
 class BlockData : public QTextBlockUserData
 {
@@ -27,7 +28,7 @@ public:
     QByteArray m_charFlags;   // 1 char = 1 byte
 };
 
-BlockData* getBlockData(QTextBlock srcBlock /*, int length = 0*/);
+BlockData* getBlockData(QTextBlock srcBlock, bool init = false /*, int length = 0*/);
 const QByteArray& getCharFlags(QTextBlock srcBlock);
 void printCharFlags(QTextBlock block);
 void printCharFlags(const BlockData*);

@@ -3,7 +3,8 @@
 #include "DocWidget.h"
 #include "MarkdownPreview.h"
 
-BlockData* getBlockData(QTextBlock srcBlock /*, int length*/) {
+BlockData* getBlockData(QTextBlock srcBlock, bool init /*, int length*/) {
+	assert( srcBlock.isValid() );
 	int bn = srcBlock.blockNumber();	//	for Debug
 	assert( bn >= 0 );
 	QString txt = srcBlock.text();	//	for Debug
@@ -16,14 +17,16 @@ BlockData* getBlockData(QTextBlock srcBlock /*, int length*/) {
 		data->m_charFlags.resize(length);
 		data->m_charFlags.fill(0);
 	} else {
-		auto len0 = data->m_charFlags.size();
-		if( len0 < length ) {
-			data->m_charFlags.resize(length);
-			for(int i = len0; i < length; ++i)
-				data->m_charFlags[i] = 0;
+		if( init )
+			data->m_charFlags.fill(0);
+		else {
+			auto len0 = data->m_charFlags.size();
+			if( len0 < length ) {
+				data->m_charFlags.resize(length);
+				for(int i = len0; i < length; ++i)
+					data->m_charFlags[i] = 0;
+			}
 		}
-		//while( data->m_charFlags.size() < length)
-		//	data->m_charFlags << 0;
 	}
 	return data;
 }

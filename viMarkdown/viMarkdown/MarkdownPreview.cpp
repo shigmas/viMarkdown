@@ -493,7 +493,7 @@ void MarkdownPreview::do_body_sub(QTextCursor& cursor, const QString &buf) {
 #endif
 void updateCharFlags(QTextBlock srcBlock) {
 	QString txt = srcBlock.text();
-	BlockData *data = getBlockData(srcBlock);
+	BlockData *data = getBlockData(srcBlock, true);
 	bool modified = false;
 	auto match = image_re.match(txt);		//	![title](image.png) を含むか？
 	while( match.hasMatch() ) {
@@ -504,7 +504,7 @@ void updateCharFlags(QTextBlock srcBlock) {
 	    	data->m_charFlags[i] = PCF_IMAGE;
 		match = image_re.match(txt, start + length);
 	}
-	match = link_re.match(txt);		//	![title](image.png) を含むか？
+	match = link_re.match(txt);		//	[title](image.png) を含むか？
 	while( match.hasMatch() ) {
 		modified = true;
 		int start = match.capturedStart(); // マッチした最初の位置（'['）
