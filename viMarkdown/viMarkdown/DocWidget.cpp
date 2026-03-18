@@ -4,6 +4,9 @@
 #include "MarkdownPreview.h"
 
 BlockData* getBlockData(QTextBlock srcBlock /*, int length*/) {
+	int bn = srcBlock.blockNumber();	//	for Debug
+	assert( bn >= 0 );
+	QString txt = srcBlock.text();	//	for Debug
 	BlockData* data = static_cast<BlockData*>(srcBlock.userData());
 	//if( !length )
 	int length = srcBlock.text().size();
