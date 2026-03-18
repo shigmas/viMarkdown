@@ -961,7 +961,9 @@ SPR# 状 P Open Close ver     Type  概要
 0954 ● C 03/18            │ToDo│help.md > viMarkdown独自仕様 > CSV：とりあえず完成させる
 0955 ◎ C 03/18 03/18 01205│ToDo│help.md > viMarkdown独自仕様 > プレビュー内編集：とりあえず完成させる
 0956 ◎ C 03/18 03/18 01205│ToDo│parseCsvLine() は DocWidget.cpp に移動
-0957 ● C 03/18            │ToDo│
+0957 ◎ A 03/18 03/18 01205│問題│help.md で「```」と入力するとクラッシュした
+									原因：途中にコメントアウトされた行があると、block と m_bodyList がズレてしまう
+									対処：後で対応付けを行うのは間違いの元なので、m_bodyList に追加する時点で m_charFlags[] を更新する
 0958 ● C 03/18            │ToDo│
 0959 ● C 03/18            │ToDo│
 0960 ● C 03/18            │ToDo│

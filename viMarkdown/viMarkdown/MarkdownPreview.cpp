@@ -491,6 +491,41 @@ void MarkdownPreview::do_body_sub(QTextCursor& cursor, const QString &buf) {
 #endif
 }
 #endif
+void updateCharFlags(QTextBlock srcBlock) {
+	QString txt = srcBlock.text();
+	BlockData *data = getBlockData(srcBlock);
+	bool modified = false;
+	auto match = image_re.match(txt);		//	![title](image.png) を含むか？
+	while( match.hasMatch() ) {
+		modified = true;
+		int start = match.capturedStart(); // マッチした最初の位置
+	    int length = match.capturedLength(); // マッチした全体の長さ
+	    for(int i = start; i < start + length; ++i)
+	    	data->m_charFlags[i] = PCF_IMAGE;
+		match = image_re.match(txt, start + length);
+	}
+	match = link_re.match(txt);		//	![title](image.png) を含むか？
+	while( match.hasMatch() ) {
+		modified = true;
+		int start = match.capturedStart(); // マッチした最初の位置（'['）
+	    int length = match.capturedLength(); // マッチした全体の長さ
+	    data->m_charFlags[start] = PCF_LINK;
+	    int ix = txt.indexOf(']', start);
+	    for(int i = ix; i < start + length && i < data->m_charFlags.size(); ++i)
+	    	data->m_charFlags[i] = PCF_LINK;
+		match = link_re.match(txt, start + length);
+	}
+	int ix = 0;
+	while( (ix = txt.indexOf(u'\\', ix)) >= 0 ) {
+		modified = true;
+		data->m_charFlags[ix] = PCF_ESCAPE;
+		ix += 2;
+	}
+	if( modified ) {
+		srcBlock.setUserData(data);
+		printCharFlags(srcBlock);
+	}
+}
 void MarkdownPreview::do_body(QTextBlock srcBlock, QTextCursor& cursor, bool last) {
 	if( m_bodyList.isEmpty() ) return;
 #if 1
@@ -499,43 +534,13 @@ void MarkdownPreview::do_body(QTextBlock srcBlock, QTextCursor& cursor, bool las
 	static QRegularExpression re("(?<!!)\\[([^\\]]+)\\]\\(([^)]+)\\)");		//	[タイトル](パス#見出し)
 	QString buf;
 	for(auto txt: m_bodyList) {
-		BlockData *data = getBlockData(srcBlock);
-		bool modified = false;
-		auto match = image_re.match(txt);		//	![title](image.png) を含むか？
-		while( match.hasMatch() ) {
-			modified = true;
-			int start = match.capturedStart(); // マッチした最初の位置
-		    int length = match.capturedLength(); // マッチした全体の長さ
-		    for(int i = start; i < start + length; ++i)
-		    	data->m_charFlags[i] = PCF_IMAGE;
-			match = image_re.match(txt, start + length);
-		}
-		match = link_re.match(txt);		//	![title](image.png) を含むか？
-		while( match.hasMatch() ) {
-			modified = true;
-			int start = match.capturedStart(); // マッチした最初の位置（'['）
-		    int length = match.capturedLength(); // マッチした全体の長さ
-		    data->m_charFlags[start] = PCF_LINK;
-		    int ix = txt.indexOf(']', start);
-		    for(int i = ix; i < start + length && i < data->m_charFlags.size(); ++i)
-		    	data->m_charFlags[i] = PCF_LINK;
-			match = link_re.match(txt, start + length);
-		}
-		int ix = 0;
-		while( (ix = txt.indexOf(u'\\', ix)) >= 0 ) {
-			modified = true;
-			data->m_charFlags[ix] = PCF_ESCAPE;
-			ix += 2;
-		}
-		if( modified ) {
-			srcBlock.setUserData(data);
-			printCharFlags(srcBlock);
-		}
+		//assert(txt.size() == srcBlock.text().size());
 		//封印：txt.replace(re, "<a href=\"\\1\" class=\"wiki-link\">\\1</a>");
 		txt.replace(re, "<a href=\"\\2\">\\1</a>");
-		//	undone: charFlags 設定はこっちに移動
 		buf += txt + "\n";
-		srcBlock = srcBlock.next();
+		//do {
+		//	srcBlock = srcBlock.next();
+		//} while( srcBlock.userState() == US_IN_COMMENT );
 	}
 	if( !buf.isEmpty() ) {
 		//QTextBlock block = cursor.block();
@@ -585,6 +590,7 @@ int indexOfComment(QStringView buf, int start) {
 	}
 	return -1;
 }
+void updateCharFlags(QTextBlock srcBlock);
 void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソースドキュメント
 	m_headingList.clear();
 	m_docWidget->m_srcHeadingBlocks.clear();
@@ -673,6 +679,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 				m_bodyLineNum = m_ln;
 				srcBlock0 = srcBlock;
 			}
+			updateCharFlags(srcBlock);
 			m_bodyList += buf;
 		}
 	}
