@@ -1028,13 +1028,17 @@ void MarkdownPreview::do_code(QTextBlock srcBlock, QTextCursor& cursor) {
 	cursor.insertText(buf, codeCharFormat);
 	cursor.movePosition(QTextCursor::End);
 	this->setTextCursor(cursor);
-	cursor.insertBlock();
+	//cursor.insertBlock();
 	QTextBlockFormat blockFormat;
 	cursor.setBlockFormat(blockFormat);
 	//--m_ln;
 	m_nEmptyLines = 0;
 }
 void MarkdownPreview::do_quote(QTextBlock &srcBlock, QTextCursor& cursor, QString buf) {
+	if( m_isPrevLineEmpty ) {
+		cursor.insertBlock();
+		//cursor.insertText("\n");
+	}
 	BlockData* data = getBlockData(srcBlock);
 	//for(int i = 0; i < mch.capturedLength(); ++i)
 	data->m_charFlags[0] = data->m_charFlags[1] = PCF_QUOTE;	//	"> " 固定
