@@ -752,6 +752,10 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 	m_processing = false;
 }
 void MarkdownPreview::do_table(QTextBlock& srcBlock, QTextCursor& cursor) {
+	if( m_isPrevLineEmpty ) {
+		cursor.insertBlock();
+		cursor.insertText("\n");
+	}
 	QString buf = m_lst[m_ln] + "\n" + m_lst[m_ln+1] /*+ "\n"*/;
 	srcBlock.setUserState(US_TABLE);
 	srcBlock = srcBlock.next();
