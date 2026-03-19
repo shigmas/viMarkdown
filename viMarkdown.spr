@@ -970,8 +970,8 @@ SPR# 状 P Open Close ver     Type  概要
 0961 ◎ A 03/19 03/19 01205│問題│test sync.md を開いたらアサーションが発生した
 0962 ◎ C 03/19 03/19 01205│問題│[text](url) の ] 位置にカーソルがあると、プレビューカーソル位置同期処理が不正
 0963 ◎ C 03/19 03/19 01205│ToDo│updateCharFlags()：m_charFlags[] を初期化してから処理を行った方がよい
-0964 ● C 03/19            │ToDo│再帰関数 updateCharFlags(BlockData*, text, int start, int end)：実装
-0965 ● C 03/19            │ToDo│
+0964 ◎ C 03/19 03/19 01206│ToDo│再帰関数 updateCharFlags(BlockData*, text, int start, int end)：実装
+0965 ● C 03/19            │ToDo│updateCharFlags(BlockData*, text, int start, int end)：* だけでなく _ にも対応
 0966 ● C 03/19            │ToDo│
 0967 ● C 03/19            │ToDo│
 0968 ● C 03/19            │ToDo│
