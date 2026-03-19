@@ -110,7 +110,7 @@ protected:
 private:
     int		m_ln;
     int		m_nSpaces;
-    int		m_nEmptyLines = 0;		//	本文最後の空行数
+    //int		m_nEmptyLines = 0;		//	本文最後の空行数
     bool	m_hasBody = false;		//	do_body() で空文以外を出力したか？
     bool	m_inComment = false;
     bool	m_processing = false;	//	再入防止用フラグ

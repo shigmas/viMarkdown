@@ -657,7 +657,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 	cursor.beginEditBlock();
 	cursor.movePosition(QTextCursor::Start);
 	m_lst = mdtext.split(u'\n');
-	m_nEmptyLines = 0;
+	//m_nEmptyLines = 0;
 	m_inComment = false;
 	QTextBlock srcBlock0;
 	for(m_ln = 0; m_ln < m_lst.size(); ++m_ln) {
@@ -846,7 +846,7 @@ void MarkdownPreview::do_heading_sub(QTextCursor& cursor, QString buf, int h, in
 
 	m_headingList.push_back(QChar(u'0'+h) + buf.remove("^ +"));
 	m_docWidget->m_srcHeadingBlocks.push_back(ln);
-	m_nEmptyLines = 0;
+	//m_nEmptyLines = 0;
 }
 void MarkdownPreview::do_CSV(QTextBlock& srcBlock, QTextCursor& cursor) {		//	cursor: プレビューカーソル
 	srcBlock.setUserState(US_CSV_BLOCK);
@@ -1036,7 +1036,7 @@ void MarkdownPreview::do_code(QTextBlock srcBlock, QTextCursor& cursor) {
 	QTextBlockFormat blockFormat;
 	cursor.setBlockFormat(blockFormat);
 	//--m_ln;
-	m_nEmptyLines = 0;
+	//m_nEmptyLines = 0;
 }
 void MarkdownPreview::do_quote(QTextBlock &srcBlock, QTextCursor& cursor, QString buf) {
 	if( m_isPrevLineEmpty ) {
@@ -1069,7 +1069,7 @@ void MarkdownPreview::do_quote(QTextBlock &srcBlock, QTextCursor& cursor, QStrin
 	QTextBlockFormat blockFormat;
 	cursor.setBlockFormat(blockFormat);
 	--m_ln;
-	m_nEmptyLines = 0;
+	//m_nEmptyLines = 0;
 }
 void MarkdownPreview::do_numlist(QTextBlock srcBlock, QTextCursor& cursor, QString buf) {
 	bool init = true;
@@ -1102,7 +1102,7 @@ void MarkdownPreview::do_numlist(QTextBlock srcBlock, QTextCursor& cursor, QStri
 	QTextBlockFormat blockFormat;
 	cursor.setBlockFormat(blockFormat);
 	--m_ln;
-	m_nEmptyLines = 0;
+	//m_nEmptyLines = 0;
 }
 void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString buf) {
 	//if( m_nEmptyLines >= 1 )
@@ -1198,7 +1198,7 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 	QTextBlockFormat blockFormat;
 	cursor.setBlockFormat(blockFormat);
 	--m_ln;
-	m_nEmptyLines = 0;
+	//m_nEmptyLines = 0;
 }
 void MarkdownPreview::setCursorAt(int srcBlockNum, QString srcText, int ix) {		//	ix: ブロック内カーソル位置
 	int i = 0;
