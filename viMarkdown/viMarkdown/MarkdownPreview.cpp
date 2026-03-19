@@ -1093,6 +1093,10 @@ void MarkdownPreview::do_numlist(QTextBlock srcBlock, QTextCursor& cursor, QStri
 		buf += u'\n' + m_lst[m_ln];
 	}
 #endif
+	if( m_isPrevLineEmpty ) {
+		cursor.insertBlock();
+		//cursor.insertText("\n");
+	}
 	cursor.insertMarkdown(buf);
 	cursor.insertBlock();
 	QTextBlockFormat blockFormat;
