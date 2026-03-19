@@ -47,6 +47,7 @@ void printCharFlags(QTextBlock block) {
 bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment, bool &commented, BlockData* data) {
 	//QStringList fields;
 	if( data != nullptr ) {
+		assert( line.size() == data->m_charFlags.size() );
 		data->m_charFlags.fill(0);
 		qDebug() << "data != nullptr";
 	}

@@ -2102,12 +2102,13 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 	//	offset = closeIX + 1;
 	//	pos = block.position() + offset;
 	//}
-	if( block.userState() == US_CSV_BLOCK ) {
-		while( pos > 0 && (doc->characterAt(pos) == u',' || doc->characterAt(pos) == u' ' || doc->characterAt(pos) == u'"') ) {
-			--pos,
-			pc.m_offset += 1;
-		}
-	} else if( block.userState() == US_KEISEN_BLOCK ) {
+	//if( block.userState() == US_CSV_BLOCK ) {
+	//	while( pos > 0 && (doc->characterAt(pos) == u',' || doc->characterAt(pos) == u' ' || doc->characterAt(pos) == u'"') ) {
+	//		--pos,
+	//		pc.m_offset += 1;
+	//	}
+	//} else 
+	if( block.userState() == US_KEISEN_BLOCK ) {
 		while( block.userState() == US_KEISEN_BLOCK ) {
 			if( !block.next().isValid() ) {
 				pos = block.position() + block.text().size();
@@ -2138,7 +2139,7 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 	}
 	const BlockData* data = getBlockData(block);
 	//if( block.userState() == US_HEADING ) {
-	if( ix == 0 || ix > 0 && data->m_charFlags[ix-1] != PCF_VISIBLE ) {		//	直前が非表示文字の場合
+	if( ix != data->m_charFlags.size() && (ix == 0 || ix > 0 && data->m_charFlags[ix-1] != PCF_VISIBLE) ) {		//	直前が非表示文字の場合
 		while( ix < data->m_charFlags.size() && data->m_charFlags[ix] != PCF_VISIBLE ) {
 			++pos;
 			++ix;

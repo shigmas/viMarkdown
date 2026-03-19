@@ -856,6 +856,7 @@ void MarkdownPreview::do_CSV(QTextBlock& srcBlock, QTextCursor& cursor) {		//	cu
 		srcBlock.setUserState(US_CSV_BLOCK);
 		data = getBlockData(srcBlock);
 		assert(srcBlock.text() == m_lst[m_ln]);
+		assert(srcBlock.text().size() == data->m_charFlags.size());
 		inQuotes = parseCsvLine(fields, m_lst[m_ln], inQuotes, inComment, commented, data);
 		if( !inQuotes && !inComment && !commented ) {
 			max_clmn = qMax(max_clmn, fields.size());
