@@ -1057,7 +1057,7 @@ void MarkdownPreview::do_quote(QTextBlock &srcBlock, QTextCursor& cursor, QStrin
 	cursor.insertText(buf);
 	cursor.movePosition(QTextCursor::End);
 	this->setTextCursor(cursor);
-	cursor.insertBlock();
+	//cursor.insertBlock();
 	QTextBlockFormat blockFormat;
 	cursor.setBlockFormat(blockFormat);
 	--m_ln;
