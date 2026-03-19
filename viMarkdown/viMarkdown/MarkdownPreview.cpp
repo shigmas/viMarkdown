@@ -830,6 +830,10 @@ void MarkdownPreview::do_heading(QTextBlock& srcBlock, QTextCursor& cursor, QStr
 void MarkdownPreview::do_heading_sub(QTextCursor& cursor, QString buf, int h, int ln) {
 	if( !cursor.atBlockStart() )
 		cursor.insertBlock();			//	新規ブロック
+	if( m_isPrevLineEmpty ) {
+		//cursor.insertBlock();
+		cursor.insertText("\n");
+	}
 	cursor.block().setUserState(US_HEADING);
 	cursor.insertMarkdown(QString(h, u'#') + u' ' + buf /*+ "\n"*/);		//	改行を付加すると、２行になってしまう
 	QTextBlockFormat blockFormat;
