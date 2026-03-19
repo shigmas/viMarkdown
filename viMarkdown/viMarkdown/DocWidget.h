@@ -18,6 +18,7 @@ enum {
     PCF_QUOTE,
     PCF_LINK,
     PCF_IMAGE,
+    PCF_CODE,			// ```
     PCF_CSV,
     PCF_KEISEN,
     PCF_EMPHASIZED,		//	ボールド、イタリック等

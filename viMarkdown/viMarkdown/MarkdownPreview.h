@@ -103,7 +103,7 @@ protected:
     void	do_list(QTextBlock srcBlock, QTextCursor&, QString buf);
     void	do_numlist(QTextBlock srcBlock, QTextCursor&, QString buf);
     void	do_quote(QTextBlock&, QTextCursor&, QString buf);
-    void	do_code(QTextCursor&);
+    void	do_code(QTextBlock, QTextCursor&);
     void	do_keisen_block(QTextBlock&, QTextCursor&);
     void	do_CSV(QTextBlock&, QTextCursor&);
 
