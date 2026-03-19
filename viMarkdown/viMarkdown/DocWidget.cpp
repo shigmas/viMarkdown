@@ -21,8 +21,8 @@ BlockData* getBlockData(QTextBlock srcBlock, bool init /*, int length*/) {
 			data->m_charFlags.fill(0);
 		else {
 			auto len0 = data->m_charFlags.size();
+			data->m_charFlags.resize(length);
 			if( len0 < length ) {
-				data->m_charFlags.resize(length);
 				for(int i = len0; i < length; ++i)
 					data->m_charFlags[i] = 0;
 			}
