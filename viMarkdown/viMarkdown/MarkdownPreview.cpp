@@ -984,6 +984,10 @@ void MarkdownPreview::do_keisen_block(QTextBlock& srcBlock, QTextCursor& cursor)
 	//cursor.setBlockFormat(QTextBlockFormat());		//	トップマージンリセット
 }
 void MarkdownPreview::do_code(QTextBlock srcBlock, QTextCursor& cursor) {
+	if( m_isPrevLineEmpty ) {
+		cursor.insertBlock();
+		//cursor.insertText("\n");
+	}
 	BlockData *data = getBlockData(srcBlock);
 	data->m_charFlags.fill(PCF_CODE);
 	srcBlock.setUserData(data);
@@ -1097,8 +1101,12 @@ void MarkdownPreview::do_numlist(QTextBlock srcBlock, QTextCursor& cursor, QStri
 	m_nEmptyLines = 0;
 }
 void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString buf) {
-	if( m_nEmptyLines >= 1 )
-		cursor.insertBlock();			//	新規ブロック
+	//if( m_nEmptyLines >= 1 )
+	//	cursor.insertBlock();			//	新規ブロック
+	if( m_isPrevLineEmpty ) {
+		cursor.insertBlock();
+		cursor.insertText("\n");
+	}
 	if( m_nSpaces > 0 )
 		buf = QString(m_nSpaces, QChar(u' ')) + buf;
 	static QRegularExpression re_checkbox(R"(^( *)- \[[ xX]\] )");
