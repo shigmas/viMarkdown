@@ -491,36 +491,74 @@ void MarkdownPreview::do_body_sub(QTextCursor& cursor, const QString &buf) {
 #endif
 }
 #endif
+//	ボールド、イタリック、打ち消し線 部分に PCF_EMPHASIZED 設定
+bool updateCharFlags(BlockData* data, const QString &buf, int ix, int ix9) {
+	bool modified = false;
+	while( ix < ix9 ) {
+		if( buf[ix] == u'\\' )
+			ix += 2;
+		else if( buf[ix] == u'*' || buf[ix] == u'~' && ix+1 < ix9 && buf[ix+1] == buf[ix]) {
+			QString sym;
+			if( buf[ix] == u'~' ) {
+				sym = "~~";
+			} else {
+				if( ix+1 < ix9 && buf[ix+1] == buf[ix] ) {
+					if(ix+2 < ix9 && buf[ix+2] == buf[ix] )
+						sym = buf.mid(ix, 3);
+					else
+						sym = buf.mid(ix, 2);
+				} else
+					sym = buf[ix];
+			}
+			int ix2 = buf.indexOf(sym, ix+sym.size());
+			if( ix2 >= 0 ) {	//	バランスしている場合
+				for(int i = 0; i < sym.size(); ++i) {
+					data->m_charFlags[ix+i] = PCF_EMPHASIZED;
+					data->m_charFlags[ix2+i] = PCF_EMPHASIZED;
+					modified = true;
+				}
+				if( updateCharFlags(data, buf, ix+sym.size(), ix2) )
+					modified = true;
+				ix = ix2 + sym.size();
+			} else
+				++ix;
+		} else
+			++ix;
+	}
+	return modified;
+}
 void updateCharFlags(QTextBlock srcBlock) {
-	QString txt = srcBlock.text();
+	QString buf = srcBlock.text();
 	BlockData *data = getBlockData(srcBlock, true);
 	bool modified = false;
-	auto match = image_re.match(txt);		//	![title](image.png) を含むか？
+	auto match = image_re.match(buf);		//	![title](image.png) を含むか？
 	while( match.hasMatch() ) {
 		modified = true;
 		int start = match.capturedStart(); // マッチした最初の位置
 	    int length = match.capturedLength(); // マッチした全体の長さ
 	    for(int i = start; i < start + length; ++i)
 	    	data->m_charFlags[i] = PCF_IMAGE;
-		match = image_re.match(txt, start + length);
+		match = image_re.match(buf, start + length);
 	}
-	match = link_re.match(txt);		//	[title](image.png) を含むか？
+	match = link_re.match(buf);		//	[title](image.png) を含むか？
 	while( match.hasMatch() ) {
 		modified = true;
 		int start = match.capturedStart(); // マッチした最初の位置（'['）
 	    int length = match.capturedLength(); // マッチした全体の長さ
 	    data->m_charFlags[start] = PCF_LINK;
-	    int ix = txt.indexOf(']', start);
+	    int ix = buf.indexOf(']', start);
 	    for(int i = ix; i < start + length && i < data->m_charFlags.size(); ++i)
 	    	data->m_charFlags[i] = PCF_LINK;
-		match = link_re.match(txt, start + length);
+		match = link_re.match(buf, start + length);
 	}
 	int ix = 0;
-	while( (ix = txt.indexOf(u'\\', ix)) >= 0 ) {
+	while( (ix = buf.indexOf(u'\\', ix)) >= 0 ) {
 		modified = true;
 		data->m_charFlags[ix] = PCF_ESCAPE;
 		ix += 2;
 	}
+	if( updateCharFlags(data, buf, 0, buf.size()) )
+		modified = true;
 	if( modified ) {
 		srcBlock.setUserData(data);
 		printCharFlags(srcBlock);
@@ -700,6 +738,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 				srcBlock0 = srcBlock;
 			}
 			updateCharFlags(srcBlock);
+			printCharFlags(srcBlock);
 			m_bodyList += buf;
 		}
 	}
