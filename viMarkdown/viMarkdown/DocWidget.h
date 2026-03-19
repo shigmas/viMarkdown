@@ -20,6 +20,7 @@ enum {
     PCF_IMAGE,
     PCF_CODE,			// ```
     PCF_CSV,
+    PCF_TABLE,			//	マークダウン表要素
     PCF_KEISEN,
     PCF_EMPHASIZED,		//	ボールド、イタリック等
 };

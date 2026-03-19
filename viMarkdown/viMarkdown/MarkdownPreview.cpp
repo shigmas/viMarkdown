@@ -565,6 +565,7 @@ void updateCharFlags(QTextBlock srcBlock) {
 	}
 }
 void MarkdownPreview::do_body(QTextBlock srcBlock, QTextCursor& cursor, bool last) {
+	m_isPrevLineEmpty = false;
 	if( m_bodyList.isEmpty() ) return;
 #if 1
 	qDebug() << "srcBlock.blockNumber() = " << srcBlock.blockNumber();
@@ -591,8 +592,9 @@ void MarkdownPreview::do_body(QTextBlock srcBlock, QTextCursor& cursor, bool las
 	//if( last && sz >= 2 && m_bodyList[sz-1].isEmpty() && m_bodyList[sz-2].endsWith("  ") ) {
 	//	cursor.insertBlock();
 	//}
-	if( m_bodyList.back().isEmpty() )	//	最後が空行
-		cursor.insertBlock();
+	m_isPrevLineEmpty = m_bodyList.back().isEmpty();	//	最後が空行か？
+	//if( m_bodyList.back().isEmpty() )	//	最後が空行
+	//	cursor.insertBlock();
 	m_bodyList.clear();
 #else
 	m_hasBody = false;
@@ -875,6 +877,10 @@ void MarkdownPreview::do_CSV(QTextBlock& srcBlock, QTextCursor& cursor) {		//	cu
 	if( ll.isEmpty() ) return;
 	static QRegularExpression re("^[+-]?(\\d+\\.\\d*|\\d+|\\.\\d+)$");
 	cursor.beginEditBlock();
+	if( m_isPrevLineEmpty ) {
+		cursor.insertBlock();
+		cursor.insertText("\n");
+	}
 	QTextTable *table = cursor.insertTable(ll.size(), max_clmn);
 	for(int row = 0; row < ll.size(); ++row) {
 		for(int col = 0; col < ll[row].size(); ++col) {
