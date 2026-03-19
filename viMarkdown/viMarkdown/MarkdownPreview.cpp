@@ -497,7 +497,7 @@ bool updateCharFlags(BlockData* data, const QString &buf, int ix, int ix9) {
 	while( ix < ix9 ) {
 		if( buf[ix] == u'\\' )
 			ix += 2;
-		else if( buf[ix] == u'*' || buf[ix] == u'~' && ix+1 < ix9 && buf[ix+1] == buf[ix]) {
+		else if( buf[ix] == u'*' || buf[ix] == u'_' || buf[ix] == u'~' && ix+1 < ix9 && buf[ix+1] == buf[ix]) {
 			QString sym;
 			if( buf[ix] == u'~' ) {
 				sym = "~~";
