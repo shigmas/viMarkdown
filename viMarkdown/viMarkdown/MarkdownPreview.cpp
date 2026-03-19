@@ -587,10 +587,12 @@ void MarkdownPreview::do_body(QTextBlock srcBlock, QTextCursor& cursor, bool las
 		cursor.mergeBlockFormat(blockFormat);
 		cursor.insertMarkdown(buf);
 	}
-	int sz = m_bodyList.size();
-	if( last && sz >= 2 && m_bodyList[sz-1].isEmpty() && m_bodyList[sz-2].endsWith("  ") ) {
+	//int sz = m_bodyList.size();
+	//if( last && sz >= 2 && m_bodyList[sz-1].isEmpty() && m_bodyList[sz-2].endsWith("  ") ) {
+	//	cursor.insertBlock();
+	//}
+	if( m_bodyList.back().isEmpty() )	//	最後が空行
 		cursor.insertBlock();
-	}
 	m_bodyList.clear();
 #else
 	m_hasBody = false;
