@@ -147,7 +147,7 @@ bool isTableLine(const QString& lnStr, QStringList &tableTokens) {
 	}
 	return tableTokens.size() > 1;
 }
-bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign) {
+bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign, BlockData *data) {
 	tableAlign.clear();
 	QStringView sv(lnStr);
 	int ix = 0;
@@ -159,7 +159,8 @@ bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign) {
 		if( ix < sv.size() && sv[ix] == u':' ) { aln = ALIGHN_LEFT; ++ix; }
 		while( ix < sv.size() && sv[ix] != u'|' ) {		//	次の'|' までループ
 			if( ix+1 < sv.size() && sv[ix] == u'\\' ) ++ix;
-			if( sv[ix] != u'-' && sv[ix] != u' ' ) return false;
+			if( sv[ix] != u'-' && sv[ix] != u':' && sv[ix] != u' ' )
+				return false;
 			++ix;
 		}
 		int i = ix - 1;
@@ -169,7 +170,14 @@ bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign) {
 		tableAlign.push_back(aln);
 		++ix;
 	}
-	return tableAlign.size() > 1;
+	if( tableAlign.size() > 1 ) {
+		if( data != nullptr ) {
+			assert( data->m_charFlags.size() == lnStr.size() );
+			data->m_charFlags.fill(PCF_TABLE);
+		}
+		return true;
+	} else
+		return false;
 }
 //----------------------------------------------------------------------
 DocWidget::DocWidget(const QString& title, const QString& fullPath, QWidget *parent)

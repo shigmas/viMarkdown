@@ -651,6 +651,10 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 		m_nSpaces = 0;
 		while( m_nSpaces < buf.size() && buf[m_nSpaces] == u' ' ) ++m_nSpaces;
 		if( m_nSpaces > 0 ) buf = buf.mid(m_nSpaces);
+		BlockData *data = getBlockData(srcBlock);
+		BlockData *data2 = nullptr;
+		if( m_ln + 1 < m_lst.size() )
+			data2 = getBlockData(srcBlock.next());
 		if( buf.startsWith('#') ) {
 			do_body(srcBlock0, cursor);
 			do_heading(srcBlock, cursor, buf);
@@ -672,7 +676,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 		} else if( buf.startsWith("```") ) {
 			do_body(srcBlock0, cursor);
 			do_code(srcBlock, cursor);
-		} else if( isTableLine(buf, m_tableTokens) && m_ln + 1 < m_lst.size() && isTableHyphenLine(m_lst[m_ln+1], m_tableAlign) ) {
+		} else if( isTableLine(buf, m_tableTokens) && m_ln + 1 < m_lst.size() && isTableHyphenLine(m_lst[m_ln+1], m_tableAlign, data2) ) {
 			do_body(srcBlock0, cursor);
 			do_table(srcBlock, cursor);
 		} else {
