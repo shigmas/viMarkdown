@@ -998,8 +998,8 @@ SPR# 状 P Open Close ver     Type  概要
 0989 ◎ C 03/21 03/21 01207│ToDo│isTableHyphenLine()：引数に BlockData* = nullptr 追加
 0990 ◎ B 03/21 03/21 01207│問題│do_table() がコールされていない？？？
 0991 ◎ C 03/21 03/21 01207│ToDo│isTableLine()：引数に BlockData* = nullptr 追加
-0992 ● C 03/21            │ToDo│
-0993 ● C 03/21            │ToDo│
+0992 ● C 03/21            │問題│表の一部を行単位で <!-- --> でコメントアウトすると、レイアウト不正になる
+0993 ◎ C 03/21 03/21 01207│ToDo│do_body()：試しに、改行の扱いを GFM に変えてみる
 0994 ● C 03/21            │ToDo│
 0995 ● C 03/21            │ToDo│
 0996 ● C 03/21            │ToDo│

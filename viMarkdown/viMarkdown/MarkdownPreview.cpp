@@ -508,19 +508,13 @@ void updateCharFlags(QTextBlock srcBlock) {
 void MarkdownPreview::do_body(QTextBlock srcBlock, QTextCursor& cursor, bool last) {
 	m_isPrevLineEmpty = false;
 	if( m_bodyList.isEmpty() ) return;
-#if 1
 	qDebug() << "srcBlock.blockNumber() = " << srcBlock.blockNumber();
-	//封印：static QRegularExpression re("\\[\\[(.+?)\\]\\]");		//	[[タイトル]]
+#if 0	//	コモンマークダウン方式
 	static QRegularExpression re("(?<!!)\\[([^\\]]+)\\]\\(([^)]+)\\)");		//	[タイトル](パス#見出し)
 	QString buf;
 	for(auto txt: m_bodyList) {
-		//assert(txt.size() == srcBlock.text().size());
-		//封印：txt.replace(re, "<a href=\"\\1\" class=\"wiki-link\">\\1</a>");
 		txt.replace(re, "<a href=\"\\2\">\\1</a>");
 		buf += txt + "\n";
-		//do {
-		//	srcBlock = srcBlock.next();
-		//} while( srcBlock.userState() == US_IN_COMMENT );
 	}
 	if( !buf.isEmpty() ) {
 		//QTextBlock block = cursor.block();
@@ -529,35 +523,14 @@ void MarkdownPreview::do_body(QTextBlock srcBlock, QTextCursor& cursor, bool las
 		cursor.mergeBlockFormat(blockFormat);
 		cursor.insertMarkdown(buf);
 	}
-	//int sz = m_bodyList.size();
-	//if( last && sz >= 2 && m_bodyList[sz-1].isEmpty() && m_bodyList[sz-2].endsWith("  ") ) {
-	//	cursor.insertBlock();
-	//}
-	m_isPrevLineEmpty = m_bodyList.back().isEmpty();	//	最後が空行か？
-	//if( m_bodyList.back().isEmpty() )	//	最後が空行
-	//	cursor.insertBlock();
-	m_bodyList.clear();
-#else
-	m_hasBody = false;
-	QString buf;
+#else	//	GFM 方式
 	for(auto txt: m_bodyList) {
-		if( txt.isEmpty() ) {		//	空行の場合
-			++m_nEmptyLines;
-			do_body_sub(cursor, buf);
-			buf.clear();
-		} else {
-			buf += txt + "\n";
-			m_hasBody = true;
-			m_nEmptyLines = 0;
-		}
+		cursor.insertMarkdown(txt);
+		cursor.insertBlock();
 	}
-	if( !buf.isEmpty() ) {
-		do_body_sub(cursor, buf);
-		m_hasBody = true;
-		m_nEmptyLines = 0;
-	}
-	m_bodyList.clear();
 #endif
+	m_isPrevLineEmpty = m_bodyList.back().isEmpty();	//	最後が空行か？
+	m_bodyList.clear();
 }
 
 static QRegularExpression re_list(R"(^ *[-\*+] )");
