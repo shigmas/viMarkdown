@@ -113,12 +113,17 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 	fields.append(currentField.trimmed());
 	return inQuotes;
 }
-bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens) {
+bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens, BlockData *data) {
+	assert( data == nullptr || data->m_charFlags.size() == lnStr.size() );
 	QStringView sv(lnStr);
 	tableTokens.clear();
 	int ix = 0;
 	while( ix < sv.size() && sv[ix] == u' ' ) ++ix;		//	空白スキップ
-	if (ix < sv.size() && sv[ix] == u'|') ++ix;			//	先頭の '|' スキップ
+	if (ix < sv.size() && sv[ix] == u'|') {
+		if( data != nullptr )
+			data->m_charFlags[ix] = PCF_TABLE;
+		++ix;			//	先頭 '|' スキップ
+	}
 	while( ix < sv.size() ) {
 		int ix0 = ix;
 		while( ix < sv.size() && sv[ix] != u'|' ) {		//	'|' までループ
@@ -126,22 +131,31 @@ bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens) {
 			else ++ix;
 		}
 		tableTokens.push_back(sv.mid(ix0, ix-ix0));
+		if( ix < sv.size() && data != nullptr )
+			data->m_charFlags[ix] = PCF_TABLE;
 		++ix;			//	'|' スキップ
 	}
 	return tableTokens.size() > 1;
 }
-bool isTableLine(const QString& lnStr, QStringList &tableTokens) {
+bool isTableLine(const QString& lnStr, QStringList &tableTokens, BlockData* data) {
+	assert( data == nullptr || data->m_charFlags.size() == lnStr.size() );
 	QString sv(lnStr);
 	tableTokens.clear();
 	int ix = 0;
 	while( ix < sv.size() && sv[ix] == u' ' ) ++ix;		//	空白スキップ
-	if (ix < sv.size() && sv[ix] == u'|') ++ix;			//	先頭の '|' スキップ
+	if (ix < sv.size() && sv[ix] == u'|') {
+		if( data != nullptr )
+			data->m_charFlags[ix] = PCF_TABLE;
+		++ix;			//	先頭 '|' スキップ
+	}
 	while( ix < sv.size() ) {
 		int ix0 = ix;
 		while( ix < sv.size() && sv[ix] != u'|' ) {		//	'|' までループ
 			if( ix+1 < sv.size() && sv[ix] == u'\\' ) ix += 2;
 			else ++ix;
 		}
+		if( ix < sv.size() && data != nullptr )
+			data->m_charFlags[ix] = PCF_TABLE;
 		tableTokens.push_back(sv.mid(ix0, ix-ix0));
 		++ix;			//	'|' スキップ
 	}

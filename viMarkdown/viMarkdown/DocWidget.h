@@ -39,8 +39,8 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 enum {
 	ALIGHN_LEFT = 1, ALIGHN_RIGHT = 2, ALIGHN_CENTER = ALIGHN_LEFT| ALIGHN_RIGHT,
 };
-bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens);
-bool isTableLine(const QString& lnStr, QStringList &tableTokens);
+bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens, BlockData* = nullptr);
+bool isTableLine(const QString& lnStr, QStringList &tableTokens, BlockData* = nullptr);
 bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign, BlockData* = nullptr);
 
 class DocWidget : public QWidget

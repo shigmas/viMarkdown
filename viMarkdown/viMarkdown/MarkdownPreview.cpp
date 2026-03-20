@@ -676,7 +676,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 		} else if( buf.startsWith("```") ) {
 			do_body(srcBlock0, cursor);
 			do_code(srcBlock, cursor);
-		} else if( isTableLine(buf, m_tableTokens) && m_ln + 1 < m_lst.size() && isTableHyphenLine(m_lst[m_ln+1], m_tableAlign, data2) ) {
+		} else if( isTableLine(buf, m_tableTokens, data) && m_ln + 1 < m_lst.size() && isTableHyphenLine(m_lst[m_ln+1], m_tableAlign, data2) ) {
 			do_body(srcBlock0, cursor);
 			do_table(srcBlock, cursor);
 		} else {
@@ -708,10 +708,13 @@ void MarkdownPreview::do_table(QTextBlock& srcBlock, QTextCursor& cursor) {
 	srcBlock.setUserState(US_TABLE);
 	srcBlock = srcBlock.next();
 	m_ln += 2;
-	while( m_ln < m_lst.size() && isTableLine(m_lst[m_ln], m_tableTokens) ) {
+	BlockData *data = getBlockData(srcBlock);
+	while( m_ln < m_lst.size() && isTableLine(m_lst[m_ln], m_tableTokens, data) ) {
 		buf += "\n" + m_lst[m_ln++];
 		srcBlock.setUserState(US_TABLE);
 		srcBlock = srcBlock.next();
+		if( srcBlock.isValid() )
+			data = getBlockData(srcBlock);
 	}
 	cursor.insertMarkdown(buf);
 	cursor.movePosition(QTextCursor::Left);
