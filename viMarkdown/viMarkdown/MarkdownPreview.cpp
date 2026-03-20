@@ -524,7 +524,14 @@ void MarkdownPreview::do_body(QTextBlock srcBlock, QTextCursor& cursor, bool las
 		cursor.insertMarkdown(buf);
 	}
 #else	//	GFM 方式
+	bool blankLine = false;
 	for(auto txt: m_bodyList) {
+		if( txt.isEmpty() ) {
+			if( blankLine )
+				continue;		//	連続する空行は無視
+			blankLine = true;
+		} else
+			blankLine = false;
 		cursor.insertMarkdown(txt);
 		cursor.insertBlock();
 	}
