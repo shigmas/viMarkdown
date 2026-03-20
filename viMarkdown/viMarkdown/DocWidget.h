@@ -36,6 +36,12 @@ void printCharFlags(QTextBlock block);
 void printCharFlags(const BlockData*);
 
 bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment, bool &commented, BlockData* = nullptr);
+enum {
+	ALIGHN_LEFT = 1, ALIGHN_RIGHT = 2, ALIGHN_CENTER = ALIGHN_LEFT| ALIGHN_RIGHT,
+};
+bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens);
+bool isTableLine(const QString& lnStr, QStringList &tableTokens);
+bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign);
 
 class DocWidget : public QWidget
 {

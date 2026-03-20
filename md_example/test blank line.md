@@ -1,8 +1,18 @@
 ﻿# test blank line
 
+## headings0
+
 text
 
-## headings
+## headings1
+
+## headings2
+
+- item1
+- item2
+
+hoge  
+![hoge](a.png)
 
 abc
 

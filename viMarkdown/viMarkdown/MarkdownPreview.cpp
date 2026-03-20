@@ -16,13 +16,12 @@ using namespace std;
 
 extern Global g;
 
+#if 0
 bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens);
 bool isTableLine(const QString& lnStr, QStringList &tableTokens);
 bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign);
+#endif
 
-enum {
-	ALIGHN_LEFT = 1, ALIGHN_RIGHT = 2, ALIGHN_CENTER = ALIGHN_LEFT| ALIGHN_RIGHT,
-};
 
 const QChar endOfCell(0xfdd0);		//	セル終端文字
 
@@ -132,64 +131,6 @@ void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int char
 
 bool isUnderlineHeading(const QString& txt);
 #if 1
-bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens) {
-	QStringView sv(lnStr);
-	tableTokens.clear();
-	int ix = 0;
-	while( ix < sv.size() && sv[ix] == u' ' ) ++ix;		//	空白スキップ
-	if (ix < sv.size() && sv[ix] == u'|') ++ix;			//	先頭の '|' スキップ
-	while( ix < sv.size() ) {
-		int ix0 = ix;
-		while( ix < sv.size() && sv[ix] != u'|' ) {		//	'|' までループ
-			if( ix+1 < sv.size() && sv[ix] == u'\\' ) ix += 2;
-			else ++ix;
-		}
-		tableTokens.push_back(sv.mid(ix0, ix-ix0));
-		++ix;			//	'|' スキップ
-	}
-	return tableTokens.size() > 1;
-}
-bool isTableLine(const QString& lnStr, QStringList &tableTokens) {
-	QString sv(lnStr);
-	tableTokens.clear();
-	int ix = 0;
-	while( ix < sv.size() && sv[ix] == u' ' ) ++ix;		//	空白スキップ
-	if (ix < sv.size() && sv[ix] == u'|') ++ix;			//	先頭の '|' スキップ
-	while( ix < sv.size() ) {
-		int ix0 = ix;
-		while( ix < sv.size() && sv[ix] != u'|' ) {		//	'|' までループ
-			if( ix+1 < sv.size() && sv[ix] == u'\\' ) ix += 2;
-			else ++ix;
-		}
-		tableTokens.push_back(sv.mid(ix0, ix-ix0));
-		++ix;			//	'|' スキップ
-	}
-	return tableTokens.size() > 1;
-}
-bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign) {
-	tableAlign.clear();
-	QStringView sv(lnStr);
-	int ix = 0;
-	while( ix < sv.size() && sv[ix] == u' ' ) ++ix;		//	空白スキップ
-	if (ix < sv.size() && sv[ix] == u'|') ++ix;			//	先頭 '|' スキップ
-	while( ix < sv.size() ) {
-		char aln = 0;
-		while( ix < sv.size() && sv[ix] == u' ' ) ++ix;		//	空白スキップ
-		if( ix < sv.size() && sv[ix] == u':' ) { aln = ALIGHN_LEFT; ++ix; }
-		while( ix < sv.size() && sv[ix] != u'|' ) {		//	次の'|' までループ
-			if( ix+1 < sv.size() && sv[ix] == u'\\' ) ++ix;
-			if( sv[ix] != u'-' && sv[ix] != u' ' ) return false;
-			++ix;
-		}
-		int i = ix - 1;
-		while( i >= 0 && sv[i] == u' ' ) --i;		//	空白スキップ
-		if( i >= 0 && sv[i] == u':' )
-			aln |= ALIGHN_RIGHT;
-		tableAlign.push_back(aln);
-		++ix;
-	}
-	return tableAlign.size() > 1;
-}
 #else
 bool MarkdownPreview::isTableLine(const QString& lnStr) {
 	QStringView sv(lnStr);
@@ -755,6 +696,7 @@ void MarkdownPreview::do_table(QTextBlock& srcBlock, QTextCursor& cursor) {
 	if( m_isPrevLineEmpty ) {
 		cursor.insertBlock();
 		cursor.insertText("\n");
+		m_isPrevLineEmpty = false;
 	}
 	QString buf = m_lst[m_ln] + "\n" + m_lst[m_ln+1] /*+ "\n"*/;
 	srcBlock.setUserState(US_TABLE);
@@ -830,11 +772,33 @@ void MarkdownPreview::do_heading(QTextBlock& srcBlock, QTextCursor& cursor, QStr
 void MarkdownPreview::do_heading_sub(QTextCursor& cursor, QString buf, int h, int ln) {
 	if( !cursor.atBlockStart() )
 		cursor.insertBlock();			//	新規ブロック
+#if 0
 	if( m_isPrevLineEmpty ) {
 		//cursor.insertBlock();
 		cursor.insertText("\n");
+		m_isPrevLineEmpty = false;
 	}
+#endif
 	cursor.block().setUserState(US_HEADING);
+#if 1
+	cursor.insertMarkdown(QString(h, u'#') + u' ' + buf /*+ "\n"*/);		//	改行を付加すると、２行になってしまう
+	//cursor.insertMarkdown(QString(h, u'#') + u' ' + buf + "\n");		//	改行を付加し、２行に
+	QTextBlock block = cursor.block();
+	//QTextBlock headBlock = block.previous();
+	//assert( headBlock.isValid() );
+	QTextBlockFormat format = block.blockFormat();    // 現在のフォーマットをコピー
+	if( h == 1 ) {		//	H1 の場合はセンタリング（viMarkdown 独自？仕様）
+		format.setAlignment(Qt::AlignCenter);
+	} else {
+		format.setTopMargin(12);	 // 上側の余白（ピクセル）
+		format.setBottomMargin(12); // 下側の余白（ピクセル）
+	}
+	//QTextCursor cur(block); // 編集用カーソルを作成
+	cursor.setBlockFormat(format); // フォーマットを上書き適用
+	//cursor.insertText("\n");
+	//cursor.setBlockFormat(QTextBlockFormat());		//	フォーマット初期化
+	cursor.insertBlock(QTextBlockFormat(), QTextCharFormat());		//	新規ブロック
+#else
 	cursor.insertMarkdown(QString(h, u'#') + u' ' + buf /*+ "\n"*/);		//	改行を付加すると、２行になってしまう
 	QTextBlockFormat blockFormat;
 	if( h == 1 ) {		//	H1 の場合はセンタリング（viMarkdown 独自？仕様）
@@ -844,9 +808,9 @@ void MarkdownPreview::do_heading_sub(QTextCursor& cursor, QString buf, int h, in
 		blockFormat.setBottomMargin(12); // 下側の余白（ピクセル）
 	}
 	cursor.mergeBlockFormat(blockFormat);
-	m_docWidget->m_prvHeadingBlocks.push_back(cursor.blockNumber());
-
 	cursor.insertBlock(QTextBlockFormat(), QTextCharFormat());		//	新規ブロック
+#endif
+	m_docWidget->m_prvHeadingBlocks.push_back(cursor.blockNumber());
 
 	m_headingList.push_back(QChar(u'0'+h) + buf.remove("^ +"));
 	m_docWidget->m_srcHeadingBlocks.push_back(ln);
@@ -888,6 +852,7 @@ void MarkdownPreview::do_CSV(QTextBlock& srcBlock, QTextCursor& cursor) {		//	cu
 	if( m_isPrevLineEmpty ) {
 		cursor.insertBlock();
 		cursor.insertText("\n");
+		m_isPrevLineEmpty = false;
 	}
 	QTextTable *table = cursor.insertTable(ll.size(), max_clmn);
 	for(int row = 0; row < ll.size(); ++row) {
@@ -991,6 +956,7 @@ void MarkdownPreview::do_code(QTextBlock srcBlock, QTextCursor& cursor) {
 	if( m_isPrevLineEmpty ) {
 		cursor.insertBlock();
 		//cursor.insertText("\n");
+		m_isPrevLineEmpty = false;
 	}
 	BlockData *data = getBlockData(srcBlock);
 	data->m_charFlags.fill(PCF_CODE);
@@ -1046,6 +1012,7 @@ void MarkdownPreview::do_quote(QTextBlock &srcBlock, QTextCursor& cursor, QStrin
 	if( m_isPrevLineEmpty ) {
 		cursor.insertBlock();
 		//cursor.insertText("\n");
+		m_isPrevLineEmpty = false;
 	}
 	BlockData* data = getBlockData(srcBlock);
 	//for(int i = 0; i < mch.capturedLength(); ++i)
@@ -1100,6 +1067,7 @@ void MarkdownPreview::do_numlist(QTextBlock srcBlock, QTextCursor& cursor, QStri
 	if( m_isPrevLineEmpty ) {
 		cursor.insertBlock();
 		//cursor.insertText("\n");
+		m_isPrevLineEmpty = false;
 	}
 	cursor.insertMarkdown(buf);
 	cursor.insertBlock();
@@ -1114,6 +1082,7 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 	if( m_isPrevLineEmpty ) {
 		cursor.insertBlock();
 		cursor.insertText("\n");
+		m_isPrevLineEmpty = false;
 	}
 	if( m_nSpaces > 0 )
 		buf = QString(m_nSpaces, QChar(u' ')) + buf;

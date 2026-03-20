@@ -113,6 +113,64 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 	fields.append(currentField.trimmed());
 	return inQuotes;
 }
+bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens) {
+	QStringView sv(lnStr);
+	tableTokens.clear();
+	int ix = 0;
+	while( ix < sv.size() && sv[ix] == u' ' ) ++ix;		//	空白スキップ
+	if (ix < sv.size() && sv[ix] == u'|') ++ix;			//	先頭の '|' スキップ
+	while( ix < sv.size() ) {
+		int ix0 = ix;
+		while( ix < sv.size() && sv[ix] != u'|' ) {		//	'|' までループ
+			if( ix+1 < sv.size() && sv[ix] == u'\\' ) ix += 2;
+			else ++ix;
+		}
+		tableTokens.push_back(sv.mid(ix0, ix-ix0));
+		++ix;			//	'|' スキップ
+	}
+	return tableTokens.size() > 1;
+}
+bool isTableLine(const QString& lnStr, QStringList &tableTokens) {
+	QString sv(lnStr);
+	tableTokens.clear();
+	int ix = 0;
+	while( ix < sv.size() && sv[ix] == u' ' ) ++ix;		//	空白スキップ
+	if (ix < sv.size() && sv[ix] == u'|') ++ix;			//	先頭の '|' スキップ
+	while( ix < sv.size() ) {
+		int ix0 = ix;
+		while( ix < sv.size() && sv[ix] != u'|' ) {		//	'|' までループ
+			if( ix+1 < sv.size() && sv[ix] == u'\\' ) ix += 2;
+			else ++ix;
+		}
+		tableTokens.push_back(sv.mid(ix0, ix-ix0));
+		++ix;			//	'|' スキップ
+	}
+	return tableTokens.size() > 1;
+}
+bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign) {
+	tableAlign.clear();
+	QStringView sv(lnStr);
+	int ix = 0;
+	while( ix < sv.size() && sv[ix] == u' ' ) ++ix;		//	空白スキップ
+	if (ix < sv.size() && sv[ix] == u'|') ++ix;			//	先頭 '|' スキップ
+	while( ix < sv.size() ) {
+		char aln = 0;
+		while( ix < sv.size() && sv[ix] == u' ' ) ++ix;		//	空白スキップ
+		if( ix < sv.size() && sv[ix] == u':' ) { aln = ALIGHN_LEFT; ++ix; }
+		while( ix < sv.size() && sv[ix] != u'|' ) {		//	次の'|' までループ
+			if( ix+1 < sv.size() && sv[ix] == u'\\' ) ++ix;
+			if( sv[ix] != u'-' && sv[ix] != u' ' ) return false;
+			++ix;
+		}
+		int i = ix - 1;
+		while( i >= 0 && sv[i] == u' ' ) --i;		//	空白スキップ
+		if( i >= 0 && sv[i] == u':' )
+			aln |= ALIGHN_RIGHT;
+		tableAlign.push_back(aln);
+		++ix;
+	}
+	return tableAlign.size() > 1;
+}
 //----------------------------------------------------------------------
 DocWidget::DocWidget(const QString& title, const QString& fullPath, QWidget *parent)
 	: m_title(title)
