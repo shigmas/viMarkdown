@@ -532,6 +532,8 @@ void MarkdownPreview::do_body(QTextBlock srcBlock, QTextCursor& cursor, bool las
 		cursor.insertMarkdown(buf);
 	}
 #else	//	GFM 方式
+	QTextBlockFormat blockFormat;
+	blockFormat.setAlignment(Qt::AlignJustify); // 左右両端揃え
 	bool blankLine = false;
 	for(auto txt: m_bodyList) {
 		if( txt.isEmpty() ) {
@@ -540,6 +542,7 @@ void MarkdownPreview::do_body(QTextBlock srcBlock, QTextCursor& cursor, bool las
 			blankLine = true;
 		} else
 			blankLine = false;
+		cursor.mergeBlockFormat(blockFormat);
 		cursor.insertMarkdown(txt);
 		cursor.insertBlock();
 	}
