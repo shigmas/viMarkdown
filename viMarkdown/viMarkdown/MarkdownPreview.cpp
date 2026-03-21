@@ -34,6 +34,7 @@ MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, DocWidget *docWid
 	setUndoRedoEnabled(false);
 	setFrameStyle(QFrame::NoFrame);
 	setCursorWidth(2);
+#if 0
 	document()->setDefaultStyleSheet(
 	    "blockquote {"
 	    "    background-color: #f0f8ff;" /* 引用の背景色 */
@@ -42,6 +43,7 @@ MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, DocWidget *docWid
 	    "    border-left: 4px solid #ccc;" /* 左側の縦線（よくある引用の装飾） */
 	    "}"
 	);
+#endif
 	//QString css = "hr { height: 1px; border: none; background-color: #333; margin-top: 10px; margin-bottom: 10px; }";
 	//document()->setDefaultStyleSheet(css);
 	//setStyleSheet("QTextEdit { caret-color: red; }");
@@ -89,7 +91,8 @@ void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int char
 	if( block.userState() == US_DEFAULT && charsAdded != 0 && strAdded.isEmpty() &&
 		document()->characterAt(position) == QChar::ParagraphSeparator )
 	{
-		strAdded = "  \n";
+		strAdded = "\n";
+		//strAdded = "  \n";
 	}
 	QString strRemoved = m_lastCurBlockText.mid(bpos, charsRemoved);
 	charsRemoved = qMin(charsRemoved, strRemoved.size());		//	行末を超えている場合対応
@@ -120,9 +123,9 @@ void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int char
 				.replace("`", "\\`").replace("[", "\\[").replace("*", "\\*").replace("_", "\\_").replace("~", "\\~");
 		if( addedStr.isEmpty() && charsRemoved == 0 && charsAdded == 1  )
 		{		//	改行が入力された場合
-			if( block.userState() == US_DEFAULT )
-				addedStr = "  \n";
-			else
+			//if( block.userState() == US_DEFAULT )
+			//	addedStr = "  \n";
+			//else
 				addedStr = "\n";
 			++pos0;
 		}
@@ -701,8 +704,25 @@ void MarkdownPreview::do_table(QTextBlock& srcBlock, QTextCursor& cursor) {
 	srcBlock.setUserState(US_TABLE);
 	srcBlock = srcBlock.next();
 	m_ln += 2;
-	BlockData *data = getBlockData(srcBlock);
-	while( m_ln < m_lst.size() && isTableLine(m_lst[m_ln], m_tableTokens, data) ) {
+	BlockData *data = nullptr;		//getBlockData(srcBlock);
+	bool inComment = false;
+	while( m_ln < m_lst.size() /*&& (m_lst[m_ln].isEmpty() || isTableLine(m_lst[m_ln], m_tableTokens, data))*/ ) {
+		//if( m_lst[m_ln].isEmpty() ) {		//	空行は無視
+		//	++m_ln;
+		//	continue;
+		//}
+		if( inComment ) {
+			if( m_lst[m_ln++].indexOf("-->") >= 0 )		//	とりあえず --> 以降は無視
+				inComment = false;
+			srcBlock = srcBlock.next();
+			continue;
+		}
+		if( m_lst[m_ln].startsWith("<!--") ) {		//	とりあえず行頭の <!-- のみ認識
+			inComment = true;
+			continue;
+		}
+		data = getBlockData(srcBlock);
+		if( !isTableLine(m_lst[m_ln], m_tableTokens, data) ) break;
 		buf += "\n" + m_lst[m_ln++];
 		srcBlock.setUserState(US_TABLE);
 		srcBlock = srcBlock.next();
