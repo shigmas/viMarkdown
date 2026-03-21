@@ -34,6 +34,14 @@ MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, DocWidget *docWid
 	setUndoRedoEnabled(false);
 	setFrameStyle(QFrame::NoFrame);
 	setCursorWidth(2);
+	document()->setDefaultStyleSheet(
+	    "blockquote {"
+	    "    background-color: #f0f8ff;" /* 引用の背景色 */
+	    "    padding: 10px;"            /* ★ここで内側パディングを指定！ */
+	    "    margin: 10px 0;"           /* 外側の上下マージン */
+	    "    border-left: 4px solid #ccc;" /* 左側の縦線（よくある引用の装飾） */
+	    "}"
+	);
 	//QString css = "hr { height: 1px; border: none; background-color: #333; margin-top: 10px; margin-bottom: 10px; }";
 	//document()->setDefaultStyleSheet(css);
 	//setStyleSheet("QTextEdit { caret-color: red; }");
@@ -1016,11 +1024,45 @@ void MarkdownPreview::do_quote(QTextBlock &srcBlock, QTextCursor& cursor, QStrin
 	//for(int i = 0; i < mch.capturedLength(); ++i)
 	data->m_charFlags[0] = data->m_charFlags[1] = PCF_QUOTE;	//	"> " 固定
 	srcBlock.setUserData(data);
+	//QString buf0 = buf + "\n";
 	buf = buf.mid(2);
 	while( ++m_ln < m_lst.size() ) {
 		if( !m_lst[m_ln].startsWith("> ") ) break;
-		buf += u"  \n" + m_lst[m_ln].mid(2);
+		buf += "\n" + m_lst[m_ln].mid(2);
+		//buf0 += m_lst[m_ln] + "\n";
 	}
+#if 0	//	insertMarkdown 版 → なんか全然だめ
+	cursor.insertMarkdown(buf0);
+#elif 0	//	insertHtml 版
+	buf += "\n";
+	//QString html = QString("<blockquote><div>%1</div></blockquote>").arg(buf.replace("\n", "<br>"));
+	//QString html = buf + "\n";
+	//htmlBuf.replace("\n", "<br>");
+	QString html = QString("<blockquote style='background-color: #f0f8ff; padding: 10px;'>%1</blockquote>").arg(buf.replace("\n", "<br>"));
+	cursor.insertHtml(html);
+#elif 1	//	QTextBlockFormat 使用版 → 問題はあるが一番マシか
+	QTextBlockFormat blockFormat;
+	blockFormat.setBackground(g.m_quoteColor); // 背景色
+	// 左側にボーダー（引用の縦線）を引きたい場合は、QTextCharFormat やペイントイベントで工夫しますが、
+	// 背景色とパディング（マージン）だけなら blockFormat で十分です。
+	blockFormat.setLeftMargin(20);  // インデント（字下げ）
+	blockFormat.setTopMargin(0);    // 上の余白を消す！
+	blockFormat.setBottomMargin(0); // 下の余白を消す！
+	// 行間（LineHeight）を少し広げることで、上下の「詰まり感」を軽減
+	//blockFormat.setLineHeight(120, QTextBlockFormat::ProportionalHeight);
+	cursor.beginEditBlock();
+	// テキストを挿入（この時点で自動的にブロックが作られる）
+	cursor.insertText(buf+"\n");
+	// 挿入したテキストの範囲を選択
+	cursor.setPosition(cursor.position() - buf.length(), QTextCursor::KeepAnchor);
+	// ブロックフォーマット（背景色とマージン）を一括適用
+	cursor.setBlockFormat(blockFormat);
+	cursor.clearSelection();
+	// 元のフォーマットに戻して次の行へ
+	cursor.movePosition(QTextCursor::End);
+	cursor.setBlockFormat(QTextBlockFormat()); // 次の行は通常のフォーマットに戻す
+	cursor.endEditBlock();
+#else	//	QTextFrameFormat 使用版 → 余分な空行が生成されてしまう
 	//cursor.insertMarkdown(buf);
 	// 1. フレームの書式を設定
 	QTextFrameFormat frameFormat;
@@ -1035,8 +1077,9 @@ void MarkdownPreview::do_quote(QTextBlock &srcBlock, QTextCursor& cursor, QStrin
 	cursor.movePosition(QTextCursor::End);
 	this->setTextCursor(cursor);
 	//cursor.insertBlock();
-	QTextBlockFormat blockFormat;
-	cursor.setBlockFormat(blockFormat);
+	//QTextBlockFormat blockFormat;
+	cursor.setBlockFormat(QTextBlockFormat());
+#endif
 	--m_ln;
 	//m_nEmptyLines = 0;
 }
