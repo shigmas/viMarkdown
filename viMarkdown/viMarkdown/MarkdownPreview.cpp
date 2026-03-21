@@ -677,11 +677,13 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 	m_processing = false;
 }
 void MarkdownPreview::do_table(QTextBlock& srcBlock, QTextCursor& cursor) {
+#if 0
 	if( m_isPrevLineEmpty ) {
 		cursor.insertBlock();
 		cursor.insertText("\n");
 		m_isPrevLineEmpty = false;
 	}
+#endif
 	QString buf = m_lst[m_ln] + "\n" + m_lst[m_ln+1] /*+ "\n"*/;
 	srcBlock.setUserState(US_TABLE);
 	srcBlock = srcBlock.next();
@@ -836,11 +838,13 @@ void MarkdownPreview::do_CSV(QTextBlock& srcBlock, QTextCursor& cursor) {		//	cu
 	if( ll.isEmpty() ) return;
 	static QRegularExpression re("^[+-]?(\\d+\\.\\d*|\\d+|\\.\\d+)$");
 	cursor.beginEditBlock();
+#if 0
 	if( m_isPrevLineEmpty ) {
 		cursor.insertBlock();
 		cursor.insertText("\n");
 		m_isPrevLineEmpty = false;
 	}
+#endif
 	QTextTable *table = cursor.insertTable(ll.size(), max_clmn);
 	for(int row = 0; row < ll.size(); ++row) {
 		for(int col = 0; col < ll[row].size(); ++col) {
@@ -940,11 +944,13 @@ void MarkdownPreview::do_keisen_block(QTextBlock& srcBlock, QTextCursor& cursor)
 	//cursor.setBlockFormat(QTextBlockFormat());		//	トップマージンリセット
 }
 void MarkdownPreview::do_code(QTextBlock srcBlock, QTextCursor& cursor) {
+#if 0
 	if( m_isPrevLineEmpty ) {
 		cursor.insertBlock();
 		//cursor.insertText("\n");
 		m_isPrevLineEmpty = false;
 	}
+#endif
 	BlockData *data = getBlockData(srcBlock);
 	data->m_charFlags.fill(PCF_CODE);
 	srcBlock.setUserData(data);
@@ -996,11 +1002,13 @@ void MarkdownPreview::do_code(QTextBlock srcBlock, QTextCursor& cursor) {
 	//m_nEmptyLines = 0;
 }
 void MarkdownPreview::do_quote(QTextBlock &srcBlock, QTextCursor& cursor, QString buf) {
+#if 0
 	if( m_isPrevLineEmpty ) {
 		cursor.insertBlock();
 		//cursor.insertText("\n");
 		m_isPrevLineEmpty = false;
 	}
+#endif
 	BlockData* data = getBlockData(srcBlock);
 	//for(int i = 0; i < mch.capturedLength(); ++i)
 	data->m_charFlags[0] = data->m_charFlags[1] = PCF_QUOTE;	//	"> " 固定
@@ -1051,11 +1059,13 @@ void MarkdownPreview::do_numlist(QTextBlock srcBlock, QTextCursor& cursor, QStri
 		buf += u'\n' + m_lst[m_ln];
 	}
 #endif
+#if 0
 	if( m_isPrevLineEmpty ) {
 		cursor.insertBlock();
 		//cursor.insertText("\n");
 		m_isPrevLineEmpty = false;
 	}
+#endif
 	cursor.insertMarkdown(buf);
 	cursor.insertBlock();
 	QTextBlockFormat blockFormat;
@@ -1066,11 +1076,13 @@ void MarkdownPreview::do_numlist(QTextBlock srcBlock, QTextCursor& cursor, QStri
 void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString buf) {
 	//if( m_nEmptyLines >= 1 )
 	//	cursor.insertBlock();			//	新規ブロック
+#if 0
 	if( m_isPrevLineEmpty ) {
 		cursor.insertBlock();
 		cursor.insertText("\n");
 		m_isPrevLineEmpty = false;
 	}
+#endif
 	if( m_nSpaces > 0 )
 		buf = QString(m_nSpaces, QChar(u' ')) + buf;
 	static QRegularExpression re_checkbox(R"(^( *)- \[[ xX]\] )");
