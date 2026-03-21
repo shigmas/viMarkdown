@@ -19,6 +19,8 @@ enum {
     PCF_LINK,
     PCF_IMAGE,
     PCF_CODE,			// ```
+    //PCF_CODE_BEGIN,		// ```
+    //PCF_CODE_END,		// ```
     PCF_CSV,
     PCF_TABLE,			//	マークダウン表要素
     PCF_KEISEN,

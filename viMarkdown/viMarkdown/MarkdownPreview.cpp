@@ -951,16 +951,19 @@ void MarkdownPreview::do_code(QTextBlock srcBlock, QTextCursor& cursor) {
 		m_isPrevLineEmpty = false;
 	}
 #endif
+	srcBlock.setUserState(US_CODE_BLOCK);
 	BlockData *data = getBlockData(srcBlock);
 	data->m_charFlags.fill(PCF_CODE);
 	srcBlock.setUserData(data);
 	QString buf;
 	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
 		srcBlock = srcBlock.next();
+		srcBlock.setUserState(US_CODE_BLOCK);
 		if( !buf.isEmpty() ) buf += "\n";
 		buf += m_lst[m_ln];
 	}
 	if( (srcBlock = srcBlock.next()).isValid() ) {
+		srcBlock.setUserState(US_CODE_BLOCK_END);
 		BlockData *data = getBlockData(srcBlock);
 		data->m_charFlags.fill(PCF_CODE);
 		srcBlock.setUserData(data);

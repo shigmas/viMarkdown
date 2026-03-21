@@ -653,7 +653,8 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	//QTextEdit *mdEditor = new QTextEdit(splitter);
 	mdEditor->setPlaceholderText("\nここにMarkdownを入力\n"
 									"\nマークダウン書式：\n# タイトル\n## 大見出し\n### 中見出し\n"
-									"本文...（空行：段落区切り）\n行末に半角スペース2つ：強制改行\n"
+									"本文...\n"		//	for GFM
+									//"本文...（空行：段落区切り）\n行末に半角スペース2つ：強制改行\n"	//	for コモンマークダウン
 									"**ボールド** *イタリック* ~~打ち消し線~~\n"
 									"1. 連番\n- リスト\n- [ ] チェックボックス\n"
 									"リンク: [テキスト](url) or [テキスト](filename.md#見出し)\n"

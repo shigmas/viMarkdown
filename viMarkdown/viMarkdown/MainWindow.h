@@ -44,6 +44,8 @@ enum {
 	US_HEADING,			//	タイトル・見出し
 	US_CHECKBOX,		//	チェックボックス
 	US_IN_COMMENT,		//	行頭がコメントブロック（<!-- -->）の中
+	US_CODE_BLOCK,		//	コードブロック内（最初の``` 行も含む）
+	US_CODE_BLOCK_END,	//	コードブロック最後の```
 	US_CSV_BLOCK,		//	CSVブロック内 ```CSV ～ ```
 	US_KEISEN_BLOCK,	//	罫線ブロック内 ```keisen ～ ```
 	US_TABLE,			//	マークダウンテーブル内
