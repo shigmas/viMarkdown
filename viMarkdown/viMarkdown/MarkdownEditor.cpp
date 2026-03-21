@@ -2108,6 +2108,12 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 	//		pc.m_offset += 1;
 	//	}
 	//} else 
+	if( block.userState() == US_CSV_BLOCK ) {
+		if( block.text().compare(QString("```CSV"), Qt::CaseInsensitive) == 0 ) {
+			block = block.next();
+			pos = block.position();
+		}
+	}
 	assert( block.isValid() );
 	if( block.userState() == US_KEISEN_BLOCK ) {
 		while( block.userState() == US_KEISEN_BLOCK ) {
