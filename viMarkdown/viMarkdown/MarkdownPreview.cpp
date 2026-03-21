@@ -799,7 +799,7 @@ void MarkdownPreview::do_heading_sub(QTextCursor& cursor, QString buf, int h, in
 	cursor.mergeBlockFormat(blockFormat);
 	cursor.insertBlock(QTextBlockFormat(), QTextCharFormat());		//	新規ブロック
 #endif
-	m_docWidget->m_prvHeadingBlocks.push_back(cursor.blockNumber());
+	m_docWidget->m_prvHeadingBlocks.push_back(cursor.blockNumber()-1);	//	プレビュー 見出し行 行番号
 
 	m_headingList.push_back(QChar(u'0'+h) + buf.remove("^ +"));
 	m_docWidget->m_srcHeadingBlocks.push_back(ln);
