@@ -2142,30 +2142,76 @@ const QString QA_MD_text_1 =
 	"# title\n"
 	"text\n"
 	"abc xyzzz\n"
+	"hoge**fuga**foo\n"
 	"## heading\n"
 	"text\n"
 	"- item1\n"
 	"- item2\n"
+	"\n"
 	"text\n"
 	"";
+int g_tested_count = 0;
+int g_failed_count = 0;
+QString g_result;
+void ASSERT(bool actual, int ln) {
+	++g_tested_count;
+	if( !actual ) {
+		++g_failed_count;
+		g_result += QString("%1: true expected. but false\n").arg(ln+1);
+	}
+}
+void ASSERT_EQ(bool expected, bool actual, int ln) {
+	++g_tested_count;
+	if( actual != expected ) {
+		++g_failed_count;
+	}
+}
+void ASSERT_EQ(const QString &expected, const QString &actual, int ln) {
+	++g_tested_count;
+	if( actual != expected ) {
+		++g_failed_count;
+		g_result += QString("%1: '%2' expected. but '%3'\n").arg(ln+1).arg(expected).arg(actual);
+	}
+}
 void MainWindow::onAction_Test() {
 	static QRegularExpression prefix_re(R"(^(#+ *| *- ))");
 	addTab(QString("QA-%1").arg(++m_QA_tab_number));
 	DocWidget *docWidget = getCurDocWidget();;
 	if( docWidget == nullptr ) return;
-	//QTextCursor cursor = docWidget->m_editor->textCursor();
 	docWidget->m_editor->setPlainText(QA_MD_text_1);
+
+	g_tested_count = 0;
+	g_failed_count = 0;
+	//g_result.clear();
+	g_result = "\n# Test Result:\n\n";
 	//	各行文字列チェック
 	QTextBlock block1 = docWidget->m_editor->document()->firstBlock();
 	QTextBlock block2 = docWidget->m_preview->document()->firstBlock();
 	while( block1.isValid() ) {
-		assert( block2.isValid() );
+		ASSERT( block2.isValid(), block1.blockNumber());
 		QString buf1 = block1.text();
 		QString buf2 = block2.text();
-		buf1.remove(prefix_re);
-		assert( buf1 == buf2 );
+		//buf1.remove(prefix_re);
+		BlockData *data = getBlockData(block1);
+		int k = 0;
+		for(int i = 0; i < data->m_charFlags.size(); ++i) {
+			if( data->m_charFlags[i] == PCF_VISIBLE ) {
+				buf1[k++] = buf1[i];
+			}
+		}
+		buf1.resize(k);
+		ASSERT_EQ( buf1, buf2, block1.blockNumber());
 		block1 = block1.next();
 		block2 = block2.next();
 	}
-	//assert( !block2.isValid() );	//	同行数のはず
+	ASSERT( !block2.isValid(), block1.blockNumber());	//	同行数のはず
+
+	QString mess = QString("%1 failed / %2 tested.").arg(g_failed_count).arg(g_tested_count);
+	statusBar()->showMessage(mess);
+	g_result += "\n" + mess;
+	qDebug() << "test result:\n" << g_result;
+
+	QTextCursor cursor = docWidget->m_editor->textCursor();
+	cursor.movePosition(QTextCursor::End);
+	cursor.insertText(g_result);
 }
