@@ -241,6 +241,7 @@ protected:
     void	onAction_AddThisFavorite();
     void	onAction_Settings();
     void	onAction_Help();
+    void	onAction_Test();
     void	onAction_Exit();
 
     void	onAboutToShow_RecentFiles();
@@ -262,6 +263,7 @@ private:
     bool	m_keisenMode = false;
     bool	m_thickKeisen = false;		//	Thin or Thick
     int		m_tab_number = 0;
+    int		m_QA_tab_number = 0;
     //int		m_editorFontSize = 12;		//	暫定的
     //QString	m_plainText;
     //QString	m_htmlText;
