@@ -1097,9 +1097,6 @@ void MainWindow::onAction_Help() {
 	qDebug() << "helpdir = " << dir.path();
 	do_open("", dir.path() + "/help.md", QString(), true);
 }
-void MainWindow::onAction_Test() {
-	addTab(QString("QA-%1").arg(++m_QA_tab_number));
-}
 void MainWindow::onAction_Settings() {
 	Global g0 = g;
 	SettingsDialog dlg(this);
@@ -2139,4 +2136,36 @@ void MainWindow::onAction_About() {
 		"<br>Copyright (C) 2025, 2026 by N.Tsuda"
 		"<br>Powered by Qt 6 and C++</p>"
 	);
+}
+//----------------------------------------------------------------------
+const QString QA_MD_text_1 =
+	"# title\n"
+	"text\n"
+	"abc xyzzz\n"
+	"## heading\n"
+	"text\n"
+	"- item1\n"
+	"- item2\n"
+	"text\n"
+	"";
+void MainWindow::onAction_Test() {
+	static QRegularExpression prefix_re(R"(^(#+ *| *- ))");
+	addTab(QString("QA-%1").arg(++m_QA_tab_number));
+	DocWidget *docWidget = getCurDocWidget();;
+	if( docWidget == nullptr ) return;
+	//QTextCursor cursor = docWidget->m_editor->textCursor();
+	docWidget->m_editor->setPlainText(QA_MD_text_1);
+	//	各行文字列チェック
+	QTextBlock block1 = docWidget->m_editor->document()->firstBlock();
+	QTextBlock block2 = docWidget->m_preview->document()->firstBlock();
+	while( block1.isValid() ) {
+		assert( block2.isValid() );
+		QString buf1 = block1.text();
+		QString buf2 = block2.text();
+		buf1.remove(prefix_re);
+		assert( buf1 == buf2 );
+		block1 = block1.next();
+		block2 = block2.next();
+	}
+	//assert( !block2.isValid() );	//	同行数のはず
 }
