@@ -2116,6 +2116,11 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			block = block.previous();
 			pos = block.position() + block.text().size();
 		}
+	} else if( block.userState() == US_CODE_BLOCK && block.text().startsWith("```") ) {
+		if( block.next().isValid() ) {
+			block = block.next();
+			pos = block.position();
+		}
 	} else if( block.userState() == US_CODE_BLOCK_END ) {
 		block = block.previous();
 		pos = block.position() + block.text().size();
