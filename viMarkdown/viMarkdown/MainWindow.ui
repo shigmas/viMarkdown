@@ -168,6 +168,7 @@
     </property>
     <addaction name="action_Settings"/>
     <addaction name="action_Help"/>
+    <addaction name="action_Test"/>
     <addaction name="action_AboutViMarkdown"/>
     <addaction name="separator"/>
    </widget>
@@ -920,6 +921,14 @@
    </property>
    <property name="text">
     <string>&amp;Link</string>
+   </property>
+  </action>
+  <action name="action_Test">
+   <property name="text">
+    <string>&amp;Test</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+T</string>
    </property>
   </action>
  </widget>

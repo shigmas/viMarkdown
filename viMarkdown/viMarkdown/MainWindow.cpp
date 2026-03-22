@@ -676,6 +676,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(markdownPreview, &MarkdownPreview::textInserted, this, &MainWindow::onTextInsertedAtPreview);
 	connect(markdownPreview, &MarkdownPreview::textRemoved, this, &MainWindow::onTextRemovedAtPreview);
 	connect(markdownPreview, &MarkdownPreview::Enter_pressed, this, &MainWindow::onEnter_pressed);
+	connect(markdownPreview, &MarkdownPreview::Tab_pressed, this, &MainWindow::onTab_pressed);
 	connect(markdownPreview, &MarkdownPreview::BS_pressed, this, &MainWindow::onBS_pressed);
 	connect(markdownPreview, &MarkdownPreview::Del_pressed, this, &MainWindow::onDel_pressed);
 	connect(markdownPreview, &MarkdownPreview::undo_triggered, this, &MainWindow::onUndoTriggered);
@@ -931,6 +932,9 @@ void MainWindow::onEnter_pressed() {
 	QTextCursor cursor = docWidget->m_editor->textCursor();
 	cursor.insertText("\n");
 	docWidget->m_editor->setTextCursor(cursor);
+}
+void MainWindow::onTab_pressed() {
+	onAction_Indent();
 }
 void MainWindow::onBS_pressed() {
 	DocWidget *docWidget = getCurDocWidget();

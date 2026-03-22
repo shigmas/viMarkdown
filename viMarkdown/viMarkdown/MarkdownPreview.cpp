@@ -190,6 +190,10 @@ void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 		emit Enter_pressed();
 		return;
 	}
+	if (e->key() == Qt::Key_Tab) {
+		emit Tab_pressed();
+		return;
+	}
 	if (e->key() == Qt::Key_Backspace) {
 		emit BS_pressed();
 		return;

@@ -65,6 +65,7 @@ signals:
     void	textInserted(QString);
     void	textRemoved(int);
     void	Enter_pressed();	//	or Return
+    void	Tab_pressed();		//	Tab
     void	BS_pressed();		//	BackSpace
     void	Del_pressed();		//	Delete
     void	undo_triggered();

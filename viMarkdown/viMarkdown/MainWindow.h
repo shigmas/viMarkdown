@@ -170,6 +170,7 @@ protected:
     void	onTextInsertedAtPreview(QString);
     void	onTextRemovedAtPreview(int);
     void	onEnter_pressed();
+    void	onTab_pressed();
     void	onBS_pressed();
     void	onDel_pressed();
     //void	syncPreviewCursorWithEditor();
