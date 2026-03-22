@@ -2143,6 +2143,8 @@ const QString QA_MD_text_1 =
 	"text\n"
 	"abc xyzzz\n"
 	"hoge**fuga**foo\n"
+	"[v](url)\n"	//	リンク
+	"![v](url)\n"	//	画像
 	"## heading\n"
 	"text\n"
 	"- item1\n"
