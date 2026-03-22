@@ -64,6 +64,7 @@ signals:
     void	anchorClicked(const QString &title, const QString &anchor, const QString name, bool readOnly = false);
     void	textInserted(QString);
     void	textRemoved(int);
+    void	Enter_pressed();	//	or Return
     void	BS_pressed();		//	BackSpace
     void	Del_pressed();		//	Delete
     void	undo_triggered();

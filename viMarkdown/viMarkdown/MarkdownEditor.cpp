@@ -1697,6 +1697,7 @@ void MarkdownEditor::convert_MarkdownTable_CSV() {
 	setTextCursor(cursor);
 }
 void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int charsAdded) {
+	if( m_ignoreContentsChanged ) return;
 	if( m_processing || (charsRemoved == 0 && charsAdded == 0) ) return;
 	if (m_isComposing) return;		//	IME変換中
 	m_processing = true;

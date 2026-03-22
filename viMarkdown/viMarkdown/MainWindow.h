@@ -169,6 +169,7 @@ protected:
     void	onEncodingChanged(int);
     void	onTextInsertedAtPreview(QString);
     void	onTextRemovedAtPreview(int);
+    void	onEnter_pressed();
     void	onBS_pressed();
     void	onDel_pressed();
     //void	syncPreviewCursorWithEditor();
@@ -252,6 +253,7 @@ protected:
 
 private:
     bool	m_processing = false;
+    //bool	m_ignoreContentsChanged = false;
     mutable bool	m_isCursorSyncing = false;		//	カーソル同期処理中
     bool	m_opening_file = false;
     bool	m_ignore_changed = false;

@@ -675,6 +675,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(markdownPreview, &MarkdownPreview::anchorClicked, this, &MainWindow::do_open);
 	connect(markdownPreview, &MarkdownPreview::textInserted, this, &MainWindow::onTextInsertedAtPreview);
 	connect(markdownPreview, &MarkdownPreview::textRemoved, this, &MainWindow::onTextRemovedAtPreview);
+	connect(markdownPreview, &MarkdownPreview::Enter_pressed, this, &MainWindow::onEnter_pressed);
 	connect(markdownPreview, &MarkdownPreview::BS_pressed, this, &MainWindow::onBS_pressed);
 	connect(markdownPreview, &MarkdownPreview::Del_pressed, this, &MainWindow::onDel_pressed);
 	connect(markdownPreview, &MarkdownPreview::undo_triggered, this, &MainWindow::onUndoTriggered);
@@ -890,10 +891,16 @@ void MainWindow::onMarkdownPreviewLineClicked(/*int nth,*/ bool checked) {
 #endif
 }
 void MainWindow::onTextInsertedAtPreview(QString txt) {
+	qDebug() << "MainWindow::onTextInsertedAtPreview(" << txt << ")";
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	QTextCursor cursor = docWidget->m_editor->textCursor();
+	//m_processing = true;
+	docWidget->m_editor->setIgnoreCC(true);
 	cursor.insertText(txt);
+	docWidget->m_editor->setTextCursor(cursor);
+	docWidget->m_editor->setIgnoreCC(false);
+	//m_processing = false;
 }
 void MainWindow::onTextRemovedAtPreview(int charsRemoved) {
 	DocWidget *docWidget = getCurDocWidget();
@@ -916,6 +923,13 @@ void MainWindow::onDel_pressed() {
 		}
 		cursor.deleteChar();
 	}
+	docWidget->m_editor->setTextCursor(cursor);
+}
+void MainWindow::onEnter_pressed() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	QTextCursor cursor = docWidget->m_editor->textCursor();
+	cursor.insertText("\n");
 	docWidget->m_editor->setTextCursor(cursor);
 }
 void MainWindow::onBS_pressed() {

@@ -186,6 +186,10 @@ bool MarkdownPreview::isTableHyphenLine(const QString& lnStr) {
 #endif
 
 void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
+	if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {		//	改行入力
+		emit Enter_pressed();
+		return;
+	}
 	if (e->key() == Qt::Key_Backspace) {
 		emit BS_pressed();
 		return;

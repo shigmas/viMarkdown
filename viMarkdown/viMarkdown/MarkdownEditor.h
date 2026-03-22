@@ -45,6 +45,7 @@ public:
 	void	convert_MarkdownTable_CSV();
     void	setCursorAtNthPat(int srcHeadingBlockNum, QString pat, int nth, bool=false);
     void	setProcessing(bool b) { m_processing = b; }
+    void	setIgnoreCC(bool b) { m_ignoreContentsChanged = b; }
     void	rehighlight();
     //void	setBoldColor(QColor);
     void	updateInlineColors();
@@ -110,6 +111,7 @@ protected:
 	bool	isInLinkURL(int pos, int& openIX, int& closeIX) const;
 
 private:
+	bool	m_ignoreContentsChanged = false;
 	bool	m_processing = false;			//	罫線保護処理中
 	bool	m_isComposing = false;			// IME入力中フラグ
 	bool	m_lnAreaPressed = false;
