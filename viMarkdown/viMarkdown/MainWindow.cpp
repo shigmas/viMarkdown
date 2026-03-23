@@ -2232,6 +2232,12 @@ bool ASSERT_EQ(const QString &expected, const QString &actual, int ln) {
 	g_result += QString("%1: '%2' expected. but '%3'\n").arg(ln+1).arg(expected).arg(actual);
 	return false;
 }
+bool isCommentOuted(const BlockData* data) {
+	for(int i = 0; i < data->m_charFlags.size(); ++i) {
+		if( data->m_charFlags[i] == PCF_VISIBLE ) return false;		//	表示文字があった
+	}
+	return true;
+}
 void MainWindow::onAction_Test() {
 	static QRegularExpression prefix_re(R"(^(#+ *| *- ))");
 	addTab(QString("QA-%1").arg(++m_QA_tab_number));
@@ -2248,8 +2254,12 @@ void MainWindow::onAction_Test() {
 	QTextBlock block2 = docWidget->m_preview->document()->firstBlock();
 	while( block1.isValid() ) {
 		QCoreApplication::processEvents();		//	溜まっているイベント処理
-		//##assert( block2.isValid() );
-		ASSERT( block2.isValid(), block1.blockNumber());
+		assert( block2.isValid() );
+		if( isCommentOuted(getBlockData(block1)) ) {
+			block1 = block1.next();
+			continue;
+		}
+		ASSERT(block2.isValid(), block1.blockNumber());
 		while( (block1.userState() == US_CODE_BLOCK || block1.userState() == US_CODE_BLOCK_END) &&
 			block1.text().startsWith("```") )
 		{
