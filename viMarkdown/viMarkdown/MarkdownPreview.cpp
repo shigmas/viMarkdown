@@ -974,7 +974,7 @@ void MarkdownPreview::do_keisen_block(QTextBlock& srcBlock, QTextCursor& cursor)
 		painter.drawText(5, lineHeight*i+fm.height(), m_lst[m_ln0+i]);
 	painter.end();
 	//
-	cursor.insertBlock();
+	//cursor.insertBlock();
 	cursor.block().setUserState(US_KEISEN_BLOCK);
 	QTextBlockFormat blockFormat;
 	blockFormat.setTopMargin(lineHeight/2);

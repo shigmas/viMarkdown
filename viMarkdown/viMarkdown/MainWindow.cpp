@@ -2151,7 +2151,7 @@ const QString QA_MD_text_1 =
 	"x[v](url)y\n"	//	リンク
 	"![v](url)\n"	//	画像
 	"x![v](url)y\n"	//	画像
-#if 0
+#if 1
 	"## heading\n"
 	"text\n"
 	"- item1\n"
@@ -2175,11 +2175,18 @@ const QString QA_MD_text_1 =
 	"int main() { return 0; }\n"
 	"```\n"		//	コードブロック終了
 	"text\n"
+	"```keisen\n"	//	罫線ブロック開始
+	"┌───┐\n"
+	"│      │\n"
+	"└───┘\n"
+	"```\n"		//	罫線ブロック終了
+	"text\n"
 #if 1
 	"```CSV\n"	//	CSVブロック開始
 	"id, hhh2, h3\n"
 	"69, ""hasshi"", hoge\n"
 	"```\n"		//	CSVブロック終了
+	"text\n"
 #endif
 #if 0
 	"|header|h|\n"
@@ -2245,6 +2252,15 @@ void MainWindow::onAction_Test() {
 		{
 			block1 = block1.next();
 		}
+		if( block1.userState() == US_KEISEN_BLOCK ) {
+			while( block1.userState() == US_KEISEN_BLOCK )
+				block1 = block1.next();
+			block2 = block2.next();
+			continue;
+		}
+		//while( block1.userState() == US_KEISEN_BLOCK && block1.text().startsWith("```") ) {
+		//	block1 = block1.next();
+		//}
 		QString buf1 = block1.text();
 		QString buf2 = block2.text();
 		QTextTable *table = QTextCursor(block2).currentTable();
