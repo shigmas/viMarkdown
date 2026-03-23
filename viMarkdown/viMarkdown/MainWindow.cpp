@@ -2161,6 +2161,15 @@ const QString QA_MD_text_1 =
 	"- [ ] item3\n"
 	"\n"
 	"text\n"
+	"```\n"		//	コードブロック開始
+	"int main() { return 0; }\n"
+	"```\n"		//	コードブロック終了
+	"text\n"
+	"```CSV\n"	//	CSVブロック開始
+	"id, hhh2, h3\n"
+	"69, ""hasshi"", hoge\n"
+	"```\n"		//	CSVブロック終了
+	"\n"
 	"";
 const short CODE_IMAGE = 0xfffc;		//	プレビュー：画像アイコン
 int g_tested_count = 0;

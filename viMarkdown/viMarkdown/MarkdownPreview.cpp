@@ -995,12 +995,14 @@ void MarkdownPreview::do_code(QTextBlock srcBlock, QTextCursor& cursor) {
 	BlockData *data = getBlockData(srcBlock);
 	data->m_charFlags.fill(PCF_CODE);
 	srcBlock.setUserData(data);
+	QStringList lst;
 	QString buf;
 	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
 		srcBlock = srcBlock.next();
 		srcBlock.setUserState(US_CODE_BLOCK);
 		if( !buf.isEmpty() ) buf += "\n";
 		buf += m_lst[m_ln];
+		lst += m_lst[m_ln];
 	}
 	if( (srcBlock = srcBlock.next()).isValid() ) {
 		srcBlock.setUserState(US_CODE_BLOCK_END);
@@ -1009,6 +1011,17 @@ void MarkdownPreview::do_code(QTextBlock srcBlock, QTextCursor& cursor) {
 		srcBlock.setUserData(data);
 	}
 	QTextCharFormat codeCharFormat;
+#if 1	//	insertFrame() を使用しない版
+	QTextBlockFormat blockFmt;
+	blockFmt.setBackground(g.m_codeBlockColor);
+	blockFmt.setLeftMargin(10);
+	QTextCharFormat charFmt = codeCharFormat;
+	cursor.setBlockFormat(blockFmt);
+	for (auto txt : lst) {
+	    cursor.insertText(txt, charFmt);
+	    cursor.insertBlock(blockFmt);
+	}
+#else
 #if 0
 	codeCharFormat.setFontFamilies({"MS Gothic", "MS UI Gothic", "Osaka-mono", "monospace"});
 	codeCharFormat.setFontFixedPitch(true); // 等幅フォントであることを明示
@@ -1033,14 +1046,24 @@ void MarkdownPreview::do_code(QTextBlock srcBlock, QTextCursor& cursor) {
 	frameFormat.setBorder(0);					  // 枠線はなし
 	// 2. フレームを挿入（この中にカーソルが入る）
 	cursor.insertFrame(frameFormat);
+	QTextBlock before = cursor.block().previous();
+	if (before.text().isEmpty()) {
+	    QTextCursor c(before);
+	    //c.deleteChar(); // or removeSelectedText		//→　直前空行は消えなかった
+	    //c.select(QTextCursor::BlockUnderCursor);
+	    //c.removeSelectedText();
+	    c.movePosition(QTextCursor::EndOfBlock);
+	    c.deleteChar();  // ブロック削除ではなく結合
+	}
 
 	// 3. フレームの中で Markdown を挿入
 	cursor.insertText(buf, codeCharFormat);
 	cursor.movePosition(QTextCursor::End);
+#endif
 	this->setTextCursor(cursor);
 	//cursor.insertBlock();
-	QTextBlockFormat blockFormat;
-	cursor.setBlockFormat(blockFormat);
+	//QTextBlockFormat blockFormat;
+	cursor.setBlockFormat(QTextBlockFormat());
 	//--m_ln;
 	//m_nEmptyLines = 0;
 }
