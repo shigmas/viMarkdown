@@ -23,6 +23,7 @@
 #include <QDesktopServices>
 #include <QLineEdit>
 #include <QToolButton>
+#include <QTextTable>
 #include "ver.h"
 #include "MainWindow.h"
 #include "DocWidget.h"
@@ -2170,10 +2171,19 @@ const QString QA_MD_text_1 =
 	"int main() { return 0; }\n"
 	"```\n"		//	コードブロック終了
 	"text\n"
+#if 1
 	"```CSV\n"	//	CSVブロック開始
 	"id, hhh2, h3\n"
 	"69, ""hasshi"", hoge\n"
 	"```\n"		//	CSVブロック終了
+#endif
+#if 0
+	"|header|h|\n"
+	"|-|-|\n"
+	"|3|1415|\n"
+	"|foo|bar|\n"
+#endif
+	"text\n"
 	"\n"
 	"";
 const short CODE_IMAGE = 0xfffc;		//	プレビュー：画像アイコン
@@ -2215,6 +2225,7 @@ void MainWindow::onAction_Test() {
 	QTextBlock block1 = docWidget->m_editor->document()->firstBlock();
 	QTextBlock block2 = docWidget->m_preview->document()->firstBlock();
 	while( block1.isValid() ) {
+		assert( block2.isValid() );
 		ASSERT( block2.isValid(), block1.blockNumber());
 		while( (block1.userState() == US_CODE_BLOCK || block1.userState() == US_CODE_BLOCK_END) &&
 			block1.text().startsWith("```") )
@@ -2223,6 +2234,16 @@ void MainWindow::onAction_Test() {
 		}
 		QString buf1 = block1.text();
 		QString buf2 = block2.text();
+		QTextTable *table = QTextCursor(block2).currentTable();
+		if( table != nullptr ) {	//	CSV テーブル中の場合
+			for(int i = 0; i < table->columns() - 1; ++i) {
+				block2 = block2.next();
+				assert( block2.isValid() );
+				buf2 += " " + block2.text();
+			}
+			//block2 = block2.next();
+			assert( block2.isValid() );
+		}
 		//buf1.remove(prefix_re);
 		BlockData *data = getBlockData(block1);
 		int k = 0;
