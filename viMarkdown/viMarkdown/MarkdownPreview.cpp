@@ -3,6 +3,7 @@
 #include <QTextBlock>
 #include <QRegularExpression>
 #include <QTextTable>
+#include <QTextList>
 #include <QAbstractTextDocumentLayout>
 #include <QScrollbar>
 #include <QDir>
@@ -1115,6 +1116,33 @@ void MarkdownPreview::do_quote(QTextBlock &srcBlock, QTextCursor& cursor, QStrin
 	//m_nEmptyLines = 0;
 }
 void MarkdownPreview::do_numlist(QTextBlock srcBlock, QTextCursor& cursor, QString buf) {
+#if 1	//	insertMarkdown() を使用せず QTextListFormat を適用
+	cursor.beginEditBlock();
+	QTextListFormat listFormat;
+	listFormat.setStyle(QTextListFormat::ListDecimal); // 1. 2. 3. の連番リスト
+	auto *list = cursor.createList(listFormat);
+	auto match = re_numlist.match(m_lst[m_ln]);
+	while( match.hasMatch() ) {
+		BlockData* data = getBlockData(srcBlock);
+		for(int i = 0; i < match.capturedLength(); ++i)
+			data->m_charFlags[i] = PCF_NUM_LIST;
+		srcBlock.setUserData(data);
+		//QTextBlock b = list->item(list->count() - 1);
+		cursor.insertText(m_lst[m_ln].remove(re_numlist) /*+ "\n"*/);
+		if( ++m_ln >= m_lst.size() ) break;
+		srcBlock = srcBlock.next();
+		match = re_numlist.match(m_lst[m_ln]);
+		if( !match.hasMatch() ) break;
+		cursor.insertBlock();
+	}
+#if 0
+	QTextBlock lastBlock = list->item(list->count() - 1);
+	QTextCursor delCursor(lastBlock);
+	delCursor.select(QTextCursor::BlockUnderCursor);
+    delCursor.removeSelectedText();
+#endif
+	cursor.endEditBlock();
+#else
 	bool init = true;
 	auto match = re_numlist.match(m_lst[m_ln]);
 	while( match.hasMatch() ) {
@@ -1122,31 +1150,19 @@ void MarkdownPreview::do_numlist(QTextBlock srcBlock, QTextCursor& cursor, QStri
 		for(int i = 0; i < match.capturedLength(); ++i)
 			data->m_charFlags[i] = PCF_NUM_LIST;
 		srcBlock.setUserData(data);
-		if( !init )
-			buf += u'\n' + m_lst[m_ln];
+		//if( !init )
+		//	buf += u'\n' + m_lst[m_ln];
 		if( ++m_ln >= m_lst.size() ) break;
 		srcBlock = srcBlock.next();
 		init = false;
 		match = re_numlist.match(m_lst[m_ln]);
 	}
-#if 0
-	while( ++m_ln < m_lst.size() ) {
-		if( !re_numlist.match(m_lst[m_ln]).hasMatch() ) break;			//	"1. " 連番行が終わった場合
-		srcBlock = srcBlock.next();
-		buf += u'\n' + m_lst[m_ln];
-	}
-#endif
-#if 0
-	if( m_isPrevLineEmpty ) {
-		cursor.insertBlock();
-		//cursor.insertText("\n");
-		m_isPrevLineEmpty = false;
-	}
-#endif
 	cursor.insertMarkdown(buf);
-	cursor.insertBlock();
-	QTextBlockFormat blockFormat;
-	cursor.setBlockFormat(blockFormat);
+#endif
+	cursor.insertBlock(QTextBlockFormat());
+	//cursor.insertBlock();
+	//QTextBlockFormat blockFormat;
+	//cursor.setBlockFormat(blockFormat);
 	--m_ln;
 	//m_nEmptyLines = 0;
 }

@@ -2144,14 +2144,25 @@ const QString QA_MD_text_1 =
 	"abc xyzzz\n"
 	"hoge**fuga**foo\n"
 	"[v](url)\n"	//	リンク
+	"x[v](url)y\n"	//	リンク
 	"![v](url)\n"	//	画像
+	"x![v](url)y\n"	//	画像
 	"## heading\n"
 	"text\n"
 	"- item1\n"
 	"- item2\n"
 	"\n"
+	"1. item1\n"
+	"1. item2\n"
+	"1. item3\n"
+	"\n"
+	"- [ ] item1\n"
+	"- [x] item2\n"
+	"- [ ] item3\n"
+	"\n"
 	"text\n"
 	"";
+const short CODE_IMAGE = 0xfffc;		//	プレビュー：画像アイコン
 int g_tested_count = 0;
 int g_failed_count = 0;
 QString g_result;
@@ -2202,6 +2213,7 @@ void MainWindow::onAction_Test() {
 			}
 		}
 		buf1.resize(k);
+		buf2.remove(QChar(CODE_IMAGE));
 		ASSERT_EQ( buf1, buf2, block1.blockNumber());
 		block1 = block1.next();
 		block2 = block2.next();
