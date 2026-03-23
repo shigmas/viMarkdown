@@ -2154,7 +2154,7 @@ const QString QA_MD_text_1 =
 	"x[v](url)y\n"	//	リンク
 	"![v](url)\n"	//	画像
 	"x![v](url)y\n"	//	画像
-#if 0
+#if 1
 	"## heading\n"
 	"text\n"
 	"- item1\n"
@@ -2233,8 +2233,9 @@ bool ASSERT_EQ(const QString &expected, const QString &actual, int ln) {
 	return false;
 }
 bool isCommentOuted(const BlockData* data) {
+	if( data->m_charFlags.isEmpty() ) return false;			//	空行
 	for(int i = 0; i < data->m_charFlags.size(); ++i) {
-		if( data->m_charFlags[i] == PCF_VISIBLE ) return false;		//	表示文字があった
+		if( data->m_charFlags[i] != PCF_COMMENTED ) return false;		//	表示文字があった
 	}
 	return true;
 }
