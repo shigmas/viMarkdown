@@ -490,7 +490,7 @@ bool updateCharFlags(BlockData* data, const QString &buf, int ix, int ix9) {
 }
 void updateCharFlags(QTextBlock srcBlock) {
 	QString buf = srcBlock.text();
-	BlockData *data = getBlockData(srcBlock, true);
+	BlockData *data = getBlockData(srcBlock, false);
 	bool modified = false;
 	auto match = image_re.match(buf);		//	![title](image.png) を含むか？
 	while( match.hasMatch() ) {
@@ -522,6 +522,7 @@ void updateCharFlags(QTextBlock srcBlock) {
 		modified = true;
 	if( modified ) {
 		srcBlock.setUserData(data);
+		qDebug() << "updateCharFlags(srcBlock)";
 		printCharFlags(srcBlock);
 	}
 }
@@ -684,14 +685,16 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 			do_body(srcBlock0, cursor);
 			do_table(srcBlock, cursor);
 		} else {
+			//printCharFlags(srcBlock);
 			if( isUnderlineHeading(buf) && do_underlineHeading(cursor, buf) )
 				continue;		//	アンダーライン見出しだった場合
 			if( m_bodyList.isEmpty() ) {
 				m_bodyLineNum = m_ln;
 				srcBlock0 = srcBlock;
 			}
+			//printCharFlags(srcBlock);
 			updateCharFlags(srcBlock);
-			printCharFlags(srcBlock);
+			//printCharFlags(srcBlock);
 			m_bodyList += buf;
 		}
 	}
