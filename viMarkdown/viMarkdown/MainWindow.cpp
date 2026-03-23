@@ -2161,6 +2161,11 @@ const QString QA_MD_text_1 =
 	"- [ ] item3\n"
 	"\n"
 	"text\n"
+	"> quote-1\n"
+	"> quote-2\n"
+	"> quote-3\n"
+	"> quote-4\n"
+	"text\n"
 	"```\n"		//	コードブロック開始
 	"int main() { return 0; }\n"
 	"```\n"		//	コードブロック終了
