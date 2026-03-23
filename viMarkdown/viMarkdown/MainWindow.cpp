@@ -2140,10 +2140,10 @@ void MainWindow::onAction_About() {
 }
 //----------------------------------------------------------------------
 const QString QA_MD_text_1 =
-	//"<!-- comment -->\n"
+	"<!-- comment -->\n"
 	"# title\n"
-	//"hoge<!-- -->\n"
-	//"<!-- -->fuga\n"
+	"hoge<!-- -->\n"
+	"<!-- -->fuga\n"
 	"text\n"
 	"abc xyzzz\n"
 	"hoge*fuga*foo\n"
@@ -2248,7 +2248,7 @@ void MainWindow::onAction_Test() {
 	QTextBlock block2 = docWidget->m_preview->document()->firstBlock();
 	while( block1.isValid() ) {
 		QCoreApplication::processEvents();		//	溜まっているイベント処理
-		assert( block2.isValid() );
+		//##assert( block2.isValid() );
 		ASSERT( block2.isValid(), block1.blockNumber());
 		while( (block1.userState() == US_CODE_BLOCK || block1.userState() == US_CODE_BLOCK_END) &&
 			block1.text().startsWith("```") )
