@@ -2211,6 +2211,11 @@ void MainWindow::onAction_Test() {
 	QTextBlock block2 = docWidget->m_preview->document()->firstBlock();
 	while( block1.isValid() ) {
 		ASSERT( block2.isValid(), block1.blockNumber());
+		while( (block1.userState() == US_CODE_BLOCK || block1.userState() == US_CODE_BLOCK_END) &&
+			block1.text().startsWith("```") )
+		{
+			block1 = block1.next();
+		}
 		QString buf1 = block1.text();
 		QString buf2 = block2.text();
 		//buf1.remove(prefix_re);
