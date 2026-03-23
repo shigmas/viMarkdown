@@ -1076,7 +1076,6 @@ void MarkdownPreview::do_quote(QTextBlock &srcBlock, QTextCursor& cursor, QStrin
 	}
 #endif
 	BlockData* data = getBlockData(srcBlock);
-	//for(int i = 0; i < mch.capturedLength(); ++i)
 	data->m_charFlags[0] = data->m_charFlags[1] = PCF_QUOTE;	//	"> " 固定
 	srcBlock.setUserData(data);
 	//QString buf0 = buf + "\n";
@@ -1085,6 +1084,10 @@ void MarkdownPreview::do_quote(QTextBlock &srcBlock, QTextCursor& cursor, QStrin
 		if( !m_lst[m_ln].startsWith("> ") ) break;
 		buf += "\n" + m_lst[m_ln].mid(2);
 		//buf0 += m_lst[m_ln] + "\n";
+		srcBlock = srcBlock.next();
+		BlockData* data = getBlockData(srcBlock);
+		data->m_charFlags[0] = data->m_charFlags[1] = PCF_QUOTE;	//	"> " 固定
+		srcBlock.setUserData(data);
 	}
 #if 0	//	insertMarkdown 版 → なんか全然だめ
 	cursor.insertMarkdown(buf0);
