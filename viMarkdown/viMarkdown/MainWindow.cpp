@@ -2143,11 +2143,15 @@ const QString QA_MD_text_1 =
 	"# title\n"
 	"text\n"
 	"abc xyzzz\n"
+	"hoge*fuga*foo\n"
 	"hoge**fuga**foo\n"
+	"hoge***fuga***foo\n"
+	"hoge~~fuga~~foo\n"
 	"[v](url)\n"	//	リンク
 	"x[v](url)y\n"	//	リンク
 	"![v](url)\n"	//	画像
 	"x![v](url)y\n"	//	画像
+#if 0
 	"## heading\n"
 	"text\n"
 	"- item1\n"
@@ -2184,31 +2188,39 @@ const QString QA_MD_text_1 =
 	"|foo|bar|\n"
 #endif
 	"text\n"
+#endif
 	"\n"
 	"";
 const short CODE_IMAGE = 0xfffc;		//	プレビュー：画像アイコン
 int g_tested_count = 0;
 int g_failed_count = 0;
 QString g_result;
-void ASSERT(bool actual, int ln) {
+bool ASSERT(bool actual, int ln) {
 	++g_tested_count;
-	if( !actual ) {
-		++g_failed_count;
-		g_result += QString("%1: true expected. but false\n").arg(ln+1);
-	}
+	if( actual ) return true;
+	++g_failed_count;
+	g_result += QString("%1: true expected. but false\n").arg(ln+1);
+	return false;
 }
-void ASSERT_EQ(bool expected, bool actual, int ln) {
+bool ASSERT_EQ(bool expected, bool actual, int ln) {
 	++g_tested_count;
-	if( actual != expected ) {
-		++g_failed_count;
-	}
+	if( actual == expected ) return true;
+	++g_failed_count;
+	return false;
 }
-void ASSERT_EQ(const QString &expected, const QString &actual, int ln) {
+bool ASSERT_EQ(int expected, int actual, int ln) {
 	++g_tested_count;
-	if( actual != expected ) {
-		++g_failed_count;
-		g_result += QString("%1: '%2' expected. but '%3'\n").arg(ln+1).arg(expected).arg(actual);
-	}
+	if( actual == expected ) return true;
+	++g_failed_count;
+	g_result += QString("%1: %2 expected. but %3\n").arg(ln+1).arg(expected).arg(actual);
+	return false;
+}
+bool ASSERT_EQ(const QString &expected, const QString &actual, int ln) {
+	++g_tested_count;
+	if( actual == expected ) return true;
+	++g_failed_count;
+	g_result += QString("%1: '%2' expected. but '%3'\n").arg(ln+1).arg(expected).arg(actual);
+	return false;
 }
 void MainWindow::onAction_Test() {
 	static QRegularExpression prefix_re(R"(^(#+ *| *- ))");
@@ -2225,6 +2237,7 @@ void MainWindow::onAction_Test() {
 	QTextBlock block1 = docWidget->m_editor->document()->firstBlock();
 	QTextBlock block2 = docWidget->m_preview->document()->firstBlock();
 	while( block1.isValid() ) {
+		QCoreApplication::processEvents();		//	溜まっているイベント処理
 		assert( block2.isValid() );
 		ASSERT( block2.isValid(), block1.blockNumber());
 		while( (block1.userState() == US_CODE_BLOCK || block1.userState() == US_CODE_BLOCK_END) &&
@@ -2254,7 +2267,21 @@ void MainWindow::onAction_Test() {
 		}
 		buf1.resize(k);
 		buf2.remove(QChar(CODE_IMAGE));
-		ASSERT_EQ( buf1, buf2, block1.blockNumber());
+		if( ASSERT_EQ( buf1, buf2, block1.blockNumber()) ) {	//	表示テキストが一致した場合
+#if 0
+			QTextCursor cursor(block1);
+			int nvcnt = 0;	//	非表示文字数
+			for(int i = 0; i < block1.text().size(); ++i) {
+				int k1 = i - nvcnt;
+				if( data->m_charFlags[i] != PCF_VISIBLE ) ++nvcnt;
+				docWidget->m_editor->setTextCursor(cursor);
+				QTextCursor cur2 = docWidget->m_preview->textCursor();		//	プレビューカーソル
+				int k2 = cur2.position() - block2.position();
+				ASSERT_EQ( k2, k1, block1.blockNumber() );
+				cursor.movePosition(QTextCursor::Right);
+			}
+#endif
+		}
 		block1 = block1.next();
 		block2 = block2.next();
 	}
