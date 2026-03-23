@@ -2140,7 +2140,10 @@ void MainWindow::onAction_About() {
 }
 //----------------------------------------------------------------------
 const QString QA_MD_text_1 =
+	//"<!-- comment -->\n"
 	"# title\n"
+	//"hoge<!-- -->\n"
+	//"<!-- -->fuga\n"
 	"text\n"
 	"abc xyzzz\n"
 	"hoge*fuga*foo\n"
@@ -2151,7 +2154,7 @@ const QString QA_MD_text_1 =
 	"x[v](url)y\n"	//	リンク
 	"![v](url)\n"	//	画像
 	"x![v](url)y\n"	//	画像
-#if 1
+#if 0
 	"## heading\n"
 	"text\n"
 	"- item1\n"

@@ -1608,7 +1608,7 @@ bool findTableHeader(QTextCursor &cursor) {
 	QTextBlock block = cursor.block();
 	bool found = false;
 	while( block.isValid() ) {
-		if( !isTableLine(block.text(), tableTokens) )
+		if( !isTableLine(block.text(), block.text(), tableTokens) )
 			break;
 		found = true;
 		block = block.previous();

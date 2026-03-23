@@ -113,8 +113,8 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 	fields.append(currentField.trimmed());
 	return inQuotes;
 }
-bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens, BlockData *data) {
-	assert( data == nullptr || data->m_charFlags.size() == lnStr.size() );
+bool isTableLine(const QString& lnStr0, const QString& lnStr, QList<QStringView> &tableTokens, BlockData *data) {
+	assert( data == nullptr || data->m_charFlags.size() == lnStr0.size() );
 	QStringView sv(lnStr);
 	tableTokens.clear();
 	int ix = 0;

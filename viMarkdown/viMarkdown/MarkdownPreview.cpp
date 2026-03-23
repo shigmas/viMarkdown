@@ -609,6 +609,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 		//QString buf = m_lst[m_ln];
 		QTextBlock srcBlock = doc->findBlockByNumber(m_ln);
 		QString buf = srcBlock.text();
+		const QString buf0 = buf;
 		if( !m_inComment ) {
 			srcBlock.setUserState(US_DEFAULT);
 			BlockData *data = getBlockData(srcBlock);
@@ -679,7 +680,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 		} else if( buf.startsWith("```") ) {
 			do_body(srcBlock0, cursor);
 			do_code(srcBlock, cursor);
-		} else if( isTableLine(buf, m_tableTokens, data) && m_ln + 1 < m_lst.size() && isTableHyphenLine(m_lst[m_ln+1], m_tableAlign, data2) ) {
+		} else if( isTableLine(buf0, buf, m_tableTokens, data) && m_ln + 1 < m_lst.size() && isTableHyphenLine(m_lst[m_ln+1], m_tableAlign, data2) ) {
 			do_body(srcBlock0, cursor);
 			do_table(srcBlock, cursor);
 		} else {
@@ -731,7 +732,7 @@ void MarkdownPreview::do_table(QTextBlock& srcBlock, QTextCursor& cursor) {
 			continue;
 		}
 		data = getBlockData(srcBlock);
-		if( !isTableLine(m_lst[m_ln], m_tableTokens, data) ) break;
+		if( !isTableLine(m_lst[m_ln], m_lst[m_ln], m_tableTokens, data) ) break;
 		buf += "\n" + m_lst[m_ln++];
 		srcBlock.setUserState(US_TABLE);
 		srcBlock = srcBlock.next();
