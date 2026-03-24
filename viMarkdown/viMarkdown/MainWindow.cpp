@@ -2140,6 +2140,13 @@ void MainWindow::onAction_About() {
 }
 //----------------------------------------------------------------------
 const QString QA_MD_text_1 =
+#if 1
+	"|header|h|\n"
+	"|-|-|\n"
+	"|3|1415|\n"
+	"|foo|bar|\n"
+#endif
+#if 0
 	"<!-- comment -->\n"
 	"# title\n"
 	"hoge<!-- -->\n"
@@ -2158,6 +2165,7 @@ const QString QA_MD_text_1 =
 	"## heading\n"
 	"text\n"
 	"- item1\n"
+	"  - item1.2\n"
 	"- item2\n"
 	"\n"
 	"1. item1\n"
@@ -2191,13 +2199,14 @@ const QString QA_MD_text_1 =
 	"```\n"		//	CSVブロック終了
 	"text\n"
 #endif
-#if 0
+#if 1
 	"|header|h|\n"
 	"|-|-|\n"
 	"|3|1415|\n"
 	"|foo|bar|\n"
 #endif
 	"text\n"
+#endif
 #endif
 	"\n"
 	"";
@@ -2256,10 +2265,17 @@ void MainWindow::onAction_Test() {
 	while( block1.isValid() ) {
 		QCoreApplication::processEvents();		//	溜まっているイベント処理
 		assert( block2.isValid() );
-		if( isCommentOuted(getBlockData(block1)) ) {
+		if( isCommentOuted(getBlockData(block1)) ) {		//	（非空行で、）１行全てコメントアウトされている場合はスキップ
 			block1 = block1.next();
 			continue;
 		}
+		std::vector<char> tableAlign;
+		if( isTableHyphenLine(block1.text(), tableAlign) ) {		//	GFM表のハイフン行はスキップ
+			block1 = block1.next();
+			continue;
+		}
+		if( block1.userState() == US_TABLE && block2.userState() != US_TABLE )		//	block2 には何故かダミー？がある
+			block2 = block2.next();
 		ASSERT(block2.isValid(), block1.blockNumber());
 		while( (block1.userState() == US_CODE_BLOCK || block1.userState() == US_CODE_BLOCK_END) &&
 			block1.text().startsWith("```") )
@@ -2287,15 +2303,24 @@ void MainWindow::onAction_Test() {
 			//block2 = block2.next();
 			assert( block2.isValid() );
 		}
-		//buf1.remove(prefix_re);
-		BlockData *data = getBlockData(block1);
-		int k = 0;
-		for(int i = 0; i < data->m_charFlags.size(); ++i) {
-			if( data->m_charFlags[i] == PCF_VISIBLE ) {
-				buf1[k++] = buf1[i];
+		QStringList tableTokens;
+		if( isTableLine(buf1, buf1, tableTokens) ) {
+			buf1.clear();
+			for(auto token : tableTokens) {
+				if( !buf1.isEmpty() ) buf1 += " ";
+				buf1 += token;
 			}
+		} else {
+			//buf1.remove(prefix_re);
+			BlockData *data = getBlockData(block1);
+			int k = 0;
+			for(int i = 0; i < data->m_charFlags.size(); ++i) {		//	buf1: 非表示部分を削除
+				if( data->m_charFlags[i] == PCF_VISIBLE ) {
+					buf1[k++] = buf1[i];
+				}
+			}
+			buf1.resize(k);
 		}
-		buf1.resize(k);
 		buf2.remove(QChar(CODE_IMAGE));
 		if( ASSERT_EQ( buf1, buf2, block1.blockNumber()) ) {	//	表示テキストが一致した場合
 #if 0

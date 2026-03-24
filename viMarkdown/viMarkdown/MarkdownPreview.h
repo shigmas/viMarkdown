@@ -126,7 +126,8 @@ private:
 	QStringList	m_headingList;		//	見出しレベル（1～9）＋見出し文字列
 	//std::vector<int>	m_srcHeadingBlocks;		//	各見出し行 ブロック番号（0 org.）in マークダウンソース
 	//std::vector<int>	m_prvHeadingBlocks;		//	各見出し行 ブロック番号（0 org.）in マークダウンプレビューワ
-	QList<QStringView>	m_tableTokens;
+	//QList<QStringView>	m_tableTokens;
+	QStringList			m_tableTokens;
 	std::vector<char>	m_tableAlign;		//	各カラムの水平方向アライメント
 
 	class DocWidget	*m_docWidget;

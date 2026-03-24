@@ -137,8 +137,8 @@ bool isTableLine(const QString& lnStr0, const QString& lnStr, QList<QStringView>
 	}
 	return tableTokens.size() > 1;
 }
-bool isTableLine(const QString& lnStr, QStringList &tableTokens, BlockData* data) {
-	assert( data == nullptr || data->m_charFlags.size() == lnStr.size() );
+bool isTableLine(const QString& lnStr0, const QString& lnStr, QStringList &tableTokens, BlockData* data) {
+	assert( data == nullptr || data->m_charFlags.size() == lnStr0.size() );
 	QString sv(lnStr);
 	tableTokens.clear();
 	int ix = 0;
@@ -154,9 +154,9 @@ bool isTableLine(const QString& lnStr, QStringList &tableTokens, BlockData* data
 			if( ix+1 < sv.size() && sv[ix] == u'\\' ) ix += 2;
 			else ++ix;
 		}
+		tableTokens.push_back(sv.mid(ix0, ix-ix0));
 		if( ix < sv.size() && data != nullptr )
 			data->m_charFlags[ix] = PCF_TABLE;
-		tableTokens.push_back(sv.mid(ix0, ix-ix0));
 		++ix;			//	'|' スキップ
 	}
 	return tableTokens.size() > 1;

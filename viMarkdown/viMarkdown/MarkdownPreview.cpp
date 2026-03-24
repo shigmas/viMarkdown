@@ -711,6 +711,47 @@ void MarkdownPreview::do_table(QTextBlock& srcBlock, QTextCursor& cursor) {
 		m_isPrevLineEmpty = false;
 	}
 #endif
+#if 1		//	insertTable() 使用版
+	QList<QStringList> ll;
+	ll.push_back(m_tableTokens);
+	m_ln += 2;
+	srcBlock = srcBlock.next();
+	srcBlock = srcBlock.next();
+	assert( srcBlock.blockNumber() == m_ln );
+	BlockData *data = nullptr;		//getBlockData(srcBlock);
+	int max_clmn = m_tableTokens.size();
+	bool inComment = false;
+	while( m_ln < m_lst.size() ) {
+		if( inComment ) {
+			if( m_lst[m_ln++].indexOf("-->") >= 0 )		//	とりあえず --> 以降は無視
+				inComment = false;
+			srcBlock = srcBlock.next();
+			continue;
+		}
+		if( m_lst[m_ln].startsWith("<!--") ) {		//	とりあえず行頭の <!-- のみ認識
+			inComment = true;
+			continue;
+		}
+		data = getBlockData(srcBlock);
+		auto t1 = srcBlock.text();
+		auto t2 = m_lst[m_ln];
+		assert( srcBlock.text() == m_lst[m_ln] );
+		if( !isTableLine(m_lst[m_ln], m_lst[m_ln], m_tableTokens, data) ) break;
+		ll.push_back(m_tableTokens);
+		max_clmn = qMax(max_clmn, m_tableTokens.size());
+		srcBlock.setUserState(US_TABLE);
+		++m_ln;
+		srcBlock = srcBlock.next();
+		if( srcBlock.isValid() )
+			data = getBlockData(srcBlock);
+	}
+	cursor.beginEditBlock();
+	QTextTable *table = cursor.insertTable(ll.size(), max_clmn);
+	cursor.setPosition(table->lastPosition());
+	cursor.movePosition(QTextCursor::NextCharacter);
+	cursor.insertBlock();
+	cursor.endEditBlock();
+#else		//	insertMarkdown() 使用版
 	QString buf = m_lst[m_ln] + "\n" + m_lst[m_ln+1] /*+ "\n"*/;
 	srcBlock.setUserState(US_TABLE);
 	srcBlock = srcBlock.next();
@@ -772,6 +813,7 @@ void MarkdownPreview::do_table(QTextBlock& srcBlock, QTextCursor& cursor) {
 	}
 	cursor.movePosition(QTextCursor::Right);
 	cursor.insertBlock();
+#endif
 	--m_ln;
 }
 bool MarkdownPreview::do_underlineHeading(QTextCursor& cursor, QString buf) {

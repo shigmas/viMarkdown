@@ -1604,7 +1604,8 @@ bool findCSVBlock(QTextCursor &cursor) {
 	return false;
 }
 bool findTableHeader(QTextCursor &cursor) {
-	QList<QStringView> tableTokens;
+	//QList<QStringView> tableTokens;
+	QStringList tableTokens;
 	QTextBlock block = cursor.block();
 	bool found = false;
 	while( block.isValid() ) {
@@ -1673,7 +1674,7 @@ void MarkdownEditor::convert_MarkdownTable_CSV() {
 	QString mdtext = "```CSV\n";;
 	//QList<QStringView> tableTokens;
 	QStringList tableTokens;
-	while( block.isValid() && isTableLine(block.text(), tableTokens) ) {
+	while( block.isValid() && isTableLine(block.text(), block.text(), tableTokens) ) {
 		for(int i = 0; i < tableTokens.size(); ++i) {
 			QString txt(tableTokens[i]);
 			txt.replace("\"", "\"\"");
