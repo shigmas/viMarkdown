@@ -2141,12 +2141,20 @@ void MainWindow::onAction_About() {
 //----------------------------------------------------------------------
 const QString QA_MD_text_1 =
 #if 1
+	"```CSV\n"	//	CSVブロック開始
+	"id, hhh2, h3\n"
+	"69, ""hasshi"", hoge\n"
+	"```\n"		//	CSVブロック終了
+	"\n"
+#endif
+#if 1
 	"|header|h|\n"
 	"|-|-|\n"
 	"|3|1415|\n"
 	"|foo|bar|\n"
+	"\n"
 #endif
-#if 0
+#if 1
 	"<!-- comment -->\n"
 	"# title\n"
 	"hoge<!-- -->\n"
@@ -2161,7 +2169,7 @@ const QString QA_MD_text_1 =
 	"x[v](url)y\n"	//	リンク
 	"![v](url)\n"	//	画像
 	"x![v](url)y\n"	//	画像
-#if 1
+#if 0
 	"## heading\n"
 	"text\n"
 	"- item1\n"
@@ -2262,6 +2270,7 @@ void MainWindow::onAction_Test() {
 	//	各行文字列チェック
 	QTextBlock block1 = docWidget->m_editor->document()->firstBlock();
 	QTextBlock block2 = docWidget->m_preview->document()->firstBlock();
+	bool inTable = false;
 	while( block1.isValid() ) {
 		QCoreApplication::processEvents();		//	溜まっているイベント処理
 		assert( block2.isValid() );
@@ -2274,8 +2283,8 @@ void MainWindow::onAction_Test() {
 			block1 = block1.next();
 			continue;
 		}
-		if( block1.userState() == US_TABLE && block2.userState() != US_TABLE )		//	block2 には何故かダミー？がある
-			block2 = block2.next();
+		//if( block1.userState() == US_TABLE && block2.userState() != US_TABLE )		//	block2 には何故かダミー？がある
+		//	block2 = block2.next();
 		ASSERT(block2.isValid(), block1.blockNumber());
 		while( (block1.userState() == US_CODE_BLOCK || block1.userState() == US_CODE_BLOCK_END) &&
 			block1.text().startsWith("```") )
@@ -2288,13 +2297,31 @@ void MainWindow::onAction_Test() {
 			block2 = block2.next();
 			continue;
 		}
-		//while( block1.userState() == US_KEISEN_BLOCK && block1.text().startsWith("```") ) {
-		//	block1 = block1.next();
-		//}
+		while( block1.userState() == US_KEISEN_BLOCK && block1.text().startsWith("```") ) {
+			block1 = block1.next();
+		}
+		if( block1.userState() == US_TABLE) {
+			if( !inTable ) {
+				block2 = block2.next();		//	GFMテーブル最初はテーブル全体のためのブロックなのでスキップ
+			}
+			inTable = true;
+		} else
+			inTable = false;
+		qDebug() << "block1: " << block1.blockNumber() << ", block2: " << block2.blockNumber();
+		qDebug() << "charAt(block2) = " << docWidget->m_preview->document()->characterAt(block2.position());
 		QString buf1 = block1.text();
 		QString buf2 = block2.text();
 		QTextTable *table = QTextCursor(block2).currentTable();
-		if( table != nullptr ) {	//	CSV テーブル中の場合
+		if( table != nullptr ) {	//	CSV・GFM テーブル中の場合
+			//if( block1.userState() == US_CSV_BLOCK && block1.text().startsWith("```CSV", Qt::CaseInsensitive) ) {
+			//	block1 = block1.next();
+			//	block2 = block2.next();
+			//	continue;
+			//}
+			//if( !inTable && block1.userState() == US_TABLE ) {
+			//	block2 = block2.next();		//	GFMテーブル最初はテーブル全体のためのブロックなのでスキップ
+			//	buf2 = block2.text();
+			//}
 			for(int i = 0; i < table->columns() - 1; ++i) {
 				block2 = block2.next();
 				assert( block2.isValid() );
@@ -2302,14 +2329,19 @@ void MainWindow::onAction_Test() {
 			}
 			//block2 = block2.next();
 			assert( block2.isValid() );
+			//inTable = true;
+		} else {
+			//inTable = false;
 		}
 		QStringList tableTokens;
 		if( isTableLine(buf1, buf1, tableTokens) ) {
-			buf1.clear();
+			//buf1.clear();
+			QString t;
 			for(auto token : tableTokens) {
-				if( !buf1.isEmpty() ) buf1 += " ";
-				buf1 += token;
+				if( !t.isEmpty() ) t += " ";
+				t += token;
 			}
+			buf1 = t;
 		} else {
 			//buf1.remove(prefix_re);
 			BlockData *data = getBlockData(block1);
