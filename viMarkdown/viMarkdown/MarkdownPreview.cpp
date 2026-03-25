@@ -452,11 +452,15 @@ void MarkdownPreview::do_body_sub(QTextCursor& cursor, const QString &buf) {
 #endif
 }
 #endif
+bool isEscapedChar(QChar ch) {
+	return ch.unicode() >= u' ' && ch.unicode() <= u'/' ||
+			ch.unicode() >= u'[' && ch.unicode() <= u']';		//	[ \ ]
+}
 //	ボールド、イタリック、打ち消し線 部分に PCF_EMPHASIZED 設定
 bool updateCharFlags(BlockData* data, const QString &buf, int ix, int ix9) {
 	bool modified = false;
 	while( ix < ix9 ) {
-		if( buf[ix] == u'\\' )
+		if( ix + 1 < buf.size() && buf[ix] == u'\\' && isEscapedChar(buf[ix+1]) )
 			ix += 2;
 		else if( buf[ix] == u'*' || buf[ix] == u'_' || buf[ix] == u'~' && ix+1 < ix9 && buf[ix+1] == buf[ix]) {
 			QString sym;
@@ -514,9 +518,12 @@ void updateCharFlags(QTextBlock srcBlock) {
 	}
 	int ix = 0;
 	while( (ix = buf.indexOf(u'\\', ix)) >= 0 ) {
-		modified = true;
-		data->m_charFlags[ix] = PCF_ESCAPE;
-		ix += 2;
+		if( ix + 1 < buf.size() && isEscapedChar(buf[ix+1]) ) {
+			modified = true;
+			data->m_charFlags[ix] = PCF_ESCAPE;
+			ix += 2;
+		} else
+			++ix;
 	}
 	if( updateCharFlags(data, buf, 0, buf.size()) )
 		modified = true;
@@ -1329,6 +1336,7 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 		for(int i = 0; i < mch.capturedLength(); ++i)
 			data->m_charFlags[i] = PCF_LIST_MARK;
 		srcBlock.setUserData(data);
+		updateCharFlags(srcBlock);
 		printCharFlags(srcBlock);
 		bool isPrevlist = true;
 		bool spc2Prev = false;
@@ -1345,6 +1353,7 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 				for(int i = 0; i < mch.capturedLength(); ++i)
 					data->m_charFlags[i] = PCF_LIST_MARK;
 				srcBlock.setUserData(data);
+				updateCharFlags(srcBlock);
 				printCharFlags(srcBlock);
 			} else {	//	非リスト行の場合
 				if( re_block.match(text).hasMatch() )	//	ブロック行の場合

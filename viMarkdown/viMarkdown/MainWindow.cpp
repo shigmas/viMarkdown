@@ -2140,28 +2140,40 @@ void MainWindow::onAction_About() {
 }
 //----------------------------------------------------------------------
 const QString QA_MD_text_1 =
-#if 1
+	"item2**bold**\n"
+	"- item2**bold**\n"
+	//"fuga\\hoge\n"
+#if 0
+	"- item2\n"
+	"\n"
+	"\\- item3\n"
+#endif
+#if 0
 	"```CSV\n"	//	CSVブロック開始
 	"id, hhh2, h3\n"
 	"69, ""hasshi"", hoge\n"
 	"```\n"		//	CSVブロック終了
 	"\n"
+	"text\n"
+	"\n"
 #endif
-#if 1
+#if 0
 	"|header|h|\n"
 	"|-|-|\n"
 	"|3|1415|\n"
 	"|foo|bar|\n"
 	"\n"
+	"text\n"
+	"\n"
 #endif
-#if 1
+#if 0
 	"<!-- comment -->\n"
 	"# title\n"
 	"hoge<!-- -->\n"
 	"<!-- -->fuga\n"
 	"text\n"
-	"abc xyzzz\n"
-	"hoge*fuga*foo\n"
+	"abc \\xyzzz\n"		//	x はエスケープされず \x と表示される
+	"hoge*fuga*foo hoge\\*fuga\\*foo\n"
 	"hoge**fuga**foo\n"
 	"hoge***fuga***foo\n"
 	"hoge~~fuga~~foo\n"
@@ -2169,26 +2181,34 @@ const QString QA_MD_text_1 =
 	"x[v](url)y\n"	//	リンク
 	"![v](url)\n"	//	画像
 	"x![v](url)y\n"	//	画像
-#if 0
+#if 1
 	"## heading\n"
 	"text\n"
 	"- item1\n"
 	"  - item1.2\n"
-	"- item2\n"
+	"- item2**bold**\n"
+	"\n"
+	"\\- item3\n"
 	"\n"
 	"1. item1\n"
-	"1. item2\n"
+	"1. *italic*\n"
 	"1. item3\n"
 	"\n"
-	"- [ ] item1\n"
-	"- [x] item2\n"
-	"- [ ] item3\n"
+	"\\1. item\n"
+	"\n"
+	"- [ ] checkbox\n"
+	"- [x] checkbox\n"
+	"- [ ] checkbox\n"
+	"\n"
+	"\\- [ ] checkbox\n"
 	"\n"
 	"text\n"
 	"> quote-1\n"
-	"> quote-2\n"
+	"> q*uot*e-2\n"
 	"> quote-3\n"
 	"> quote-4\n"
+	"\n"
+	"\\> quote-5\n"
 	"text\n"
 	"```\n"		//	コードブロック開始
 	"int main() { return 0; }\n"
@@ -2273,6 +2293,7 @@ void MainWindow::onAction_Test() {
 	bool inTable = false;
 	while( block1.isValid() ) {
 		QCoreApplication::processEvents();		//	溜まっているイベント処理
+		QString t0 = block1.text();
 		assert( block2.isValid() );
 		if( isCommentOuted(getBlockData(block1)) ) {		//	（非空行で、）１行全てコメントアウトされている場合はスキップ
 			block1 = block1.next();
@@ -2305,8 +2326,12 @@ void MainWindow::onAction_Test() {
 				block2 = block2.next();		//	GFMテーブル最初はテーブル全体のためのブロックなのでスキップ
 			}
 			inTable = true;
-		} else
+		} else {
+			if( inTable ) {
+				block2 = block2.next();		//	GFMテーブル最後もスキップ
+			}
 			inTable = false;
+		}
 		qDebug() << "block1: " << block1.blockNumber() << ", block2: " << block2.blockNumber();
 		qDebug() << "charAt(block2) = " << docWidget->m_preview->document()->characterAt(block2.position());
 		QString buf1 = block1.text();
@@ -2355,8 +2380,9 @@ void MainWindow::onAction_Test() {
 		}
 		buf2.remove(QChar(CODE_IMAGE));
 		if( ASSERT_EQ( buf1, buf2, block1.blockNumber()) ) {	//	表示テキストが一致した場合
-#if 0
+#if 0	//	エディタ → プレビュー カーソル同期テスト
 			QTextCursor cursor(block1);
+			const BlockData *data = getBlockData(block1);
 			int nvcnt = 0;	//	非表示文字数
 			for(int i = 0; i < block1.text().size(); ++i) {
 				int k1 = i - nvcnt;
