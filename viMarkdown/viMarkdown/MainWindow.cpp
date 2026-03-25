@@ -2140,8 +2140,9 @@ void MainWindow::onAction_About() {
 }
 //----------------------------------------------------------------------
 const QString QA_MD_text_1 =
-	"item2**bold**\n"
-	"- item2**bold**\n"
+	"\\> quote-5\n"
+	//"item2**bold**\n"
+	//"- item2**bold**\n"
 	//"fuga\\hoge\n"
 #if 0
 	"- item2\n"

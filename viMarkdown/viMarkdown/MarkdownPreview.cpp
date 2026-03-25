@@ -454,7 +454,8 @@ void MarkdownPreview::do_body_sub(QTextCursor& cursor, const QString &buf) {
 #endif
 bool isEscapedChar(QChar ch) {
 	return ch.unicode() >= u' ' && ch.unicode() <= u'/' ||
-			ch.unicode() >= u'[' && ch.unicode() <= u']';		//	[ \ ]
+			ch.unicode() >= u'[' && ch.unicode() <= u']' ||		//	[ \ ]
+			ch.unicode() == u'>';
 }
 //	ボールド、イタリック、打ち消し線 部分に PCF_EMPHASIZED 設定
 bool updateCharFlags(BlockData* data, const QString &buf, int ix, int ix9) {
@@ -555,6 +556,7 @@ void MarkdownPreview::do_body(QTextBlock srcBlock, QTextCursor& cursor, bool las
 	QTextBlockFormat blockFormat;
 	blockFormat.setAlignment(Qt::AlignJustify); // 左右両端揃え
 	bool blankLine = false;
+	//QTextBlock b = block0;
 	for(auto txt: m_bodyList) {
 		if( txt.isEmpty() ) {
 			if( blankLine )
