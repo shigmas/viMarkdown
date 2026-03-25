@@ -415,43 +415,6 @@ void MarkdownPreview::paintEvent(QPaintEvent *e) {
 
 static QRegularExpression image_re(R"((?<!\\)!\[([^\]]+)\]\(([^)]+)\))");
 static QRegularExpression link_re(R"((?<![!\\])\[([^\]]+)\]\(([^)]+)\))");
-#if 0
-void MarkdownPreview::do_body_sub(QTextCursor& cursor, const QString &buf) {
-#if 1
-	QTextBlock block = cursor.block();
-	BlockData *data = getBlockData(block);
-	bool modified = false;
-	auto match = image_re.match(buf);		//	![title](image.png) か？
-	while( match.hasMatch() ) {
-		modified = true;
-		int start = match.capturedStart(); // マッチした最初の位置
-	    int length = match.capturedLength(); // マッチした全体の長さ
-	    for(int i = start; i < start + length; ++i)
-	    	data->m_charFlags[i] = PCF_IMAGE;
-		match = image_re.match(buf, start + length);
-	}
-	if( modified )
-		block.setUserData(data);
-	int startPos = cursor.position(); // 挿入前の位置
-	cursor.insertMarkdown(buf);
-	int endPos = cursor.position();   // 挿入後の位置
-	QTextCursor selectCursor = cursor;
-	selectCursor.setPosition(startPos);
-	selectCursor.setPosition(endPos, QTextCursor::KeepAnchor);
-	QTextBlockFormat blockFormat;
-	blockFormat.setAlignment(Qt::AlignJustify);
-	selectCursor.mergeBlockFormat(blockFormat);
-#else
-	cursor.insertMarkdown(buf);
-	//cursor.insertBlock();
-	QTextBlockFormat blockFormat;
-	blockFormat.setAlignment(Qt::AlignJustify); // 左右両端揃え
-	cursor.mergeBlockFormat(blockFormat);
-	//cursor.insertBlock();
-	//cursor.insertMarkdown(buf);
-#endif
-}
-#endif
 bool isEscapedChar(QChar ch) {
 	return ch.unicode() >= u' ' && ch.unicode() <= u'/' ||
 			ch.unicode() >= u'[' && ch.unicode() <= u']' ||		//	[ \ ]

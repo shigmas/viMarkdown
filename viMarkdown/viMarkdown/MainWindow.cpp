@@ -2140,7 +2140,15 @@ void MainWindow::onAction_About() {
 }
 //----------------------------------------------------------------------
 const QString QA_MD_text_1 =
-	"\\> quote-5\n"
+	"x![v](url)y\n"	//	画像
+#if 0
+	"<!-- comment -->\n"
+	"# title\n"
+	"hoge<!-- -->\n"
+	"<!-- -->fuga\n"
+	"text\n"
+#endif
+	//"\\> quote-5\n"
 	//"item2**bold**\n"
 	//"- item2**bold**\n"
 	//"fuga\\hoge\n"
@@ -2182,7 +2190,7 @@ const QString QA_MD_text_1 =
 	"x[v](url)y\n"	//	リンク
 	"![v](url)\n"	//	画像
 	"x![v](url)y\n"	//	画像
-#if 1
+#if 0
 	"## heading\n"
 	"text\n"
 	"- item1\n"
@@ -2229,10 +2237,10 @@ const QString QA_MD_text_1 =
 	"text\n"
 #endif
 #if 1
-	"|header|h|\n"
+	"|he**ad**er|h|\n"
 	"|-|-|\n"
 	"|3|1415|\n"
-	"|foo|bar|\n"
+	"|f\\*o\\*o|bar|\n"
 #endif
 	"text\n"
 #endif
@@ -2381,7 +2389,7 @@ void MainWindow::onAction_Test() {
 		}
 		buf2.remove(QChar(CODE_IMAGE));
 		if( ASSERT_EQ( buf1, buf2, block1.blockNumber()) ) {	//	表示テキストが一致した場合
-#if 0	//	エディタ → プレビュー カーソル同期テスト
+#if 1	//	エディタ → プレビュー カーソル同期テスト
 			QTextCursor cursor(block1);
 			const BlockData *data = getBlockData(block1);
 			int nvcnt = 0;	//	非表示文字数
@@ -2390,7 +2398,7 @@ void MainWindow::onAction_Test() {
 				if( data->m_charFlags[i] != PCF_VISIBLE ) ++nvcnt;
 				docWidget->m_editor->setTextCursor(cursor);
 				QTextCursor cur2 = docWidget->m_preview->textCursor();		//	プレビューカーソル
-				int k2 = cur2.position() - block2.position();
+				int k2 = cur2.position() - cur2.block().position();
 				ASSERT_EQ( k2, k1, block1.blockNumber() );
 				cursor.movePosition(QTextCursor::Right);
 			}
