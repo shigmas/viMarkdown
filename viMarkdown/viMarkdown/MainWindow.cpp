@@ -2231,8 +2231,8 @@ const QString QA_MD_text_1 =
 	"text\n"
 #if 1
 	"```CSV\n"	//	CSVブロック開始
-	"id, hhh2, h3\n"
-	"69, ""hasshi"", hoge\n"
+	"id, h*h*h2, h3\n"
+	"69, ""hasshi"", h\\*o\\*ge\n"
 	"```\n"		//	CSVブロック終了
 	"text\n"
 #endif
