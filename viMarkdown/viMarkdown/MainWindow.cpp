@@ -2140,7 +2140,7 @@ void MainWindow::onAction_About() {
 }
 //----------------------------------------------------------------------
 const QString QA_MD_text_1 =
-	"x![v](url)y\n"	//	画像
+	//"x![v](url)y\n"	//	画像
 #if 0
 	"<!-- comment -->\n"
 	"# title\n"
@@ -2166,11 +2166,11 @@ const QString QA_MD_text_1 =
 	"text\n"
 	"\n"
 #endif
-#if 0
-	"|header|h|\n"
+#if 1
+	"|he**ad**er|h|\n"
 	"|-|-|\n"
 	"|3|1415|\n"
-	"|foo|bar|\n"
+	"|f\\*o\\*o|bar|\n"
 	"\n"
 	"text\n"
 	"\n"
@@ -2190,7 +2190,7 @@ const QString QA_MD_text_1 =
 	"x[v](url)y\n"	//	リンク
 	"![v](url)\n"	//	画像
 	"x![v](url)y\n"	//	画像
-#if 0
+#if 1
 	"## heading\n"
 	"text\n"
 	"- item1\n"
@@ -2389,7 +2389,7 @@ void MainWindow::onAction_Test() {
 		}
 		buf2.remove(QChar(CODE_IMAGE));
 		if( ASSERT_EQ( buf1, buf2, block1.blockNumber()) ) {	//	表示テキストが一致した場合
-#if 1	//	エディタ → プレビュー カーソル同期テスト
+#if 0	//	エディタ → プレビュー カーソル同期テスト
 			QTextCursor cursor(block1);
 			const BlockData *data = getBlockData(block1);
 			int nvcnt = 0;	//	非表示文字数
