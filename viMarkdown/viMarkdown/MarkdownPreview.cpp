@@ -1463,10 +1463,16 @@ int MarkdownPreview::findPosition(const PosContext &context) {
 	int ix = 0;
 	while( block.isValid() ) {
 		QString buf = block.text();
-		if( ch == ETX ) {		//	行末の場合
+		if( ch == STX ) {		//	行頭の場合
+			ix = 0;
+			if( --nth == 0 ) break;
+			block = block.next();
+			ix = 0;
+		} else if( ch == ETX ) {		//	行末の場合
 			ix = buf.size();
 			if( --nth == 0 ) break;
 			block = block.next();
+			ix = 0;
 		} else {		//	非行末の場合
 			ix = buf.indexOf(ch, ix);
 			if( ix >= 0 ) {
