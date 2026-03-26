@@ -51,6 +51,9 @@ enum {
 	US_TABLE,			//	マークダウンテーブル内
 };
 
+const QChar STX(0x0002);		//	行頭仮想文字
+const QChar ETX(0x0003);		//	行末仮想文字
+
 struct PosContext {
     QChar	m_anchorChar;			//	アンカー文字、行末の場合は QChar() かもしれない
     int		m_nth = 0;				//	直前見出しからの m_anchorChar 出現回数 (1 org. 自分自身も含むため)、0 for 無効

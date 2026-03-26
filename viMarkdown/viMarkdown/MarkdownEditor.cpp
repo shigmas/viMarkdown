@@ -815,7 +815,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 		QString buf = block.text();
 		buf.remove(re);				//	/# /, /- / などを削除
 		offset = block.text().size() - buf.size();
-		if( ch == QChar() ) {		//	行末の場合
+		if( ch == ETX ) {		//	行末の場合
 			int i = buf.size();
 			while( --i >= 0 && buf[i] == u' ' ) {}
 			if( i >= 0 /*&& buf[i] == prev*/ ) {
@@ -2079,7 +2079,16 @@ bool MarkdownEditor::isInLinkURL(int pos, int& openIX, int& closeIX) const {
     }
     return true;
 }
+bool isVisibleEmpty(const BlockData* data) {
+	//if( data->m_charFlags.isEmpty() ) return true;
+	for(int i = 0; i < data->m_charFlags.size(); ++i) {
+		if( data->m_charFlags[i] == PCF_VISIBLE )
+			return false;
+	}
+	return true;
+}
 static QRegularExpression re_prefix("^(#+ *| *- (\\[[ xX]\\] )?| *\\d+[\\.)] |(> )+)");
+
 PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext を構築
 	PosContext pc;
 	auto* doc = document();
@@ -2100,16 +2109,6 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			ix = 0;
 		}
 	}
-	//if( isInLinkURL(pos, openIX, closeIX) ) {
-	//	offset = closeIX + 1;
-	//	pos = block.position() + offset;
-	//}
-	//if( block.userState() == US_CSV_BLOCK ) {
-	//	while( pos > 0 && (doc->characterAt(pos) == u',' || doc->characterAt(pos) == u' ' || doc->characterAt(pos) == u'"') ) {
-	//		--pos,
-	//		pc.m_offset += 1;
-	//	}
-	//} else 
 	if( block.userState() == US_CSV_BLOCK ) {
 		if( block.text().compare(QString("```CSV"), Qt::CaseInsensitive) == 0 && block.next().isValid() ) {
 			block = block.next();
@@ -2160,87 +2159,77 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 	}
 	const QString tmp = block.text();
 	const BlockData* data = getBlockData(block);
-	//if( block.userState() == US_HEADING ) {
-	if( ix != data->m_charFlags.size() && (ix == 0 || ix > 0 && data->m_charFlags[ix-1] != PCF_VISIBLE) ) {		//	直前が非表示文字の場合
-		while( ix < data->m_charFlags.size() && data->m_charFlags[ix] != PCF_VISIBLE ) {
-			++pos;
-			++ix;
+	QChar ch;	//	アンカー文字
+	if( isVisibleEmpty(data) ) {
+		ch = ix == 0 ? STX : ETX;
+	} else {
+		if( ix != data->m_charFlags.size() && (ix == 0 || ix > 0 && data->m_charFlags[ix-1] != PCF_VISIBLE) ) {		//	直前が非表示文字の場合
+			while( ix < data->m_charFlags.size() && data->m_charFlags[ix] != PCF_VISIBLE ) {
+				++pos;
+				++ix;
+			}
+		} else {	//	直前が非表示文字でない場合
+			while( pos > 0 && ix >= 0 && (ix >= data->m_charFlags.size() || data->m_charFlags[ix] != PCF_VISIBLE) ) {
+				//if( ix == data->m_charFlags.size() )
+				if( ix == 0 || data->m_charFlags[ix-1] == PCF_VISIBLE )
+					pc.m_offset += 1;
+				--pos;
+				if( --ix < 0 ) {
+					bool isEmptyLine = block.text().isEmpty();
+					block = block.previous();
+					if( isEmptyLine && block.text().isEmpty() )		//	空行が続く場合
+						pc.m_offset -= 1;
+					ix = pos - block.position();
+					data = getBlockData(block);
+				}
+			}
 		}
-	} else {	//	直前が非表示文字でない場合
-		while( pos > 0 && ix >= 0 && (ix >= data->m_charFlags.size() || data->m_charFlags[ix] != PCF_VISIBLE) ) {
-			//if( ix == data->m_charFlags.size() )
-			if( ix == 0 || data->m_charFlags[ix-1] == PCF_VISIBLE )
-				pc.m_offset += 1;
-			--pos;
-			if( --ix < 0 ) {
-				bool isEmptyLine = block.text().isEmpty();
+		//	Undone: block が見出し・リスト・連番・チェックボックス行で、pos が接頭辞内にある場合対応
+		bool prefix = false;
+		if( offset ==0 && (prefix = block.text().indexOf(re_prefix) == 0) ) {
+			auto buf = block.text();
+			buf.remove(re_prefix);
+			int ofst = block.text().size() - buf.size();
+			if( pos < block.position() + ofst ) {	//	接頭辞内にある
+				pos = block.position() + ofst;
+			}
+		}
+		const QString text = block.text();
+		if( text.endsWith("  ") && pos - block.position() >= text.size() - 2 && pos > 0 ) {	//	行末 "  " にカーソルがある場合
+			int ix = --pos - block.position();
+			while( ix > 0 && text[ix] == u' ' ) {
+				--ix;
+				--pos;
+			}
+			pc.m_offset += 1;
+		}
+		ch = doc->characterAt(pos);
+		while( pos > 0 && ch == QChar::ParagraphSeparator ) {	//	改行位置にいる場合
+			if( pos == block.position() ) {		//	空行の場合
+				if( !block.previous().isValid() ) {
+					//ch = ETX;
+					break;
+				}
 				block = block.previous();
-				if( isEmptyLine && block.text().isEmpty() )		//	空行が続く場合
-					pc.m_offset -= 1;
-				ix = pos - block.position();
-				data = getBlockData(block);
+			}
+			ch = doc->characterAt(--pos);
+			int ix = pos - block.position();
+			if( ch != QChar::ParagraphSeparator || pos > block.position() )
+				pc.m_offset += 1;		//	空行が続かない場合
+			if( pos > 0 && doc->characterAt(pos-1) != u'\\' && block.userState() == US_TABLE && ch == u'|' ) {
+				//pc.m_offset += 1;
+				ch = doc->characterAt(--pos);
+			}
+			while( pos > 0 && doc->characterAt(pos-1) != u'\\' && (ch == u'*' || ch == u'_' || ch == u'~' ) ) {
+				ch = doc->characterAt(--pos);
 			}
 		}
-	}
-	//	Undone: block が見出し・リスト・連番・チェックボックス行で、pos が接頭辞内にある場合対応
-	bool prefix = false;
-	if( offset ==0 && (prefix = block.text().indexOf(re_prefix) == 0) ) {
-		auto buf = block.text();
-		buf.remove(re_prefix);
-		int ofst = block.text().size() - buf.size();
-		if( pos < block.position() + ofst ) {	//	接頭辞内にある
-			pos = block.position() + ofst;
+		if( ch == QChar::ParagraphSeparator ) ch = ETX;
+		if( pos > 0 && doc->characterAt(pos-1) != u'\\' ) {
+			while( ch == u'*' || ch == u'_' || ch == u'~' )
+				ch = doc->characterAt(++pos);
 		}
 	}
-	const QString text = block.text();
-	if( text.endsWith("  ") && pos - block.position() >= text.size() - 2 && pos > 0 ) {	//	行末 "  " にカーソルがある場合
-		int ix = --pos - block.position();
-		while( ix > 0 && text[ix] == u' ' ) {
-			--ix;
-			--pos;
-		}
-		pc.m_offset += 1;
-	}
-	auto ch = doc->characterAt(pos);
-	while( pos > 0 && ch == QChar::ParagraphSeparator ) {	//	改行位置にいる場合
-		if( pos == block.position() ) {		//	空行の場合
-			if( !block.previous().isValid() ) {
-				//ch = QChar();
-				break;
-			}
-			block = block.previous();
-		}
-		ch = doc->characterAt(--pos);
-		int ix = pos - block.position();
-		if( ch != QChar::ParagraphSeparator || pos > block.position() )
-			pc.m_offset += 1;		//	空行が続かない場合
-		if( pos > 0 && doc->characterAt(pos-1) != u'\\' && block.userState() == US_TABLE && ch == u'|' ) {
-			//pc.m_offset += 1;
-			ch = doc->characterAt(--pos);
-		}
-		while( pos > 0 && doc->characterAt(pos-1) != u'\\' && (ch == u'*' || ch == u'_' || ch == u'~' ) ) {
-			ch = doc->characterAt(--pos);
-		}
-	}
-	if( ch == QChar::ParagraphSeparator ) ch = QChar();
-	ix = pos - block.position();
-	//int openIX, closeIX;
-	//if( isInLinkURL(pos, openIX, closeIX) && ix >= openIX - 1 ) {		//	"](" 以降
-	//	pos = block.position() + openIX - 2;	//	']' 直前位置
-	//	ch = doc->characterAt(pos);
-	//}
-	if( pos > 0 && doc->characterAt(pos-1) != u'\\' ) {
-		while( ch == u'*' || ch == u'_' || ch == u'~' )
-			ch = doc->characterAt(++pos);
-	}
-#if 0
-	if( ch == QChar::ParagraphSeparator ) {
-		if( prefix || !block.next().isValid() || block.next().text().isEmpty() )
-			ch = QChar();
-		else
-			ch = u' ';
-	}
-#endif
 	//	Undone: "  +\n" の場合も改行扱い
 	pc.m_anchorChar = ch;
 	while( block.userState() == US_IN_COMMENT || !block.text().startsWith(u'#') ) {		//	直前の見出し行を探す
@@ -2264,14 +2253,25 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const	//
 			block = block.next();
 			continue;
 		}
-		if( ch == QChar() ) {		//	行末の場合
+		if( ch == STX ) {		//	行頭の場合
 			if( !block.next().isValid() ) break;		//	最終行の場合
+			if( block.position() == pos ) break;
+			if( !block.text().isEmpty() || block.previous().isValid() && !block.previous().text().isEmpty() )		//	連続空行でない場合
+				++count;
+		} else if( ch == ETX ) {		//	行末の場合
+			if( !block.next().isValid() ) break;		//	最終行の場合
+#if 1	//	GFM
+			if( pos >= block.position() && pos < block.next().position() ) break;
+			if( !block.text().isEmpty() || block.previous().isValid() && !block.previous().text().isEmpty() )		//	連続空行でない場合
+				++count;
+#else	//	コモンマークダウン
 			bool prefix = block.text().indexOf(re_prefix) == 0;		//	# 等の接頭辞？あり
 			if( prefix || block.text().endsWith("  ") || block.next().text().isEmpty() ) {
 				if( block.next().position() >= pos )
 					break;
 				++count;
 			}
+#endif
 		} else {
 			bool inComment = block.userState() == US_IN_COMMENT;
 			bool inCSVBlock = block.userState() == US_CSV_BLOCK;
