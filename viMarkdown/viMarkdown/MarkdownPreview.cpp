@@ -1217,7 +1217,8 @@ void MarkdownPreview::do_numlist(QTextBlock srcBlock, QTextCursor& cursor, QStri
 			data->m_charFlags[i] = PCF_NUM_LIST;
 		srcBlock.setUserData(data);
 		//QTextBlock b = list->item(list->count() - 1);
-		cursor.insertText(m_lst[m_ln].remove(re_numlist) /*+ "\n"*/);
+		//cursor.insertText(m_lst[m_ln].remove(re_numlist) /*+ "\n"*/);
+		cursor.insertMarkdown(m_lst[m_ln] + "\n");
 		if( ++m_ln >= m_lst.size() ) break;
 		srcBlock = srcBlock.next();
 		match = re_numlist.match(m_lst[m_ln]);

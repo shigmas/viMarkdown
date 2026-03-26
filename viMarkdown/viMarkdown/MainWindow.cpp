@@ -2202,6 +2202,8 @@ const QString QA_MD_text_1 =
 	"1. item1\n"
 	"1. *italic*\n"
 	"1. item3\n"
+	"1. **bold** *italic* ~~strike~~ \n"
+	"1. [link](url) \n"
 	"\n"
 	"\\1. item\n"
 	"\n"

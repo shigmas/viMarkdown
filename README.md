@@ -51,7 +51,7 @@ The project is currently developed and tested on **Windows 11** using **Visual S
 - **Qt VS Tools** extension
 - **Qt 6 SDK** (MSVC build)
 
-**Build Instructions:**
+**Build Instructions**:
 1. Clone the repository.
 2. Open `viMarkdown.slnx` in Visual Studio.
 3. If prompted, configure the Qt Version in the Qt VS Tools settings to match your installed Qt SDK.
