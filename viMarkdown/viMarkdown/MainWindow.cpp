@@ -2139,7 +2139,7 @@ void MainWindow::onAction_About() {
 	);
 }
 //----------------------------------------------------------------------
-const QString QA_MD_text_1 =
+const QString QA_MD_TEXT_2 =
 	"1. item1\n"
 	"1. *italic*\n"
 	"\n"
@@ -2293,18 +2293,21 @@ bool isCommentOuted(const BlockData* data) {
 enum { PATH_1 = 1, PATH_2, PATH_3, };
 
 void MainWindow::onAction_Test() {
-	static QRegularExpression prefix_re(R"(^(#+ *| *- ))");
+	//static QRegularExpression prefix_re(R"(^(#+ *| *- ))");
 	addTab(QString("QA-%1").arg(++m_QA_tab_number));
 	DocWidget *docWidget = getCurDocWidget();;
 	if( docWidget == nullptr ) return;
-	docWidget->m_editor->setPlainText(QA_MD_text_1);
 
 	g_tested_count = 0;
 	g_failed_count = 0;
 	//g_result.clear();
 	g_result = "\n# Test Result:\n\n";
-	do_test(docWidget, PATH_1);		//	行単位一致テスト
+	test_charFlags(docWidget);
 	g_result += QString("\npath 1: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count);
+#if 0
+	docWidget->m_editor->setPlainText(QA_MD_TEXT_2);
+	do_test(docWidget, PATH_1);		//	行単位一致テスト
+	g_result += QString("\npath 2: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count);
 #if 1
 	int n_testted = g_tested_count;
 	int n_failed = g_failed_count;
@@ -2312,6 +2315,7 @@ void MainWindow::onAction_Test() {
 	g_tested_count -= n_testted;	//	重複数分
 	g_failed_count -= n_failed;
 	//do_test(docWidget, PATH_3);		//	PtoE 行内表示文字一致テスト
+#endif
 #endif
 	QString mess = QString("total: %1 failed / %2 tested.").arg(g_failed_count).arg(g_tested_count);
 	statusBar()->showMessage(mess);
@@ -2440,5 +2444,66 @@ void MainWindow::do_test(DocWidget *docWidget, int nth_path) {
 		block2 = block2.next();
 	}
 	ASSERT( !block2.isValid(), block1.blockNumber());	//	同行数のはず
-
+}
+const QString QA_MD_TEXT_1 =
+	"text\n"
+	"*i*\n"
+	"**b**\n"
+	"*i* **b** ***bi*** ~~s~~\n"
+	"\n"
+	"1. hoge\n"
+	"1. h*og*e\n"
+	"\n";
+const QStringList QA_MD_FLAGS = {
+	"vvvv",
+	"=v=",
+	"==v==",
+	"=v= ==v== ===vv=== ==v==",
+	"",
+	"LLLvvvv",
+	"LLLv=vv=v",
+	"",
+};
+QChar g_flag_char[] = {
+	u'v',	//	PCF_VISIBLE = 0,	// プレビューに表示される
+	u'-',	//	PCF_COMMENTED,		//	コメントアウトされた文字
+	u'E',	//	PCF_ESCAPE,			//	エスケープ文字
+	u'H',	//	PCF_HEADING,		//	タイトル・見出し行
+	u'L',	//	PCF_LIST_MARK,		// "- " などリストマーカー
+	u'N',	//	PCF_NUM_LIST,		//	"1. " 連番
+	u'Q',	//	PCF_QUOTE,
+	u'K',	//	PCF_LINK,
+	u'I',	//	PCF_IMAGE,
+	u'C',	//	PCF_CODE,			// ```
+	u'S',	//	PCF_CSV,
+	u'T',	//	PCF_TABLE,			//	マークダウン表要素
+	u'K',	//	PCF_KEISEN,
+	u'=',	//	PCF_EMPHASIZED,		//	ボールド、イタリック等
+};
+void MainWindow::test_charFlags(DocWidget *docWidget) {
+	docWidget->m_editor->setPlainText(QA_MD_TEXT_1);
+	QTextBlock block1 = docWidget->m_editor->document()->firstBlock();
+	QTextBlock block2 = docWidget->m_preview->document()->firstBlock();
+	for(auto flags: QA_MD_FLAGS) {
+		QString buf1 = block1.text();
+		BlockData *data = getBlockData(block1);
+		ASSERT_EQ( (int)flags.size(), (int)data->m_charFlags.size(), block1.blockNumber());
+		for(int i = 0; i < flags.size(); ++i) {
+			++g_tested_count;
+			if( (flags[i] == u'v' || flags[i] == u' ') && data->m_charFlags[i] != PCF_VISIBLE ||
+				!(flags[i] == u'v' || flags[i] == u' ') && data->m_charFlags[i] == PCF_VISIBLE )
+			{
+				g_result += QString("%1: flags[%2] is NOT correct.\n").arg(block1.blockNumber()+1).arg(i);
+				QString f = "m_charFlags[] = {";
+				int len = f.size();
+				for(int k = 0; k < flags.size(); ++k) {
+					f += g_flag_char[data->m_charFlags[k]];
+				}
+				g_result += f + "}\n";
+				g_result += QString(len + i, QChar(0x00a0)) + "^\n";
+				++g_failed_count;
+			}
+		}
+		block1 = block1.next();
+	}
 }
