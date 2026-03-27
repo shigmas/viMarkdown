@@ -2226,11 +2226,11 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			}
 		}
 #endif
-		if( ch == QChar::ParagraphSeparator ) ch = ETX;
 		if( pos > 0 && doc->characterAt(pos-1) != u'\\' ) {
 			while( ch == u'*' || ch == u'_' || ch == u'~' )
 				ch = doc->characterAt(++pos);
 		}
+		if (ch == QChar::ParagraphSeparator) ch = ETX;
 	}
 	//	Undone: "  +\n" の場合も改行扱い
 	pc.m_anchorChar = ch;

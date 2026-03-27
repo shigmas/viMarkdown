@@ -2140,6 +2140,9 @@ void MainWindow::onAction_About() {
 }
 //----------------------------------------------------------------------
 const QString QA_MD_text_1 =
+	"1. item1\n"
+	"1. *italic*\n"
+	"\n"
 	//"x![v](url)y\n"	//	画像
 #if 0
 	"<!-- comment -->\n"
@@ -2175,7 +2178,7 @@ const QString QA_MD_text_1 =
 	"text\n"
 	"\n"
 #endif
-#if 1
+#if 0
 	"<!-- comment -->\n"
 	"# title\n"
 	"hoge<!-- -->\n"
@@ -2287,8 +2290,8 @@ bool isCommentOuted(const BlockData* data) {
 	}
 	return true;
 }
-#define		PATH_1		1
-#define		PATH_2		2
+enum { PATH_1 = 1, PATH_2, PATH_3, };
+
 void MainWindow::onAction_Test() {
 	static QRegularExpression prefix_re(R"(^(#+ *| *- ))");
 	addTab(QString("QA-%1").arg(++m_QA_tab_number));
@@ -2305,9 +2308,10 @@ void MainWindow::onAction_Test() {
 #if 1
 	int n_testted = g_tested_count;
 	int n_failed = g_failed_count;
-	do_test(docWidget, PATH_2);		//	行内表示文字一致テスト
+	do_test(docWidget, PATH_2);		//	EtoP 行内表示文字一致テスト
 	g_tested_count -= n_testted;	//	重複数分
 	g_failed_count -= n_failed;
+	//do_test(docWidget, PATH_3);		//	PtoE 行内表示文字一致テスト
 #endif
 	QString mess = QString("total: %1 failed / %2 tested.").arg(g_failed_count).arg(g_tested_count);
 	statusBar()->showMessage(mess);
@@ -2411,6 +2415,21 @@ void MainWindow::do_test(DocWidget *docWidget, int nth_path) {
 					if( data->m_charFlags[i] != PCF_VISIBLE ) ++nvcnt;
 					docWidget->m_editor->setTextCursor(cursor);
 					QTextCursor cur2 = docWidget->m_preview->textCursor();		//	プレビューカーソル
+					int k2 = cur2.position() - cur2.block().position();
+					ASSERT_EQ( k2, k1, block1.blockNumber() );
+					cursor.movePosition(QTextCursor::Right);
+				}
+			}
+			if( nth_path == PATH_3 ) {
+				//	プレビュー → エディタ カーソル同期テスト
+				QTextCursor cursor(block1);
+				QTextCursor cur2 = docWidget->m_preview->textCursor();		//	プレビューカーソル
+				const BlockData *data = getBlockData(block1);
+				int nvcnt = 0;	//	非表示文字数
+				for(int i = 0; i < block1.text().size(); ++i) {
+					int k1 = i - nvcnt;
+					if( data->m_charFlags[i] != PCF_VISIBLE ) ++nvcnt;
+					docWidget->m_editor->setTextCursor(cursor);
 					int k2 = cur2.position() - cur2.block().position();
 					ASSERT_EQ( k2, k1, block1.blockNumber() );
 					cursor.movePosition(QTextCursor::Right);
