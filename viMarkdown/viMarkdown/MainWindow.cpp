@@ -2166,7 +2166,7 @@ const QString QA_MD_text_1 =
 	"text\n"
 	"\n"
 #endif
-#if 1
+#if 0
 	"|he**ad**er|h|\n"
 	"|-|-|\n"
 	"|3|1415|\n"
@@ -2175,7 +2175,7 @@ const QString QA_MD_text_1 =
 	"text\n"
 	"\n"
 #endif
-#if 0
+#if 1
 	"<!-- comment -->\n"
 	"# title\n"
 	"hoge<!-- -->\n"
@@ -2287,6 +2287,8 @@ bool isCommentOuted(const BlockData* data) {
 	}
 	return true;
 }
+#define		PATH_1		1
+#define		PATH_2		2
 void MainWindow::onAction_Test() {
 	static QRegularExpression prefix_re(R"(^(#+ *| *- ))");
 	addTab(QString("QA-%1").arg(++m_QA_tab_number));
@@ -2298,7 +2300,24 @@ void MainWindow::onAction_Test() {
 	g_failed_count = 0;
 	//g_result.clear();
 	g_result = "\n# Test Result:\n\n";
-	//	各行文字列チェック
+	do_test(docWidget, PATH_1);		//	行単位一致テスト
+	g_result += QString("\npath 1: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count);
+#if 1
+	int n_testted = g_tested_count;
+	int n_failed = g_failed_count;
+	do_test(docWidget, PATH_2);		//	行内表示文字一致テスト
+	g_tested_count -= n_testted;	//	重複数分
+	g_failed_count -= n_failed;
+#endif
+	QString mess = QString("total: %1 failed / %2 tested.").arg(g_failed_count).arg(g_tested_count);
+	statusBar()->showMessage(mess);
+	g_result += "\n" + mess;
+	qDebug() << "test result:\n" << g_result;
+	QTextCursor cursor = docWidget->m_editor->textCursor();
+	cursor.movePosition(QTextCursor::End);
+	cursor.insertText(g_result);
+}
+void MainWindow::do_test(DocWidget *docWidget, int nth_path) {
 	QTextBlock block1 = docWidget->m_editor->document()->firstBlock();
 	QTextBlock block2 = docWidget->m_preview->document()->firstBlock();
 	bool inTable = false;
@@ -2349,15 +2368,6 @@ void MainWindow::onAction_Test() {
 		QString buf2 = block2.text();
 		QTextTable *table = QTextCursor(block2).currentTable();
 		if( table != nullptr ) {	//	CSV・GFM テーブル中の場合
-			//if( block1.userState() == US_CSV_BLOCK && block1.text().startsWith("```CSV", Qt::CaseInsensitive) ) {
-			//	block1 = block1.next();
-			//	block2 = block2.next();
-			//	continue;
-			//}
-			//if( !inTable && block1.userState() == US_TABLE ) {
-			//	block2 = block2.next();		//	GFMテーブル最初はテーブル全体のためのブロックなのでスキップ
-			//	buf2 = block2.text();
-			//}
 			for(int i = 0; i < table->columns() - 1; ++i) {
 				block2 = block2.next();
 				assert( block2.isValid() );
@@ -2391,32 +2401,25 @@ void MainWindow::onAction_Test() {
 		}
 		buf2.remove(QChar(CODE_IMAGE));
 		if( ASSERT_EQ( buf1, buf2, block1.blockNumber()) ) {	//	表示テキストが一致した場合
-#if 0	//	エディタ → プレビュー カーソル同期テスト
-			QTextCursor cursor(block1);
-			const BlockData *data = getBlockData(block1);
-			int nvcnt = 0;	//	非表示文字数
-			for(int i = 0; i < block1.text().size(); ++i) {
-				int k1 = i - nvcnt;
-				if( data->m_charFlags[i] != PCF_VISIBLE ) ++nvcnt;
-				docWidget->m_editor->setTextCursor(cursor);
-				QTextCursor cur2 = docWidget->m_preview->textCursor();		//	プレビューカーソル
-				int k2 = cur2.position() - cur2.block().position();
-				ASSERT_EQ( k2, k1, block1.blockNumber() );
-				cursor.movePosition(QTextCursor::Right);
+			if( nth_path == PATH_2 ) {
+				//	エディタ → プレビュー カーソル同期テスト
+				QTextCursor cursor(block1);
+				const BlockData *data = getBlockData(block1);
+				int nvcnt = 0;	//	非表示文字数
+				for(int i = 0; i < block1.text().size(); ++i) {
+					int k1 = i - nvcnt;
+					if( data->m_charFlags[i] != PCF_VISIBLE ) ++nvcnt;
+					docWidget->m_editor->setTextCursor(cursor);
+					QTextCursor cur2 = docWidget->m_preview->textCursor();		//	プレビューカーソル
+					int k2 = cur2.position() - cur2.block().position();
+					ASSERT_EQ( k2, k1, block1.blockNumber() );
+					cursor.movePosition(QTextCursor::Right);
+				}
 			}
-#endif
 		}
 		block1 = block1.next();
 		block2 = block2.next();
 	}
 	ASSERT( !block2.isValid(), block1.blockNumber());	//	同行数のはず
 
-	QString mess = QString("%1 failed / %2 tested.").arg(g_failed_count).arg(g_tested_count);
-	statusBar()->showMessage(mess);
-	g_result += "\n" + mess;
-	qDebug() << "test result:\n" << g_result;
-
-	QTextCursor cursor = docWidget->m_editor->textCursor();
-	cursor.movePosition(QTextCursor::End);
-	cursor.insertText(g_result);
 }

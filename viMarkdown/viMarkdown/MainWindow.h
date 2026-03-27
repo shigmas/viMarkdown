@@ -187,6 +187,7 @@ protected:
     void	onSrcPosContextChanged(const struct PosContext&, const PosContext &acontext);
     void	onSrcCursorPosChanged();
     void	syncEditorPreviewScroll();
+    void	do_test(DocWidget*, int nth_path);
 
     void	onAction_New();
     void	onAction_NewTab();
