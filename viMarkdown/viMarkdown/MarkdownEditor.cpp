@@ -2227,8 +2227,11 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 		}
 #endif
 		if( pos > 0 && doc->characterAt(pos-1) != u'\\' ) {
-			while( ch == u'*' || ch == u'_' || ch == u'~' )
+			//while( ch == u'*' || ch == u'_' || ch == u'~' )
+			while( ix < data->m_charFlags.size() && data->m_charFlags[ix] != PCF_VISIBLE ) {
+				++ix;
 				ch = doc->characterAt(++pos);
+			}
 		}
 		if (ch == QChar::ParagraphSeparator) ch = ETX;
 	}
