@@ -988,6 +988,9 @@ void MarkdownPreview::do_CSV(QTextBlock& srcBlock, QTextCursor& cursor) {		//	cu
 }
 void MarkdownPreview::do_keisen_block(QTextBlock& srcBlock, QTextCursor& cursor) {
 	srcBlock.setUserState(US_KEISEN_BLOCK);
+	BlockData *data = getBlockData(srcBlock);
+	data->m_charFlags.fill(PCF_KEISEN);
+	srcBlock.setUserData(data);
 	QFont font;
 	QStringView buf = m_lst[m_ln].mid(QString("```keisen").size());
 	QColor bgcolor = g.m_keisenBlockColor;
@@ -1024,6 +1027,9 @@ void MarkdownPreview::do_keisen_block(QTextBlock& srcBlock, QTextCursor& cursor)
 	}
 	srcBlock = srcBlock.next();
 	srcBlock.setUserState(US_KEISEN_BLOCK);
+	data = getBlockData(srcBlock);
+	data->m_charFlags.fill(PCF_KEISEN);
+	srcBlock.setUserData(data);
 	int lineHeight = fm.lineSpacing(); // 行の間隔（高さ＋行間）
 	
 	int height = lineHeight * (m_ln - m_ln0);
