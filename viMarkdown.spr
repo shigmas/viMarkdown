@@ -1111,7 +1111,7 @@ SPR# 状 P Open Close ver     Type  概要
 1097 ◎ C 03/29 03/29 01213│問題│CSV セルテキスト中に \ があると、m_charFlags[] の値が不正
 1098 ◎ C 03/29 03/29 01213│問題│エディタ：行頭 or 行末に半角空白があると？、対応行テストに失敗する
 1099 ◎ C 03/29 03/29 01213│問題│行頭 or 行末に半角空白があると、m_charFlags[] の値が不正（行頭・行末半角空白は非表示）
-1100 ● C 03/29            │ToDo│updateCharFlags() は docWidget.cpp に移動
+1100 ◎ C 03/29 03/29 01213│ToDo│updateCharFlags() は docWidget.cpp に移動
 1101 ● C 03/29            │ToDo│
 1102 ● C 03/29            │ToDo│
 1103 ● C 03/29            │ToDo│
