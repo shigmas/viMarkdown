@@ -2537,8 +2537,8 @@ const QStringList QA_TEXT_FLAGS = {
 #if 1
 	"```CSV",
 	"SSSSSS",
-	"h1,  h22,  h333",
-	"vvSSSvvvSSSvvvv",
+	"h1,  h22,  h3*33",
+	"vvSSSvvvSSSvvvvv",
 	"ID,  9,  h*o*ge",
 	"vvSSSvSSSv=v=vv",
 	"```",
@@ -2546,6 +2546,16 @@ const QStringList QA_TEXT_FLAGS = {
 	"",
 	"",
 #endif
+	"hdr|hdr2",
+	"vvvTvvvv",
+	"---|---:",
+	"TTTTTTTT",
+	"hac*k|69",
+	"vvvvvTvv",
+	"h*a*ck|69",
+	"v=v=vvTvv",
+	"",
+	"",
 };
 #if 0
 const QString QA_MD_TEXT_1 =

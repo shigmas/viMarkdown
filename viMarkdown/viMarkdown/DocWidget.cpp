@@ -116,6 +116,7 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 	fields.append(currentField.trimmed());
 	return inQuotes;
 }
+#if 0
 bool isTableLine(const QString& lnStr0, const QString& lnStr, QList<QStringView> &tableTokens, BlockData *data) {
 	assert( data == nullptr || data->m_charFlags.size() == lnStr0.size() );
 	QStringView sv(lnStr);
@@ -140,6 +141,7 @@ bool isTableLine(const QString& lnStr0, const QString& lnStr, QList<QStringView>
 	}
 	return tableTokens.size() > 1;
 }
+#endif
 bool isTableLine(const QString& lnStr0, const QString& lnStr, QStringList &tableTokens, BlockData* data) {
 	assert( data == nullptr || data->m_charFlags.size() == lnStr0.size() );
 	QString sv(lnStr);
@@ -158,8 +160,10 @@ bool isTableLine(const QString& lnStr0, const QString& lnStr, QStringList &table
 			else ++ix;
 		}
 		tableTokens.push_back(sv.mid(ix0, ix-ix0));
-		if( ix < sv.size() && data != nullptr )
+		if( ix < sv.size() && data != nullptr ) {
 			data->m_charFlags[ix] = PCF_TABLE;
+			updateCharFlags(data, lnStr0, ix0, ix);
+		}
 		++ix;			//	'|' スキップ
 	}
 	return tableTokens.size() > 1;

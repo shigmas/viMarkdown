@@ -42,6 +42,7 @@ enum {
 //bool isTableLine(const QString& lnStr0, const QString& lnStr, QList<QStringView> &tableTokens, BlockData* = nullptr);
 bool isTableLine(const QString& lnStr0, const QString& lnStr, QStringList &tableTokens, BlockData* = nullptr);
 bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign, BlockData* = nullptr);
+bool updateCharFlags(BlockData* data, const QString &buf, int ix, int ix9);
 
 class DocWidget : public QWidget
 {
