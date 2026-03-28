@@ -166,8 +166,9 @@ bool isTableLine(const QString& lnStr0, const QString& lnStr, QStringList &table
 			else ++ix;
 		}
 		tableTokens.push_back(sv.mid(ix0, ix-ix0));
-		if( ix < sv.size() && data != nullptr ) {
-			data->m_charFlags[ix] = PCF_TABLE;
+		if( data != nullptr ) {
+			if( ix < sv.size() )
+				data->m_charFlags[ix] = PCF_TABLE;
 			updateCharFlags(data, lnStr0, ix0, ix);
 		}
 		++ix;			//	'|' スキップ
