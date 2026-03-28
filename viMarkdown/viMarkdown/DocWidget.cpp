@@ -73,6 +73,7 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 		fields.pop_back();
 	}
 	//bool inQuotes = false;
+	int ix0 = i;
 	for (; i < line.length(); ++i) {
 		if( line.mid(i).startsWith("<!--") ) {
 			int ix = line.indexOf("-->", i + 4);
@@ -106,7 +107,9 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 				data->m_charFlags[i] = PCF_CSV;
 				for(int k = i+1; k < line.size() && line[k] == u' '; ++k)
 					data->m_charFlags[k] = PCF_CSV;
+				updateCharFlags(data, line, ix0, i);
 			}
+			ix0 = i + 1;
 		} else { // 通常の文字
 			if( c != ' ' || !currentField.isEmpty() )
 				currentField += c;
@@ -114,6 +117,9 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 	}
 	// 最後のフィールドを追加
 	fields.append(currentField.trimmed());
+	if( data != nullptr ) {
+		updateCharFlags(data, line, ix0, i);
+	}
 	return inQuotes;
 }
 #if 0

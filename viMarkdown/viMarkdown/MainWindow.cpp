@@ -2554,6 +2554,8 @@ const QStringList QA_TEXT_FLAGS = {
 	"vvvvvTvv",
 	"h*a*ck|69",
 	"v=v=vvTvv",
+	"69|h*a*ck",
+	"vvTv=v=vv",
 	"",
 	"",
 };
