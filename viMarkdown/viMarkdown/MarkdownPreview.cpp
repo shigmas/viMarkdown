@@ -1212,6 +1212,7 @@ void MarkdownPreview::do_numlist(QTextBlock srcBlock, QTextCursor& cursor, QStri
 	auto *list = cursor.createList(listFormat);
 	auto match = re_numlist.match(m_lst[m_ln]);
 	while( match.hasMatch() ) {
+		updateCharFlags(srcBlock);
 		BlockData* data = getBlockData(srcBlock);
 		for(int i = 0; i < match.capturedLength(); ++i)
 			data->m_charFlags[i] = PCF_NUM_LIST;
