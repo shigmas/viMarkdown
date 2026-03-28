@@ -2504,6 +2504,16 @@ const QStringList QA_TEXT_FLAGS = {
 	"LLLLLLv==vv==v",
 	"",
 	"",
+	"```",
+	"CCC",
+	"abcdef",
+	"vvvvvv",
+	"a*bcde*f",
+	"vvvvvvvv",
+	"```",
+	"CCC",
+	"",
+	"",
 };
 #if 0
 const QString QA_MD_TEXT_1 =
