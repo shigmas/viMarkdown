@@ -423,7 +423,11 @@ void MainWindow::setup_connections() {
 	connect(ui->action_Exit, &QAction::triggered, this, &MainWindow::onAction_Exit);
 	connect(ui->action_Settings, &QAction::triggered, this, &MainWindow::onAction_Settings);
 	connect(ui->action_Help, &QAction::triggered, this, &MainWindow::onAction_Help);
-	connect(ui->action_Test, &QAction::triggered, this, &MainWindow::onAction_Test);
+	//connect(ui->action_Test, &QAction::triggered, this, &MainWindow::onAction_Test);
+	connect(ui->action_TestCharFlags, &QAction::triggered, this, &MainWindow::onAction_TestCharFlags);
+	connect(ui->action_TestLineCrsp, &QAction::triggered, this, &MainWindow::onAction_TestLineCrsp);
+	connect(ui->action_TestEtoPCurSync, &QAction::triggered, this, &MainWindow::onAction_TestEtoPCurSync);
+	connect(ui->action_TestAll, &QAction::triggered, this, &MainWindow::onAction_TestAll);
 	connect(ui->action_AddThisFavorite, &QAction::triggered, this, &MainWindow::onAction_AddThisFavorite);
 	connect(ui->action_New, &QAction::triggered, this, &MainWindow::onAction_New);
 	connect(ui->action_NewTab, &QAction::triggered, this, &MainWindow::onAction_NewTab);
@@ -2140,9 +2144,9 @@ void MainWindow::onAction_About() {
 }
 //----------------------------------------------------------------------
 const QString QA_MD_TEXT_2 =
-	"1. item1\n"
-	"1. *italic*\n"
-	"\n"
+	//"1. item1\n"
+	//"1. *italic*\n"
+	//"\n"
 	//"x![v](url)y\n"	//	画像
 #if 0
 	"<!-- comment -->\n"
@@ -2178,7 +2182,7 @@ const QString QA_MD_TEXT_2 =
 	"text\n"
 	"\n"
 #endif
-#if 0
+#if 1
 	"<!-- comment -->\n"
 	"# title\n"
 	"hoge<!-- -->\n"
@@ -2291,33 +2295,80 @@ bool isCommentOuted(const BlockData* data) {
 	return true;
 }
 enum { PATH_1 = 1, PATH_2, PATH_3, };
+enum {
+	TEST_CHAR_FLAGS = 1,
+	TEST_LINE_CRSP = 2,
+	TEST_EtoP_CUR_SYNC = 4,
+	TEST_ALL = 0xff,	//	とりあえず８ビットまで対応
+};
 
 void MainWindow::onAction_Test() {
-	//static QRegularExpression prefix_re(R"(^(#+ *| *- ))");
+}
+void MainWindow::onAction_TestCharFlags() {
+	do_test(TEST_CHAR_FLAGS);
+#if 0
 	addTab(QString("QA-%1").arg(++m_QA_tab_number));
 	DocWidget *docWidget = getCurDocWidget();;
 	if( docWidget == nullptr ) return;
-
 	g_tested_count = 0;
 	g_failed_count = 0;
-	//g_result.clear();
 	g_result = "\n# Test Result:\n\n";
-	test_charFlags(docWidget);
-	g_result += QString("\npath 1: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count);
-#if 0
-	docWidget->m_editor->setPlainText(QA_MD_TEXT_2);
-	do_test(docWidget, PATH_1);		//	行単位一致テスト
-	g_result += QString("\npath 2: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count);
-#if 1
-	int n_testted = g_tested_count;
-	int n_failed = g_failed_count;
-	do_test(docWidget, PATH_2);		//	EtoP 行内表示文字一致テスト
-	g_tested_count -= n_testted;	//	重複数分
-	g_failed_count -= n_failed;
-	//do_test(docWidget, PATH_3);		//	PtoE 行内表示文字一致テスト
-#endif
-#endif
+	test_charFlags(docWidget);			//	m_charFlags[] テスト
 	QString mess = QString("total: %1 failed / %2 tested.").arg(g_failed_count).arg(g_tested_count);
+	statusBar()->showMessage(mess);
+	g_result += "\n" + mess;
+	qDebug() << "test result:\n" << g_result;
+	QTextCursor cursor = docWidget->m_editor->textCursor();
+	cursor.movePosition(QTextCursor::End);
+	cursor.insertText(g_result);
+#endif
+}
+void MainWindow::onAction_TestLineCrsp() {
+	do_test(TEST_LINE_CRSP);
+}
+void MainWindow::onAction_TestEtoPCurSync() {
+	do_test(TEST_EtoP_CUR_SYNC);
+}
+void MainWindow::onAction_TestAll() {
+	do_test(TEST_ALL);
+}
+
+void MainWindow::do_test(int type) {
+	addTab(QString("QA-%1").arg(++m_QA_tab_number));
+	DocWidget *docWidget = getCurDocWidget();;
+	if( docWidget == nullptr ) return;
+	int total_tested = 0;
+	int total_failed = 0;
+	g_result = "\n# Test Result:\n\n";
+	if( (type & TEST_CHAR_FLAGS) != 0 ) {
+		g_tested_count = 0;
+		g_failed_count = 0;
+		test_charFlags(docWidget);			//	m_charFlags[] テスト
+		g_result += QString("\nTest char flags: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count);
+		total_tested += g_tested_count;
+		total_failed += g_failed_count;
+	}
+	if( (type & TEST_LINE_CRSP) != 0 ) {
+		g_tested_count = 0;
+		g_failed_count = 0;
+		docWidget->m_editor->setPlainText(QA_MD_TEXT_2);
+		do_test(docWidget, PATH_1);		//	行単位一致テスト
+		g_result += QString("\nTest Line Crsp: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count);
+		total_tested += g_tested_count;
+		total_failed += g_failed_count;
+	}
+	if( (type & TEST_EtoP_CUR_SYNC) != 0 ) {
+		g_tested_count = 0;
+		g_failed_count = 0;
+		do_test(docWidget, PATH_2);		//	EtoP 行内表示文字一致テスト
+		//g_tested_count -= n_testted;	//	重複数分
+		//g_failed_count -= n_failed;
+		g_result += QString("\nTest EtoP CurSync: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count);
+		total_tested += g_tested_count;
+		total_failed += g_failed_count;
+	}
+	//do_test(docWidget, PATH_3);		//	PtoE 行内表示文字一致テスト
+	QString mess = QString("Total: %1 failed / %2 tested.").arg(total_failed).arg(total_tested);
 	statusBar()->showMessage(mess);
 	g_result += "\n" + mess;
 	qDebug() << "test result:\n" << g_result;
@@ -2424,6 +2475,7 @@ void MainWindow::do_test(DocWidget *docWidget, int nth_path) {
 					cursor.movePosition(QTextCursor::Right);
 				}
 			}
+#if 0
 			if( nth_path == PATH_3 ) {
 				//	プレビュー → エディタ カーソル同期テスト
 				QTextCursor cursor(block1);
@@ -2439,6 +2491,7 @@ void MainWindow::do_test(DocWidget *docWidget, int nth_path) {
 					cursor.movePosition(QTextCursor::Right);
 				}
 			}
+#endif
 		}
 		block1 = block1.next();
 		block2 = block2.next();
@@ -2482,6 +2535,8 @@ const QStringList QA_TEXT_FLAGS = {
 	"vvvv",
 	"*i*",
 	"=v=",
+	"\\*i\\*",
+	"=vv=v",
 	"**b**",
 	"==v==",
 	"*i* **b** ***bi*** ~~s~~",
@@ -2541,6 +2596,10 @@ const QStringList QA_TEXT_FLAGS = {
 	"vvSSSvvvSSSvvvvv",
 	"ID,  9,  h*o*ge",
 	"vvSSSvSSSv=v=vv",
+	"ID,  9,  h\\*o\\*ge",
+	"vvSSSvSSSv-vv-vvv",
+	",,",
+	"SS",
 	"```",
 	"SSS",
 	"",

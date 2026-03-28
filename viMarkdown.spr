@@ -1107,8 +1107,8 @@ SPR# 状 P Open Close ver     Type  概要
 1093 ◎ C 03/28 03/28 01212│ToDo│m_charFlags[] 値テスト：GFM表テスト追加
 1094 ◎ C 03/28 03/28 01212│問題│m_charFlags[] 値テスト：GFM表中のセルテキストがボールド等を含んでいる場合に表示フラグが立っていない
 1095 ◎ C 03/28 03/28 01212│問題│m_charFlags[] 値テスト：GFM表中の最後のセルテキストがボールド等を含んでいる場合に表示フラグが立っていない
-1096 ● C 03/28            │ToDo│
-1097 ● C 03/28            │ToDo│
-1098 ● C 03/28            │ToDo│
-1099 ● C 03/28            │ToDo│
-1100 ● C 03/28            │ToDo│
+1096 ◎ C 03/29 03/29 01213│ToDo│テスト > CharFlags, LineCorresponding, EtoP CurSync, All にメニューを分ける？
+1097 ● C 03/29            │問題│CSV セルテキスト中に \ があると、m_charFlags[] の値が不正
+1098 ● C 03/29            │ToDo│
+1099 ● C 03/29            │ToDo│
+1100 ● C 03/29            │ToDo│

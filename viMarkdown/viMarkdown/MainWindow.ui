@@ -166,9 +166,18 @@
     <property name="title">
      <string>&amp;Other</string>
     </property>
+    <widget class="QMenu" name="menu_Test">
+     <property name="title">
+      <string>&amp;Test</string>
+     </property>
+     <addaction name="action_TestCharFlags"/>
+     <addaction name="action_TestLineCrsp"/>
+     <addaction name="action_TestEtoPCurSync"/>
+     <addaction name="action_TestAll"/>
+    </widget>
     <addaction name="action_Settings"/>
     <addaction name="action_Help"/>
-    <addaction name="action_Test"/>
+    <addaction name="menu_Test"/>
     <addaction name="action_AboutViMarkdown"/>
     <addaction name="separator"/>
    </widget>
@@ -923,12 +932,45 @@
     <string>&amp;Link</string>
    </property>
   </action>
-  <action name="action_Test">
+  <action name="action_TestCharFlags">
    <property name="text">
-    <string>&amp;Test</string>
+    <string>&amp;CharFlags</string>
+   </property>
+   <property name="toolTip">
+    <string>Test CharFlags</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+1</string>
+   </property>
+  </action>
+  <action name="action_TestAll">
+   <property name="text">
+    <string>&amp;All</string>
+   </property>
+   <property name="toolTip">
+    <string>Test All</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+T</string>
+   </property>
+  </action>
+  <action name="action_TestLineCrsp">
+   <property name="text">
+    <string>&amp;LineCoresponding</string>
+   </property>
+   <property name="toolTip">
+    <string>Test LineCoresponding</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+2</string>
+   </property>
+  </action>
+  <action name="action_TestEtoPCurSync">
+   <property name="text">
+    <string>&amp;EtoP CurSync</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+3</string>
    </property>
   </action>
  </widget>
