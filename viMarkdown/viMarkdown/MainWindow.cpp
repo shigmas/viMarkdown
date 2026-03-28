@@ -2526,11 +2526,13 @@ const QStringList QA_TEXT_FLAGS = {
 	"KKK",
 	"",
 	"",
-#if 0
+#if 1
 	"```CSV",
 	"SSSSSS",
-	"h1, h22, h333",
-	"vvSSvvvSSvvvv",
+	"h1,  h22,  h333",
+	"vvSSSvvvSSSvvvv",
+	"ID,  9,  h*o*ge",
+	"vvSSSvSSSv=v=vv",
 	"```",
 	"SSS",
 	"",

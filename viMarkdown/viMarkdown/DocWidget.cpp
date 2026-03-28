@@ -102,8 +102,11 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 		} else if (c == ',' && !inQuotes) {		// クォートの外にあるカンマはセパレータ
 			fields.append(currentField.trimmed());
 			currentField.clear();
-			if( data != nullptr )
+			if( data != nullptr ) {
 				data->m_charFlags[i] = PCF_CSV;
+				for(int k = i+1; k < line.size() && line[k] == u' '; ++k)
+					data->m_charFlags[k] = PCF_CSV;
+			}
 		} else { // 通常の文字
 			if( c != ' ' || !currentField.isEmpty() )
 				currentField += c;
