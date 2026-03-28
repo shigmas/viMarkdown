@@ -1277,6 +1277,7 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 	bool is_checkbox = match.hasMatch();		//	チェックボックス（"- [ ] "）の場合
 	if( is_checkbox ) {
 		for(;;) {
+			updateCharFlags(srcBlock);
 			BlockData* data = getBlockData(srcBlock);
 			for(int i = 0; i < match.capturedLength(); ++i)
 				data->m_charFlags[i] = PCF_LIST_MARK;
