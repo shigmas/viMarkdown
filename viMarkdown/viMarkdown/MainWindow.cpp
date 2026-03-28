@@ -2622,7 +2622,7 @@ const QStringList QA_TEXT_FLAGS = {
 	"69|h*a*ck",
 	"vvTv=v=vv",
 	"69|h\\*a\\*ck",
-	"vvTv-vvv-vv",
+	"vvTv-vv-vvv",
 	"",
 	"",
 };

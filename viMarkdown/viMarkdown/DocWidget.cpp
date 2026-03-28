@@ -170,7 +170,7 @@ bool isTableLine(const QString& lnStr0, const QString& lnStr, QStringList &table
 		if( data != nullptr ) {
 			if( ix < sv.size() )
 				data->m_charFlags[ix] = PCF_TABLE;
-			updateCharFlags(data, lnStr0, ix0, ix);
+			updateCharFlags(data, lnStr0, ix0, ix, true);		//	true for エスケープ文字処理
 		}
 		++ix;			//	'|' スキップ
 	}
