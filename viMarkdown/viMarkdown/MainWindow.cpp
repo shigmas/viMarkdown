@@ -2188,6 +2188,8 @@ const QString QA_MD_TEXT_2 =
 	"hoge<!-- -->\n"
 	"<!-- -->fuga\n"
 	"text\n"
+	" text\n"
+	"text \n"
 	"abc \\xyzzz\n"		//	x はエスケープされず \x と表示される
 	"hoge*fuga*foo hoge\\*fuga\\*foo\n"
 	"hoge**fuga**foo\n"
@@ -2459,7 +2461,7 @@ void MainWindow::do_test(DocWidget *docWidget, int nth_path) {
 			buf1.resize(k);
 		}
 		buf2.remove(QChar(CODE_IMAGE));
-		if( ASSERT_EQ( buf1, buf2, block1.blockNumber()) ) {	//	表示テキストが一致した場合
+		if( ASSERT_EQ( buf1.trimmed(), buf2, block1.blockNumber()) ) {	//	表示テキストが一致した場合
 			if( nth_path == PATH_2 ) {
 				//	エディタ → プレビュー カーソル同期テスト
 				QTextCursor cursor(block1);
