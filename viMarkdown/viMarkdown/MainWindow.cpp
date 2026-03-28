@@ -2519,6 +2519,10 @@ QChar g_flag_char[] = {
 const QStringList QA_TEXT_FLAGS = {
 	"text",
 	"vvvv",
+	" text",
+	"-vvvv",
+	"text ",
+	"vvvv-",
 	"<!--text-->",
 	"-----------",
 	"xyz<!--text-->",

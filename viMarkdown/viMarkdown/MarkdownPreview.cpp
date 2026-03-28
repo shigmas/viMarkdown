@@ -413,90 +413,6 @@ void MarkdownPreview::paintEvent(QPaintEvent *e) {
 	}
 }
 
-static QRegularExpression image_re(R"((?<!\\)!\[([^\]]+)\]\(([^)]+)\))");
-static QRegularExpression link_re(R"((?<![!\\])\[([^\]]+)\]\(([^)]+)\))");
-bool isEscapedChar(QChar ch) {
-	return ch.unicode() >= u' ' && ch.unicode() <= u'/' ||
-			ch.unicode() >= u'[' && ch.unicode() <= u']' ||		//	[ \ ]
-			ch.unicode() == u'>';
-}
-//	ボールド、イタリック、打ち消し線 部分に PCF_EMPHASIZED 設定
-bool updateCharFlags(BlockData* data, const QString &buf, int ix, int ix9) {
-	bool modified = false;
-	while( ix < ix9 ) {
-		if( ix + 1 < buf.size() && buf[ix] == u'\\' && isEscapedChar(buf[ix+1]) )
-			ix += 2;
-		else if( buf[ix] == u'*' || buf[ix] == u'_' || buf[ix] == u'~' && ix+1 < ix9 && buf[ix+1] == buf[ix]) {
-			QString sym;
-			if( buf[ix] == u'~' ) {
-				sym = "~~";
-			} else {
-				if( ix+1 < ix9 && buf[ix+1] == buf[ix] ) {
-					if(ix+2 < ix9 && buf[ix+2] == buf[ix] )
-						sym = buf.mid(ix, 3);
-					else
-						sym = buf.mid(ix, 2);
-				} else
-					sym = buf[ix];
-			}
-			int ix2 = buf.indexOf(sym, ix+sym.size());
-			if( ix2 >= 0 ) {	//	バランスしている場合
-				for(int i = 0; i < sym.size(); ++i) {
-					data->m_charFlags[ix+i] = PCF_EMPHASIZED;
-					data->m_charFlags[ix2+i] = PCF_EMPHASIZED;
-					modified = true;
-				}
-				if( updateCharFlags(data, buf, ix+sym.size(), ix2) )
-					modified = true;
-				ix = ix2 + sym.size();
-			} else
-				++ix;
-		} else
-			++ix;
-	}
-	return modified;
-}
-void updateCharFlags(QTextBlock srcBlock) {
-	QString buf = srcBlock.text();
-	BlockData *data = getBlockData(srcBlock, false);
-	bool modified = false;
-	auto match = image_re.match(buf);		//	![title](image.png) を含むか？
-	while( match.hasMatch() ) {
-		modified = true;
-		int start = match.capturedStart(); // マッチした最初の位置
-	    int length = match.capturedLength(); // マッチした全体の長さ
-	    for(int i = start; i < start + length; ++i)
-	    	data->m_charFlags[i] = PCF_IMAGE;
-		match = image_re.match(buf, start + length);
-	}
-	match = link_re.match(buf);		//	[title](image.png) を含むか？
-	while( match.hasMatch() ) {
-		modified = true;
-		int start = match.capturedStart(); // マッチした最初の位置（'['）
-	    int length = match.capturedLength(); // マッチした全体の長さ
-	    data->m_charFlags[start] = PCF_LINK;
-	    int ix = buf.indexOf(']', start);
-	    for(int i = ix; i < start + length && i < data->m_charFlags.size(); ++i)
-	    	data->m_charFlags[i] = PCF_LINK;
-		match = link_re.match(buf, start + length);
-	}
-	int ix = 0;
-	while( (ix = buf.indexOf(u'\\', ix)) >= 0 ) {
-		if( ix + 1 < buf.size() && isEscapedChar(buf[ix+1]) ) {
-			modified = true;
-			data->m_charFlags[ix] = PCF_ESCAPE;
-			ix += 2;
-		} else
-			++ix;
-	}
-	if( updateCharFlags(data, buf, 0, buf.size()) )
-		modified = true;
-	if( modified ) {
-		srcBlock.setUserData(data);
-		qDebug() << "updateCharFlags(srcBlock)";
-		printCharFlags(srcBlock);
-	}
-}
 void MarkdownPreview::do_body(QTextBlock srcBlock, QTextCursor& cursor, bool last) {
 	m_isPrevLineEmpty = false;
 	if( m_bodyList.isEmpty() ) return;
@@ -549,7 +465,7 @@ int indexOfComment(QStringView buf, int start) {
 	}
 	return -1;
 }
-void updateCharFlags(QTextBlock srcBlock);
+//void updateCharFlags(QTextBlock srcBlock);
 void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソースドキュメント
 	m_headingList.clear();
 	m_docWidget->m_srcHeadingBlocks.clear();

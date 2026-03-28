@@ -1,4 +1,5 @@
 ﻿#include <QTextBlock>
+#include <QRegularExpression>
 #include "MarkdownEditor.h"
 #include "DocWidget.h"
 #include "MarkdownPreview.h"
@@ -107,7 +108,7 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 				data->m_charFlags[i] = PCF_CSV;
 				for(int k = i+1; k < line.size() && line[k] == u' '; ++k)
 					data->m_charFlags[k] = PCF_CSV;
-				updateCharFlags(data, line, ix0, i);
+				updateCharFlags(data, line, ix0, i, true);		//	true for エスケープ文字処理
 			}
 			ix0 = i + 1;
 		} else { // 通常の文字
@@ -118,7 +119,7 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 	// 最後のフィールドを追加
 	fields.append(currentField.trimmed());
 	if( data != nullptr ) {
-		updateCharFlags(data, line, ix0, i);
+		updateCharFlags(data, line, ix0, i, true);		//	true for エスケープ文字処理
 	}
 	return inQuotes;
 }
@@ -206,6 +207,105 @@ bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign, Bloc
 		return true;
 	} else
 		return false;
+}
+bool isEscapedChar(QChar ch) {
+	return ch.unicode() >= u' ' && ch.unicode() <= u'/' ||
+			ch.unicode() >= u'[' && ch.unicode() <= u']' ||		//	[ \ ]
+			ch.unicode() == u'>';
+}
+static QRegularExpression image_re(R"((?<!\\)!\[([^\]]+)\]\(([^)]+)\))");
+static QRegularExpression link_re(R"((?<![!\\])\[([^\]]+)\]\(([^)]+)\))");
+//	ボールド、イタリック、打ち消し線 部分に PCF_EMPHASIZED 設定
+bool updateCharFlags(BlockData* data, const QString &buf, int ix, int ix9, bool esc) {
+	bool modified = false;
+	if( esc ) {
+		int i = ix;
+		while( (i = buf.indexOf(u'\\', i)) >= 0 && i < ix9 ) {
+			if( i + 1 < ix9 && isEscapedChar(buf[i+1]) ) {
+				modified = true;
+				data->m_charFlags[i] = PCF_ESCAPE;
+				i += 2;
+			} else
+				++i;
+		}
+	}
+	while( ix < ix9 ) {
+		if( ix + 1 < buf.size() && buf[ix] == u'\\' && isEscapedChar(buf[ix+1]) )
+			ix += 2;
+		else if( buf[ix] == u'*' || buf[ix] == u'_' || buf[ix] == u'~' && ix+1 < ix9 && buf[ix+1] == buf[ix]) {
+			QString sym;
+			if( buf[ix] == u'~' ) {
+				sym = "~~";
+			} else {
+				if( ix+1 < ix9 && buf[ix+1] == buf[ix] ) {
+					if(ix+2 < ix9 && buf[ix+2] == buf[ix] )
+						sym = buf.mid(ix, 3);
+					else
+						sym = buf.mid(ix, 2);
+				} else
+					sym = buf[ix];
+			}
+			int ix2 = buf.indexOf(sym, ix+sym.size());
+			if( ix2 >= 0 ) {	//	バランスしている場合
+				for(int i = 0; i < sym.size(); ++i) {
+					data->m_charFlags[ix+i] = PCF_EMPHASIZED;
+					data->m_charFlags[ix2+i] = PCF_EMPHASIZED;
+					modified = true;
+				}
+				if( updateCharFlags(data, buf, ix+sym.size(), ix2) )
+					modified = true;
+				ix = ix2 + sym.size();
+			} else
+				++ix;
+		} else
+			++ix;
+	}
+	return modified;
+}
+void updateCharFlags(QTextBlock srcBlock) {
+	QString buf = srcBlock.text();
+	BlockData *data = getBlockData(srcBlock, false);
+	bool modified = false;
+	auto match = image_re.match(buf);		//	![title](image.png) を含むか？
+	while( match.hasMatch() ) {
+		modified = true;
+		int start = match.capturedStart(); // マッチした最初の位置
+	    int length = match.capturedLength(); // マッチした全体の長さ
+	    for(int i = start; i < start + length; ++i)
+	    	data->m_charFlags[i] = PCF_IMAGE;
+		match = image_re.match(buf, start + length);
+	}
+	match = link_re.match(buf);		//	[title](image.png) を含むか？
+	while( match.hasMatch() ) {
+		modified = true;
+		int start = match.capturedStart(); // マッチした最初の位置（'['）
+	    int length = match.capturedLength(); // マッチした全体の長さ
+	    data->m_charFlags[start] = PCF_LINK;
+	    int ix = buf.indexOf(']', start);
+	    for(int i = ix; i < start + length && i < data->m_charFlags.size(); ++i)
+	    	data->m_charFlags[i] = PCF_LINK;
+		match = link_re.match(buf, start + length);
+	}
+	for(int i = 0; i < buf.size() && buf[i] == u' '; ++i)
+		data->m_charFlags[i] = PCF_ESCAPE;
+	for(int i = buf.size(); --i >= 0 && buf[i] == u' '; )
+		data->m_charFlags[i] = PCF_ESCAPE;
+	int ix = 0;
+	while( (ix = buf.indexOf(u'\\', ix)) >= 0 ) {
+		if( ix + 1 < buf.size() && isEscapedChar(buf[ix+1]) ) {
+			modified = true;
+			data->m_charFlags[ix] = PCF_ESCAPE;
+			ix += 2;
+		} else
+			++ix;
+	}
+	if( updateCharFlags(data, buf, 0, buf.size()) )
+		modified = true;
+	if( modified ) {
+		srcBlock.setUserData(data);
+		qDebug() << "updateCharFlags(srcBlock)";
+		printCharFlags(srcBlock);
+	}
 }
 //----------------------------------------------------------------------
 DocWidget::DocWidget(const QString& title, const QString& fullPath, QWidget *parent)
