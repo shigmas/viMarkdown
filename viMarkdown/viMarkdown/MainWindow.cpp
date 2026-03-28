@@ -2445,6 +2445,25 @@ void MainWindow::do_test(DocWidget *docWidget, int nth_path) {
 	}
 	ASSERT( !block2.isValid(), block1.blockNumber());	//	同行数のはず
 }
+const QStringList QA_TEXT_FLAGS = {
+	"text",
+	"vvvv",
+	"*i*",
+	"=v=",
+	"**b**",
+	"==v==",
+	"*i* **b** ***bi*** ~~s~~",
+	"=v= ==v== ===vv=== ==v==",
+	"",
+	"",
+	"1. hoge",
+	"LLLvvvv",
+	"1. h*og*e",
+	"LLLv=vv=v",
+	"",
+	"",
+};
+#if 0
 const QString QA_MD_TEXT_1 =
 	"text\n"
 	"*i*\n"
@@ -2464,6 +2483,7 @@ const QStringList QA_MD_FLAGS = {
 	"LLLv=vv=v",
 	"",
 };
+#endif
 QChar g_flag_char[] = {
 	u'v',	//	PCF_VISIBLE = 0,	// プレビューに表示される
 	u'-',	//	PCF_COMMENTED,		//	コメントアウトされた文字
@@ -2481,11 +2501,16 @@ QChar g_flag_char[] = {
 	u'=',	//	PCF_EMPHASIZED,		//	ボールド、イタリック等
 };
 void MainWindow::test_charFlags(DocWidget *docWidget) {
-	docWidget->m_editor->setPlainText(QA_MD_TEXT_1);
+	QString buf;
+	for(int i = 0; i < QA_TEXT_FLAGS.size(); i += 2 )
+		buf += QA_TEXT_FLAGS[i] + "\n";
+	docWidget->m_editor->setPlainText(buf);
 	QTextBlock block1 = docWidget->m_editor->document()->firstBlock();
 	QTextBlock block2 = docWidget->m_preview->document()->firstBlock();
-	for(auto flags: QA_MD_FLAGS) {
+	//for(auto flags: QA_MD_FLAGS) {
+	for(int i = 1; i < QA_TEXT_FLAGS.size(); i += 2 ) {
 		QString buf1 = block1.text();
+		QString flags = QA_TEXT_FLAGS[i];
 		BlockData *data = getBlockData(block1);
 		ASSERT_EQ( (int)flags.size(), (int)data->m_charFlags.size(), block1.blockNumber());
 		for(int i = 0; i < flags.size(); ++i) {
