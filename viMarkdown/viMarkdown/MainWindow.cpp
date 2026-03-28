@@ -2445,6 +2445,22 @@ void MainWindow::do_test(DocWidget *docWidget, int nth_path) {
 	}
 	ASSERT( !block2.isValid(), block1.blockNumber());	//	同行数のはず
 }
+QChar g_flag_char[] = {
+	u'v',	//	PCF_VISIBLE = 0,	// プレビューに表示される
+	u'-',	//	PCF_COMMENTED,		//	コメントアウトされた文字
+	u'E',	//	PCF_ESCAPE,			//	エスケープ文字
+	u'H',	//	PCF_HEADING,		//	タイトル・見出し行
+	u'L',	//	PCF_LIST_MARK,		// "- " などリストマーカー
+	u'N',	//	PCF_NUM_LIST,		//	"1. " 連番
+	u'Q',	//	PCF_QUOTE,
+	u'K',	//	PCF_LINK,
+	u'I',	//	PCF_IMAGE,
+	u'C',	//	PCF_CODE,			// ```
+	u'S',	//	PCF_CSV,
+	u'T',	//	PCF_TABLE,			//	マークダウン表要素
+	u'K',	//	PCF_KEISEN,
+	u'=',	//	PCF_EMPHASIZED,		//	ボールド、イタリック等
+};
 const QStringList QA_TEXT_FLAGS = {
 	"text",
 	"vvvv",
@@ -2457,9 +2473,27 @@ const QStringList QA_TEXT_FLAGS = {
 	"",
 	"",
 	"1. hoge",
-	"LLLvvvv",
+	"NNNvvvv",
 	"1. h*og*e",
-	"LLLv=vv=v",
+	"NNNv=vv=v",
+	"1. h**og**e",
+	"NNNv==vv==v",
+	"",
+	"",
+	"- text",
+	"LLvvvv",
+	"- t*ex*t",
+	"LLv=vv=v",
+	"- t**ex**t",
+	"LLv==vv==v",
+	"",
+	"",
+	"- [ ] text",
+	"LLLLLLvvvv",
+	"- [x] t*ex*t",
+	"LLLLLLv=vv=v",
+	"- [X] t**ex**t",
+	"LLLLLLv==vv==v",
 	"",
 	"",
 };
@@ -2484,22 +2518,6 @@ const QStringList QA_MD_FLAGS = {
 	"",
 };
 #endif
-QChar g_flag_char[] = {
-	u'v',	//	PCF_VISIBLE = 0,	// プレビューに表示される
-	u'-',	//	PCF_COMMENTED,		//	コメントアウトされた文字
-	u'E',	//	PCF_ESCAPE,			//	エスケープ文字
-	u'H',	//	PCF_HEADING,		//	タイトル・見出し行
-	u'L',	//	PCF_LIST_MARK,		// "- " などリストマーカー
-	u'N',	//	PCF_NUM_LIST,		//	"1. " 連番
-	u'Q',	//	PCF_QUOTE,
-	u'K',	//	PCF_LINK,
-	u'I',	//	PCF_IMAGE,
-	u'C',	//	PCF_CODE,			// ```
-	u'S',	//	PCF_CSV,
-	u'T',	//	PCF_TABLE,			//	マークダウン表要素
-	u'K',	//	PCF_KEISEN,
-	u'=',	//	PCF_EMPHASIZED,		//	ボールド、イタリック等
-};
 void MainWindow::test_charFlags(DocWidget *docWidget) {
 	QString buf;
 	for(int i = 0; i < QA_TEXT_FLAGS.size(); i += 2 )
