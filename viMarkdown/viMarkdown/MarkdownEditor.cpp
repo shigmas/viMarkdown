@@ -2266,18 +2266,20 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const	//
 			if( block.position() == pos ) break;
 		} else if( ch == ETX ) {		//	行末の場合
 			if( !block.next().isValid() ) break;		//	最終行の場合
+			if( !block.text().startsWith("```") ) {		//	``` 行は無視
 #if 1	//	GFM
-			if( pos >= block.position() && pos < block.next().position() ) break;
-			if( !block.text().isEmpty() || block.previous().isValid() && !block.previous().text().isEmpty() )		//	連続空行でない場合
-				++count;
+				if( pos >= block.position() && pos < block.next().position() ) break;
+				if( !block.text().isEmpty() || block.previous().isValid() && !block.previous().text().isEmpty() )		//	連続空行でない場合
+					++count;
 #else	//	コモンマークダウン
-			bool prefix = block.text().indexOf(re_prefix) == 0;		//	# 等の接頭辞？あり
-			if( prefix || block.text().endsWith("  ") || block.next().text().isEmpty() ) {
-				if( block.next().position() >= pos )
-					break;
-				++count;
-			}
+				bool prefix = block.text().indexOf(re_prefix) == 0;		//	# 等の接頭辞？あり
+				if( prefix || block.text().endsWith("  ") || block.next().text().isEmpty() ) {
+					if( block.next().position() >= pos )
+						break;
+					++count;
+				}
 #endif
+			}
 		} else {
 			bool inComment = block.userState() == US_IN_COMMENT;
 			bool inCSVBlock = block.userState() == US_CSV_BLOCK;

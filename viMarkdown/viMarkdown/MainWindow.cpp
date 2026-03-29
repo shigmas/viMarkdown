@@ -2219,7 +2219,7 @@ const QString QA_MD_TEXT_2 =
 	"x![v](url)y![v](url)z\n"	//	画像が複数
 	"x![v](url)![v](url)z\n"	//	画像が連続
 #if 1
-	"## heading\n"
+	"## list\n"
 	"text\n"
 	"- item1\n"
 	"  - item1.2\n"
@@ -2248,6 +2248,7 @@ const QString QA_MD_TEXT_2 =
 	"> quote-4\n"
 	"\n"
 	"\\> quote-5\n"
+	"## block\n"
 	"text\n"
 	"```\n"		//	コードブロック開始
 	"int main() { return 0; }\n"
@@ -2260,6 +2261,7 @@ const QString QA_MD_TEXT_2 =
 	"```\n"		//	罫線ブロック終了
 	"text\n"
 #if 1
+	"## table\n"
 	"```CSV\n"	//	CSVブロック開始
 	"id, h*h*h2, h3\n"
 	"69, ""hasshi"", h\\*o\\*ge\n"

@@ -1381,6 +1381,15 @@ int MarkdownPreview::prvToSrcHeading(int blockNum) {
 #endif
 }
 #endif
+#if 0
+bool isLastBlockInRow(QTextBlock block) {
+	QTextCursor cursor(block);
+	QTextTable *table = cursor.currentTable();
+	if( table == nullptr ) return false;
+	int col = table->cellAt(cursor).column();
+	return col >= table->columns();
+}
+#endif
 int MarkdownPreview::findPosition(const PosContext &context) {
 	QTextBlock block = document()->findBlockByNumber(context.m_prvHBlockNum);
 	const QChar ch = context.m_anchorChar;
@@ -1394,8 +1403,16 @@ int MarkdownPreview::findPosition(const PosContext &context) {
 			block = block.next();
 			ix = 0;
 		} else if( ch == ETX ) {		//	行末の場合
+			//	undone: 表内の場合は、行最後のセルでのみカウント
 			ix = buf.size();
-			if( --nth == 0 ) break;
+			QTextCursor cursor(block);
+			QTextTable *table = cursor.currentTable();
+			if( table == nullptr ) {
+				if( --nth == 0 ) break;
+			} else {
+				if( table->cellAt(cursor).column() >= table->columns() )
+					if( --nth == 0 ) break;
+			}
 			block = block.next();
 			ix = 0;
 		} else {		//	非行末の場合
