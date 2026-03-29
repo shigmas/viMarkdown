@@ -43,6 +43,22 @@ const QStringView KEY_FAVORITE_FILES(u"favoriteFilePaths");
 //const QStringView KEY_EDITOR_FONT_SIZE(u"editorFontSize");
 
 Global g;
+QChar g_flag_char[] = {
+	u'v',	//	PCF_VISIBLE = 0,	// プレビューに表示される
+	u'-',	//	PCF_COMMENTED,		//	コメントアウトされた文字
+	u'E',	//	PCF_ESCAPE,			//	エスケープ文字
+	u'H',	//	PCF_HEADING,		//	タイトル・見出し行
+	u'L',	//	PCF_LIST_MARK,		// "- " などリストマーカー
+	u'N',	//	PCF_NUM_LIST,		//	"1. " 連番
+	u'Q',	//	PCF_QUOTE,
+	u'K',	//	PCF_LINK,
+	u'I',	//	PCF_IMAGE,
+	u'C',	//	PCF_CODE,			// ```
+	u'S',	//	PCF_CSV,
+	u'T',	//	PCF_TABLE,			//	マークダウン表要素
+	u'K',	//	PCF_KEISEN,
+	u'=',	//	PCF_EMPHASIZED,		//	ボールド、イタリック等
+};
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
@@ -2251,6 +2267,8 @@ const QString QA_MD_TEXT_2 =
 	"|he**ad**er|h|\n"
 	"|-|-|\n"
 	"|3|1415|\n"
+	"| a |xyz|\n"
+	"|a|\\[xyz\\]|\n"
 	"|f\\*o\\*o|bar|\n"
 #endif
 	"text\n"
@@ -2432,7 +2450,7 @@ void MainWindow::do_test(DocWidget *docWidget, int nth_path) {
 			for(int i = 0; i < table->columns() - 1; ++i) {
 				block2 = block2.next();
 				assert( block2.isValid() );
-				buf2 += " " + block2.text();
+				buf2 += /*" " +*/ block2.text();
 			}
 			//block2 = block2.next();
 			assert( block2.isValid() );
@@ -2441,21 +2459,26 @@ void MainWindow::do_test(DocWidget *docWidget, int nth_path) {
 			//inTable = false;
 		}
 		QStringList tableTokens;
-		if( isTableLine(buf1, buf1, tableTokens) ) {
+		if( isTableLine(buf1, buf1, tableTokens) ) {	//  GFM表
 			//buf1.clear();
 			QString t;
-			for(auto token : tableTokens) {
+			for(auto token : tableTokens) {			//	undone: 非表示文字の削除が必要では？？？
 				if( !t.isEmpty() ) t += " ";
 				t += token;
 			}
 			buf1 = t;
 		} else {
+			if( block1.userState() == US_CSV_BLOCK ) {
+				//qDebug() << "block1.userState() == US_CSV_BLOCK";
+			}
 			//buf1.remove(prefix_re);
 			BlockData *data = getBlockData(block1);
 			int k = 0;
 			for(int i = 0; i < data->m_charFlags.size(); ++i) {		//	buf1: 非表示部分を削除
 				if( data->m_charFlags[i] == PCF_VISIBLE ) {
 					buf1[k++] = buf1[i];
+				//} else if( data->m_charFlags[i] == g_flag_char[PCF_CSV] ) {
+				//	buf1[k++] = u' ';
 				}
 			}
 			buf1.resize(k);
@@ -2500,22 +2523,6 @@ void MainWindow::do_test(DocWidget *docWidget, int nth_path) {
 	}
 	ASSERT( !block2.isValid(), block1.blockNumber());	//	同行数のはず
 }
-QChar g_flag_char[] = {
-	u'v',	//	PCF_VISIBLE = 0,	// プレビューに表示される
-	u'-',	//	PCF_COMMENTED,		//	コメントアウトされた文字
-	u'E',	//	PCF_ESCAPE,			//	エスケープ文字
-	u'H',	//	PCF_HEADING,		//	タイトル・見出し行
-	u'L',	//	PCF_LIST_MARK,		// "- " などリストマーカー
-	u'N',	//	PCF_NUM_LIST,		//	"1. " 連番
-	u'Q',	//	PCF_QUOTE,
-	u'K',	//	PCF_LINK,
-	u'I',	//	PCF_IMAGE,
-	u'C',	//	PCF_CODE,			// ```
-	u'S',	//	PCF_CSV,
-	u'T',	//	PCF_TABLE,			//	マークダウン表要素
-	u'K',	//	PCF_KEISEN,
-	u'=',	//	PCF_EMPHASIZED,		//	ボールド、イタリック等
-};
 const QStringList QA_TEXT_FLAGS = {
 	"text",
 	"vvvv",
