@@ -2163,7 +2163,8 @@ const QString QA_MD_TEXT_2 =
 	//"1. item1\n"
 	//"1. *italic*\n"
 	//"\n"
-	//"x![v](url)y\n"	//	画像
+	//"![v](url)\n"	//	画像
+	//"\n"
 #if 0
 	"<!-- comment -->\n"
 	"# title\n"
@@ -2388,7 +2389,10 @@ void MainWindow::do_test(int type) {
 		total_failed += g_failed_count;
 	}
 	//do_test(docWidget, PATH_3);		//	PtoE 行内表示文字一致テスト
-	QString mess = QString("Total: %1 failed / %2 tested.").arg(total_failed).arg(total_tested);
+	//QString mess = QString("Total: %1 failed / %2 tested. (Fail:%3%)")
+	//				.arg(total_failed).arg(total_tested).arg(total_failed*100.0/total_tested, 0, 'f', 1);
+	QString mess = QString("Total: %1 failed / %2 tested. (Success:%3%)")
+					.arg(total_failed).arg(total_tested).arg(100.0 - total_failed*100.0/total_tested, 0, 'f', 1);
 	statusBar()->showMessage(mess);
 	g_result += "\n" + mess;
 	qDebug() << "test result:\n" << g_result;
@@ -2450,7 +2454,7 @@ void MainWindow::do_test(DocWidget *docWidget, int nth_path) {
 			for(int i = 0; i < table->columns() - 1; ++i) {
 				block2 = block2.next();
 				assert( block2.isValid() );
-				buf2 += /*" " +*/ block2.text();
+				buf2 += /*" " +*/ block2.text().trimmed();
 			}
 			//block2 = block2.next();
 			assert( block2.isValid() );
@@ -2458,6 +2462,18 @@ void MainWindow::do_test(DocWidget *docWidget, int nth_path) {
 		} else {
 			//inTable = false;
 		}
+#if 1
+		BlockData *data = getBlockData(block1);
+		int k = 0;
+		for(int i = 0; i < data->m_charFlags.size(); ++i) {		//	buf1: 非表示部分を削除
+			if( data->m_charFlags[i] == PCF_VISIBLE ) {
+				buf1[k++] = buf1[i];
+			//} else if( data->m_charFlags[i] == g_flag_char[PCF_CSV] ) {
+			//	buf1[k++] = u' ';
+			}
+		}
+		buf1.resize(k);
+#else
 		QStringList tableTokens;
 		if( isTableLine(buf1, buf1, tableTokens) ) {	//  GFM表
 			//buf1.clear();
@@ -2483,19 +2499,26 @@ void MainWindow::do_test(DocWidget *docWidget, int nth_path) {
 			}
 			buf1.resize(k);
 		}
+#endif
 		buf2.remove(QChar(CODE_IMAGE));
-		if( ASSERT_EQ( buf1.trimmed(), buf2, block1.blockNumber()) ) {	//	表示テキストが一致した場合
+		ASSERT_EQ( buf1.trimmed(), buf2, block1.blockNumber());
+		//if( ASSERT_EQ( buf1.trimmed(), buf2, block1.blockNumber()) )	//	表示テキストが一致した場合
+		{
 			if( nth_path == PATH_2 ) {
 				//	エディタ → プレビュー カーソル同期テスト
+				//		![v](url) の場合、m_charFlags[] = {I, I, I, ... I}
+				//		column: 0 -> 0, 1 ～ 9 -> 1 （画像があるため１ずれる）
 				QTextCursor cursor(block1);
 				const BlockData *data = getBlockData(block1);
 				int nvcnt = 0;	//	非表示文字数
 				for(int i = 0; i < block1.text().size(); ++i) {
-					int k1 = i - nvcnt;
+					int k1 = i - nvcnt;			//	k1: 期待されるカーソル位置
+					if( i != 0 && data->m_charFlags[i] == PCF_IMAGE )
+						++k1;
 					if( data->m_charFlags[i] != PCF_VISIBLE ) ++nvcnt;
 					docWidget->m_editor->setTextCursor(cursor);
 					QTextCursor cur2 = docWidget->m_preview->textCursor();		//	プレビューカーソル
-					int k2 = cur2.position() - cur2.block().position();
+					int k2 = cur2.position() - cur2.block().position();			//	k2: プレビューカーソルカラム
 					ASSERT_EQ( k2, k1, block1.blockNumber() );
 					cursor.movePosition(QTextCursor::Right);
 				}
@@ -2630,6 +2653,8 @@ const QStringList QA_TEXT_FLAGS = {
 	"vvTv=v=vv",
 	"69|h\\*a\\*ck",
 	"vvTv-vv-vvv",
+	" a |xyz",
+	"-v--vvv",
 	"",
 	"",
 };

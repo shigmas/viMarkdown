@@ -154,7 +154,11 @@ bool isTableLine(const QString& lnStr0, const QString& lnStr, QStringList &table
 	QString sv(lnStr);
 	tableTokens.clear();
 	int ix = 0;
-	while( ix < sv.size() && sv[ix] == u' ' ) ++ix;		//	空白スキップ
+	while( ix < sv.size() && sv[ix] == u' ' ) {
+		if( data != nullptr )
+			data->m_charFlags[ix] = PCF_ESCAPE;	//	| 直後空白は非表示
+		++ix;		//	空白スキップ
+	}
 	if (ix < sv.size() && sv[ix] == u'|') {
 		if( data != nullptr )
 			data->m_charFlags[ix] = PCF_TABLE;
@@ -168,6 +172,8 @@ bool isTableLine(const QString& lnStr0, const QString& lnStr, QStringList &table
 		}
 		tableTokens.push_back(sv.mid(ix0, ix-ix0));
 		if( data != nullptr ) {
+			for(int i = ix; --i >= 0 && lnStr0[i] == u' '; )	//	| 直前空白は非表示
+				data->m_charFlags[i] = PCF_ESCAPE;
 			if( ix < sv.size() )
 				data->m_charFlags[ix] = PCF_TABLE;
 			updateCharFlags(data, lnStr0, ix0, ix, true);		//	true for エスケープ文字処理
