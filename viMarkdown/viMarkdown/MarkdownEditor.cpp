@@ -2261,8 +2261,10 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const	//
 		if( ch == STX ) {		//	行頭の場合
 			if( !block.next().isValid() ) break;		//	最終行の場合
 			//if( block.next().position() == pos ) break;
-			if( !(block.text().isEmpty() && block.previous().isValid() && block.previous().text().isEmpty()) )		//	連続空行でない場合
-				++count;
+			if( !block.text().startsWith("```") ) {		//	``` 行は無視
+				if( !(block.text().isEmpty() && block.previous().isValid() && block.previous().text().isEmpty()) )		//	連続空行でない場合
+					++count;
+			}
 			if( block.position() == pos ) break;
 		} else if( ch == ETX ) {		//	行末の場合
 			if( !block.next().isValid() ) break;		//	最終行の場合
