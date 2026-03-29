@@ -2216,6 +2216,8 @@ const QString QA_MD_TEXT_2 =
 	"x[v](url)y\n"	//	リンク
 	"![v](url)\n"	//	画像
 	"x![v](url)y\n"	//	画像
+	"x![v](url)y![v](url)z\n"	//	画像が複数
+	"x![v](url)![v](url)z\n"	//	画像が連続
 #if 1
 	"## heading\n"
 	"text\n"
@@ -2513,7 +2515,7 @@ void MainWindow::do_test(DocWidget *docWidget, int nth_path) {
 				int nvcnt = 0;	//	非表示文字数
 				for(int i = 0; i < block1.text().size(); ++i) {
 					int k1 = i - nvcnt;			//	k1: 期待されるカーソル位置
-					if( i != 0 && data->m_charFlags[i] == PCF_IMAGE )
+					if( i != 0 && data->m_charFlags[i-1] == PCF_IMAGE && data->m_charFlags[i] == PCF_IMAGE )
 						++k1;
 					if( data->m_charFlags[i] != PCF_VISIBLE ) ++nvcnt;
 					docWidget->m_editor->setTextCursor(cursor);
