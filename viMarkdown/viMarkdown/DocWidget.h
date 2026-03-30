@@ -17,6 +17,7 @@ enum {
     PCF_NUM_LIST,		//	"1. " 連番
     PCF_QUOTE,
     PCF_LINK,
+    PCF_IMAGE_BEGIN,	//	最初の '!' 位置
     PCF_IMAGE,
     PCF_CODE,			// ```
     PCF_CSV,

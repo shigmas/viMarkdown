@@ -592,7 +592,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 	m_processing = false;
 }
 void insertTable(QTextCursor& cursor, const QList<QStringList> &ll, int max_clmn, vector<char> *tableAlign = nullptr) {
-	static QRegularExpression re("^[+-]?(\\d+\\.\\d*|\\d+|\\.\\d+)$");
+	static QRegularExpression numbers_re("^[+-]?(\\d+\\.\\d*|\\d+|\\.\\d+)%?$");
 	QTextTable *table = cursor.insertTable(ll.size(), max_clmn);
 	for(int row = 0; row < ll.size(); ++row) {
 		for(int col = 0; col < ll[row].size(); ++col) {
@@ -617,7 +617,7 @@ void insertTable(QTextCursor& cursor, const QList<QStringList> &ll, int max_clmn
 							blockFormat.setAlignment(Qt::AlignRight);  // 右揃え
 						else
 							blockFormat.setAlignment(Qt::AlignLeft);   // その他は左
-					} else if (re.match(ll[row][col]).hasMatch()) {
+					} else if (numbers_re.match(ll[row][col]).hasMatch()) {
 						blockFormat.setAlignment(Qt::AlignRight);  // 数値は右
 					} else {
 						blockFormat.setAlignment(Qt::AlignLeft);   // その他は左

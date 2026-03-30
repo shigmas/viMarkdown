@@ -277,7 +277,8 @@ void updateCharFlags(QTextBlock srcBlock) {
 		modified = true;
 		int start = match.capturedStart(); // マッチした最初の位置
 	    int length = match.capturedLength(); // マッチした全体の長さ
-	    for(int i = start; i < start + length; ++i)
+    	data->m_charFlags[start] = PCF_IMAGE_BEGIN;
+	    for(int i = start + 1; i < start + length; ++i)
 	    	data->m_charFlags[i] = PCF_IMAGE;
 		match = image_re.match(buf, start + length);
 	}
