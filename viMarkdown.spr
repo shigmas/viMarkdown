@@ -1137,7 +1137,7 @@ SPR# 状 P Open Close ver     Type  概要
 1121 ◎ C 03/30 03/31 01214│ToDo│Other > Test > DumpCharFlags もついでに実装しておく
 1122 ◎ C 03/31 03/31 01214│ToDo│EtoP カーソル同期テスト結果書式： エディタ行番号: 'a' -> Pix: 0 expected, but 1 
 1123 ◎ C 03/31 03/31 01214│ToDo│Other > Test > DumpCharFlags：エディタに結果を出力した方がよい？
-1124 ● C 03/31            │ToDo│
+1124 ◎ C 03/31 03/31 01214│ToDo│Other > Test > DumpPreviewBlocks もエディタに結果を出力した方がよい
 1125 ● C 03/31            │ToDo│
 1126 ● C 03/31            │ToDo│
 1127 ● C 03/31            │ToDo│

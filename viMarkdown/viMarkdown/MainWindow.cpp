@@ -2767,7 +2767,7 @@ void MainWindow::onAction_DumpCharFlags() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	QTextBlock block = docWidget->m_editor->document()->firstBlock();
-	QString txt = "\n# dump charFlags[]\n\n```\n";
+	QString txt = "\n# Dump charFlags[]\n\n```\n";
 	while( block.isValid() ) {
 		//qDebug() << block.blockNumber() << ": " << block.userState() << ", " << block.text();
 		//printCharFlags(block);
@@ -2788,8 +2788,16 @@ void MainWindow::onAction_DumpPreviewBlocks() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	QTextBlock block = docWidget->m_preview->document()->firstBlock();
+	QString txt = "\n# Dump userState[] of Preview Blocks\n\n```\n";
 	while( block.isValid() ) {
-		qDebug() << block.blockNumber() << ": " << block.userState() << ", " << block.text();
+		//qDebug() << block.blockNumber() << ": " << block.userState() << ", " << block.text();
+		//txt += QString::number((int)block.blockNumber()) + ": '" + block.userState();
+		txt += QString("%1: %2 '%3'\n").arg(block.blockNumber()).arg(block.userState()).arg(block.text());
 		block = block.next();
 	}
+	txt += "```\n";
+	QTextCursor cursor = docWidget->m_editor->textCursor();
+	cursor.movePosition(QTextCursor::End);
+	cursor.insertText(txt);
+	docWidget->m_editor->setTextCursor(cursor);
 }
