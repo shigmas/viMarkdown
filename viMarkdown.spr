@@ -1133,7 +1133,7 @@ SPR# 状 P Open Close ver     Type  概要
 									テストケース：{テキスト、{カーソル位置、アンカー文字, ...}*複数} 形式
 1118 ● C 03/30            │問題│CSV表があると、空行でのEtoPカーソル位置同期が不正になる（原因：MarkdownPreview::findPosition() が STX 対応不十分？）
 1119 ◎ C 03/30 03/30 01213│ToDo│Other > Test > DumpPreviewBlocks 実装
-1120 ● C 03/30            │ToDo│CSV表：前後のダミーブロックの userState 設定
+1120 ◎ C 03/30 03/30 01213│ToDo│CSV表：前後のダミーブロックの userState 設定
 1121 ● C 03/30            │ToDo│
 1122 ● C 03/30            │ToDo│
 1123 ● C 03/30            │ToDo│

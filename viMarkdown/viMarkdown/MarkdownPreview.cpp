@@ -630,9 +630,15 @@ void insertTable(QTextCursor& cursor, const QList<QStringList> &ll, int max_clmn
 			}
 		}
 	}
+	QTextCursor cur = cursor;
+	cur.setPosition(table->firstPosition() - 1);
+	cur.block().setUserState(US_TABLE);
 	cursor.setPosition(table->lastPosition());
 	cursor.movePosition(QTextCursor::NextCharacter);
 	cursor.insertBlock();
+	cur = cursor;
+	cur.setPosition(table->lastPosition() + 1);		//	テーブルの外に出るには +1
+	cur.block().setUserState(US_TABLE);
 }
 void MarkdownPreview::do_table(QTextBlock& srcBlock, QTextCursor& cursor) {
 #if 0
