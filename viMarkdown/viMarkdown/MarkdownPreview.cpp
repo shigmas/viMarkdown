@@ -1402,28 +1402,37 @@ int MarkdownPreview::findPosition(const PosContext &context) {
 	int nth = context.m_nth;
 	int ix = 0;
 	while( block.isValid() ) {
+		if( block.userState() == US_TABLE ) {		//	CSV, GFM表 のダミーブロックの場合
+			block = block.next();
+			continue;
+		}
 		QString buf = block.text();
 		if( ch == STX ) {		//	行頭の場合
 			ix = 0;
 			QTextCursor cursor(block);
 			QTextTable *table = cursor.currentTable();
-			//	暫定的：直前の空ブロックですでにデクリメントされているので、最初の行では nth をデクリメントしない
-			if( table == nullptr || table->cellAt(cursor).column() == 0 && table->cellAt(cursor).row() != 0 ) {
+			//	~~暫定的：直前の空ブロックですでにデクリメントされているので、最初の行では nth をデクリメントしない~~
+			if( table == nullptr || table->cellAt(cursor).column() == 0 /*&& table->cellAt(cursor).row() != 0*/ ) {
 				if( --nth == 0 ) break;
 			}
+			//if( --nth == 0 ) break;
 			block = block.next();
-			ix = 0;
+			//ix = 0;
 		} else if( ch == ETX ) {		//	行末の場合
 			//	undone: 表内の場合は、行最後のセルでのみカウント
 			ix = buf.size();
+#if 1
 			QTextCursor cursor(block);
 			QTextTable *table = cursor.currentTable();
 			if( table == nullptr ) {
 				if( --nth == 0 ) break;
 			} else {
-				if( table->cellAt(cursor).column() >= table->columns() )
+				if( table->cellAt(cursor).column() >= table->columns() - 1)
 					if( --nth == 0 ) break;
 			}
+#else
+			if( --nth == 0 ) break;
+#endif
 			block = block.next();
 			ix = 0;
 		} else {		//	非行末の場合
