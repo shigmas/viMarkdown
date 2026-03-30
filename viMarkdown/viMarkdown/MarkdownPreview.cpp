@@ -1399,7 +1399,12 @@ int MarkdownPreview::findPosition(const PosContext &context) {
 		QString buf = block.text();
 		if( ch == STX ) {		//	行頭の場合
 			ix = 0;
-			if( --nth == 0 ) break;
+			QTextCursor cursor(block);
+			QTextTable *table = cursor.currentTable();
+			//	暫定的：直前の空ブロックですでにデクリメントされているので、最初の行では nth をデクリメントしない
+			if( table == nullptr || table->cellAt(cursor).column() == 0 && table->cellAt(cursor).row() != 0 ) {
+				if( --nth == 0 ) break;
+			}
 			block = block.next();
 			ix = 0;
 		} else if( ch == ETX ) {		//	行末の場合

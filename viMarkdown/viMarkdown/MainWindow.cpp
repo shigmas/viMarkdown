@@ -441,9 +441,11 @@ void MainWindow::setup_connections() {
 	connect(ui->action_Help, &QAction::triggered, this, &MainWindow::onAction_Help);
 	//connect(ui->action_Test, &QAction::triggered, this, &MainWindow::onAction_Test);
 	connect(ui->action_TestCharFlags, &QAction::triggered, this, &MainWindow::onAction_TestCharFlags);
+	connect(ui->action_TestContextAt, &QAction::triggered, this, &MainWindow::onAction_TestContextAt);
 	connect(ui->action_TestLineCrsp, &QAction::triggered, this, &MainWindow::onAction_TestLineCrsp);
 	connect(ui->action_TestEtoPCurSync, &QAction::triggered, this, &MainWindow::onAction_TestEtoPCurSync);
 	connect(ui->action_TestAll, &QAction::triggered, this, &MainWindow::onAction_TestAll);
+	connect(ui->action_DumpPreviewBlocks, &QAction::triggered, this, &MainWindow::onAction_DumpPreviewBlocks);
 	connect(ui->action_AddThisFavorite, &QAction::triggered, this, &MainWindow::onAction_AddThisFavorite);
 	connect(ui->action_New, &QAction::triggered, this, &MainWindow::onAction_New);
 	connect(ui->action_NewTab, &QAction::triggered, this, &MainWindow::onAction_NewTab);
@@ -2292,6 +2294,7 @@ bool ASSERT(bool actual, int ln) {
 	g_result += QString("%1: true expected. but false\n").arg(ln+1);
 	return false;
 }
+//	undone: テンプレート関数化
 bool ASSERT_EQ(bool expected, bool actual, int ln) {
 	++g_tested_count;
 	if( actual == expected ) return true;
@@ -2303,6 +2306,13 @@ bool ASSERT_EQ(int expected, int actual, int ln) {
 	if( actual == expected ) return true;
 	++g_failed_count;
 	g_result += QString("%1: %2 expected. but %3\n").arg(ln+1).arg(expected).arg(actual);
+	return false;
+}
+bool ASSERT_EQ(const QChar expected, const QChar actual, int ln) {
+	++g_tested_count;
+	if( actual == expected ) return true;
+	++g_failed_count;
+	g_result += QString("%1: '%2' expected. but '%3'\n").arg(ln+1).arg(expected).arg(actual);
 	return false;
 }
 bool ASSERT_EQ(const QString &expected, const QString &actual, int ln) {
@@ -2322,31 +2332,19 @@ bool isCommentOuted(const BlockData* data) {
 enum { PATH_1 = 1, PATH_2, PATH_3, };
 enum {
 	TEST_CHAR_FLAGS = 1,
-	TEST_LINE_CRSP = 2,
-	TEST_EtoP_CUR_SYNC = 4,
-	TEST_ALL = 0xff,	//	とりあえず８ビットまで対応
+	TEST_CONTEXT_AT = 2,
+	TEST_LINE_CRSP = 4,			//	対応行テキストチェック
+	TEST_EtoP_CUR_SYNC = 8,		//	対応行カーソル位置同期チェック
+	TEST_ALL = 0xffff,			//	とりあえず16ビットまで対応
 };
 
 void MainWindow::onAction_Test() {
 }
 void MainWindow::onAction_TestCharFlags() {
 	do_test(TEST_CHAR_FLAGS);
-#if 0
-	addTab(QString("QA-%1").arg(++m_QA_tab_number));
-	DocWidget *docWidget = getCurDocWidget();;
-	if( docWidget == nullptr ) return;
-	g_tested_count = 0;
-	g_failed_count = 0;
-	g_result = "\n# Test Result:\n\n";
-	test_charFlags(docWidget);			//	m_charFlags[] テスト
-	QString mess = QString("total: %1 failed / %2 tested.").arg(g_failed_count).arg(g_tested_count);
-	statusBar()->showMessage(mess);
-	g_result += "\n" + mess;
-	qDebug() << "test result:\n" << g_result;
-	QTextCursor cursor = docWidget->m_editor->textCursor();
-	cursor.movePosition(QTextCursor::End);
-	cursor.insertText(g_result);
-#endif
+}
+void MainWindow::onAction_TestContextAt() {
+	do_test(TEST_CONTEXT_AT);
 }
 void MainWindow::onAction_TestLineCrsp() {
 	do_test(TEST_LINE_CRSP);
@@ -2370,6 +2368,14 @@ void MainWindow::do_test(int type) {
 		g_failed_count = 0;
 		test_charFlags(docWidget);			//	m_charFlags[] テスト
 		g_result += QString("\nTest char flags: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count);
+		total_tested += g_tested_count;
+		total_failed += g_failed_count;
+	}
+	if( (type & TEST_CONTEXT_AT) != 0 ) {
+		g_tested_count = 0;
+		g_failed_count = 0;
+		test_contextAt(docWidget);			//	MarkdownEditor::contextAt テスト
+		g_result += QString("\nTest MarkdownEditor::contextAt: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count);
 		total_tested += g_tested_count;
 		total_failed += g_failed_count;
 	}
@@ -2713,5 +2719,46 @@ void MainWindow::test_charFlags(DocWidget *docWidget) {
 			}
 		}
 		block1 = block1.next();
+	}
+}
+const QStringList QA_CONTEXT_AT = {
+	"# title",
+	"text",
+	"",
+};
+struct TestCaseContextAt {
+	int		m_position;
+	QChar	m_anchorChar;
+	int		m_offset;
+	int		m_nth;
+} g_testCaseContextAt[] = {
+	{0, u't', 0, 1},	//	[#] title
+	{1, u't', 0, 1},
+	{2, u't', 0, 1},	//	# [t]itle
+	{3, u'i', 0, 1},
+	{4, u't', 0, 2},	//	# title		２つめの t
+	{5, u'l', 0, 1},	//	# title
+	{6, u'e', 0, 1},	//	# title
+	{7, ETX, 0, 1},		//	# title
+};
+void MainWindow::test_contextAt(DocWidget *docWidget) {
+	QString buf;
+	for(int i = 0; i < QA_CONTEXT_AT.size(); ++i)
+		buf += QA_CONTEXT_AT[i] + "\n";
+	docWidget->m_editor->setPlainText(buf);
+	QTextCursor cursor = docWidget->m_editor->textCursor();
+	for(auto tc: g_testCaseContextAt) {
+		cursor.setPosition(tc.m_position);
+		PosContext pc = docWidget->m_editor->contextAt(tc.m_position);
+		ASSERT_EQ( tc.m_anchorChar, pc.m_anchorChar, cursor.block().blockNumber() );
+	}
+}
+void MainWindow::onAction_DumpPreviewBlocks() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	QTextBlock block = docWidget->m_preview->document()->firstBlock();
+	while( block.isValid() ) {
+		qDebug() << block.blockNumber() << ": " << block.userState() << ", " << block.text();
+		block = block.next();
 	}
 }

@@ -188,6 +188,7 @@ protected:
     void	onSrcCursorPosChanged();
     void	syncEditorPreviewScroll();
     void	test_charFlags(DocWidget*);
+    void	test_contextAt(DocWidget*);
     void	do_test(int type);
     void	do_test(DocWidget*, int nth_path);
 
@@ -249,9 +250,11 @@ protected:
     void	onAction_Help();
     void	onAction_Test();
     void	onAction_TestCharFlags();
+    void	onAction_TestContextAt();
     void	onAction_TestLineCrsp();
     void	onAction_TestEtoPCurSync();
     void	onAction_TestAll();
+    void	onAction_DumpPreviewBlocks();
     void	onAction_Exit();
 
     void	onAboutToShow_RecentFiles();

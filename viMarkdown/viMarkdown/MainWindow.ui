@@ -171,9 +171,11 @@
       <string>&amp;Test</string>
      </property>
      <addaction name="action_TestCharFlags"/>
+     <addaction name="action_TestContextAt"/>
      <addaction name="action_TestLineCrsp"/>
      <addaction name="action_TestEtoPCurSync"/>
      <addaction name="action_TestAll"/>
+     <addaction name="action_DumpPreviewBlocks"/>
     </widget>
     <addaction name="action_Settings"/>
     <addaction name="action_Help"/>
@@ -962,7 +964,7 @@
     <string>Test LineCoresponding</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Alt+2</string>
+    <string>Ctrl+Alt+3</string>
    </property>
   </action>
   <action name="action_TestEtoPCurSync">
@@ -970,7 +972,23 @@
     <string>&amp;EtoP CurSync</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Alt+3</string>
+    <string>Ctrl+Alt+4</string>
+   </property>
+  </action>
+  <action name="action_TestContextAt">
+   <property name="text">
+    <string>Conte&amp;xtAt</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+2</string>
+   </property>
+  </action>
+  <action name="action_DumpPreviewBlocks">
+   <property name="text">
+    <string>DumpPreview&amp;Blocks</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+B</string>
    </property>
   </action>
  </widget>
