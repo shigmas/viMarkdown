@@ -2767,11 +2767,22 @@ void MainWindow::onAction_DumpCharFlags() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	QTextBlock block = docWidget->m_editor->document()->firstBlock();
+	QString txt = "\n# dump charFlags[]\n\n```\n";
 	while( block.isValid() ) {
 		//qDebug() << block.blockNumber() << ": " << block.userState() << ", " << block.text();
-		printCharFlags(block);
+		//printCharFlags(block);
+		txt += QString::number((int)block.blockNumber()) + ": '" + block.text() + "' ";
+		const BlockData* data = getBlockData(block);
+		for(int i = 0; i < data->m_charFlags.size(); ++i)
+			txt += QString::number((int)data->m_charFlags[i]) + u' ';
+		txt += "\n";
 		block = block.next();
 	}
+	txt += "```\n";
+	QTextCursor cursor = docWidget->m_editor->textCursor();
+	cursor.movePosition(QTextCursor::End);
+	cursor.insertText(txt);
+	docWidget->m_editor->setTextCursor(cursor);
 }
 void MainWindow::onAction_DumpPreviewBlocks() {
 	DocWidget *docWidget = getCurDocWidget();
