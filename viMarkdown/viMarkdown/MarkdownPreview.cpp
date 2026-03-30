@@ -651,16 +651,18 @@ void MarkdownPreview::do_table(QTextBlock& srcBlock, QTextCursor& cursor) {
 #if 1		//	insertTable() 使用版
 	QList<QStringList> ll;
 	ll.push_back(m_tableTokens);
+	assert(srcBlock.blockNumber() == m_ln);
 	m_ln += 2;
 	srcBlock.setUserState(US_TABLE);
 	srcBlock = srcBlock.next();
 	srcBlock.setUserState(US_TABLE);
 	srcBlock = srcBlock.next();
-	assert( srcBlock.blockNumber() == m_ln );
+	//assert( srcBlock.blockNumber() == m_ln );  block が invalid の場合には失敗する
 	BlockData *data = nullptr;		//getBlockData(srcBlock);
 	int max_clmn = m_tableTokens.size();
 	bool inComment = false;
 	while( m_ln < m_lst.size() ) {
+		assert(srcBlock.blockNumber() == m_ln);
 		if( inComment ) {
 			if( m_lst[m_ln++].indexOf("-->") >= 0 )		//	とりあえず --> 以降は無視
 				inComment = false;
