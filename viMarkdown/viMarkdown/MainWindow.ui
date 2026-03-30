@@ -175,6 +175,7 @@
      <addaction name="action_TestLineCrsp"/>
      <addaction name="action_TestEtoPCurSync"/>
      <addaction name="action_TestAll"/>
+     <addaction name="action_DumpCharFlags"/>
      <addaction name="action_DumpPreviewBlocks"/>
     </widget>
     <addaction name="action_Settings"/>
@@ -989,6 +990,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+B</string>
+   </property>
+  </action>
+  <action name="action_DumpCharFlags">
+   <property name="text">
+    <string>DumpChar&amp;Flags</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+F</string>
    </property>
   </action>
  </widget>

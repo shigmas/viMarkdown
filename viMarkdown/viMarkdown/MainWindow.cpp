@@ -445,6 +445,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_TestLineCrsp, &QAction::triggered, this, &MainWindow::onAction_TestLineCrsp);
 	connect(ui->action_TestEtoPCurSync, &QAction::triggered, this, &MainWindow::onAction_TestEtoPCurSync);
 	connect(ui->action_TestAll, &QAction::triggered, this, &MainWindow::onAction_TestAll);
+	connect(ui->action_DumpCharFlags, &QAction::triggered, this, &MainWindow::onAction_DumpCharFlags);
 	connect(ui->action_DumpPreviewBlocks, &QAction::triggered, this, &MainWindow::onAction_DumpPreviewBlocks);
 	connect(ui->action_AddThisFavorite, &QAction::triggered, this, &MainWindow::onAction_AddThisFavorite);
 	connect(ui->action_New, &QAction::triggered, this, &MainWindow::onAction_New);
@@ -2760,6 +2761,16 @@ void MainWindow::test_contextAt(DocWidget *docWidget) {
 		cursor.setPosition(tc.m_position);
 		PosContext pc = docWidget->m_editor->contextAt(tc.m_position);
 		ASSERT_EQ( tc.m_anchorChar, pc.m_anchorChar, cursor.block().blockNumber() );
+	}
+}
+void MainWindow::onAction_DumpCharFlags() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	QTextBlock block = docWidget->m_editor->document()->firstBlock();
+	while( block.isValid() ) {
+		//qDebug() << block.blockNumber() << ": " << block.userState() << ", " << block.text();
+		printCharFlags(block);
+		block = block.next();
 	}
 }
 void MainWindow::onAction_DumpPreviewBlocks() {

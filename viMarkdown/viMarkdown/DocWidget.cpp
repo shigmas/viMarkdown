@@ -37,12 +37,13 @@ const QByteArray& getCharFlags(QTextBlock block) {
 }
 void printCharFlags(QTextBlock block) {
 #ifdef _DEBUG
-	qDebug() << "blockNumber = " << block.blockNumber();
+	//qDebug() << "blockNumber = " << block.blockNumber();
 	const BlockData* data = getBlockData(block);
+	QString bn = QString::number((int)block.blockNumber()) + ": ";
 	QString txt;
 	for(int i = 0; i < data->m_charFlags.size(); ++i)
 		txt += QString::number((int)data->m_charFlags[i]) + u' ';
-	qDebug() << txt;
+	qDebug() << bn << block.text() << "\t" << txt;
 #endif
 }
 bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment, bool &commented, BlockData* data) {
