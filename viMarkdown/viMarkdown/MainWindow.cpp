@@ -2308,6 +2308,13 @@ bool ASSERT_EQ(int expected, int actual, int ln) {
 	g_result += QString("%1: %2 expected. but %3\n").arg(ln+1).arg(expected).arg(actual);
 	return false;
 }
+bool ASSERT_EQ(int expected, int actual, int ln, QChar ch) {
+	++g_tested_count;
+	if( actual == expected ) return true;
+	++g_failed_count;
+	g_result += QString("%1: '%2' -> P ix: %3 expected. but %4\n").arg(ln+1).arg(ch).arg(expected).arg(actual);
+	return false;
+}
 bool ASSERT_EQ(const QChar expected, const QChar actual, int ln) {
 	++g_tested_count;
 	if( actual == expected ) return true;
@@ -2518,6 +2525,7 @@ void MainWindow::do_test(DocWidget *docWidget, int nth_path) {
 				//	エディタ → プレビュー カーソル同期テスト
 				//		![v](url) の場合、m_charFlags[] = {I, I, I, ... I}
 				//		column: 0 -> 0, 1 ～ 9 -> 1 （画像があるため１ずれる）
+				QTextDocument *document = docWidget->m_editor->document();
 				QTextCursor cursor(block1);
 				const BlockData *data = getBlockData(block1);
 				int nvcnt = 0;	//	非表示文字数
@@ -2529,7 +2537,8 @@ void MainWindow::do_test(DocWidget *docWidget, int nth_path) {
 					docWidget->m_editor->setTextCursor(cursor);
 					QTextCursor cur2 = docWidget->m_preview->textCursor();		//	プレビューカーソル
 					int k2 = cur2.position() - cur2.block().position();			//	k2: プレビューカーソルカラム
-					ASSERT_EQ( k2, k1, block1.blockNumber() );
+					QChar ch = document->characterAt(cursor.position());
+					ASSERT_EQ( k2, k1, block1.blockNumber(), ch );
 					cursor.movePosition(QTextCursor::Right);
 				}
 			}
