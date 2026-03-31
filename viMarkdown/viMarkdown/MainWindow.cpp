@@ -2343,7 +2343,8 @@ enum {
 	TEST_CONTEXT_AT = 2,
 	TEST_LINE_CRSP = 4,			//	対応行テキストチェック
 	TEST_EtoP_CUR_SYNC = 8,		//	対応行カーソル位置同期チェック
-	TEST_ALL = 0xffff,			//	とりあえず16ビットまで対応
+	TEST_PtoE_CUR_SYNC = 16,	//	対応行カーソル位置同期チェック
+	TEST_ALL = TEST_CHAR_FLAGS|TEST_LINE_CRSP|TEST_PtoE_CUR_SYNC,
 };
 
 void MainWindow::onAction_Test() {
@@ -2391,7 +2392,7 @@ void MainWindow::do_test(int type) {
 		g_tested_count = 0;
 		g_failed_count = 0;
 		docWidget->m_editor->setPlainText(QA_MD_TEXT_2);
-		do_test(docWidget, PATH_1);		//	行単位一致テスト
+		do_test(docWidget, TEST_LINE_CRSP);
 		g_result += QString("\nTest Line Crsp: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count);
 		total_tested += g_tested_count;
 		total_failed += g_failed_count;
@@ -2399,10 +2400,20 @@ void MainWindow::do_test(int type) {
 	if( (type & TEST_EtoP_CUR_SYNC) != 0 ) {
 		g_tested_count = 0;
 		g_failed_count = 0;
-		do_test(docWidget, PATH_2);		//	EtoP 行内表示文字一致テスト
+		do_test(docWidget, TEST_EtoP_CUR_SYNC);		//	EtoP 行内表示文字一致テスト
 		//g_tested_count -= n_testted;	//	重複数分
 		//g_failed_count -= n_failed;
 		g_result += QString("\nTest EtoP CurSync: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count);
+		total_tested += g_tested_count;
+		total_failed += g_failed_count;
+	}
+	if( (type & TEST_PtoE_CUR_SYNC) != 0 ) {
+		g_tested_count = 0;
+		g_failed_count = 0;
+		do_test(docWidget, TEST_PtoE_CUR_SYNC);		//	PtoE 行内表示文字一致テスト
+		//g_tested_count -= n_testted;	//	重複数分
+		//g_failed_count -= n_failed;
+		g_result += QString("\nTest PtoE CurSync: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count);
 		total_tested += g_tested_count;
 		total_failed += g_failed_count;
 	}
@@ -2418,7 +2429,7 @@ void MainWindow::do_test(int type) {
 	cursor.movePosition(QTextCursor::End);
 	cursor.insertText(g_result);
 }
-void MainWindow::do_test(DocWidget *docWidget, int nth_path) {
+void MainWindow::do_test(DocWidget *docWidget, int type) {
 	QTextBlock block1 = docWidget->m_editor->document()->firstBlock();
 	QTextBlock block2 = docWidget->m_preview->document()->firstBlock();
 	bool inTable = false;
@@ -2522,7 +2533,7 @@ void MainWindow::do_test(DocWidget *docWidget, int nth_path) {
 		ASSERT_EQ( buf1.trimmed(), buf2, block1.blockNumber());
 		//if( ASSERT_EQ( buf1.trimmed(), buf2, block1.blockNumber()) )	//	表示テキストが一致した場合
 		{
-			if( nth_path == PATH_2 ) {
+			if( type == TEST_EtoP_CUR_SYNC ) {
 				//	エディタ → プレビュー カーソル同期テスト
 				//		![v](url) の場合、m_charFlags[] = {I, I, I, ... I}
 				//		column: 0 -> 0, 1 ～ 9 -> 1 （画像があるため１ずれる）
@@ -2543,23 +2554,25 @@ void MainWindow::do_test(DocWidget *docWidget, int nth_path) {
 					cursor.movePosition(QTextCursor::Right);
 				}
 			}
-#if 0
-			if( nth_path == PATH_3 ) {
+			if( type == TEST_PtoE_CUR_SYNC ) {
 				//	プレビュー → エディタ カーソル同期テスト
-				QTextCursor cursor(block1);
-				QTextCursor cur2 = docWidget->m_preview->textCursor();		//	プレビューカーソル
+				//QTextCursor cur1(block1);		//	エディタカーソル
+				QTextCursor cur2(block2);		//	プレビューカーソル
+				//QTextCursor cur2 = docWidget->m_preview->textCursor();		//	プレビューカーソル
 				const BlockData *data = getBlockData(block1);
 				int nvcnt = 0;	//	非表示文字数
-				for(int i = 0; i < block1.text().size(); ++i) {
-					int k1 = i - nvcnt;
-					if( data->m_charFlags[i] != PCF_VISIBLE ) ++nvcnt;
-					docWidget->m_editor->setTextCursor(cursor);
-					int k2 = cur2.position() - cur2.block().position();
-					ASSERT_EQ( k2, k1, block1.blockNumber() );
-					cursor.movePosition(QTextCursor::Right);
+				int k = 0;		//	エディタカーソルインデックス
+				for(int i = 0; i < block2.text().size(); ++i) {
+					docWidget->m_preview->setTextCursor(cur2);
+					while( k < data->m_charFlags.size() && data->m_charFlags[k] != PCF_VISIBLE )
+						++k;
+					QTextCursor cur1 = docWidget->m_editor->textCursor();
+					int k1 = cur1.position() - cur1.block().position();		//	実際のエディタカーソルインデックス
+					ASSERT_EQ( k, k1, block1.blockNumber() );
+					cur2.movePosition(QTextCursor::Right);
+					++k;
 				}
 			}
-#endif
 		}
 		block1 = block1.next();
 		block2 = block2.next();
