@@ -812,7 +812,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			block = block.next();
 			continue;
 		}
-		if( block.userState() == US_KEISEN_BLOCK ) {
+		if( block.userState() == US_KEISEN_BLOCK && block.userState() == US_CODE_BLOCK ) {
 			block = block.next();
 			continue;
 		}
@@ -840,17 +840,10 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			}
 			block = block.next();
 		} else if( ch == ETX ) {		//	行末の場合
-#if 1
-			ix = buf.size();
-			if( --nth == 0 ) break;
-#else
-			int i = buf.size();
-			while( --i >= 0 && buf[i] == u' ' ) {}
-			if( i >= 0 /*&& buf[i] == prev*/ ) {
-				ix = i + 1;
+			if( !block.text().startsWith("```") ) {
+				ix = buf.size();
 				if( --nth == 0 ) break;
 			}
-#endif
 			block = block.next();
 			ix = 0;
 		} else {		//	非行末の場合
