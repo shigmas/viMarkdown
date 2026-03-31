@@ -1157,8 +1157,8 @@ SPR# 状 P Open Close ver     Type  概要
 1140 ◎ C 04/01 04/01 01215│問題│MarkdownEditor::findPosition()：アンカー文字 STX に対応していない
 1140 ◎ C 04/01 04/01 01215│問題│MarkdownPreview::contextAt()：アンカー文字 STX に対応していない
 1140 ◎ C 04/01 04/01 01215│問題│MarkdownPreview::contextAt()：画像が行末にある場合、アンカー文字が ETX にならない
-1140 ● C 04/01            │ToDo│
-1140 ● C 04/01            │ToDo│
+1140 ◎ C 04/01 04/01 01215│問題│MarkdownEditor::findPosition()：完全にコメントアウトされた行が無視されていない
+1140 ● C 04/01            │問題│プレビューで Ctrl + Delete 押下で、カーソル位置単語単位ではなく、単にカーソル位置文字が消える
 1140 ● C 04/01            │ToDo│
 1140 ● C 04/01            │ToDo│
 1140 ● C 04/01            │ToDo│

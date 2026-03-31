@@ -64,8 +64,11 @@ struct PosContext {
 #define		U_KEISEN_BLOCK	0xe000		//	罫線ブロック文字 ユニコード（PAU)
 
 class DocWidget;
+class BlockData;
 
 #define		N_PATH_HIST		32
+
+bool isCommentOuted(const BlockData* data);
 
 //using QStringPair = std::pair<QString, QString>;
 struct DocLocation {		//	Alt + 左右 ナビゲーション用

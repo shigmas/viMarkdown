@@ -798,6 +798,11 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 	int offset = 0;
 	bool inComment = false;
 	while( block.isValid() ) {
+		if( isCommentOuted(getBlockData(block)) ) {
+			block = block.next();
+			ix = 0;
+			continue;
+		}
 		if( ch == QChar(U_KEISEN_BLOCK) ) {
 			if( block.userState() == US_KEISEN_BLOCK ) {
 				if( --nth == 0 ) break;
