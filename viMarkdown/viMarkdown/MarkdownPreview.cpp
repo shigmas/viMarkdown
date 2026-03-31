@@ -1499,12 +1499,14 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 	QTextBlock block = doc->findBlock(pos);
 	if( block.userState() == US_KEISEN_BLOCK ) {
 		pc.m_anchorChar = QChar(U_KEISEN_BLOCK);
+	} else if( pos == block.position() ) {		//	行頭にいる場合
+		pc.m_anchorChar = STX;
 	} else {
 		//pc.m_chPrev = pos != block.position() ? doc->characterAt(pos-1) : ETX;
-		auto chat = doc->characterAt(pos);
-		while( pos > 0 && (chat == endOfCell || chat == u' ' || chat == QChar::ParagraphSeparator) ) {
+		auto ch = doc->characterAt(pos);
+		while( pos > 0 && (ch == endOfCell || ch == u' ' || ch == QChar::ParagraphSeparator) ) {
 			pc.m_offset += 1;
-			chat = doc->characterAt(--pos);
+			ch = doc->characterAt(--pos);
 		}
 #if 0
 		if( pos > 0 && (chat == endOfCell || chat == u' ') ) {
@@ -1519,9 +1521,9 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 			}
 		}
 #endif
-		pc.m_anchorChar = chat != QChar::ParagraphSeparator ? chat : ETX;
+		pc.m_anchorChar = ch != QChar::ParagraphSeparator ? ch : ETX;
 	}
-	//pc.m_anchorChar = chat;
+	//pc.m_anchorChar = ch;
 	while( block.userState() != US_HEADING ) {		//	直前の見出し行を探す
 		if( !block.previous().isValid() )
 			break;
@@ -1530,7 +1532,14 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 	pc.m_prvHBlockNum = block.blockNumber();
 	//	pos の {chPrev, chNext} が見出し行先頭から何番目かを計算
 	int count = 1;
-	if( pc.m_anchorChar == ETX ) {		//	行末の場合
+	if( pc.m_anchorChar == STX ) {			//	行頭の場合
+		while( block.isValid() ) {
+			if( block.position() >= pos )
+				break;
+			++count;
+			block = block.next();
+		}
+	} else if( pc.m_anchorChar == ETX ) {	//	行末の場合
 		while( block.isValid() ) {
 			if( block.position() + block.text().length() >= pos )
 				break;
