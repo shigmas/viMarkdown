@@ -2410,6 +2410,7 @@ void MainWindow::do_test(int type) {
 		total_failed += g_failed_count;
 	}
 	if( (type & TEST_PtoE_CUR_SYNC) != 0 ) {
+		docWidget->m_preview->setFocus();
 		g_tested_count = 0;
 		g_failed_count = 0;
 		do_test(docWidget, TEST_PtoE_CUR_SYNC);		//	PtoE 行内表示文字一致テスト
@@ -2567,6 +2568,7 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 				int k = 0;		//	エディタカーソルインデックス
 				for(int i = 0; i < block2.text().size(); ++i) {
 					docWidget->m_preview->setTextCursor(cur2);
+					QCoreApplication::processEvents();		//	溜まっているイベント処理
 					while( k < data->m_charFlags.size() && data->m_charFlags[k] != PCF_VISIBLE )
 						++k;
 					QTextCursor cur1 = docWidget->m_editor->textCursor();

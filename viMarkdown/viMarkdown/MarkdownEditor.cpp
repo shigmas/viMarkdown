@@ -840,14 +840,19 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			}
 			block = block.next();
 		} else if( ch == ETX ) {		//	行末の場合
+#if 1
+			ix = buf.size();
+			if( --nth == 0 ) break;
+#else
 			int i = buf.size();
 			while( --i >= 0 && buf[i] == u' ' ) {}
 			if( i >= 0 /*&& buf[i] == prev*/ ) {
 				ix = i + 1;
 				if( --nth == 0 ) break;
 			}
+#endif
 			block = block.next();
-			//ix = 0;		//	ほんとは必要ないけど、なんとなく書いておく
+			ix = 0;
 		} else {		//	非行末の場合
 			bool isNextBlankLine = !block.next().isValid() || block.next().text().isEmpty();
 			while( (ix = indexOf(inComment, buf, ix, ch, isNextBlankLine)) >= 0 ) {
