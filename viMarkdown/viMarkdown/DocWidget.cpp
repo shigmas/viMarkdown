@@ -18,11 +18,11 @@ BlockData* getBlockData(QTextBlock srcBlock, bool init /*, int length*/) {
 		data->m_charFlags.resize(length);
 		data->m_charFlags.fill(0);
 	} else {
-		if( init )
+		auto len0 = data->m_charFlags.size();
+		data->m_charFlags.resize(length);
+		if( init ) {
 			data->m_charFlags.fill(0);
-		else {
-			auto len0 = data->m_charFlags.size();
-			data->m_charFlags.resize(length);
+		} else {
 			if( len0 < length ) {
 				for(int i = len0; i < length; ++i)
 					data->m_charFlags[i] = 0;
@@ -154,7 +154,7 @@ bool isTableLine(const QString& lnStr0, const QString& lnStr, QStringList &table
 	assert( data == nullptr || data->m_charFlags.size() == lnStr0.size() );
 	QString sv(lnStr);
 	tableTokens.clear();
-	if( data != nullptr ) data->m_charFlags.fill(PCF_VISIBLE);
+	//if( data != nullptr ) data->m_charFlags.fill(PCF_VISIBLE);	← ここでクリアするとすでに設定されているコメントアウト情報が消えてしまう
 	int ix = 0;
 	while( ix < sv.size() && sv[ix] == u' ' ) {
 		if( data != nullptr )

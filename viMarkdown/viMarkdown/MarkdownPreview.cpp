@@ -498,10 +498,11 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 		//QString buf = m_lst[m_ln];
 		QTextBlock srcBlock = doc->findBlockByNumber(m_ln);
 		QString buf = srcBlock.text();
+		BlockData *data = getBlockData(srcBlock, true);			//	true for 初期化
 		const QString buf0 = buf;
 		if( !m_inComment ) {
 			srcBlock.setUserState(US_DEFAULT);
-			BlockData *data = getBlockData(srcBlock);
+			//BlockData *data = getBlockData(srcBlock);
 			int start = 0, ix;
 			QString buf2;
 			bool modified = false;
@@ -527,7 +528,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 			if( bComment && buf.isEmpty() ) continue;
 		} else {
 			srcBlock.setUserState(US_IN_COMMENT);
-			BlockData *data = getBlockData(srcBlock);
+			//BlockData *data = getBlockData(srcBlock);
 			int ix = buf.indexOf("-->");
 			if( ix < 0 ) {
 				data->m_charFlags.fill(PCF_COMMENTED);
@@ -544,7 +545,8 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 		m_nSpaces = 0;
 		while( m_nSpaces < buf.size() && buf[m_nSpaces] == u' ' ) ++m_nSpaces;
 		if( m_nSpaces > 0 ) buf = buf.mid(m_nSpaces);
-		BlockData *data = getBlockData(srcBlock);
+		//BlockData *data = getBlockData(srcBlock, /*init=*/true);	//	初期化
+		//BlockData *data = getBlockData(srcBlock);
 		BlockData *data2 = nullptr;
 		if( m_ln + 1 < m_lst.size() )
 			data2 = getBlockData(srcBlock.next());
@@ -658,11 +660,15 @@ void MarkdownPreview::do_table(QTextBlock& srcBlock, QTextCursor& cursor) {
 	srcBlock.setUserState(US_TABLE);
 	srcBlock = srcBlock.next();
 	//assert( srcBlock.blockNumber() == m_ln );  block が invalid の場合には失敗する
-	BlockData *data = nullptr;		//getBlockData(srcBlock);
+	//BlockData *data = nullptr;		//getBlockData(srcBlock);
+	//if( srcBlock.isValid() )
+	//	data = getBlockData(srcBlock, true);
 	int max_clmn = m_tableTokens.size();
 	bool inComment = false;
 	while( m_ln < m_lst.size() ) {
 		assert(srcBlock.blockNumber() == m_ln);
+		assert( srcBlock.isValid() );
+		BlockData *data = getBlockData(srcBlock, true);
 		if( inComment ) {
 			if( m_lst[m_ln++].indexOf("-->") >= 0 )		//	とりあえず --> 以降は無視
 				inComment = false;
@@ -673,7 +679,7 @@ void MarkdownPreview::do_table(QTextBlock& srcBlock, QTextCursor& cursor) {
 			inComment = true;
 			continue;
 		}
-		data = getBlockData(srcBlock);
+		//data = getBlockData(srcBlock);
 		auto t1 = srcBlock.text();
 		auto t2 = m_lst[m_ln];
 		assert( srcBlock.text() == m_lst[m_ln] );
@@ -681,10 +687,11 @@ void MarkdownPreview::do_table(QTextBlock& srcBlock, QTextCursor& cursor) {
 		ll.push_back(m_tableTokens);
 		max_clmn = qMax(max_clmn, m_tableTokens.size());
 		srcBlock.setUserState(US_TABLE);
+		srcBlock.setUserData(data);
 		++m_ln;
 		srcBlock = srcBlock.next();
 		if( srcBlock.isValid() )
-			data = getBlockData(srcBlock);
+			data = getBlockData(srcBlock, true);
 	}
 	cursor.beginEditBlock();
 	insertTable(cursor, ll, max_clmn, &m_tableAlign);
