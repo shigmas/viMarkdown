@@ -813,7 +813,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 		}
 		const auto charFlags = getCharFlags(block);
 		QString buf = block.text();
-		buf.remove(re);				//	/# /, /- / などを削除
+		//buf.remove(re);				//	/# /, /- / などを削除
 		offset = block.text().size() - buf.size();
 		if( ch == ETX ) {		//	行末の場合
 			int i = buf.size();
@@ -2259,7 +2259,10 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const	//
 			continue;
 		}
 		if( ch == STX ) {		//	行頭の場合
-			if( !block.next().isValid() ) break;		//	最終行の場合
+			if (!block.next().isValid()) {
+				++count;
+				break;		//	最終行の場合
+			}
 			//if( block.next().position() == pos ) break;
 			if( !block.text().startsWith("```") ) {		//	``` 行は無視
 				if( !(block.text().isEmpty() && block.previous().isValid() && block.previous().text().isEmpty()) )		//	連続空行でない場合

@@ -1146,8 +1146,8 @@ SPR# 状 P Open Close ver     Type  概要
 1130 ◎ C 03/31 03/31 01214│問題│getBlockData()：初期化指定の場合、配列サイズをリサイズしていない
 1131 ◎ C 03/31 03/31 01214│ToDo│EtoPカーソル同期テスト失敗時：Editor での文字インデックスも表示
 1132 ◎ C 03/31 03/31 01214│問題│非テーブル行に対しても isTableLine(..., data) が data != nullptr で呼ばれ、テーブル関連フラグが設定されてしまっている
-1133 ● C 03/31            │ToDo│
-1134 ● C 03/31            │ToDo│
+1133 ◎ C 03/31 03/31 01214│問題│MarkdownEditor::contextAt()：カーソルがEOF位置にいる場合、アンカー文字：STX で、nth の値がひとつ少ない
+1134 ◎ C 03/31 03/31 01214│問題│MarkdownEditor::findPosition()：見出し行があると、何故か１文字ずれる
 1135 ● C 03/31            │ToDo│
 1136 ● C 03/31            │ToDo│
 1137 ● C 03/31            │ToDo│
