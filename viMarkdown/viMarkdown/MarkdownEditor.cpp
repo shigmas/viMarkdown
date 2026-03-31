@@ -833,10 +833,12 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 		offset = block.text().size() - buf.size();
 		if( ch == STX ) {		//	行頭の場合
 			ix = 0;
-			if( --nth == 0 ) {
-				while( ix < charFlags.size() && charFlags[ix] != PCF_VISIBLE && charFlags[ix] != PCF_IMAGE_BEGIN )
-					++ix;		//	非表示文字をスキップ
-				break;
+			if( !block.text().startsWith("```") ) {
+				if( --nth == 0 ) {
+					while( ix < charFlags.size() && charFlags[ix] != PCF_VISIBLE && charFlags[ix] != PCF_IMAGE_BEGIN )
+						++ix;		//	非表示文字をスキップ
+					break;
+				}
 			}
 			block = block.next();
 		} else if( ch == ETX ) {		//	行末の場合
