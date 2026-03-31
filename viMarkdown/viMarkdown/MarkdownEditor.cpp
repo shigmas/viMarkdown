@@ -826,7 +826,11 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 		}
 		//buf.remove(re);				//	/# /, /- / などを削除
 		offset = block.text().size() - buf.size();
-		if( ch == ETX ) {		//	行末の場合
+		if( ch == STX ) {		//	行頭の場合
+			ix = 0;
+			if( --nth == 0 ) break;
+			block = block.next();
+		} else if( ch == ETX ) {		//	行末の場合
 			int i = buf.size();
 			while( --i >= 0 && buf[i] == u' ' ) {}
 			if( i >= 0 /*&& buf[i] == prev*/ ) {
