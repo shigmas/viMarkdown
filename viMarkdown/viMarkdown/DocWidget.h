@@ -3,6 +3,8 @@
 #include "C:\Qt\6.10.0\msvc2022_64\include\QtWidgets\qwidget.h"
 #include "markdowntohtmlconvertor.h"
 
+#define		CODE_IMAGE		0xfffc		//	プレビュー：画像アイコン
+
 //class QPlainTextEdit;
 class MarkdownEditor;
 class QTextEdit;

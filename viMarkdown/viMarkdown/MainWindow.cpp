@@ -2292,7 +2292,7 @@ const QString QA_MD_TEXT_2 =
 #endif
 	"\n"
 	"";
-const short CODE_IMAGE = 0xfffc;		//	プレビュー：画像アイコン
+//const short CODE_IMAGE = 0xfffc;		//	プレビュー：画像アイコン
 int g_tested_count = 0;
 int g_failed_count = 0;
 QString g_result;

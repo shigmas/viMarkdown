@@ -813,6 +813,17 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 		}
 		const auto charFlags = getCharFlags(block);
 		QString buf = block.text();
+		if( ch == QChar(CODE_IMAGE) ) {
+			for(ix = 0; ix < charFlags.size(); ++ix) {
+				if( charFlags[ix] == PCF_IMAGE_BEGIN ) {
+					if( --nth == 0 ) break;
+				}
+			}
+			if( nth == 0 ) break;
+			block = block.next();
+			ix = 0;
+			continue;
+		}
 		//buf.remove(re);				//	/# /, /- / などを削除
 		offset = block.text().size() - buf.size();
 		if( ch == ETX ) {		//	行末の場合
