@@ -255,7 +255,7 @@ protected:
     void	onAction_TestEtoPCurSync();
     void	onAction_TestAll();
     void	onAction_DumpCharFlags();
-    void	onAction_DumpPreviewBlocks();
+    void	onAction_DumpBlockUserStates();
     void	onAction_Exit();
 
     void	onAboutToShow_RecentFiles();

@@ -154,6 +154,7 @@ bool isTableLine(const QString& lnStr0, const QString& lnStr, QStringList &table
 	assert( data == nullptr || data->m_charFlags.size() == lnStr0.size() );
 	QString sv(lnStr);
 	tableTokens.clear();
+	if( data != nullptr ) data->m_charFlags.fill(PCF_VISIBLE);
 	int ix = 0;
 	while( ix < sv.size() && sv[ix] == u' ' ) {
 		if( data != nullptr )

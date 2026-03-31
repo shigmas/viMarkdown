@@ -176,7 +176,7 @@
      <addaction name="action_TestEtoPCurSync"/>
      <addaction name="action_TestAll"/>
      <addaction name="action_DumpCharFlags"/>
-     <addaction name="action_DumpPreviewBlocks"/>
+     <addaction name="action_DumpBlockUserStates"/>
     </widget>
     <addaction name="action_Settings"/>
     <addaction name="action_Help"/>
@@ -984,9 +984,12 @@
     <string>Ctrl+Alt+2</string>
    </property>
   </action>
-  <action name="action_DumpPreviewBlocks">
+  <action name="action_DumpBlockUserStates">
    <property name="text">
-    <string>DumpPreview&amp;Blocks</string>
+    <string>Dump&amp;BlockUserStates</string>
+   </property>
+   <property name="toolTip">
+    <string>DumpBlockUserStates</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+B</string>
