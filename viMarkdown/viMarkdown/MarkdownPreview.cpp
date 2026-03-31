@@ -1501,6 +1501,8 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 		pc.m_anchorChar = QChar(U_KEISEN_BLOCK);
 	} else if( pos == block.position() ) {		//	行頭にいる場合
 		pc.m_anchorChar = STX;
+	} else if( pos == block.position() + block.text().size() ) {		//	行末にいる場合
+		pc.m_anchorChar = ETX;
 	} else {
 		//pc.m_chPrev = pos != block.position() ? doc->characterAt(pos-1) : ETX;
 		auto ch = doc->characterAt(pos);
