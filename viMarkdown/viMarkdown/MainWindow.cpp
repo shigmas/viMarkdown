@@ -59,6 +59,14 @@ QChar g_flag_char[] = {
 	u'K',	//	PCF_KEISEN,
 	u'=',	//	PCF_EMPHASIZED,		//	ボールド、イタリック等
 };
+enum {
+	TEST_CHAR_FLAGS = 1,
+	TEST_CONTEXT_AT = 2,
+	TEST_LINE_CRSP = 4,			//	対応行テキストチェック
+	TEST_EtoP_CUR_SYNC = 8,		//	対応行カーソル位置同期チェック
+	TEST_PtoE_CUR_SYNC = 16,	//	対応行カーソル位置同期チェック
+	TEST_ALL = TEST_CHAR_FLAGS|TEST_LINE_CRSP|TEST_PtoE_CUR_SYNC,
+};
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
@@ -2309,11 +2317,14 @@ bool ASSERT_EQ(int expected, int actual, int ln) {
 	g_result += QString("%1: %2 expected. but %3\n").arg(ln+1).arg(expected).arg(actual);
 	return false;
 }
-bool ASSERT_EQ(int expected, int actual, int ln, QChar ch, int ix) {
+bool ASSERT_EQ(int expected, int actual, int ln, QChar ch, int ix, int type) {
 	++g_tested_count;
 	if( actual == expected ) return true;
 	++g_failed_count;
-	g_result += QString("%1: E [%2] '%3' -> P ix: %4 expected. but %5\n").arg(ln+1).arg(ix).arg(ch).arg(expected).arg(actual);
+	if( type == TEST_EtoP_CUR_SYNC )
+		g_result += QString("%1: E [%2] '%3' -> P ix: %4 expected. but %5\n").arg(ln+1).arg(ix).arg(ch).arg(expected).arg(actual);
+	else
+		g_result += QString("%1: P [%2] '%3' -> E ix: %4 expected. but %5\n").arg(ln+1).arg(ix).arg(ch).arg(expected).arg(actual);
 	return false;
 }
 bool ASSERT_EQ(const QChar expected, const QChar actual, int ln) {
@@ -2337,16 +2348,7 @@ bool isCommentOuted(const BlockData* data) {
 	}
 	return true;
 }
-enum { PATH_1 = 1, PATH_2, PATH_3, };
-enum {
-	TEST_CHAR_FLAGS = 1,
-	TEST_CONTEXT_AT = 2,
-	TEST_LINE_CRSP = 4,			//	対応行テキストチェック
-	TEST_EtoP_CUR_SYNC = 8,		//	対応行カーソル位置同期チェック
-	TEST_PtoE_CUR_SYNC = 16,	//	対応行カーソル位置同期チェック
-	TEST_ALL = TEST_CHAR_FLAGS|TEST_LINE_CRSP|TEST_PtoE_CUR_SYNC,
-};
-
+//enum { PATH_1 = 1, PATH_2, PATH_3, };
 void MainWindow::onAction_Test() {
 }
 void MainWindow::onAction_TestCharFlags() {
@@ -2550,12 +2552,13 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 					QTextCursor cur2 = docWidget->m_preview->textCursor();		//	プレビューカーソル
 					int k2 = cur2.position() - cur2.block().position();			//	k2: プレビューカーソルカラム
 					QChar ch = document->characterAt(cursor.position());
-					ASSERT_EQ( k2, k1, block1.blockNumber(), ch, i );
+					ASSERT_EQ( k2, k1, block1.blockNumber(), ch, i, TEST_EtoP_CUR_SYNC );
 					cursor.movePosition(QTextCursor::Right);
 				}
 			}
 			if( type == TEST_PtoE_CUR_SYNC ) {
 				//	プレビュー → エディタ カーソル同期テスト
+				QTextDocument *document = docWidget->m_preview->document();
 				//QTextCursor cur1(block1);		//	エディタカーソル
 				QTextCursor cur2(block2);		//	プレビューカーソル
 				//QTextCursor cur2 = docWidget->m_preview->textCursor();		//	プレビューカーソル
@@ -2568,7 +2571,8 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 						++k;
 					QTextCursor cur1 = docWidget->m_editor->textCursor();
 					int k1 = cur1.position() - cur1.block().position();		//	実際のエディタカーソルインデックス
-					ASSERT_EQ( k, k1, block1.blockNumber() );
+					QChar ch = document->characterAt(cur2.position());
+					ASSERT_EQ( k, k1, block1.blockNumber() , ch, i, TEST_PtoE_CUR_SYNC);
 					cur2.movePosition(QTextCursor::Right);
 					++k;
 				}
