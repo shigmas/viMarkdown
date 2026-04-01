@@ -2569,7 +2569,7 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 				const BlockData *data = getBlockData(block1);
 				int nvcnt = 0;	//	非表示文字数
 				int k = 0;		//	エディタカーソルインデックス
-				for(int i = 0; i < block2.text().size(); ++i) {
+				for(int i = 0; i <= block2.text().size(); ++i) {
 					docWidget->m_preview->setTextCursor(cur2);
 					QCoreApplication::processEvents();		//	溜まっているイベント処理
 					while( k < data->m_charFlags.size() && data->m_charFlags[k] != PCF_VISIBLE )
