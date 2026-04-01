@@ -960,10 +960,12 @@ void MarkdownPreview::do_keisen_block(QTextBlock& srcBlock, QTextCursor& cursor)
 		width = qMax(width, fm.horizontalAdvance(m_lst[m_ln])+10);
 	}
 	srcBlock = srcBlock.next();
-	srcBlock.setUserState(US_KEISEN_BLOCK);
-	data = getBlockData(srcBlock);
-	data->m_charFlags.fill(PCF_KEISEN);
-	srcBlock.setUserData(data);
+	if( srcBlock.isValid() ) {
+		srcBlock.setUserState(US_KEISEN_BLOCK);
+		data = getBlockData(srcBlock);
+		data->m_charFlags.fill(PCF_KEISEN);
+		srcBlock.setUserData(data);
+	}
 	int lineHeight = fm.lineSpacing(); // 行の間隔（高さ＋行間）
 	
 	int height = lineHeight * (m_ln - m_ln0);
