@@ -108,7 +108,7 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 			if( data != nullptr ) {
 				data->m_charFlags[i] = PCF_CSV;
 				for(int k = i+1; k < line.size() && line[k] == u' '; ++k)
-					data->m_charFlags[k] = PCF_CSV;
+					data->m_charFlags[k] = PCF_NOT_VISIBLE;
 				updateCharFlags(data, line, ix0, i, true);		//	true for エスケープ文字処理
 			}
 			ix0 = i + 1;
@@ -158,7 +158,7 @@ bool isTableLine(const QString& lnStr0, const QString& lnStr, QStringList &table
 	int ix = 0;
 	while( ix < sv.size() && sv[ix] == u' ' ) {
 		if( data != nullptr )
-			data->m_charFlags[ix] = PCF_ESCAPE;	//	| 直後空白は非表示
+			data->m_charFlags[ix] = PCF_NOT_VISIBLE;	//	| 直後空白は非表示
 		++ix;		//	空白スキップ
 	}
 	if (ix < sv.size() && sv[ix] == u'|') {
@@ -175,7 +175,7 @@ bool isTableLine(const QString& lnStr0, const QString& lnStr, QStringList &table
 		tableTokens.push_back(sv.mid(ix0, ix-ix0));
 		if( data != nullptr ) {
 			for(int i = ix; --i >= 0 && lnStr0[i] == u' '; )	//	| 直前空白は非表示
-				data->m_charFlags[i] = PCF_ESCAPE;
+				data->m_charFlags[i] = PCF_NOT_VISIBLE;
 			if( ix < sv.size() )
 				data->m_charFlags[ix] = PCF_TABLE;
 			updateCharFlags(data, lnStr0, ix0, ix, true);		//	true for エスケープ文字処理

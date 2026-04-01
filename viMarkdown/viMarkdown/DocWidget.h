@@ -12,6 +12,8 @@ class MarkdownPreview;
 
 enum {
     PCF_VISIBLE = 0,	// プレビューに表示される
+    PCF_IMAGE_BEGIN,	//	最初の '!' 位置
+    PCF_NOT_VISIBLE,	//	以下以外で非表示
     PCF_COMMENTED,		//	コメントアウトされた文字
     PCF_ESCAPE,			//	エスケープ文字
     PCF_HEADING,		//	タイトル・見出し行
@@ -19,7 +21,6 @@ enum {
     PCF_NUM_LIST,		//	"1. " 連番
     PCF_QUOTE,
     PCF_LINK,
-    PCF_IMAGE_BEGIN,	//	最初の '!' 位置
     PCF_IMAGE,
     PCF_CODE,			// ```
     PCF_CSV,

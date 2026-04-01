@@ -2212,6 +2212,7 @@ const QString QA_MD_TEXT_2 =
 	"\n"
 #endif
 #if 1
+	"TEST\n"
 	"<!-- comment -->\n"
 	"# title\n"
 	"hoge<!-- -->\n"
@@ -2220,7 +2221,8 @@ const QString QA_MD_TEXT_2 =
 	" text\n"
 	"text \n"
 	"abc \\xyzzz\n"		//	x はエスケープされず \x と表示される
-	"hoge*fuga*foo hoge\\*fuga\\*foo\n"
+	"hoge*fuga*foo\n"
+	"hoge\\*fuga\\*foo\n"
 	"hoge**fuga**foo\n"
 	"hoge***fuga***foo\n"
 	"hoge~~fuga~~foo\n"
