@@ -140,47 +140,21 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 	}
 	return inQuotes;
 }
-#if 0
-bool isTableLine(const QString& lnStr0, const QString& lnStr, QList<QStringView> &tableTokens, BlockData *data) {
-	assert( data == nullptr || data->m_charFlags.size() == lnStr0.size() );
-	QStringView sv(lnStr);
-	tableTokens.clear();
-	int ix = 0;
-	while( ix < sv.size() && sv[ix] == u' ' ) ++ix;		//	空白スキップ
-	if (ix < sv.size() && sv[ix] == u'|') {
-		if( data != nullptr )
-			data->m_charFlags[ix] = PCF_TABLE;
-		++ix;			//	先頭 '|' スキップ
-	}
-	while( ix < sv.size() ) {
-		int ix0 = ix;
-		while( ix < sv.size() && sv[ix] != u'|' ) {		//	'|' までループ
-			if( ix+1 < sv.size() && sv[ix] == u'\\' ) ix += 2;
-			else ++ix;
-		}
-		tableTokens.push_back(sv.mid(ix0, ix-ix0));
-		if( ix < sv.size() && data != nullptr )
-			data->m_charFlags[ix] = PCF_TABLE;
-		++ix;			//	'|' スキップ
-	}
-	return tableTokens.size() > 1;
-}
-#endif
 bool isTableLine(const QString& lnStr0, const QString& lnStr, QStringList &tableTokens, BlockData* data) {
 	assert( data == nullptr || data->m_charFlags.size() == lnStr0.size() );
 	QString sv(lnStr);
 	tableTokens.clear();
 	//if( data != nullptr ) data->m_charFlags.fill(PCF_VISIBLE);	← ここでクリアするとすでに設定されているコメントアウト情報が消えてしまう
 	int ix = 0;
-	while( ix < sv.size() && sv[ix] == u' ' ) {
-		if( data != nullptr )
-			data->m_charFlags[ix] = PCF_NOT_VISIBLE;	//	| 直後空白は非表示
-		++ix;		//	空白スキップ
-	}
 	if (ix < sv.size() && sv[ix] == u'|') {
 		if( data != nullptr )
 			data->m_charFlags[ix] = PCF_TABLE;
 		++ix;			//	先頭 '|' スキップ
+	}
+	while( ix < sv.size() && sv[ix] == u' ' ) {
+		if( data != nullptr )
+			data->m_charFlags[ix] = PCF_NOT_VISIBLE;	//	| 直後空白は非表示
+		++ix;		//	空白スキップ
 	}
 	while( ix < sv.size() ) {
 		int ix0 = ix;
@@ -194,6 +168,8 @@ bool isTableLine(const QString& lnStr0, const QString& lnStr, QStringList &table
 				data->m_charFlags[i] = PCF_NOT_VISIBLE;
 			if( ix < sv.size() )
 				data->m_charFlags[ix] = PCF_TABLE;
+			for(int i = ix + 1; i < lnStr0.size() && lnStr0[i] == u' '; ++i)	//	| 直後空白も非表示
+				data->m_charFlags[i] = PCF_NOT_VISIBLE;
 			updateCharFlags(data, lnStr0, ix0, ix, true);		//	true for エスケープ文字処理
 		}
 		++ix;			//	'|' スキップ
