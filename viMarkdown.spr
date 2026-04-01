@@ -1165,7 +1165,7 @@ SPR# 状 P Open Close ver     Type  概要
 1149 ◎ B 04/01 04/01 01215│問題│エディタ：'''keisen と入力したらアサーションが発生した
 1150 ◎ C 04/01 04/01 01215│問題│MarkdownEditor::contextAt()：STX の場合も ``` 等の非表示行は行末カウントしないと行対応がずれる
 1151 ● C 04/01            │問題│プレビューカーソルが罫線ブロック直後にある場合、エディタカーソルはブロックテキスト末尾に設定すべき
-1152 ● C 04/01            │ToDo│MarkdownEditor::keyPressEvent(QKeyEvent *e)：改行入力処理部分を関数化
+1152 ◎ C 04/01 04/01 01215│ToDo│MarkdownEditor::keyPressEvent(QKeyEvent *e)：改行入力処理部分を関数化
 1153 ● C 04/01            │ToDo│
 1154 ● C 04/01            │ToDo│
 1155 ● C 04/01            │ToDo│
