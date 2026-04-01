@@ -1497,17 +1497,23 @@ void MarkdownPreview::setCursorByContext(const PosContext &context, const PosCon
 }
 PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext を構築
 	PosContext pc;
+	QTextCursor cursor = this->textCursor();
+	cursor.setPosition(pos);
 	auto *doc = document();
 	QTextBlock block = doc->findBlock(pos);
+	QTextTable *table = cursor.currentTable();
 	if( block.userState() == US_KEISEN_BLOCK ) {
 		pc.m_anchorChar = QChar(U_KEISEN_BLOCK);
-	} else if( pos == block.position() ) {		//	行頭にいる場合
+	} else if( pos == block.position() && (table == nullptr || table->cellAt(cursor).column() == 0) ) {		//	行頭にいる場合
 		pc.m_anchorChar = STX;
-	} else if( pos == block.position() + block.text().size() ) {		//	行末にいる場合
+	} else if( pos == block.position() + block.text().size() &&		//	行末にいる場合
+				(table == nullptr || table->cellAt(cursor).column() >= table->columns() - 1) )
+	{
 		pc.m_anchorChar = ETX;
 	} else {
 		//pc.m_chPrev = pos != block.position() ? doc->characterAt(pos-1) : ETX;
 		auto ch = doc->characterAt(pos);
+		// undone: 行頭に来たらそこでストップ
 		while( pos > 0 && (ch == endOfCell || ch == u' ' || ch == QChar::ParagraphSeparator) ) {
 			pc.m_offset += 1;
 			ch = doc->characterAt(--pos);
@@ -1540,14 +1546,24 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 		while( block.isValid() ) {
 			if( block.position() >= pos )
 				break;
-			++count;
+			if( block.userState() != US_TABLE ) {	//	テーブル前後のダミーブロックではない
+				QTextCursor cursor(block);
+				QTextTable *table = cursor.currentTable();
+				if( table == nullptr || table->cellAt(cursor).column() == 0 )
+					++count;
+			}
 			block = block.next();
 		}
 	} else if( pc.m_anchorChar == ETX ) {	//	行末の場合
 		while( block.isValid() ) {
 			if( block.position() + block.text().length() >= pos )
 				break;
-			++count;
+			if( block.userState() != US_TABLE ) {	//	テーブル前後のダミーブロックではない
+				QTextCursor cursor(block);
+				QTextTable *table = cursor.currentTable();
+				if( table == nullptr || table->cellAt(cursor).column() >= table->columns() - 1 )
+					++count;
+			}
 			block = block.next();
 		}
 	} else if( pc.m_anchorChar == QChar(U_KEISEN_BLOCK) ) {		//	罫線ブロックの場合
