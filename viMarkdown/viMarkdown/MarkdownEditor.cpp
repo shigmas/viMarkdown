@@ -833,7 +833,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			ix = 0;
 			if( !block.text().startsWith("```") ) {
 				if( --nth == 0 ) {
-					while( ix < charFlags.size() && charFlags[ix] > PCF_IMAGE_BEGIN )
+					while( ix < charFlags.size() && charFlags[ix] > PCF_IMAGE_BEGIN && block.text()[ix] != u',' )
 						++ix;		//	非表示文字をスキップ
 					break;
 				}

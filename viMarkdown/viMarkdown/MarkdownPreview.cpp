@@ -1514,9 +1514,15 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 		//pc.m_chPrev = pos != block.position() ? doc->characterAt(pos-1) : ETX;
 		auto ch = doc->characterAt(pos);
 		// undone: 行頭に来たらそこでストップ
+		int ix = pos - block.position();
 		while( pos > 0 && (ch == endOfCell || ch == u' ' || ch == QChar::ParagraphSeparator) ) {
 			pc.m_offset += 1;
-			ch = doc->characterAt(--pos);
+			--pos;
+			if( --ix <= 0 ) {
+				ch = STX;
+				break;
+			}
+			ch = doc->characterAt(pos);
 		}
 #if 0
 		if( pos > 0 && (chat == endOfCell || chat == u' ') ) {
