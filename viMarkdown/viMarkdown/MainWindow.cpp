@@ -962,9 +962,10 @@ void MainWindow::onDel_pressed() {
 void MainWindow::onEnter_pressed() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	QTextCursor cursor = docWidget->m_editor->textCursor();
-	cursor.insertText("\n");
-	docWidget->m_editor->setTextCursor(cursor);
+	docWidget->m_editor->insertEnter();
+	//QTextCursor cursor = docWidget->m_editor->textCursor();
+	//cursor.insertText("\n");
+	//docWidget->m_editor->setTextCursor(cursor);
 }
 void MainWindow::onTab_pressed() {
 	onAction_Indent();

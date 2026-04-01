@@ -502,56 +502,54 @@ void MarkdownEditor::moveToEndOfWord(QTextCursor& cursor, bool shift) {
 	}
 	cursor.setPosition(pos, shift ? QTextCursor::KeepAnchor : QTextCursor::MoveAnchor);
 }
-void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
+void MarkdownEditor::insertEnter() {
 	//static QRegularExpression re(R"(^\d[\.\)] )");
 	static QRegularExpression re(R"(^\d\. )");
 	static QRegularExpression re2(R"(^\d\) )");
+	QTextCursor cursor = this->textCursor();
+	QTextBlock currentBlock = cursor.block();
+	QString text = currentBlock.text();
+	int n = 0;
+	while( n < text.length() && text[n].isSpace() ) ++n;
+	QString atxt = text.left(n);		//	オートインデントテキスト
+	const QString mtxt = text.mid(n);
+	if( mtxt == "- " || mtxt == "- [ ] " || mtxt == "- [x] " || mtxt == "- [X] " || mtxt == "1. " || mtxt == "1) " || mtxt == "> ") {
+		cursor.movePosition(QTextCursor::StartOfBlock);
+		cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+		cursor.deleteChar();
+		atxt.clear();
+		return;
+	} else if( mtxt.startsWith("- [ ] ") )
+		atxt += "- [ ] ";
+	else if( mtxt.startsWith("- [x] ") )
+		atxt += "- [x] ";
+	else if( mtxt.startsWith("- [X] ") )
+		atxt += "- [X] ";
+	else if( mtxt.startsWith("- ") )
+		atxt += "- ";
+	else if( re.match(mtxt).hasMatch())
+		atxt += "1. ";
+	else if( re2.match(mtxt).hasMatch())
+		atxt += "1) ";
+	else if( mtxt.startsWith("> ") )
+		atxt += "> ";
+	cursor.insertText("\n" + atxt);
+	setTextCursor(cursor);
+	// カーソル位置を画面内に維持
+	this->ensureCursorVisible();
+}
+void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	QTextCursor cursor = this->textCursor();
 	if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {		//	改行入力
 		QTextBlock currentBlock = cursor.block();
 		if( (e->modifiers() & Qt::ShiftModifier) == 0 &&		//	Shift + Enter でない
 			cursor.position() != currentBlock.position())		//	行頭にいない場合
 		{
-			QString text = currentBlock.text();
-			int n = 0;
-			while( n < text.length() && text[n].isSpace() ) ++n;
-			QString atxt = text.left(n);		//	オートインデントテキスト
-			const QString mtxt = text.mid(n);
-			if( mtxt == "- " || mtxt == "- [ ] " || mtxt == "- [x] " || mtxt == "- [X] " || mtxt == "1. " || mtxt == "1) " || mtxt == "> ") {
-				cursor.movePosition(QTextCursor::StartOfBlock);
-				cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
-				cursor.deleteChar();
-				atxt.clear();
-				return;
-			} else if( mtxt.startsWith("- [ ] ") )
-				atxt += "- [ ] ";
-			else if( mtxt.startsWith("- [x] ") )
-				atxt += "- [x] ";
-			else if( mtxt.startsWith("- [X] ") )
-				atxt += "- [X] ";
-			else if( mtxt.startsWith("- ") )
-				atxt += "- ";
-			else if( re.match(mtxt).hasMatch())
-				atxt += "1. ";
-			else if( re2.match(mtxt).hasMatch())
-				atxt += "1) ";
-			else if( mtxt.startsWith("> ") )
-				atxt += "> ";
-#if 1
-			cursor.insertText("\n" + atxt);
-			setTextCursor(cursor);
-#else
-			MarkdownBaseEdit::keyPressEvent(e);		//	改行挿入
-			if( !atxt.isEmpty() )
-				cursor.insertText(atxt);
-#endif
-			// カーソル位置を画面内に維持
-			this->ensureCursorVisible();
-			return;
+			insertEnter();
 		} else {
 			cursor.insertText("\n");
-			return;
 		}
+		return;
 	} else if (e->key() == Qt::Key_Tab ) {
 		emit tab_pressed();
 		return;
