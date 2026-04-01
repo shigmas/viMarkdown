@@ -103,6 +103,11 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 				currentField += '"';
 			}
 		} else if (c == ',' && !inQuotes) {		// クォートの外にあるカンマはセパレータ
+			if( data != nullptr ) {
+				for(int k = i; --k >= 0 && line[k] == u' ';) {
+					data->m_charFlags[k] = PCF_NOT_VISIBLE;
+				}
+			}
 			fields.append(currentField.trimmed());
 			currentField.clear();
 			if( data != nullptr ) {
@@ -113,8 +118,19 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 			}
 			ix0 = i + 1;
 		} else { // 通常の文字
-			if( c != ' ' || !currentField.isEmpty() )
+			if( c == u' ' ) {
+				if( currentField.isEmpty() ) {
+					if( data != nullptr )
+						data->m_charFlags[i] = PCF_NOT_VISIBLE;
+				} else
+					currentField += c;
+			} else
 				currentField += c;
+		}
+	}
+	if( data != nullptr ) {
+		for(int k = i; --k >= 0 && line[k] == u' ';) {
+			data->m_charFlags[k] = PCF_NOT_VISIBLE;
 		}
 	}
 	// 最後のフィールドを追加
