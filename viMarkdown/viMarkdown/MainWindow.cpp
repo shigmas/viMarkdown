@@ -2572,12 +2572,15 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 				for(int i = 0; i <= block2.text().size(); ++i) {
 					docWidget->m_preview->setTextCursor(cur2);
 					QCoreApplication::processEvents();		//	溜まっているイベント処理
+					int k0 = k;
 					while( k < data->m_charFlags.size() && data->m_charFlags[k] >= PCF_NOT_VISIBLE )
 						++k;
+					QChar ch1 = k < block1.text().size() ? block1.text()[k] : u'\n';
 					QTextCursor cur1 = docWidget->m_editor->textCursor();
 					int k1 = cur1.position() - cur1.block().position();		//	実際のエディタカーソルインデックス
 					QChar ch = document->characterAt(cur2.position());
-					ASSERT_EQ( k, k1, block1.blockNumber() , ch, i, TEST_PtoE_CUR_SYNC);
+					//	"** " の様な場合は、カーソルは "** " 先頭位置を期待
+					ASSERT_EQ( ch1 == u' ' ? k0 : k, k1, block1.blockNumber() , ch, i, TEST_PtoE_CUR_SYNC);
 					cur2.movePosition(QTextCursor::Right);
 					++k;
 				}

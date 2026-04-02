@@ -1515,6 +1515,10 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 		auto ch = doc->characterAt(pos);
 		// undone: 行頭に来たらそこでストップ
 		int ix = pos - block.position();
+		if( table != nullptr ) {	//	テーブル内の場合
+			int row = table->cellAt(cursor).row();
+			ix = pos - table->cellAt(row, 0).firstPosition();
+		}
 		while( pos > 0 && (ch == endOfCell || ch == u' ' || ch == QChar::ParagraphSeparator) ) {
 			pc.m_offset += 1;
 			--pos;
