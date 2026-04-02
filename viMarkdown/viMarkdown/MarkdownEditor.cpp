@@ -816,6 +816,11 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			block = block.next();
 			continue;
 		}
+		if( block.userState() == US_TABLE && isTableHyphenLine(block.text()) ) {
+			//	GFM 表のハイフン行はスキップ
+			block = block.next();
+			continue;
+		}
 #if 0
 		if( block.userState() == US_CODE_BLOCK ) {
 			block = block.next();
