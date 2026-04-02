@@ -766,7 +766,7 @@ bool isMatch(const QString& buf, int ix, QChar ch) {
 	while( ix < buf.size() && (buf[ix] == u'*' || buf[ix] == u'_' || buf[ix] == u'~') ) ++ix;
 	return ix < buf.size() && buf[ix] == ch;
 }
-int indexOf(bool &inComment, const QString& buf, int ix, QChar ch, bool isNextBlankLine) {
+int indexOf(bool &inComment, const QString& buf, int ix, QChar ch, bool isNextBlankLine, const BlockData *data) {
 	while( ix < buf.size() ) {
 		if( inComment ) {
 			if( (ix = buf.indexOf("-->", ix)) < 0 ) {
@@ -777,9 +777,10 @@ int indexOf(bool &inComment, const QString& buf, int ix, QChar ch, bool isNextBl
 			inComment = true;
 			ix += 4;
 		} else {
-			if( !(buf[ix] == u'*' || buf[ix] == u'_' || buf[ix] == u'~') ) {
-				if( buf[ix] == ch )
-					return ix;
+			//if( !(buf[ix] == u'*' || buf[ix] == u'_' || buf[ix] == u'~') )
+			if( data->m_charFlags[ix] < PCF_NOT_VISIBLE && buf[ix] == ch )
+			{
+				return ix;
 			}
 			++ix;
 		}
@@ -848,7 +849,8 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			ix = 0;
 		} else {		//	非行末の場合
 			bool isNextBlankLine = !block.next().isValid() || block.next().text().isEmpty();
-			while( (ix = indexOf(inComment, buf, ix, ch, isNextBlankLine)) >= 0 ) {
+			const BlockData* data = getBlockData(block);
+			while( (ix = indexOf(inComment, buf, ix, ch, isNextBlankLine, data)) >= 0 ) {
 				if( charFlags[ix] == PCF_VISIBLE && --nth == 0 ) break;
 				++ix;
 			}
