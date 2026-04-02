@@ -811,10 +811,17 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			block = block.next();
 			continue;
 		}
-		if( block.userState() == US_KEISEN_BLOCK && block.userState() == US_CODE_BLOCK ) {
+		if( block.userState() == US_KEISEN_BLOCK && !(block.previous().isValid() && block.previous().text().startsWith("```")) ) {
+			//	最初の罫線ブロック以外の場合
 			block = block.next();
 			continue;
 		}
+#if 0
+		if( block.userState() == US_CODE_BLOCK ) {
+			block = block.next();
+			continue;
+		}
+#endif
 		const auto charFlags = getCharFlags(block);
 		QString buf = block.text();
 		if( ch == QChar(CODE_IMAGE) ) {
