@@ -615,7 +615,7 @@ void insertTable(QTextCursor& cursor, const QList<QStringList> &ll, int max_clmn
 					cell.setFormat(cellFormat);
 					charFormat.setFontWeight(QFont::Normal);
 					if( tableAlign != nullptr) {
-						if( ((*tableAlign)[col] & ALIGHN_RIGHT) != 0 )
+						if( col < tableAlign->size() && ((*tableAlign)[col] & ALIGHN_RIGHT) != 0 )
 							blockFormat.setAlignment(Qt::AlignRight);  // 右揃え
 						else
 							blockFormat.setAlignment(Qt::AlignLeft);   // その他は左
