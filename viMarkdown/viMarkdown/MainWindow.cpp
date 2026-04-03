@@ -2277,8 +2277,10 @@ const QString QA_MD_TEXT_2 =
 #if 1
 	"## table\n"
 	"```CSV\n"	//	CSVブロック開始
+	"id, , h3\n"
 	"id, h*h*h2, h3\n"
 	"69, ""hasshi"", h\\*o\\*ge\n"
+	",,\n"
 	"```\n"		//	CSVブロック終了
 	"text\n"
 #endif

@@ -844,7 +844,9 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 		offset = block.text().size() - buf.size();
 		if( ch == STX ) {		//	行頭の場合
 			ix = 0;
-			if( !block.text().startsWith("```") ) {
+			if( !block.text().startsWith("```") &&
+				!(block.text().isEmpty() && block.previous().isValid() && block.previous().text().isEmpty()) )	//	連続空行ではない
+			{
 				if( --nth == 0 ) {
 					while( ix < charFlags.size() && charFlags[ix] > PCF_IMAGE_BEGIN && block.text()[ix] != u',' )
 						++ix;		//	非表示文字をスキップ
@@ -853,7 +855,9 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			}
 			block = block.next();
 		} else if( ch == ETX ) {		//	行末の場合
-			if( !block.text().startsWith("```") ) {
+			if( !block.text().startsWith("```") &&
+				!(block.text().isEmpty() && block.previous().isValid() && block.previous().text().isEmpty()) )	//	連続空行ではない
+			{
 				ix = buf.size();
 				if( --nth == 0 ) break;
 			}
@@ -2213,7 +2217,7 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			}
 		}
 		if( !found && ix < data->m_charFlags.size() ) {	//	改行位置でない場合
-			while( pos > 0 && ix >= 0 && (/*ix >= data->m_charFlags.size() ||*/ data->m_charFlags[ix] != PCF_VISIBLE) ) {
+			while( pos > 0 && ix >= 0 && ix < data->m_charFlags.size() && data->m_charFlags[ix] != PCF_VISIBLE ) {
 				//if( ix == data->m_charFlags.size() )
 				if( ix == 0 || data->m_charFlags[ix-1] == PCF_VISIBLE ) {
 					pc.m_offset += 1;
