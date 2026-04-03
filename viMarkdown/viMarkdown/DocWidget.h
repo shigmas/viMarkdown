@@ -25,6 +25,7 @@ enum {
     PCF_CODE,			// ```
     PCF_CSV,
     PCF_TABLE,			//	マークダウン表要素
+    //PCF_CELL,			//	表セルブロック
     PCF_KEISEN,
     PCF_EMPHASIZED,		//	ボールド、イタリック等
 };

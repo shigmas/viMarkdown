@@ -600,6 +600,10 @@ void insertTable(QTextCursor& cursor, const QList<QStringList> &ll, int max_clmn
 		for(int col = 0; col < ll[row].size(); ++col) {
 			QTextTableCell cell = table->cellAt(row, col);
 			if (cell.isValid()) {
+				for (QTextFrame::iterator it = cell.begin(); !(it.atEnd()); ++it) {
+					QTextBlock block = it.currentBlock();
+					if( block.isValid() ) block.setUserState(US_CELL);
+				}
 				QTextCursor cellCursor = cell.firstCursorPosition();
 				QTextCharFormat charFormat;
 				QTextBlockFormat blockFormat;

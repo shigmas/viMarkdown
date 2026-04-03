@@ -49,6 +49,7 @@ enum {
 	US_CSV_BLOCK,		//	CSVブロック内 ```CSV ～ ```
 	US_KEISEN_BLOCK,	//	罫線ブロック内 ```keisen ～ ```
 	US_TABLE,			//	マークダウンテーブル内
+	US_CELL,			//	マークダウンテーブル内セル
 };
 
 const QChar STX(0x0002);		//	行頭仮想文字
