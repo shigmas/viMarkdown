@@ -319,6 +319,19 @@ void MarkdownPreview::mouseReleaseEvent(QMouseEvent *me)
 	if (me->button() == Qt::LeftButton) {
 		QString anchor = anchorAt(me->pos());
 		QString name = splitName(anchor);
+		QTextCursor cursor = cursorForPosition(me->pos());
+		QTextBlock block = cursor.block();
+		if( block.userState() == US_TABLE ) {	//	QTextTable 前後ダミー
+			if( block.previous().isValid() && block.previous().userState() == US_CELL ) {
+				cursor.movePosition(QTextCursor::Left);
+				setTextCursor(cursor);
+				block = block.previous();
+			} else {
+				cursor.movePosition(QTextCursor::Right);
+				setTextCursor(cursor);
+				block = block.next();
+			}
+		}
 		if (!anchor.isEmpty() || !name.isEmpty() ) {	// リンク上
 			//qDebug() << "anchor = " << anchor;
 			QString fullPath = anchor;
@@ -330,8 +343,6 @@ void MarkdownPreview::mouseReleaseEvent(QMouseEvent *me)
 			m_processing = false;
 			return;
 		} else {
-			QTextCursor cursor = cursorForPosition(me->pos());
-			QTextBlock block = cursor.block();
 			if (block.userState() == US_CHECKBOX) {
 				QTextEdit::mouseReleaseEvent(me);
 				m_processing = false;
