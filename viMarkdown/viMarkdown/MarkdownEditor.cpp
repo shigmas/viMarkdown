@@ -859,7 +859,10 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 				!(block.text().isEmpty() && block.previous().isValid() && block.previous().text().isEmpty()) )	//	連続空行ではない
 			{
 				ix = buf.size();
-				if( --nth == 0 ) break;
+				if( --nth == 0 ) {
+					if( block.userState() == US_CELL && block.text().endsWith("|") ) --ix;
+					break;
+				}
 			}
 			block = block.next();
 			ix = 0;
