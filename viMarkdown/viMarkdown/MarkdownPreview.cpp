@@ -191,6 +191,30 @@ void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 		emit Enter_pressed();
 		return;
 	}
+	if (e->key() == Qt::Key_Right || e->key() == Qt::Key_Down) {
+		QTextEdit::keyPressEvent(e);
+		QTextCursor cursor = textCursor();
+		QTextBlock block = cursor.block();
+		//auto text = block.text();
+		if( block.userState() == US_TABLE /*&& !(block.previous().isValid() && block.previous().userState() == US_CELL)*/ ) {
+			//block = block.next();
+			//auto text2 = block.text();
+			//cursor.setPosition(block.position());
+			cursor.movePosition(QTextCursor::Right);
+			setTextCursor(cursor);
+		}
+		return;
+	}
+	if (e->key() == Qt::Key_Left || e->key() == Qt::Key_Up) {
+		QTextEdit::keyPressEvent(e);
+		QTextCursor cursor = textCursor();
+		QTextBlock block = cursor.block();
+		if( block.userState() == US_TABLE /*&& block.previous().isValid() && block.previous().userState() == US_CELL*/ ) {
+			cursor.movePosition(QTextCursor::Left);
+			setTextCursor(cursor);
+		}
+		return;
+	}
 	if (e->key() == Qt::Key_Tab) {
 		emit Tab_pressed();
 		return;
