@@ -480,9 +480,11 @@ void MarkdownPreview::do_body(QTextBlock srcBlock, QTextCursor& cursor, bool las
 			blankLine = false;
 		cursor.mergeBlockFormat(blockFormat);
 		cursor.insertMarkdown(txt);
-		cursor.insertBlock();
+		cursor.insertBlock(QTextBlockFormat(), QTextCharFormat());
 	}
 #endif
+	//cursor.setBlockFormat(QTextBlockFormat());				//	フォーマットリセット
+	//cursor.setCharFormat(QTextCharFormat());
 	m_isPrevLineEmpty = m_bodyList.back().isEmpty();	//	最後が空行か？
 	m_bodyList.clear();
 }
