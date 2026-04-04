@@ -1196,12 +1196,14 @@ void MarkdownPreview::do_numlist(QTextBlock srcBlock, QTextCursor& cursor, QStri
 	auto match = re_numlist.match(m_lst[m_ln]);
 	while( match.hasMatch() ) {
 		updateCharFlags(srcBlock);
+		srcBlock.setUserState(US_NUMLIST);
 		BlockData* data = getBlockData(srcBlock);
 		for(int i = 0; i < match.capturedLength(); ++i)
 			data->m_charFlags[i] = PCF_NUM_LIST;
 		srcBlock.setUserData(data);
 		//QTextBlock b = list->item(list->count() - 1);
 		//cursor.insertText(m_lst[m_ln].remove(re_numlist) /*+ "\n"*/);
+		cursor.block().setUserState(US_NUMLIST);
 		cursor.insertMarkdown(m_lst[m_ln] + "\n");
 		if( ++m_ln >= m_lst.size() ) break;
 		srcBlock = srcBlock.next();
@@ -1265,6 +1267,7 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 			for(int i = 0; i < match.capturedLength(); ++i)
 				data->m_charFlags[i] = PCF_LIST_MARK;
 			srcBlock.setUserData(data);
+			srcBlock.setUserState(US_CHECKBOX);
 			if( ++m_ln >= m_lst.size() ) break;
 			match = re_checkbox.match(m_lst[m_ln]);
 			if( !match.hasMatch() ) break;
@@ -1288,7 +1291,8 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 			data->m_charFlags[i] = PCF_LIST_MARK;
 		srcBlock.setUserData(data);
 		updateCharFlags(srcBlock);
-		printCharFlags(srcBlock);
+		srcBlock.setUserState(US_LIST);
+		//printCharFlags(srcBlock);
 		bool isPrevlist = true;
 		bool spc2Prev = false;
 		while( ++m_ln < m_lst.size() ) {
@@ -1297,6 +1301,7 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 			if( text.isEmpty() ) break;		//	空行だった場合
 			auto mch = re_list.match(text);
 			if( mch.hasMatch() ) {	//	リスト行
+				++n_item;
 				buf += u'\n' + text;
 				isPrevlist = true;
 				//int length = mch.capturedLength();
@@ -1305,7 +1310,8 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 					data->m_charFlags[i] = PCF_LIST_MARK;
 				srcBlock.setUserData(data);
 				updateCharFlags(srcBlock);
-				printCharFlags(srcBlock);
+				srcBlock.setUserState(US_LIST);
+				//printCharFlags(srcBlock);
 			} else {	//	非リスト行の場合
 				if( re_block.match(text).hasMatch() )	//	ブロック行の場合
 					break;
@@ -1321,6 +1327,7 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 		}
 	}
 	int startPos = cursor.position();
+	//cursor.block().setUserState(is_checkbox ? US_CHECKBOX : US_LIST);
 	cursor.insertMarkdown(buf);
 	QTextBlock firstBlock = document()->findBlock(startPos);
 	if (firstBlock.isValid() && firstBlock.text().isEmpty()) {
@@ -1328,14 +1335,14 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 		QTextCursor helper(firstBlock);
 		helper.deleteChar(); 
 	}
-	if( is_checkbox ) {
-		QTextBlock srcBlock = document()->findBlock(pos);
+	//if( is_checkbox ) {
+		QTextBlock srcBlock2 = document()->findBlock(pos);
 		for(int i = 0; i < n_item; ++i) {
 			//srcBlock.setUserState(ln++);
-			srcBlock.setUserState(US_CHECKBOX);
-			srcBlock = srcBlock.next();
+			srcBlock2.setUserState(is_checkbox ? US_CHECKBOX : US_LIST);
+			srcBlock2 = srcBlock2.next();
 		}
-	}
+	//}
 	cursor.insertBlock();
 	QTextBlockFormat blockFormat;
 	cursor.setBlockFormat(blockFormat);
@@ -1478,7 +1485,6 @@ int MarkdownPreview::findPosition(const PosContext &context) {
 		} else if( ch == ETX ) {		//	行末の場合
 			//	undone: 表内の場合は、行最後のセルでのみカウント
 			ix = buf.size();
-			//if( block.userState() == US_
 #if 1
 			QTextCursor cursor(block);
 			QTextTable *table = cursor.currentTable();

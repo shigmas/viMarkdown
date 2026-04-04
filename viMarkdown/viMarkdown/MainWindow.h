@@ -42,7 +42,9 @@ enum {
 	US_DEFAULT = -1,	//	本文など
 	//US_BODY = 0,		//	本文など
 	US_HEADING,			//	タイトル・見出し
+	US_LIST,			//	リスト
 	US_CHECKBOX,		//	チェックボックス
+	US_NUMLIST,			//	連番
 	US_IN_COMMENT,		//	行頭がコメントブロック（<!-- -->）の中
 	US_CODE_BLOCK,		//	コードブロック内（最初の``` 行も含む）
 	US_CODE_BLOCK_END,	//	コードブロック最後の```
