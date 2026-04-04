@@ -220,7 +220,7 @@ void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 		return;
 	}
 	if (e->key() == Qt::Key_Backspace) {
-		emit BS_pressed();
+		emit BS_pressed((e->modifiers() & Qt::ControlModifier) != 0);
 		return;
 	}
 	if (e->key() == Qt::Key_Delete) {

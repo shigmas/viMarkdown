@@ -950,18 +950,22 @@ void MainWindow::onEnter_pressed() {
 void MainWindow::onTab_pressed() {
 	onAction_Indent();
 }
-void MainWindow::onBS_pressed() {
+void MainWindow::onBS_pressed(bool ctrl) {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	QTextCursor cursor = docWidget->m_editor->textCursor();
 	if( cursor.hasSelection() ) {
 		cursor.deleteChar();
 	} else {
-		auto pos = cursor.position();
-		if( pos > 1 && docWidget->m_editor->document()->characterAt(pos-2) == '\\' ) {
+		if( ctrl )
+			docWidget->m_editor->backSpaceWord();
+		else {
+			auto pos = cursor.position();
+			if( pos > 1 && docWidget->m_editor->document()->characterAt(pos-2) == '\\' ) {
+				cursor.deletePreviousChar();
+			}
 			cursor.deletePreviousChar();
 		}
-		cursor.deletePreviousChar();
 	}
 	docWidget->m_editor->setTextCursor(cursor);
 	//syncPreviewCursorWithEditor();

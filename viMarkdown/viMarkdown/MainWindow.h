@@ -178,7 +178,7 @@ protected:
     void	onTextRemovedAtPreview(int);
     void	onEnter_pressed();
     void	onTab_pressed();
-    void	onBS_pressed();
+    void	onBS_pressed(bool);
     void	onDel_pressed(bool);
     //void	syncPreviewCursorWithEditor();
     void	onChangeEditorFontSize(int);

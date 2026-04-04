@@ -544,6 +544,12 @@ void MarkdownEditor::deleteWord() {
 	cursor.deleteChar();
 	setTextCursor(cursor);
 }
+void MarkdownEditor::backSpaceWord() {
+	QTextCursor cursor = textCursor();
+	moveToPrevWord(cursor, true);
+	cursor.deleteChar();
+	setTextCursor(cursor);
+}
 void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	QTextCursor cursor = this->textCursor();
 	if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {		//	改行入力
@@ -571,10 +577,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 		deleteWord();
 		return;
 	} else if (e->key() == Qt::Key_Backspace && (e->modifiers() & Qt::ControlModifier) != 0) {
-		QTextCursor cursor = textCursor();
-		moveToPrevWord(cursor, true);
-		cursor.deleteChar();
-		setTextCursor(cursor);
+		backSpaceWord();
 		return;
 	} else if( !m_mainWindow->isKeisenMode() ) {		//	非罫線モードの場合
 		if( (e->modifiers() & Qt::ControlModifier) != 0 ) {

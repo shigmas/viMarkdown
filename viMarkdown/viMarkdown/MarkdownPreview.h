@@ -66,7 +66,7 @@ signals:
     void	textRemoved(int);
     void	Enter_pressed();	//	or Return
     void	Tab_pressed();		//	Tab
-    void	BS_pressed();		//	BackSpace
+    void	BS_pressed(bool);		//	BackSpace
     void	Del_pressed(bool);		//	Delete
     void	undo_triggered();
     void	redo_triggered();

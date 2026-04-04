@@ -67,6 +67,7 @@ public:
 	bool	isComposing() const { return m_isComposing; }
 	void	insertEnter();		//	カーソル位置に改行挿入（＋オートテキスト・インデント）
 	void	deleteWord();
+	void	backSpaceWord();
 
 signals:
     void	tab_pressed();
