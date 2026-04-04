@@ -92,6 +92,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AutoTest.cpp" />
     <ClCompile Include="DocWidget.cpp" />
     <ClCompile Include="MarkdownPreview.cpp" />
     <ClCompile Include="MarkdownEditor.cpp" />

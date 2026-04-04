@@ -1476,6 +1476,7 @@ int MarkdownPreview::findPosition(const PosContext &context) {
 		} else if( ch == ETX ) {		//	行末の場合
 			//	undone: 表内の場合は、行最後のセルでのみカウント
 			ix = buf.size();
+			//if( block.userState() == US_
 #if 1
 			QTextCursor cursor(block);
 			QTextTable *table = cursor.currentTable();
