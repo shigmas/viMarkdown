@@ -457,6 +457,7 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 				QTextCursor cur2(block2);		//	プレビューカーソル
 				//QTextCursor cur2 = docWidget->m_preview->textCursor();		//	プレビューカーソル
 				const BlockData *data = getBlockData(block1);
+				const QTextTable *table = cur2.currentTable();
 				int nvcnt = 0;	//	非表示文字数
 				int k = 0;		//	エディタカーソルインデックス
 				for(int i = 0; i <= block2.text().size(); ++i) {
@@ -469,8 +470,17 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 					QTextCursor cur1 = docWidget->m_editor->textCursor();
 					int k1 = cur1.position() - cur1.block().position();		//	実際のエディタカーソルインデックス
 					QChar ch = document->characterAt(cur2.position());
+					int ix = i;
+					if( table != nullptr ) {
+						QTextTableCell cell = table->cellAt(cur2);
+						int row = cell.row();
+						for(int c = 0; c < cell.column(); ++c) {
+							QTextBlock block = table->cellAt(row, c).firstCursorPosition().block();
+							ix += block.text().size();
+						}
+					}
 					//	"** " の様な場合は、カーソルは "** " 先頭位置を期待
-					ASSERT_EQ( ch1 == u' ' ? k0 : k, k1, block1.blockNumber() , ch, i, TEST_PtoE_CUR_SYNC);
+					ASSERT_EQ( ch1 == u' ' ? k0 : k, k1, block1.blockNumber() , ch, ix, TEST_PtoE_CUR_SYNC);
 					cur2.movePosition(QTextCursor::Right);
 					++k;
 				}
