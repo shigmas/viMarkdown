@@ -1553,7 +1553,8 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 	QTextBlock block = doc->findBlock(pos);
 	QTextTable *table = cursor.currentTable();
 	if( block.userState() == US_KEISEN_BLOCK ) {
-		pc.m_anchorChar = QChar(U_KEISEN_BLOCK);
+		//pc.m_anchorChar = QChar(U_KEISEN_BLOCK);
+		pc.m_anchorChar = pos == block.position() ? STX : ETX;
 	} else if( pos == block.position() && (table == nullptr || table->cellAt(cursor).column() == 0) ) {		//	行頭にいる場合
 		pc.m_anchorChar = STX;
 	} else if( pos == block.position() + block.text().size() &&		//	行末にいる場合
