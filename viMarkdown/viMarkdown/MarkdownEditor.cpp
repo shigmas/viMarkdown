@@ -538,6 +538,12 @@ void MarkdownEditor::insertEnter() {
 	// カーソル位置を画面内に維持
 	this->ensureCursorVisible();
 }
+void MarkdownEditor::deleteWord() {
+	QTextCursor cursor = textCursor();
+	moveToNextWord(cursor, true);
+	cursor.deleteChar();
+	setTextCursor(cursor);
+}
 void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	QTextCursor cursor = this->textCursor();
 	if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {		//	改行入力
@@ -562,10 +568,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 		}
 		return;
 	} else if (e->key() == Qt::Key_Delete && (e->modifiers() & Qt::ControlModifier) != 0) {
-		QTextCursor cursor = textCursor();
-		moveToNextWord(cursor, true);
-		cursor.deleteChar();
-		setTextCursor(cursor);
+		deleteWord();
 		return;
 	} else if (e->key() == Qt::Key_Backspace && (e->modifiers() & Qt::ControlModifier) != 0) {
 		QTextCursor cursor = textCursor();

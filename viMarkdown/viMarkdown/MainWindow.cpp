@@ -920,18 +920,22 @@ void MainWindow::onTextRemovedAtPreview(int charsRemoved) {
 	cursor.removeSelectedText();
 	//syncPreviewCursorWithEditor();
 }
-void MainWindow::onDel_pressed() {
+void MainWindow::onDel_pressed(bool ctrl) {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	QTextCursor cursor = docWidget->m_editor->textCursor();
 	if( cursor.hasSelection() ) {
 		cursor.deleteChar();
 	} else {
-		auto pos = cursor.position();
-		if( pos > 0 && docWidget->m_editor->document()->characterAt(pos-1) == '\\' ) {
-			cursor.deletePreviousChar();
+		if( ctrl )
+			docWidget->m_editor->deleteWord();
+		else {
+			auto pos = cursor.position();
+			if( pos > 0 && docWidget->m_editor->document()->characterAt(pos-1) == '\\' ) {
+				cursor.deletePreviousChar();
+			}
+			cursor.deleteChar();
 		}
-		cursor.deleteChar();
 	}
 	docWidget->m_editor->setTextCursor(cursor);
 }

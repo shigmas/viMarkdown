@@ -224,7 +224,7 @@ void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 		return;
 	}
 	if (e->key() == Qt::Key_Delete) {
-		emit Del_pressed();
+		emit Del_pressed((e->modifiers() & Qt::ControlModifier) != 0);
 		return;
 	}
 	if( (e->modifiers() & Qt::ControlModifier) != 0 ) {		//	Ctrl +

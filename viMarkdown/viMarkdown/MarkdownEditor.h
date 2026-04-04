@@ -66,6 +66,7 @@ public:
 	int		linkClickedPos() const { return m_linkClickedPos; }
 	bool	isComposing() const { return m_isComposing; }
 	void	insertEnter();		//	カーソル位置に改行挿入（＋オートテキスト・インデント）
+	void	deleteWord();
 
 signals:
     void	tab_pressed();

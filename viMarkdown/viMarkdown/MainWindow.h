@@ -179,7 +179,7 @@ protected:
     void	onEnter_pressed();
     void	onTab_pressed();
     void	onBS_pressed();
-    void	onDel_pressed();
+    void	onDel_pressed(bool);
     //void	syncPreviewCursorWithEditor();
     void	onChangeEditorFontSize(int);
     void	onChangePreviewFontSize(int);
