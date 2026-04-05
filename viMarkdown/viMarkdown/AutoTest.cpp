@@ -328,9 +328,15 @@ void MainWindow::do_test(int type) {
 void MainWindow::do_test(DocWidget *docWidget, int type) {
 	QTextBlock block1 = docWidget->m_editor->document()->firstBlock();
 	QTextBlock block2 = docWidget->m_preview->document()->firstBlock();
-	bool inTable = false;
+	//bool inTable = false;
 	while( block1.isValid() ) {
 		QCoreApplication::processEvents();		//	溜まっているイベント処理
+#if 0
+		while( block2.userState() == US_TABLE ) {		//	テーブル前後ダミーブロックはスキップ
+			block2 = block2.next();
+		}
+		if (!block2.isValid()) break;
+#endif
 		int n1 = block1.blockNumber();
 		int n2 = block2.blockNumber();
 		QString t1 = block1.text();
@@ -359,9 +365,10 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 			block2 = block2.next();
 			continue;
 		}
-		while( block1.userState() == US_KEISEN_BLOCK && block1.text().startsWith("```") ) {
+		while( /*block1.userState() == US_KEISEN_BLOCK &&*/ block1.text().startsWith("```") ) {
 			block1 = block1.next();
 		}
+#if 0
 		if( block1.userState() == US_TABLE) {
 			if( !inTable ) {
 				block2 = block2.next();		//	GFMテーブル最初はテーブル全体のためのブロックなのでスキップ
@@ -372,6 +379,10 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 				block2 = block2.next();		//	GFMテーブル最後もスキップ
 			}
 			inTable = false;
+		}
+#endif
+		while( block2.userState() == US_TABLE ) {		//	テーブル前後ダミーブロックはスキップ
+			block2 = block2.next();
 		}
 		qDebug() << "block1: " << block1.blockNumber() << ", block2: " << block2.blockNumber();
 		qDebug() << "charAt(block2) = " << docWidget->m_preview->document()->characterAt(block2.position());

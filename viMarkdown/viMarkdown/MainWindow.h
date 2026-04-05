@@ -50,7 +50,7 @@ enum {
 	US_CODE_BLOCK_END,	//	コードブロック最後の```
 	US_CSV_BLOCK,		//	CSVブロック内 ```CSV ～ ```
 	US_KEISEN_BLOCK,	//	罫線ブロック内 ```keisen ～ ```
-	US_TABLE,			//	マークダウンテーブル内
+	US_TABLE,			//	マークダウンテーブル前後ダミーブロック？
 	US_CELL,			//	マークダウンテーブル内セル
 };
 
