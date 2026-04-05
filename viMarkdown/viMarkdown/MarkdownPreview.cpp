@@ -1294,7 +1294,7 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 		srcBlock.setUserState(US_LIST);
 		//printCharFlags(srcBlock);
 		bool isPrevlist = true;
-		bool spc2Prev = false;
+		//bool spc2Prev = false;
 		while( ++m_ln < m_lst.size() ) {
 			srcBlock = srcBlock.next();
 			QString text = m_lst[m_ln];
@@ -1315,14 +1315,22 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 			} else {	//	非リスト行の場合
 				if( re_block.match(text).hasMatch() )	//	ブロック行の場合
 					break;
+#if 1
+				buf += u"<br />\n" + text /*+ "<br />\n"*/;
+				//if( isPrevlist )
+				//	buf += u"<br/>" + text;
+				//else
+				//	buf += u"\n" + text;
+#else
 				bool spc2 = text.endsWith("  ");
 				text = text.trimmed();
 				if( isPrevlist || spc2Prev )
 					buf += u"<br/>" + text;
 				else
 					buf += u"\n" + text;
+#endif
 				isPrevlist = false;
-				spc2Prev = spc2;
+				//spc2Prev = spc2;
 			}
 		}
 	}
