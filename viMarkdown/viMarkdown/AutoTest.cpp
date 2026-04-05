@@ -484,8 +484,11 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 					docWidget->m_preview->setTextCursor(cur2);
 					QCoreApplication::processEvents();		//	溜まっているイベント処理
 					int k0 = k;
-					while( k < data->m_charFlags.size() && data->m_charFlags[k] >= PCF_NOT_VISIBLE )	//	次の表示文字を探す
+					while( k < data->m_charFlags.size() && data->m_charFlags[k] >= PCF_NOT_VISIBLE &&
+						data->m_charFlags[k] != PCF_CSV )	//	次の表示文字を探す
+					{
 						++k;
+					}
 					QChar ch1 = k < block1.text().size() ? block1.text()[k] : u'\n';
 					QTextCursor cur1 = docWidget->m_editor->textCursor();
 					int k1 = cur1.position() - cur1.block().position();		//	実際のエディタカーソルインデックス
