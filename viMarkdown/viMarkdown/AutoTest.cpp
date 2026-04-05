@@ -81,14 +81,13 @@ const QString QA_MD_TEXT_2 =
 	"\n"
 	"\\- item3\n"
 #endif
-#if 0
+#if 1
 	"```CSV\n"	//	CSVブロック開始
 	"id, hhh2, h3\n"
 	"69, ""hasshi"", hoge\n"
 	"```\n"		//	CSVブロック終了
 	"\n"
 	"text\n"
-	"\n"
 #endif
 #if 0
 	"|he**ad**er|h|\n"
@@ -99,7 +98,7 @@ const QString QA_MD_TEXT_2 =
 	"text\n"
 	"\n"
 #endif
-#if 1
+#if 0
 	"TEST\n"
 	"<!-- comment -->\n"
 	"# title\n"
@@ -165,6 +164,7 @@ const QString QA_MD_TEXT_2 =
 #if 1
 	"## table\n"
 	"```CSV\n"	//	CSVブロック開始
+	"abc, xy, z123\n"
 	"id, , h3\n"
 	"id, h*h*h2, h3\n"
 	"69, ""hasshi"", h\\*o\\*ge\n"
@@ -374,12 +374,13 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 		qDebug() << "charAt(block2) = " << docWidget->m_preview->document()->characterAt(block2.position());
 		QString buf1 = block1.text();
 		QString buf2 = block2.text();
+		int lineStartPos = block2.position();		//	行先頭位置
 		QTextTable *table = QTextCursor(block2).currentTable();
 		if( table != nullptr ) {	//	CSV・GFM テーブル中の場合
 			for(int i = 0; i < table->columns() - 1; ++i) {
 				block2 = block2.next();
 				assert( block2.isValid() );
-				buf2 += /*" " +*/ block2.text().trimmed();
+				buf2 += " " + block2.text().trimmed();		//	セル文字列は半角空白j区切り
 			}
 			//block2 = block2.next();
 			assert( block2.isValid() );
@@ -393,8 +394,8 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 		for(int i = 0; i < data->m_charFlags.size(); ++i) {		//	buf1: 非表示部分を削除
 			if( data->m_charFlags[i] == PCF_VISIBLE ) {
 				buf1[k++] = buf1[i];
-			//} else if( data->m_charFlags[i] == g_flag_char[PCF_CSV] ) {
-			//	buf1[k++] = u' ';
+			} else if(data->m_charFlags[i] == PCF_CSV) {
+				buf1[k++] = u' ';
 			}
 		}
 		buf1.resize(k);
@@ -455,33 +456,43 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 				QTextDocument *document = docWidget->m_preview->document();
 				//QTextCursor cur1(block1);		//	エディタカーソル
 				QTextCursor cur2(block2);		//	プレビューカーソル
+				cur2.setPosition(lineStartPos);
 				//QTextCursor cur2 = docWidget->m_preview->textCursor();		//	プレビューカーソル
 				const BlockData *data = getBlockData(block1);
+#if 0
 				const QTextTable *table = cur2.currentTable();
-				int nvcnt = 0;	//	非表示文字数
+				int ofst1 = 0;		//	エディタ：現セルより左にあるセル文字数合計
+				int ofst2 = 0;		//	プレビュー：現セルより左にあるセル文字数合計
+				if( table != nullptr ) {
+					QTextTableCell cell = table->cellAt(cur2);
+					int row = cell.row();
+					int column = cell.column();
+					for(int c = 0; c < cell.column(); ++c) {
+						QTextBlock block = table->cellAt(row, c).firstCursorPosition().block();
+						auto t = block.text();
+						ofst2 += block.text().size();
+						for(int i = 0; i < block.text().size(); ++i) {
+							while( ofst1 < data->m_charFlags.size() && data->m_charFlags[ofst1] >= PCF_NOT_VISIBLE )	//	次の表示文字を探す
+								++ofst1;
+						}
+					}
+				}
+#endif
+				//int nvcnt = 0;	//	非表示文字数
 				int k = 0;		//	エディタカーソルインデックス
-				for(int i = 0; i <= block2.text().size(); ++i) {
+				for(int i = 0; i <= buf2.size(); ++i) {		//	１行分のテキストについてチェック
 					docWidget->m_preview->setTextCursor(cur2);
 					QCoreApplication::processEvents();		//	溜まっているイベント処理
 					int k0 = k;
-					while( k < data->m_charFlags.size() && data->m_charFlags[k] >= PCF_NOT_VISIBLE )
+					while( k < data->m_charFlags.size() && data->m_charFlags[k] >= PCF_NOT_VISIBLE )	//	次の表示文字を探す
 						++k;
 					QChar ch1 = k < block1.text().size() ? block1.text()[k] : u'\n';
 					QTextCursor cur1 = docWidget->m_editor->textCursor();
 					int k1 = cur1.position() - cur1.block().position();		//	実際のエディタカーソルインデックス
 					QChar ch = document->characterAt(cur2.position());
-					int ix = i;
-					if( table != nullptr ) {
-						QTextTableCell cell = table->cellAt(cur2);
-						int row = cell.row();
-						for(int c = 0; c < cell.column(); ++c) {
-							QTextBlock block = table->cellAt(row, c).firstCursorPosition().block();
-							ix += block.text().size();
-						}
-					}
-					//	"** " の様な場合は、カーソルは "** " 先頭位置を期待
-					ASSERT_EQ( ch1 == u' ' ? k0 : k, k1, block1.blockNumber() , ch, ix, TEST_PtoE_CUR_SYNC);
-					cur2.movePosition(QTextCursor::Right);
+					//	"** " の様な場合は、カーソルは "** " 先頭位置（k0）を期待
+					ASSERT_EQ( (ch1 == u' ' ? k0 : k), k1, block1.blockNumber() , ch, i, TEST_PtoE_CUR_SYNC);
+					cur2.movePosition(QTextCursor::Right);		//	カーソル右移動
 					++k;
 				}
 			}
