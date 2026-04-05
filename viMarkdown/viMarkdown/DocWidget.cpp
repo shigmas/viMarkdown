@@ -111,7 +111,7 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 			fields.append(currentField.trimmed());
 			currentField.clear();
 			if( data != nullptr ) {
-				data->m_charFlags[i] = PCF_CSV;
+				data->m_charFlags[i] = PCF_CELL_SEPARATOR;
 				for(int k = i+1; k < line.size() && line[k] == u' '; ++k)
 					data->m_charFlags[k] = PCF_NOT_VISIBLE;
 				updateCharFlags(data, line, ix0, i, true);		//	true for エスケープ文字処理
@@ -167,7 +167,7 @@ bool isTableLine(const QString& lnStr0, const QString& lnStr, QStringList &table
 			for(int i = ix; --i >= 0 && lnStr0[i] == u' '; )	//	| 直前空白は非表示
 				data->m_charFlags[i] = PCF_NOT_VISIBLE;
 			if( ix < sv.size() )
-				data->m_charFlags[ix] = PCF_TABLE;
+				data->m_charFlags[ix] = PCF_CELL_SEPARATOR;
 			for(int i = ix + 1; i < lnStr0.size() && lnStr0[i] == u' '; ++i)	//	| 直後空白も非表示
 				data->m_charFlags[i] = PCF_NOT_VISIBLE;
 			updateCharFlags(data, lnStr0, ix0, ix, true);		//	true for エスケープ文字処理

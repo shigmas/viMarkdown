@@ -89,7 +89,7 @@ const QString QA_MD_TEXT_2 =
 	"\n"
 	"text\n"
 #endif
-#if 0
+#if 1
 	"|he**ad**er|h|\n"
 	"|-|-|\n"
 	"|3|1415|\n"
@@ -485,7 +485,7 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 					QCoreApplication::processEvents();		//	溜まっているイベント処理
 					int k0 = k;
 					while( k < data->m_charFlags.size() && data->m_charFlags[k] >= PCF_NOT_VISIBLE &&
-						data->m_charFlags[k] != PCF_CSV )	//	次の表示文字を探す
+						data->m_charFlags[k] != PCF_CELL_SEPARATOR )	//	次の表示文字を探す
 					{
 						++k;
 					}
