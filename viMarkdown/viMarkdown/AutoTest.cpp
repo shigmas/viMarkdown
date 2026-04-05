@@ -81,7 +81,7 @@ const QString QA_MD_TEXT_2 =
 	"\n"
 	"\\- item3\n"
 #endif
-#if 1
+#if 0
 	"```CSV\n"	//	CSVブロック開始
 	"id, hhh2, h3\n"
 	"69, ""hasshi"", hoge\n"
@@ -89,7 +89,7 @@ const QString QA_MD_TEXT_2 =
 	"\n"
 	"text\n"
 #endif
-#if 1
+#if 0
 	"|he**ad**er|h|\n"
 	"|-|-|\n"
 	"|3|1415|\n"
@@ -98,7 +98,7 @@ const QString QA_MD_TEXT_2 =
 	"text\n"
 	"\n"
 #endif
-#if 0
+#if 1
 	"TEST\n"
 	"<!-- comment -->\n"
 	"# title\n"
@@ -331,7 +331,10 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 	bool inTable = false;
 	while( block1.isValid() ) {
 		QCoreApplication::processEvents();		//	溜まっているイベント処理
-		QString t0 = block1.text();
+		int n1 = block1.blockNumber();
+		int n2 = block2.blockNumber();
+		QString t1 = block1.text();
+		QString t2 = block2.text();
 		assert( block2.isValid() );
 		if( isCommentOuted(getBlockData(block1)) ) {		//	（非空行で、）１行全てコメントアウトされている場合はスキップ
 			block1 = block1.next();
@@ -394,7 +397,7 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 		for(int i = 0; i < data->m_charFlags.size(); ++i) {		//	buf1: 非表示部分を削除
 			if( data->m_charFlags[i] == PCF_VISIBLE ) {
 				buf1[k++] = buf1[i];
-			} else if(data->m_charFlags[i] == PCF_CSV) {
+			} else if(data->m_charFlags[i] == PCF_CELL_SEPARATOR) {
 				buf1[k++] = u' ';
 			}
 		}
