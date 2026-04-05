@@ -869,7 +869,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 				}
 				ix = buf.size();
 				if( --nth == 0 ) {
-					if( block.userState() == US_CELL && block.text().endsWith("|") ) --ix;
+					if( block.userState() == US_TABLE && block.text().endsWith("|") ) --ix;
 					break;
 				}
 			}
