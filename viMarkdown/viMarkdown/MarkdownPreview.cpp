@@ -1578,7 +1578,8 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 		pc.m_anchorChar = pos == block.position() ? STX : ETX;
 	} else if( pos == block.position() && (table == nullptr || table->cellAt(cursor).column() == 0) ) {		//	行頭にいる場合
 		pc.m_anchorChar = STX;
-	} else if( pos == block.position() + block.text().size() &&		//	行末にいる場合
+	} else if( block.userState() != US_LIST &&
+				pos == block.position() + block.text().size() &&		//	行末にいる場合
 				(table == nullptr || table->cellAt(cursor).column() >= table->columns() - 1) )
 	{
 		pc.m_anchorChar = ETX;
