@@ -335,6 +335,7 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 	QTextBlock block1 = docWidget->m_editor->document()->firstBlock();
 	QTextBlock block2 = docWidget->m_preview->document()->firstBlock();
 	//bool inTable = false;
+	QStringList listStrings;
 	while( block1.isValid() && block2.isValid() ) {
 		QCoreApplication::processEvents();		//	溜まっているイベント処理
 #if 0
@@ -394,6 +395,10 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 		qDebug() << "charAt(block2) = " << docWidget->m_preview->document()->characterAt(block2.position());
 		QString buf1 = block1.text();
 		QString buf2 = block2.text();
+		if( listStrings.isEmpty() && block2.userState() == US_LIST ) {
+			listStrings = buf2.split(QChar(LINE_SEPARATOR));
+			buf2 = listStrings.front();
+		}
 		int lineStartPos = block2.position();		//	行先頭位置
 		QTextTable *table = QTextCursor(block2).currentTable();
 		if( table != nullptr ) {	//	CSV・GFM テーブル中の場合
@@ -521,7 +526,10 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 			}
 		}
 		block1 = block1.next();
-		block2 = block2.next();
+		if( !listStrings.isEmpty() )
+			listStrings.pop_front();
+		if( listStrings.isEmpty() )
+			block2 = block2.next();
 	}
 	ASSERT( !block2.isValid(), block1.blockNumber());	//	同行数のはず
 }
