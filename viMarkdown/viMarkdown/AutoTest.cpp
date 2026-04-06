@@ -76,10 +76,13 @@ const QString QA_MD_TEXT_2 =
 	//"item2**bold**\n"
 	//"- item2**bold**\n"
 	//"fuga\\hoge\n"
-#if 0
-	"- item2\n"
-	"\n"
-	"\\- item3\n"
+#if 1
+	"- item1\n"
+	//"- item2\n"
+	"  hoge fuga\n"
+	//"  abc xyzzzzy\n"
+	//"\n"
+	//"\\- item3\n"
 #endif
 #if 0
 	"```CSV\n"	//	CSVブロック開始
@@ -98,7 +101,7 @@ const QString QA_MD_TEXT_2 =
 	"text\n"
 	"\n"
 #endif
-#if 1
+#if 0
 	"TEST\n"
 	"<!-- comment -->\n"
 	"# title\n"

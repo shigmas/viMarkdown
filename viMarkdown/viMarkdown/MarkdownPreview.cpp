@@ -534,6 +534,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 		bool bComment = false;		//	コメントがあった
 		//QString buf = m_lst[m_ln];
 		QTextBlock srcBlock = doc->findBlockByNumber(m_ln);
+		if (!srcBlock.isValid()) break;
 		QString buf = srcBlock.text();
 		BlockData *data = getBlockData(srcBlock, true);			//	true for 初期化
 		const QString buf0 = buf;
