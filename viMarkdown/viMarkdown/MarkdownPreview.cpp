@@ -1591,7 +1591,7 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 			int row = table->cellAt(cursor).row();
 			ix = pos - table->cellAt(row, 0).firstPosition();
 		}
-		while( pos > 0 && (ch == endOfCell || ch == u' ' || ch == QChar::ParagraphSeparator) ) {
+		while( ix > 0 && (ch == endOfCell || ch == u' ' || ch == QChar(LINE_SEPARATOR) || ch == QChar::ParagraphSeparator) ) {
 			pc.m_offset += 1;
 			--pos;
 			if( --ix <= 0 ) {
