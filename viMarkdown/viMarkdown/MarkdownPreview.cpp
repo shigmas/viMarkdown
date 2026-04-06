@@ -1471,7 +1471,7 @@ int MarkdownPreview::findPosition(const PosContext &context) {
 	QTextBlock block = document()->findBlockByNumber(context.m_prvHBlockNum);
 	const QChar ch = context.m_anchorChar;
 	int nth = context.m_nth;
-	int ix = 0;
+	int ix = 0, ix2;
 	while( block.isValid() ) {
 		if( block.userState() == US_TABLE ||		//	CSV, GFM表 のダミーブロックの場合
 			block.userState() == US_KEISEN_BLOCK )	//	罫線ブロック（```行）の場合
@@ -1488,14 +1488,19 @@ int MarkdownPreview::findPosition(const PosContext &context) {
 			if( table == nullptr || table->cellAt(cursor).column() == 0 /*&& table->cellAt(cursor).row() != 0*/ ) {
 				if( --nth == 0 ) break;
 			}
-			//if( --nth == 0 ) break;
+			if( block.userState() == US_LIST ) {	//	リスト行の場合
+				while( (ix2 = buf.indexOf(QChar(LINE_SEPARATOR), ix)) >= 0 ) {
+					ix = ix2 + 1;
+					if( --nth == 0 ) break;
+				}
+				if( nth == 0 ) break;
+			}
 			block = block.next();
 			//ix = 0;
 		} else if( ch == ETX ) {		//	行末の場合
 			//	undone: 表内の場合は、行最後のセルでのみカウント
 			if( block.userState() == US_LIST ) {	//	リスト行の場合
 				ix = 0;
-				int ix2;
 				while( (ix2 = buf.indexOf(QChar(LINE_SEPARATOR), ix)) >= 0 ) {
 					ix = ix2;
 					if( --nth == 0 ) break;
