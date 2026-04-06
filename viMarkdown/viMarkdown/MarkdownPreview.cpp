@@ -586,7 +586,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 		//BlockData *data = getBlockData(srcBlock, /*init=*/true);	//	初期化
 		//BlockData *data = getBlockData(srcBlock);
 		BlockData *data2 = nullptr;
-		if( m_ln + 1 < m_lst.size() )
+		if( m_ln + 1 < m_lst.size() && srcBlock.next().isValid())
 			data2 = getBlockData(srcBlock.next());
 		if( buf.startsWith('#') ) {
 			do_body(srcBlock0, cursor);

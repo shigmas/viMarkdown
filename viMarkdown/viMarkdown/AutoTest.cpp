@@ -332,7 +332,7 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 	QTextBlock block1 = docWidget->m_editor->document()->firstBlock();
 	QTextBlock block2 = docWidget->m_preview->document()->firstBlock();
 	//bool inTable = false;
-	while( block1.isValid() ) {
+	while( block1.isValid() && block2.isValid() ) {
 		QCoreApplication::processEvents();		//	溜まっているイベント処理
 #if 0
 		while( block2.userState() == US_TABLE ) {		//	テーブル前後ダミーブロックはスキップ
