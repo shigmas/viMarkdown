@@ -76,7 +76,7 @@ const QString QA_MD_TEXT_2 =
 	//"item2**bold**\n"
 	//"- item2**bold**\n"
 	//"fuga\\hoge\n"
-#if 1
+#if 0
 	"- item1\n"
 	//"- item2\n"
 	"  hoge fuga\n"
@@ -101,7 +101,7 @@ const QString QA_MD_TEXT_2 =
 	"text\n"
 	"\n"
 #endif
-#if 0
+#if 1
 	"TEST\n"
 	"<!-- comment -->\n"
 	"# title\n"

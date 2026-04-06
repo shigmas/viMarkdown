@@ -4,6 +4,7 @@
 #include "markdowntohtmlconvertor.h"
 
 #define		CODE_IMAGE		0xfffc		//	プレビュー：画像アイコン
+#define		LINE_SEPARATOR	0x2028		//	リスト文字列内改行コード
 
 //class QPlainTextEdit;
 class MarkdownEditor;

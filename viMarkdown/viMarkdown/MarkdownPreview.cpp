@@ -1493,8 +1493,17 @@ int MarkdownPreview::findPosition(const PosContext &context) {
 			//ix = 0;
 		} else if( ch == ETX ) {		//	行末の場合
 			//	undone: 表内の場合は、行最後のセルでのみカウント
+			if( block.userState() == US_LIST ) {	//	リスト行の場合
+				ix = 0;
+				int ix2;
+				while( (ix2 = buf.indexOf(QChar(LINE_SEPARATOR), ix)) >= 0 ) {
+					ix = ix2;
+					if( --nth == 0 ) break;
+					++ix;
+				}
+				if( nth == 0 ) break;
+			}
 			ix = buf.size();
-#if 1
 			QTextCursor cursor(block);
 			QTextTable *table = cursor.currentTable();
 			if( table == nullptr ) {
@@ -1503,9 +1512,6 @@ int MarkdownPreview::findPosition(const PosContext &context) {
 				if( table->cellAt(cursor).column() >= table->columns() - 1)
 					if( --nth == 0 ) break;
 			}
-#else
-			if( --nth == 0 ) break;
-#endif
 			block = block.next();
 			ix = 0;
 		} else {		//	非行末の場合

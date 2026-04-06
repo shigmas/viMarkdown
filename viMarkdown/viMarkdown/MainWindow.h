@@ -41,7 +41,7 @@ enum CharType {
 enum {
 	US_DEFAULT = -1,	//	本文など
 	//US_BODY = 0,		//	本文など
-	US_HEADING,			//	タイトル・見出し
+	US_HEADING = 0,		//	タイトル・見出し
 	US_LIST,			//	リスト
 	US_CHECKBOX,		//	チェックボックス
 	US_NUMLIST,			//	連番
