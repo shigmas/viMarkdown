@@ -1625,6 +1625,7 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 	pc.m_prvHBlockNum = block.blockNumber();
 	//	pos の {chPrev, chNext} が見出し行先頭から何番目かを計算
 	int count = 1;
+	bool found = false;
 	if( pc.m_anchorChar == STX ) {			//	行頭の場合
 		while( block.isValid() ) {
 			if( block.position() >= pos )
@@ -1635,6 +1636,18 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 				if( table == nullptr || table->cellAt(cursor).column() == 0 )
 					++count;
 			}
+			if( block.userState() == US_LIST ) {	//	リスト行の場合
+				const QString buf = block.text();
+				for(int i = 0; i < buf.size(); ++i) {
+					if( block.position() + i >= pos ) {
+						found = true;
+						break;
+					}
+					if( buf[i] == QChar(LINE_SEPARATOR ) )
+						++count;
+				}
+			}
+			if( found ) break;
 			block = block.next();
 		}
 	} else if( pc.m_anchorChar == ETX ) {	//	行末の場合
