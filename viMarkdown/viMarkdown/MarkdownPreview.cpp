@@ -1317,7 +1317,8 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 				if( re_block.match(text).hasMatch() )	//	ブロック行の場合
 					break;
 #if 1
-				buf += u"<br />\n" + text /*+ "<br />\n"*/;
+				buf += "<br />" + text;
+				//buf += u"<br />\n" + text /*+ "<br />\n"*/;
 				//if( isPrevlist )
 				//	buf += u"<br/>" + text;
 				//else
