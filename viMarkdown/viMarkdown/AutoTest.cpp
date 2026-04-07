@@ -56,7 +56,7 @@ enum {
 	TEST_LINE_CRSP = 4,			//	対応行テキストチェック
 	TEST_EtoP_CUR_SYNC = 8,		//	対応行カーソル位置同期チェック
 	TEST_PtoE_CUR_SYNC = 16,	//	対応行カーソル位置同期チェック
-	TEST_ALL = TEST_CHAR_FLAGS|TEST_LINE_CRSP|TEST_PtoE_CUR_SYNC,
+	TEST_ALL = TEST_CHAR_FLAGS|TEST_LINE_CRSP /*|TEST_EtoP_CUR_SYNC*/ |TEST_PtoE_CUR_SYNC,
 };
 
 const QString QA_MD_TEXT_2 =

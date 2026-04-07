@@ -315,7 +315,7 @@ public:
 		m_strikethroughFormat.setForeground(g.m_strikethroughColor);
 		m_boldItalicRegex = QRegularExpression(R"(\*\*\*([^\*]+)\*\*\*)");
 		m_boldRegex = QRegularExpression(R"((?<!\*)\*\*([^\*]+)\*\*)");
-		m_italicRegex = QRegularExpression(R"((?<!\*)\*([^\*]+)\*)");
+		m_italicRegex = QRegularExpression(R"((?<![\*\\])\*([^\*]+)\*)");
 		m_strikethroughRegex = QRegularExpression(R"(\~\~([^\*]+)\~\~)");
 	}
 	//void setBoldColor(const QColor &color) {
