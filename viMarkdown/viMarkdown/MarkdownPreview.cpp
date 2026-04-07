@@ -1658,7 +1658,12 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 		while( block.isValid() ) {
 			if( block.position() + block.text().length() >= pos )
 				break;
-			if( block.userState() != US_TABLE ) {	//	テーブル前後のダミーブロックではない
+			if( block.userState() == US_LIST ) {	//	リスト行の場合
+				++count;
+				for(QChar c: block.text()) {
+					if( c == QChar(LINE_SEPARATOR) ) ++count;
+				}
+			} else if( block.userState() != US_TABLE ) {	//	テーブル前後のダミーブロックではない
 				QTextCursor cursor(block);
 				QTextTable *table = cursor.currentTable();
 				if( table == nullptr || table->cellAt(cursor).column() >= table->columns() - 1 )
