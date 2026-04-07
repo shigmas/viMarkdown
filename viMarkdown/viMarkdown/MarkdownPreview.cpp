@@ -1317,7 +1317,11 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 				if( re_block.match(text).hasMatch() )	//	ブロック行の場合
 					break;
 #if 1
+				//static QRegularExpression re_headsp(R"(^ +)");
+				//buf += "<br />" + text.remove(re_headsp);
+				bool tailsp = text.endsWith(" ");
 				buf += "<br />" + text.trimmed();
+				if( tailsp ) buf += "&nbsp;";
 				//buf += u"<br />\n" + text /*+ "<br />\n"*/;
 				//if( isPrevlist )
 				//	buf += u"<br/>" + text;
