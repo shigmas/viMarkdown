@@ -76,12 +76,11 @@ const QString QA_MD_TEXT_2 =
 	//"item2**bold**\n"
 	//"- item2**bold**\n"
 	//"fuga\\hoge\n"
-#if 0
+#if 1
 	"- item1\n"
-	//"- item2\n"
 	"  hoge fuga\n"
-	//"  abc xyzzzzy\n"
-	//"\n"
+	"  abc xyzzzzy\n"
+	"\n"
 	//"\\- item3\n"
 #endif
 #if 0
@@ -101,7 +100,7 @@ const QString QA_MD_TEXT_2 =
 	"text\n"
 	"\n"
 #endif
-#if 1
+#if 0
 	"TEST\n"
 	"<!-- comment -->\n"
 	"# title\n"
@@ -294,7 +293,7 @@ void MainWindow::do_test(int type) {
 		g_failed_count = 0;
 		docWidget->m_editor->setPlainText(QA_MD_TEXT_2);
 		do_test(docWidget, TEST_LINE_CRSP);
-		g_result += QString("\nTest Line Crsp: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count);
+		g_result += QString("\nTest Line Corresponding: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count);
 		total_tested += g_tested_count;
 		total_failed += g_failed_count;
 	}
@@ -397,8 +396,9 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 		QString buf2 = block2.text();
 		if( listStrings.isEmpty() && block2.userState() == US_LIST ) {
 			listStrings = buf2.split(QChar(LINE_SEPARATOR));
-			buf2 = listStrings.front();
 		}
+		if( !listStrings.isEmpty() )
+			buf2 = listStrings.front();
 		int lineStartPos = block2.position();		//	行先頭位置
 		QTextTable *table = QTextCursor(block2).currentTable();
 		if( table != nullptr ) {	//	CSV・GFM テーブル中の場合
