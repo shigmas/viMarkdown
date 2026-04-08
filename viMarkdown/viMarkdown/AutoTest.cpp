@@ -24,6 +24,7 @@
 #include <QLineEdit>
 #include <QToolButton>
 #include <QTextTable>
+#include <QRegularExpression>
 #include "ver.h"
 #include "MainWindow.h"
 #include "DocWidget.h"
@@ -60,6 +61,9 @@ enum {
 };
 
 const QString QA_MD_TEXT_2 =
+	//"```CSV\n"
+	//",,,\n"
+	//"```\n"
 	//"1. item1\n"
 	//"1. *italic*\n"
 	//"\n"
@@ -452,7 +456,10 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 		}
 #endif
 		buf2.remove(QChar(CODE_IMAGE));
-		ASSERT_EQ( buf1.trimmed(), buf2, block1.blockNumber());
+		static QRegularExpression allspc("^ +$");
+		if( !allspc.match(buf1).hasMatch() )	//	空白以外を含んでいる
+			buf1 = buf1.trimmed();
+		ASSERT_EQ( buf1, buf2, block1.blockNumber());
 		//if( ASSERT_EQ( buf1.trimmed(), buf2, block1.blockNumber()) )	//	表示テキストが一致した場合
 		{
 			if( type == TEST_EtoP_CUR_SYNC ) {
