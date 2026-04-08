@@ -340,6 +340,7 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 	QTextBlock block2 = docWidget->m_preview->document()->firstBlock();
 	//bool inTable = false;
 	QStringList listStrings;
+	int prevLen = 0;
 	while( block1.isValid() && block2.isValid() ) {
 		QCoreApplication::processEvents();		//	溜まっているイベント処理
 #if 0
@@ -399,8 +400,12 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 		qDebug() << "charAt(block2) = " << docWidget->m_preview->document()->characterAt(block2.position());
 		QString buf1 = block1.text();
 		QString buf2 = block2.text();
+		int offset = 0;
 		if( listStrings.isEmpty() && block2.userState() == US_LIST ) {
 			listStrings = buf2.split(QChar(LINE_SEPARATOR));
+			//if( listStrings.size() > 1 )	//	継続行がある場合
+			//	offset = strlen("- ");
+			prevLen = 0;
 		}
 		if( !listStrings.isEmpty() )
 			buf2 = listStrings.front();
@@ -418,7 +423,6 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 		} else {
 			//inTable = false;
 		}
-#if 1
 		BlockData *data = getBlockData(block1);
 		int k = 0;
 		for(int i = 0; i < data->m_charFlags.size(); ++i) {		//	buf1: 非表示部分を削除
@@ -429,33 +433,6 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 			}
 		}
 		buf1.resize(k);
-#else
-		QStringList tableTokens;
-		if( isTableLine(buf1, buf1, tableTokens) ) {	//  GFM表
-			//buf1.clear();
-			QString t;
-			for(auto token : tableTokens) {			//	undone: 非表示文字の削除が必要では？？？
-				if( !t.isEmpty() ) t += " ";
-				t += token;
-			}
-			buf1 = t;
-		} else {
-			if( block1.userState() == US_CSV_BLOCK ) {
-				//qDebug() << "block1.userState() == US_CSV_BLOCK";
-			}
-			//buf1.remove(prefix_re);
-			BlockData *data = getBlockData(block1);
-			int k = 0;
-			for(int i = 0; i < data->m_charFlags.size(); ++i) {		//	buf1: 非表示部分を削除
-				if( data->m_charFlags[i] == PCF_VISIBLE ) {
-					buf1[k++] = buf1[i];
-				//} else if( data->m_charFlags[i] == g_flag_char[PCF_CSV] ) {
-				//	buf1[k++] = u' ';
-				}
-			}
-			buf1.resize(k);
-		}
-#endif
 		buf2.remove(QChar(CODE_IMAGE));
 		static QRegularExpression allspc("^ +$");
 		if( !allspc.match(buf1).hasMatch() )	//	空白以外を含んでいる
@@ -480,7 +457,9 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 					QTextCursor cur2 = docWidget->m_preview->textCursor();		//	プレビューカーソル
 					int k2 = cur2.position() - cur2.block().position();			//	k2: プレビューカーソルカラム
 					QChar ch = document->characterAt(cursor.position());
-					ASSERT_EQ( k2, k1, block1.blockNumber(), ch, i, TEST_EtoP_CUR_SYNC );
+					if( !ASSERT_EQ( k2, k1, block1.blockNumber(), ch, i, TEST_EtoP_CUR_SYNC ) ) {
+						qDebug() << "ch = " << ch;
+					}
 					cursor.movePosition(QTextCursor::Right);
 				}
 			}
@@ -492,25 +471,6 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 				cur2.setPosition(lineStartPos);
 				//QTextCursor cur2 = docWidget->m_preview->textCursor();		//	プレビューカーソル
 				const BlockData *data = getBlockData(block1);
-#if 0
-				const QTextTable *table = cur2.currentTable();
-				int ofst1 = 0;		//	エディタ：現セルより左にあるセル文字数合計
-				int ofst2 = 0;		//	プレビュー：現セルより左にあるセル文字数合計
-				if( table != nullptr ) {
-					QTextTableCell cell = table->cellAt(cur2);
-					int row = cell.row();
-					int column = cell.column();
-					for(int c = 0; c < cell.column(); ++c) {
-						QTextBlock block = table->cellAt(row, c).firstCursorPosition().block();
-						auto t = block.text();
-						ofst2 += block.text().size();
-						for(int i = 0; i < block.text().size(); ++i) {
-							while( ofst1 < data->m_charFlags.size() && data->m_charFlags[ofst1] >= PCF_NOT_VISIBLE )	//	次の表示文字を探す
-								++ofst1;
-						}
-					}
-				}
-#endif
 				//int nvcnt = 0;	//	非表示文字数
 				int k = 0;		//	エディタカーソルインデックス
 				for(int i = 0; i <= buf2.size(); ++i) {		//	１行分のテキストについてチェック
@@ -527,7 +487,7 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 					int k1 = cur1.position() - cur1.block().position();		//	実際のエディタカーソルインデックス
 					QChar ch = document->characterAt(cur2.position());
 					//	"** " の様な場合は、カーソルは "** " 先頭位置（k0）を期待
-					if( !ASSERT_EQ( (ch1 == u' ' || ch1 == u'\n' ? k0 : k), k1, block1.blockNumber() , ch, i, TEST_PtoE_CUR_SYNC) ) {
+					if( !ASSERT_EQ( (ch1 == u' ' || ch1 == u'\n' ? k0 : k)+offset-prevLen, k1, block1.blockNumber() , ch, i, TEST_PtoE_CUR_SYNC) ) {
 						qDebug() << "ch1 = " << ch1;
 					}
 					cur2.movePosition(QTextCursor::Right);		//	カーソル右移動
@@ -536,10 +496,14 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 			}
 		}
 		block1 = block1.next();
-		if( !listStrings.isEmpty() )
+		if( !listStrings.isEmpty() ) {
+			prevLen += listStrings.front().size() + 1;
 			listStrings.pop_front();
-		if( listStrings.isEmpty() )
+		}
+		if( listStrings.isEmpty() ) {
+			prevLen = 0;
 			block2 = block2.next();
+		}
 	}
 	ASSERT( !block2.isValid(), block1.blockNumber());	//	同行数のはず
 }
