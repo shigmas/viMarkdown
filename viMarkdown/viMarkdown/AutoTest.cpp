@@ -527,7 +527,9 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 					int k1 = cur1.position() - cur1.block().position();		//	実際のエディタカーソルインデックス
 					QChar ch = document->characterAt(cur2.position());
 					//	"** " の様な場合は、カーソルは "** " 先頭位置（k0）を期待
-					ASSERT_EQ( (ch1 == u' ' ? k0 : k), k1, block1.blockNumber() , ch, i, TEST_PtoE_CUR_SYNC);
+					if( !ASSERT_EQ( (ch1 == u' ' || ch1 == u'\n' ? k0 : k), k1, block1.blockNumber() , ch, i, TEST_PtoE_CUR_SYNC) ) {
+						qDebug() << "ch1 = " << ch1;
+					}
 					cur2.movePosition(QTextCursor::Right);		//	カーソル右移動
 					++k;
 				}
