@@ -291,6 +291,7 @@ void updateCharFlags(QTextBlock srcBlock) {
 		data->m_charFlags[i] = PCF_ESCAPE;
 	for(int i = buf.size(); --i >= 0 && buf[i] == u' '; )
 		data->m_charFlags[i] = PCF_ESCAPE;
+	// undone: 前後の空白をスキップして処理した方がいいのでは？
 	int ix = 0;
 	while( (ix = buf.indexOf(u'\\', ix)) >= 0 ) {
 		if( ix + 1 < buf.size() && isEscapedChar(buf[ix+1]) ) {

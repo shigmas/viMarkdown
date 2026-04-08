@@ -123,7 +123,7 @@ private:
     int		m_bodyLineNum = -1;		//	m_bodyList に入っている最初の行のソース行番号
     QStringList	m_bodyList;
 	QStringList	m_lst;
-	QStringList	m_headingList;		//	見出しレベル（1～9）＋見出し文字列
+	QStringList	m_headingList;		//	見出しレベル（'1'～'9'）＋見出し文字列
 	//std::vector<int>	m_srcHeadingBlocks;		//	各見出し行 ブロック番号（0 org.）in マークダウンソース
 	//std::vector<int>	m_prvHeadingBlocks;		//	各見出し行 ブロック番号（0 org.）in マークダウンプレビューワ
 	//QList<QStringView>	m_tableTokens;

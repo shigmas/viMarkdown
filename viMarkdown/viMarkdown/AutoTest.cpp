@@ -119,6 +119,7 @@ const QString QA_MD_TEXT_2 =
 	"hoge**fuga**foo\n"
 	"hoge***fuga***foo\n"
 	"hoge~~fuga~~foo\n"
+	"h'a\\*bc*xyz*abc'x\n"
 	"[v](url)\n"	//	リンク
 	"x[v](url)y\n"	//	リンク
 	"![v](url)\n"	//	画像
@@ -571,6 +572,8 @@ const QStringList QA_TEXT_FLAGS = {
 	"==v==",
 	"*i* **b** ***bi*** ~~s~~",
 	"=v= ==v== ===vv=== ==v==",
+	"h'a\\*bc*xyz*abc'x",
+	"v=vvvvvvvvvvvvv=v",
 	"",
 	"",
 	"1. hoge",
