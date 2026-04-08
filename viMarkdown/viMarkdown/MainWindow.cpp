@@ -1416,6 +1416,7 @@ void MainWindow::onAction_ExportAsPDF() {
     printer.setOutputFileName(fileName);
 
     docWidget->m_preview->print(&printer);
+    statusBar()->showMessage(tr("PDF export completed."), 5000);
 }
 void MainWindow::onAction_Close() {
 	qDebug() << "MainWindow::onAction_Close()";
