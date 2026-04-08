@@ -215,6 +215,14 @@ void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 		}
 		return;
 	}
+	if (e->key() == Qt::Key_Escape) {
+		QTextCursor cursor = textCursor();
+		if( cursor.hasSelection() ) {	//	選択状態ならば
+			cursor.setPosition(cursor.position());		//	選択解除
+			setTextCursor(cursor);
+		}
+		return;
+	}
 	if (e->key() == Qt::Key_Tab) {
 		emit Tab_pressed();
 		return;
