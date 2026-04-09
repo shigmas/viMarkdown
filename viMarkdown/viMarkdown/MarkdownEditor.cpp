@@ -2184,7 +2184,14 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 		pos = block.position() + block.text().size();
 	}
 	assert( block.isValid() );
-	if( block.userState() == US_KEISEN_BLOCK ) {
+	if( block.userState() == US_KEISEN_BLOCK ) {		//	罫線ブロック内の場合
+#if 1
+		if( block.text().startsWith("```keisen", Qt::CaseInsensitive) ) {	//	罫線ブロック開始
+			if( block.next().isValid() ) {
+				block = block.next();
+			}
+		}
+#else
 		while( block.userState() == US_KEISEN_BLOCK ) {
 			if( !block.previous().isValid() ) {
 				pos = block.position() + block.text().size();
@@ -2193,6 +2200,7 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			block = block.previous();
 			pos = block.position();
 		}
+#endif
 	} else {
 		if( block.userState() == US_TABLE && isTableHyphenLine(block.text()) && block.next().isValid() ) {
 			block = block.next();
@@ -2323,9 +2331,13 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const
 	int count = ch == STX ? 0 : 1;
 	while( block.isValid() ) {
 		const BlockData *data = getBlockData(block);
-		printCharFlags(block);
+		//printCharFlags(block);
 		if( block.userState() == US_KEISEN_BLOCK ) {
-			block = block.next();
+			if( ch == STX || ch == ETX )
+				++count;
+			do {
+				block = block.next();
+			} while( block.isValid() && block.userState() == US_KEISEN_BLOCK );
 			continue;
 		}
 		if( ch == STX ) {		//	行頭の場合

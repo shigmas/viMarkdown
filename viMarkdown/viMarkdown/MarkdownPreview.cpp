@@ -1486,8 +1486,8 @@ int MarkdownPreview::findPosition(const PosContext &context) {
 	int nth = context.m_nth;
 	int ix = 0, ix2;
 	while( block.isValid() ) {
-		if( block.userState() == US_TABLE ||		//	CSV, GFM表 のダミーブロックの場合
-			block.userState() == US_KEISEN_BLOCK )	//	罫線ブロック（```行）の場合
+		if( block.userState() == US_TABLE		//	CSV, GFM表 のダミーブロックの場合
+			/*|| block.userState() == US_KEISEN_BLOCK*/ )	//	罫線ブロック（```行）の場合
 		{
 			block = block.next();
 			continue;
