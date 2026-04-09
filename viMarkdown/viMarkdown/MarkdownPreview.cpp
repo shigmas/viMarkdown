@@ -971,7 +971,7 @@ void MarkdownPreview::do_CSV(QTextBlock& srcBlock, QTextCursor& cursor) {		//	cu
 	//++m_ln;
 }
 void MarkdownPreview::do_keisen_block(QTextBlock& srcBlock, QTextCursor& cursor) {
-	srcBlock.setUserState(US_KEISEN_BLOCK);
+	srcBlock.setUserState(US_KEISEN_BEGIN);
 	BlockData *data = getBlockData(srcBlock);
 	data->m_charFlags.fill(PCF_KEISEN);
 	srcBlock.setUserData(data);

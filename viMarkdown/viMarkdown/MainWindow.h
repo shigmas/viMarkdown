@@ -49,7 +49,8 @@ enum {
 	US_CODE_BLOCK,		//	コードブロック内（最初の``` 行も含む）
 	US_CODE_BLOCK_END,	//	コードブロック最後の```
 	US_CSV_BLOCK,		//	CSVブロック内 ```CSV ～ ```
-	US_KEISEN_BLOCK,	//	罫線ブロック内 ```keisen ～ ```
+	US_KEISEN_BEGIN,	//	罫線ブロック開始 ```keisen
+	US_KEISEN_BLOCK,	//	罫線ブロック内 ```keisenの次行 ～ ```
 	US_TABLE,			//	マークダウンテーブル前後ダミーブロック？
 	US_CELL,			//	マークダウンテーブル内セル
 };
