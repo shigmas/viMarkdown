@@ -1274,10 +1274,10 @@ SPR# 状 P Open Close ver     Type  概要
 1251 ● C 04/09            │問題│MarkdownPreview::findPosition()：アンカー文字 STX、罫線ブロックがある場合に動作不良？
 1252 ● C 04/09            │ToDo│MarkdownEditor::contextAt()：罫線ブロック本文先頭以外は ETX をアンカー文字に設定
 1253 ◎ C 04/09 04/09 01221│ToDo│MarkdownEditor::countCharUntil()：STX, ETX の場合、罫線ブロック全体を1行とみなす
-1254 ◎ C 04/10 04/10 01221│ToDo│block.userState：罫線開始行は US_KEISEN_BEGIN に？
-1255 ● C 04/10            │ToDo│
-1256 ● C 04/10            │ToDo│
-1257 ● C 04/10            │ToDo│
+1254 ◎ C 04/10 04/10 01222│ToDo│block.userState：罫線開始行は US_KEISEN_BEGIN に？
+1255 ◎ C 04/10 04/10 01222│問題│罫線ブロックがあると、それ以降の PtoE カーソル同期が1行ずれる
+1256 ◎ C 04/10 04/10 01222│問題│エディタ：罫線ブロック内にカーソルがあると、nth が異常に大きくなる
+1257 ◎ C 04/10 04/10 01222│問題│エディタ：罫線ブロック直後に空行があり、そこにカーソルがある場合、nth がひとつ少なくなる
 1258 ● C 04/10            │ToDo│
 1259 ● C 04/10            │ToDo│
 1260 ● C 04/10            │ToDo│

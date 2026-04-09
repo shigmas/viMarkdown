@@ -810,15 +810,15 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			continue;
 		}
 		if( ch == QChar(U_KEISEN_BLOCK) ) {
-			if( block.userState() == US_KEISEN_BLOCK ) {
+			if( block.userState() == US_KEISEN_BEGIN ) {
 				if( --nth == 0 ) break;
-				while( block.userState() == US_KEISEN_BLOCK )
+				while( block.userState() == US_KEISEN_BEGIN || block.userState() == US_KEISEN_BLOCK )
 					block = block.next();
-			}
+			} else
 			block = block.next();
 			continue;
 		}
-		if( block.userState() == US_KEISEN_BLOCK && !(block.previous().isValid() && block.previous().text().startsWith("```")) ) {
+		if( block.userState() == US_KEISEN_BLOCK ) {
 			//	最初の罫線ブロック以外の場合
 			block = block.next();
 			continue;
@@ -851,6 +851,12 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 		offset = block.text().size() - buf.size();
 		if( ch == STX ) {		//	行頭の場合
 			ix = 0;
+			if( block.userState() == US_KEISEN_BEGIN ) {
+				if( --nth == 0 ) {
+					block = block.next();	//	罫線開始行の次行
+					break;
+				}
+			}
 			if( !block.text().startsWith("```") &&
 				!(block.text().isEmpty() && block.previous().isValid() && block.previous().text().isEmpty()) )	//	連続空行ではない
 			{
@@ -862,10 +868,18 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			}
 			block = block.next();
 		} else if( ch == ETX ) {		//	行末の場合
-			if( !block.text().startsWith("```") &&
+			if( block.userState() == US_KEISEN_BEGIN ) {
+				if( --nth == 0 ) {
+					while( block.next().isValid() && block.next().userState() == US_CODE_BLOCK )
+						block = block.next();
+					ix = block.text().size();
+					break;
+				}
+			} else if( block.userState() != US_KEISEN_BLOCK &&
+				!block.text().startsWith("```") &&
 				!(block.text().isEmpty() && block.previous().isValid() && block.previous().text().isEmpty()) )	//	連続空行ではない
 			{
-				while( block.userState() == US_KEISEN_BLOCK && block.next().isValid() && !block.next().text().startsWith("```")) {
+				while( block.userState() == US_KEISEN_BLOCK /*&& block.next().isValid() && !block.next().text().startsWith("```")*/) {
 					block = block.next();
 				}
 				ix = buf.size();
@@ -2184,24 +2198,11 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 		pos = block.position() + block.text().size();
 	}
 	assert( block.isValid() );
-	if( block.userState() == US_KEISEN_BLOCK ) {		//	罫線ブロック内の場合
-#if 1
-		if( block.text().startsWith("```keisen", Qt::CaseInsensitive) ) {	//	罫線ブロック開始
-			if( block.next().isValid() ) {
-				block = block.next();
-			}
+	if( block.userState() == US_KEISEN_BEGIN ) {	//	罫線ブロック開始
+		if( block.next().isValid() ) {
+			block = block.next();
 		}
-#else
-		while( block.userState() == US_KEISEN_BLOCK ) {
-			if( !block.previous().isValid() ) {
-				pos = block.position() + block.text().size();
-				break;
-			}
-			block = block.previous();
-			pos = block.position();
-		}
-#endif
-	} else {
+	} else if( block.userState() != US_KEISEN_BLOCK ) {
 		if( block.userState() == US_TABLE && isTableHyphenLine(block.text()) && block.next().isValid() ) {
 			block = block.next();
 			pos = block.position();
@@ -2332,12 +2333,13 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const
 	while( block.isValid() ) {
 		const BlockData *data = getBlockData(block);
 		//printCharFlags(block);
-		if( block.userState() == US_KEISEN_BLOCK ) {
+		if( block.userState() == US_KEISEN_BEGIN ) {
 			if( ch == STX || ch == ETX )
 				++count;
 			do {
 				block = block.next();
 			} while( block.isValid() && block.userState() == US_KEISEN_BLOCK );
+			if (block.position() > pos) break;
 			continue;
 		}
 		if( ch == STX ) {		//	行頭の場合

@@ -371,8 +371,8 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 		{
 			block1 = block1.next();
 		}
-		if( block1.userState() == US_KEISEN_BLOCK ) {
-			while( block1.userState() == US_KEISEN_BLOCK )
+		if( block1.userState() == US_KEISEN_BEGIN || block1.userState() == US_KEISEN_BLOCK ) {
+			while( block1.userState() == US_KEISEN_BEGIN || block1.userState() == US_KEISEN_BLOCK )
 				block1 = block1.next();
 			block2 = block2.next();
 			continue;
