@@ -71,7 +71,8 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 	if( !inQuotes ) {
 		fields.clear();
 	} else {
-		currentField = fields.back() + u'\n';
+		currentField = fields.back() + "<br />";	//	for insertMarkdown()
+		//currentField = fields.back() + u'\n';		//	for insertText()
 		fields.pop_back();
 	}
 	//bool inQuotes = false;
@@ -232,7 +233,7 @@ bool updateCharFlags(BlockData* data, const QString &buf, int ix, int ix9, bool 
 	while( ix < ix9 ) {
 		if( ix + 1 < buf.size() && buf[ix] == u'\\' && isEscapedChar(buf[ix+1]) )
 			ix += 2;
-		else if( buf[ix] == u'*' || buf[ix] == u'_' || buf[ix] == u'~' && ix+1 < ix9 && buf[ix+1] == buf[ix]) {
+		else if( buf[ix] == u'*' || buf[ix] == u'_' || buf[ix] == u'`' || buf[ix] == u'~' && ix+1 < ix9 && buf[ix+1] == buf[ix]) {
 			QString sym;
 			if( buf[ix] == u'~' ) {
 				sym = "~~";
@@ -292,6 +293,7 @@ void updateCharFlags(QTextBlock srcBlock) {
 	for(int i = buf.size(); --i >= 0 && buf[i] == u' '; )
 		data->m_charFlags[i] = PCF_ESCAPE;
 	// undone: 前後の空白をスキップして処理した方がいいのでは？
+#if 0
 	int ix = 0;
 	while( (ix = buf.indexOf(u'\\', ix)) >= 0 ) {
 		if( ix + 1 < buf.size() && isEscapedChar(buf[ix+1]) ) {
@@ -301,7 +303,8 @@ void updateCharFlags(QTextBlock srcBlock) {
 		} else
 			++ix;
 	}
-	if( updateCharFlags(data, buf, 0, buf.size()) )
+#endif
+	if( updateCharFlags(data, buf, 0, buf.size(), true) )
 		modified = true;
 	if( modified ) {
 		srcBlock.setUserData(data);
