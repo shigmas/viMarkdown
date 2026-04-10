@@ -253,8 +253,14 @@ bool updateCharFlags(BlockData* data, const QString &buf, int ix, int ix9, bool 
 					data->m_charFlags[ix2+i] = PCF_EMPHASIZED;
 					modified = true;
 				}
-				if( updateCharFlags(data, buf, ix+sym.size(), ix2) )
+				if( sym[0] == '`' ) {	//	インラインコードの場合
+					for(int i = ix + sym.size(); i < ix2; ++i)
+						data->m_charFlags[i] = PCF_VISIBLE;
 					modified = true;
+				} else {
+					if( updateCharFlags(data, buf, ix+sym.size(), ix2) )
+						modified = true;
+				}
 				ix = ix2 + sym.size();
 			} else
 				++ix;

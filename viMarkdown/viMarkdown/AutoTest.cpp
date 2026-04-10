@@ -538,7 +538,7 @@ const QStringList QA_TEXT_FLAGS = {
 	"==v==",
 	"*i* **b** ***bi*** ~~s~~",
 	"=v= ==v== ===vv=== ==v==",
-	"h'a\\*bc*xyz*abc'x",
+	"h`a\\*bc*xyz*abc`x",
 	"v=vvvvvvvvvvvvv=v",
 	"",
 	"",
