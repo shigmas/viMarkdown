@@ -46,7 +46,7 @@ void printCharFlags(QTextBlock block) {
 	qDebug() << bn << block.text() << "\t" << txt;
 #endif
 }
-bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment, bool &commented, BlockData* data) {
+bool parseCsvLine(QStringList &fields, QByteArray& ba, const QString &line, bool inQuotes, bool &inComment, bool &commented, BlockData* data) {
 	//QStringList fields;
 	if( data != nullptr ) {
 		assert( line.size() == data->m_charFlags.size() );
@@ -68,12 +68,15 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 	if( line.startsWith("```csv", Qt::CaseInsensitive) )
 		return inQuotes;
 	QString currentField;
+	bool quoted = false;
 	if( !inQuotes ) {
 		fields.clear();
+		ba.clear();
 	} else {
 		currentField = fields.back() + "<br />";	//	for insertMarkdown()
 		//currentField = fields.back() + u'\n';		//	for insertText()
 		fields.pop_back();
+		ba.chop(1);		//ba.pop_back();
 	}
 	//bool inQuotes = false;
 	int ix0 = i;
@@ -100,6 +103,7 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 				i++; // 1文字飛ばす
 			} else if( currentField.isEmpty() || i + 1 == line.length() || line.at(i + 1) == ',') {
 				inQuotes = !inQuotes; // クォート状態の反転
+				if( inQuotes ) quoted = true;
 			} else {
 				currentField += '"';
 			}
@@ -110,7 +114,9 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 				}
 			}
 			fields.append(currentField.trimmed());
+			ba.push_back(quoted);
 			currentField.clear();
+			quoted = false;
 			if( data != nullptr ) {
 				data->m_charFlags[i] = PCF_CELL_SEPARATOR;
 				for(int k = i+1; k < line.size() && line[k] == u' '; ++k)
@@ -136,6 +142,7 @@ bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool 
 	}
 	// 最後のフィールドを追加
 	fields.append(currentField.trimmed());
+	ba.push_back(quoted);
 	if( data != nullptr ) {
 		updateCharFlags(data, line, ix0, i, true);		//	true for エスケープ文字処理
 	}

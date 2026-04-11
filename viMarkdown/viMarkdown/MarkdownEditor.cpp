@@ -1702,13 +1702,14 @@ void MarkdownEditor::convert_CSV_MarkdownTable() {
 	bool commented = false;
 	int endPosition = -1;
 	QList<QStringList> ll;
+	QByteArray ba;
 	QStringList fields;
 	while( block.isValid() ) {
 		if( block.text().startsWith("```")) {
 			endPosition = block.position() + block.length();
 			break;
 		}
-		inQuotes = parseCsvLine(fields, block.text(), inQuotes, inComment, commented);
+		inQuotes = parseCsvLine(fields, ba, block.text(), inQuotes, inComment, commented);
 		if( !inQuotes && !inComment ) {
 			ll.push_back(fields);
 		}
@@ -2382,12 +2383,13 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const
 				bool inQuotes = false;
 				bool commented = false;
 				QStringList fields;
+				QByteArray ba;
 				QString buf2 = buf;
 				if( block.next().isValid() && block.next().position() > pos) {
 					buf2 = buf2.left(pos - block.position());
 					finished = true;
 				}
-				parseCsvLine(fields, buf2, inQuotes, inComment, commented);
+				parseCsvLine(fields, ba, buf2, inQuotes, inComment, commented);
 				if( !fields.isEmpty() ) {
 					for(auto txt: fields) {
 						for(int i = 0; i < txt.size(); ++i)

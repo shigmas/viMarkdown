@@ -639,7 +639,9 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 	cursor.endEditBlock();
 	m_processing = false;
 }
-void insertTable(QTextCursor& cursor, const QList<QStringList> &ll, int max_clmn, vector<char> *tableAlign = nullptr) {
+void insertTable(QTextCursor& cursor, const QList<QStringList> &ll, const QList<QByteArray> &lba,
+					int max_clmn, vector<char> *tableAlign = nullptr)
+{
 	static QRegularExpression numbers_re("^[+-]?(\\d+\\.\\d*|\\d+|\\.\\d+)%?$");
 	QTextTable *table = cursor.insertTable(ll.size(), max_clmn);
 	for(int row = 0; row < ll.size(); ++row) {
@@ -648,7 +650,12 @@ void insertTable(QTextCursor& cursor, const QList<QStringList> &ll, int max_clmn
 			if (cell.isValid()) {
 				for (QTextFrame::iterator it = cell.begin(); !(it.atEnd()); ++it) {
 					QTextBlock block = it.currentBlock();
-					if( block.isValid() ) block.setUserState(US_CELL);
+					if( block.isValid() ) {
+						if( !lba.isEmpty() && lba[row][col] )
+							block.setUserState(US_CELL_DQ);
+						else
+							block.setUserState(US_CELL);
+					}
 				}
 				QTextCursor cellCursor = cell.firstCursorPosition();
 				QTextCharFormat charFormat;
@@ -747,7 +754,8 @@ void MarkdownPreview::do_table(QTextBlock& srcBlock, QTextCursor& cursor) {
 			data = getBlockData(srcBlock, true);
 	}
 	cursor.beginEditBlock();
-	insertTable(cursor, ll, max_clmn, &m_tableAlign);
+	QList<QByteArray> lba;
+	insertTable(cursor, ll, lba, max_clmn, &m_tableAlign);
 	//QTextTable *table = cursor.insertTable(ll.size(), max_clmn);
 	//cursor.setPosition(table->lastPosition());
 	//cursor.movePosition(QTextCursor::NextCharacter);
@@ -899,21 +907,24 @@ void MarkdownPreview::do_CSV(QTextBlock& srcBlock, QTextCursor& cursor) {		//	cu
 	data->m_charFlags.fill(PCF_CSV);
 	srcBlock.setUserData(data);
 	QList<QStringList> ll;
+	QList<QByteArray> lba;
 	int max_clmn = 0;
 	bool inQuotes = false;
 	bool inComment = false;
 	bool commented = false;		//	行単位でコメントアウトされた
 	QStringList fields;
+	QByteArray ba;
 	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
 		srcBlock = srcBlock.next();
 		srcBlock.setUserState(US_CSV_BLOCK);
 		data = getBlockData(srcBlock);
 		assert(srcBlock.text() == m_lst[m_ln]);
 		assert(srcBlock.text().size() == data->m_charFlags.size());
-		inQuotes = parseCsvLine(fields, m_lst[m_ln], inQuotes, inComment, commented, data);
+		inQuotes = parseCsvLine(fields, ba, m_lst[m_ln], inQuotes, inComment, commented, data);
 		if( !inQuotes && !inComment && !commented ) {
 			max_clmn = qMax(max_clmn, fields.size());
 			ll.push_back(fields);
+			lba.push_back(ba);
 			srcBlock.setUserData(data);
 		}
 	}
@@ -932,7 +943,7 @@ void MarkdownPreview::do_CSV(QTextBlock& srcBlock, QTextCursor& cursor) {		//	cu
 		m_isPrevLineEmpty = false;
 	}
 #endif
-	insertTable(cursor, ll, max_clmn);
+	insertTable(cursor, ll, lba, max_clmn);
 #if 0
 	QTextTable *table = cursor.insertTable(ll.size(), max_clmn);
 	for(int row = 0; row < ll.size(); ++row) {

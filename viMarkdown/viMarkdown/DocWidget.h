@@ -42,7 +42,7 @@ const QByteArray& getCharFlags(QTextBlock srcBlock);
 void printCharFlags(QTextBlock block);
 void printCharFlags(const BlockData*);
 
-bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment, bool &commented, BlockData* = nullptr);
+bool parseCsvLine(QStringList &fields, QByteArray&, const QString &line, bool inQuotes, bool &inComment, bool &commented, BlockData* = nullptr);
 enum {
 	ALIGHN_LEFT = 1, ALIGHN_RIGHT = 2, ALIGHN_CENTER = ALIGHN_LEFT| ALIGHN_RIGHT,
 };
