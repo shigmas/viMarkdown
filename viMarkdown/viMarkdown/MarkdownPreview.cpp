@@ -122,6 +122,8 @@ void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int char
 		QString addedStr = block.text().mid(cursor.position() - block.position(), charsAdded);
 		addedStr.replace("\\", "\\\\").replace("#", "\\#").replace("-", "\\-").replace("<", "\\<")
 				.replace("`", "\\`").replace("[", "\\[").replace("*", "\\*").replace("_", "\\_").replace("~", "\\~");
+		if( block.userState() == US_CELL_DQ )
+			addedStr.replace("\"", "\"\"");
 		if( addedStr.isEmpty() && charsRemoved == 0 && charsAdded == 1  )
 		{		//	改行が入力された場合
 			//if( block.userState() == US_DEFAULT )
