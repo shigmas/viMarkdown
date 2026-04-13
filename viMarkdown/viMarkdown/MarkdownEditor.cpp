@@ -795,6 +795,7 @@ int indexOf(bool &inComment, const QString& buf, int ix, QChar ch, bool isNextBl
 	return -1;
 }
 int MarkdownEditor::findPosition(const PosContext &context) {
+	qDebug() << "MarkdownEditor::findPosition():";
 	qDebug() << ".ancharChar = " << context.m_anchorChar << ", nth = " << context.m_nth << ", offset = " << context.m_offset;
 	static QRegularExpression re("^(#+ *| *- )[\\*_~]*");
 	QTextBlock block = document()->findBlockByNumber(context.m_srcHBlockNum);

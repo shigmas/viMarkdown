@@ -788,6 +788,7 @@ void MainWindow::onSrcPosContextChanged(const PosContext& context, const PosCont
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	docWidget->m_preview->setCursorByContext(context, acontext);
+	qDebug() << "preview cursor.position() = " << docWidget->m_preview->textCursor().position();
 }
 //	プレビュー → エディタ カーソル位置同期
 void MainWindow::onPrvPosContextChanged(const PosContext& context, const PosContext &acontext) {
