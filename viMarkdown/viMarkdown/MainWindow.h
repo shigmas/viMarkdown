@@ -193,7 +193,7 @@ protected:
     void	onRedoTriggered();
     void	onPrvPosContextChanged(const struct PosContext&, const PosContext &acontext);
     void	onSrcPosContextChanged(const struct PosContext&, const PosContext &acontext);
-    void	onSrcCursorPosChanged();
+    //void	onSrcCursorPosChanged();
     void	syncEditorPreviewScroll();
     void	test_charFlags(DocWidget*);
     void	test_contextAt(DocWidget*);

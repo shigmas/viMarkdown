@@ -658,7 +658,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(mdEditor, &MarkdownEditor::changeFontSize, this, &MainWindow::onChangeEditorFontSize);
 	connect(mdEditor, &MarkdownEditor::posContextChanged, this, &MainWindow::onSrcPosContextChanged);
 	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
-	connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onSrcCursorPosChanged);
+	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onSrcCursorPosChanged);
 	//QTextEdit *mdEditor = new QTextEdit(splitter);
 	mdEditor->setPlaceholderText("\nここにMarkdownを入力\n"
 									"\nマークダウン書式：\n# タイトル\n## 大見出し\n### 中見出し\n"
@@ -2034,8 +2034,8 @@ void MainWindow::onModificationChanged(bool b) {
 	if( b ) title += " *";
 	ui->tabWidget->setTabText(ui->tabWidget->currentIndex(), title);
 }
-void MainWindow::onSrcCursorPosChanged() {
-}
+//void MainWindow::onSrcCursorPosChanged() {
+//}
 void MainWindow::syncEditorPreviewScroll() {
 	DocWidget *docWidget = getCurDocWidget();
 	if (docWidget == nullptr) return;

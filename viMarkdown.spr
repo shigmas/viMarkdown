@@ -1287,7 +1287,7 @@ SPR# 状 P Open Close ver     Type  概要
 1263 ● C 04/13            │問題│MarkdownEditor::contextAt()：罫線ブロック本文末尾にカーソルがある場合の nth の値がひとつ多い
 1264 ● C 04/14            │問題│プレビュー：リスト行末尾で ' ' を入力すると、プレビューカーソルが次行に移動してしまう
 									原因：MarkdownEditor::setCursorByContext(context) が余分にコールされている？
-1265 ● C 04/14            │ToDo│
+1265 ◎ C 04/14 04/14 01223│ToDo│MainWindow::onSrcCursorPosChanged() もはや未使用なので削除
 1266 ● C 04/14            │ToDo│
 1267 ● C 04/14            │ToDo│
 1268 ● C 04/14            │ToDo│

@@ -1,7 +1,7 @@
 ﻿# viMarkdown コールツリー
 
 ## ■ エディタカーソル移動時
-###【Editor クラス】
+### 【Editor クラス】
 - onCursorPosChanged()    //  cursorPositionChanged シグナル処理スロット
   - syncEditorCursorFromPreview()
     - context = contextAt(cursor.position());   // pos 位置を検索するための情報取得
