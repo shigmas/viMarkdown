@@ -118,6 +118,7 @@ private:
     bool	m_processing = false;	//	再入防止用フラグ
 	bool	m_isComposing = false;			// IME入力中フラグ
 	bool	m_isPrevLineEmpty = false;		//	本文最後が空行か？
+	QString	m_commitString;
 	QString	m_lastCurBlockText;				//	事前のカーソルブロックテキスト
     //QString	m_bodyText;
     int		m_bodyLineNum = -1;		//	m_bodyList に入っている最初の行のソース行番号

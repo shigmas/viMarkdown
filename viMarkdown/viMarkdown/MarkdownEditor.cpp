@@ -798,7 +798,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 	qDebug() << "MarkdownEditor::findPosition():";
 	qDebug() << ".ancharChar = " << context.m_anchorChar << ", nth = " << context.m_nth << ", offset = " << context.m_offset;
 	static QRegularExpression re("^(#+ *| *- )[\\*_~]*");
-	QTextBlock block = document()->findBlockByNumber(context.m_srcHBlockNum);
+  	QTextBlock block = document()->findBlockByNumber(context.m_srcHBlockNum);
 	const QChar ch = context.m_anchorChar;
 	int nth = context.m_nth;
 	int ix = 0;
@@ -1824,7 +1824,8 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 	m_processing = false;
 }
 	//	カーソル同期処理
-void MarkdownEditor::syncEditorCursorFromPreview() {
+void MarkdownEditor::syncPreviewCursorFromEditor() {
+	if( m_mainWindow->isEdittingInPreview() ) return;
 	if( m_processing || m_mainWindow->isCursorCyncing() ) return;		//	再入禁止
 	m_processing = true;
 	m_mainWindow->setCursorCyncing();	//	同期処理中フラグON
@@ -1846,7 +1847,7 @@ void MarkdownEditor::onCursorPosChanged() {
 	m_lastCurBlockText = cursor.block().text();
 	viewport()->update();
 	//	Undone: プレビューの対応段落（見出し行＋本文）を画面内に
-	syncEditorCursorFromPreview();
+	syncPreviewCursorFromEditor();
 }
 int MarkdownEditor::getVisualLineNumber(const QTextCursor &cursor) const {
 	int visualLineNum = 0;

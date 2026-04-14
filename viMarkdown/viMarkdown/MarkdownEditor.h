@@ -60,7 +60,7 @@ public:
     struct PosContext	contextAt(int pos);		//	pos 位置情報を構築
     //int		srcToPrvHeading(int blockNum);		//	エディタの見出し行番号（0 org.）をプレビューのそれに変換
     int		findPosition(const struct PosContext&);
-    void	syncEditorCursorFromPreview();
+    void	syncPreviewCursorFromEditor();
     void	tagJump();
 	void	make_link();
 	int		linkClickedPos() const { return m_linkClickedPos; }
@@ -68,6 +68,7 @@ public:
 	void	insertEnter();		//	カーソル位置に改行挿入（＋オートテキスト・インデント）
 	void	deleteWord();
 	void	backSpaceWord();
+    void	onCursorPosChanged();
 
 signals:
     void	tab_pressed();
@@ -98,7 +99,6 @@ protected:
 #endif
     void	updateLnArea(const QRect &rect, int dy);
     void	onContentsChanged(int position, int charsRemoved, int charsAdded);
-    void	onCursorPosChanged();
     int		nColumn(const QString&) const;		//	表示カラム数を計算
     void	setLineSpacing(int percentage);
     void	tagJump_sub(QTextCursor);

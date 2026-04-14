@@ -1,9 +1,12 @@
 ﻿# viMarkdown コールツリー
 
 ## ■ エディタカーソル移動時
+プレビューカーソルを対応する位置に移動する。
+エディタにてカーソル移動を行うと、cursorPositionChanged シグナルが発行される。
+それにコネクトされた
 ### 【Editor クラス】
 - onCursorPosChanged()    //  cursorPositionChanged シグナル処理スロット
-  - syncEditorCursorFromPreview()
+  - syncPreviewCursorFromEditor()
     - context = contextAt(cursor.position());   // pos 位置を検索するための情報取得
     - emit posContextChanged(context,...);  → 【MainWindow へ渡す】
 ### 【MainWindow クラス（仲介）】
@@ -26,4 +29,4 @@
   - emit textInserted(addedStr);  → 【MainWindow へ渡す】
 ### 【MainWindow クラス（仲介）】
 - onTextInsertedAtPreview(QString txt)
-  - editCursor.insertText(txt);
+  - editCursor.insertText(txt); → Editor::onCursorPosChanged() がコールされる

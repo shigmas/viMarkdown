@@ -122,6 +122,7 @@ public:
     const QString	srcText() const { return m_srcText; }
     void	setCursorCyncing(bool b = true) const { m_isCursorSyncing = b; }
     bool	isCursorCyncing() const { return m_isCursorSyncing; }
+    bool	isEdittingInPreview() const { return m_edittingInPreview; }
     bool	do_open(const QString& title, const QString& fullPath, const QString name = QString(), bool readOnly = false);
 
 protected:
@@ -284,6 +285,7 @@ private:
     bool	m_htmlMode = true;
     bool	m_keisenMode = false;
     bool	m_thickKeisen = false;		//	Thin or Thick
+    bool	m_edittingInPreview = false;		//	プレビューでの編集処理中
     int		m_tab_number = 0;
     int		m_QA_tab_number = 0;
     //int		m_editorFontSize = 12;		//	暫定的

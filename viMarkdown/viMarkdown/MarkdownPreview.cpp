@@ -56,6 +56,10 @@ MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, DocWidget *docWid
 }
 void MarkdownPreview::inputMethodEvent(QInputMethodEvent *event) {
 	m_isComposing = !event->preeditString().isEmpty();
+	m_commitString = event->commitString();
+	//qDebug() << "isComposing = " << m_isComposing << ", IME commitString = " << txt;
+	//if( m_isComposing && !txt.isEmpty() )
+	//	emit textInserted(txt);
 	QTextEdit::inputMethodEvent(event);
 }
 void MarkdownPreview::onCursorPosChanged() {
@@ -80,7 +84,11 @@ void MarkdownPreview::onCursorPosChanged() {
 }
 void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int charsAdded) {
 	if( m_processing ) return;
-	if (m_isComposing) return;		//	IME変換中
+	if (m_isComposing) {		//	IME変換中
+		if( !m_commitString.isEmpty() )		//	確定文字列がある場合
+			emit textInserted(m_commitString);
+		return;
+	}
 	qDebug() << "*** MarkdownPreview::onContentsChanged(" << position << ", " << charsRemoved << ", " << charsAdded << ")";
 	m_processing = true;
 	QTextCursor cursor = this->textCursor();
@@ -514,6 +522,7 @@ int indexOfComment(QStringView buf, int start) {
 }
 //void updateCharFlags(QTextBlock srcBlock);
 void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソースドキュメント
+	qDebug() << "MarkdownPreview::setMarkdown(): cursor.position = " << textCursor().position();
 	m_headingList.clear();
 	m_docWidget->m_srcHeadingBlocks.clear();
 	m_docWidget->m_prvHeadingBlocks.clear();
@@ -640,6 +649,7 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 	do_body(srcBlock, cursor, true);
 	cursor.endEditBlock();
 	m_processing = false;
+	qDebug() << "MarkdownPreview::setMarkdown(): cursor.position = " << textCursor().position();
 }
 void insertTable(QTextCursor& cursor, const QList<QStringList> &ll, const QList<QByteArray> &lba,
 					int max_clmn, vector<char> *tableAlign = nullptr)
@@ -1494,6 +1504,8 @@ bool isLastBlockInRow(QTextBlock block) {
 }
 #endif
 int MarkdownPreview::findPosition(const PosContext &context) {
+	qDebug() << "MarkdownPreview::findPosition():";
+	qDebug() << ".ancharChar = " << context.m_anchorChar << ", nth = " << context.m_nth << ", offset = " << context.m_offset;
 	QTextBlock block = document()->findBlockByNumber(context.m_prvHBlockNum);
 	const QChar ch = context.m_anchorChar;
 	int nth = context.m_nth;

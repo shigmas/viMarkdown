@@ -785,6 +785,7 @@ void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソ
 #endif
 //	エディタ → プレビュー カーソル位置同期
 void MainWindow::onSrcPosContextChanged(const PosContext& context, const PosContext &acontext) {
+	if( m_edittingInPreview ) return;
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	docWidget->m_preview->setCursorByContext(context, acontext);
@@ -905,6 +906,7 @@ void MainWindow::onTextInsertedAtPreview(QString txt) {
 	qDebug() << "MainWindow::onTextInsertedAtPreview(" << txt << ")";
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
+	m_edittingInPreview = true;
 	QTextCursor cursor = docWidget->m_editor->textCursor();
 	//m_processing = true;
 	docWidget->m_editor->setIgnoreCC(true);
@@ -912,6 +914,11 @@ void MainWindow::onTextInsertedAtPreview(QString txt) {
 	docWidget->m_editor->setTextCursor(cursor);
 	docWidget->m_editor->setIgnoreCC(false);
 	//m_processing = false;
+	m_edittingInPreview = false;
+	//syncPreviewCursorWithEditor();
+	//onSrcPosContextChanged();
+	//docWidget->m_editor->onCursorPosChanged();
+	docWidget->m_editor->syncPreviewCursorFromEditor();
 }
 void MainWindow::onTextRemovedAtPreview(int charsRemoved) {
 	DocWidget *docWidget = getCurDocWidget();
@@ -2069,7 +2076,7 @@ void MainWindow::onMDTextChanged() {
 		docWidget->m_preview->setMarkdown(mdEditor->document());
 		docWidget->m_preview->verticalScrollBar()->setValue(scrollPos);
 		docWidget->m_editor->setProcessing(false);
-		docWidget->m_editor->syncEditorCursorFromPreview();
+		docWidget->m_editor->syncPreviewCursorFromEditor();
 		//syncPreviewCursorWithEditor();
 	}
 #else
