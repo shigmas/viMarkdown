@@ -116,6 +116,7 @@ private:
     bool	m_hasBody = false;		//	do_body() で空文以外を出力したか？
     bool	m_inComment = false;
     bool	m_processing = false;	//	再入防止用フラグ
+    bool	m_procContentsChanged = false;	//	コンテンツ変更通知処理中
 	bool	m_isComposing = false;			// IME入力中フラグ
 	bool	m_isPrevLineEmpty = false;		//	本文最後が空行か？
 	QString	m_commitString;

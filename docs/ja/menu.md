@@ -2,11 +2,11 @@
 
 [README_ja](../../README_ja.md) > メニュー一覧
 
-> **※ ドキュメントの表示について:**
+**※ ドキュメントの表示について:**
 > 
 > 本リポジトリのドキュメントには、viMarkdown の拡張構文（CSVブロック）が含まれています。
 > GitHub の Markdown レンダリングエンジンではサポート外のため、プレーンな CSV 形式として表示されます。
-> 正しい書式（表組み）での閲覧には、viMarkdown エディタをご使用ください。
+> 正しい書式（表組み）での閲覧には、viMarkdown をご使用ください。
 
 ## File メニュー
 
@@ -97,6 +97,6 @@
 " カテゴリ ", " 項目 ", " 説明 ", " ショートカット "
 "Other", "Settings...", "[設定ダイアログ](dialogs.md#設定ダイアログ)表示", "F8"
 "Other", "Help", "ヘルプ文書表示", "F1"
-"Other", "About viMarkdown...", "About viMarkdown ダイアログ表示", "F1"
+"Other", "About viMarkdown...", "About viMarkdown ダイアログ表示", ""
 ```
 

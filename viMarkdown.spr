@@ -1285,13 +1285,16 @@ SPR# 状 P Open Close ver     Type  概要
 1261 ◎ C 04/11 04/11 01222│ToDo│ダブルクォートで囲まれているセルの userState は US_CELL_DQ にする？
 1262 ● D 04/13            │問題│エディタ：CSVブロック中に <!-- --> があり、'<' 位置にカーソルがあると、EtoP カーソル位置同期処理が不正になる
 1263 ● C 04/13            │問題│MarkdownEditor::contextAt()：罫線ブロック本文末尾にカーソルがある場合の nth の値がひとつ多い
-1264 ● C 04/14            │問題│プレビュー：リスト行末尾で ' ' を入力すると、プレビューカーソルが次行に移動してしまう
+1264 ◎ C 04/14 04/15 01223│問題│プレビュー：行末尾で ' ' を入力すると、プレビューカーソルが次行に移動してしまう
 									原因：MarkdownEditor::setCursorByContext(context) が余分にコールされている？
+									メモ：MarkdownEditor::findPosition()：アンカー文字 = STX, nth = 2 でコールされている
+									メモ：MarkdownPreview::onCursorPosChanged() から emit posContextChanged(context, acontext) されている
+									メモ：MarkdownPreview::onContentsChanged() の中で setCursor() してて、それで onCursorPosChanged() がコールされている？
 1265 ◎ C 04/14 04/14 01223│ToDo│MainWindow::onSrcCursorPosChanged() もはや未使用なので削除
 1266 ◎ C 04/14 04/14 01223│ToDo│MainWindow::onTextInsertedAtPreview() テキスト挿入中フラグ導入（ → 挿入中はカーソル同期を後回しに）
 1267 ● C 04/14            │問題│MarkdownEditor::syncEditorCursorFromPreview()：関数名が誤り。逆
 1268 ◎ B 04/14 04/15 01223│問題│プレビューでIME入力すると、入力したテキストが消えることがある
 									詳細：テキスト 変換 状態で続けてテキストを入力し、確定すると最初のテキストが消える
 									原因：変換時にテキストが選択状態になり、それが残っている？
-1269 ● C 04/14            │ToDo│
-1270 ● C 04/14            │ToDo│
+1269 ● C 04/15            │ToDo│
+1270 ● C 04/15            │ToDo│

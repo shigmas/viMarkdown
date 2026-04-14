@@ -63,6 +63,7 @@ void MarkdownPreview::inputMethodEvent(QInputMethodEvent *event) {
 	QTextEdit::inputMethodEvent(event);
 }
 void MarkdownPreview::onCursorPosChanged() {
+	if( m_procContentsChanged ) return;
 	QTextCursor cursor = this->textCursor();
 	m_lastCurBlockText = cursor.block().text();
 	viewport()->update();	//	強制再描画
@@ -91,6 +92,7 @@ void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int char
 	}
 	qDebug() << "*** MarkdownPreview::onContentsChanged(" << position << ", " << charsRemoved << ", " << charsAdded << ")";
 	m_processing = true;
+	m_procContentsChanged = true;
 	QTextCursor cursor = this->textCursor();
 	QTextBlock block = cursor.block();
 	const QString &text = block.text();		//	編集後ブロックテキスト
@@ -148,7 +150,9 @@ void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int char
 	if( charsRemoved > 0 ) {
 		emit textRemoved(charsRemoved);
 	}
+	m_procContentsChanged = false;
 	m_processing = false;
+	((MainWindow*)m_mainWindow)->syncEditorToPreviewCursor();	//	暫定的、undone: シグナルスロットに変更
 }
 
 bool isUnderlineHeading(const QString& txt);

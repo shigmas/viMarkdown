@@ -2043,6 +2043,11 @@ void MainWindow::onModificationChanged(bool b) {
 }
 //void MainWindow::onSrcCursorPosChanged() {
 //}
+void MainWindow::syncEditorToPreviewCursor() {
+	DocWidget *docWidget = getCurDocWidget();
+	if (docWidget == nullptr) return;
+	docWidget->m_editor->syncPreviewCursorFromEditor();
+}
 void MainWindow::syncEditorPreviewScroll() {
 	DocWidget *docWidget = getCurDocWidget();
 	if (docWidget == nullptr) return;
