@@ -1023,7 +1023,7 @@ SPR# 状 P Open Close ver     Type  概要
 1010 ◎ C 03/22 03/22 01209│問題│README_ja.md：エディタ5行目末尾にカーソルがあると、プレビューカーソル位置が不正になる。
 									原因：PosContext.m_offset の値が不正
 1011 ◎ C 03/22 03/27 01211│問題│[t](url) の '(' ～ ')' にカーソルがあると、プレビューカーソル位置が不正になる。
-1012 ● C 03/22            │ToDo│MarkdownEditor::contextAt()：の単体テストを組む
+1012 ● D 03/22            │ToDo│MarkdownEditor::contextAt()：の単体テストを組む
 1013 ● C 03/23            │問題│プレビューで Tab 押下した場合の動作はエディタでのそれと同一の方がよい
 1014 ◎ B 03/23 04/04 01218│問題│エディタで Tab 押下 or インデント するとアサーションが発生する → もはや再現しない
 1015 ◎ C 03/23 03/23 01209│ToDo│Other > Test メニュー追加
@@ -1292,9 +1292,19 @@ SPR# 状 P Open Close ver     Type  概要
 									メモ：MarkdownPreview::onContentsChanged() の中で setCursor() してて、それで onCursorPosChanged() がコールされている？
 1265 ◎ C 04/14 04/14 01223│ToDo│MainWindow::onSrcCursorPosChanged() もはや未使用なので削除
 1266 ◎ C 04/14 04/14 01223│ToDo│MainWindow::onTextInsertedAtPreview() テキスト挿入中フラグ導入（ → 挿入中はカーソル同期を後回しに）
-1267 ● C 04/14            │問題│MarkdownEditor::syncEditorCursorFromPreview()：関数名が誤り。逆
+1267 ◎ C 04/14 04/15 01223│問題│MarkdownEditor::syncEditorCursorFromPreview()：関数名が誤り。逆
 1268 ◎ B 04/14 04/15 01223│問題│プレビューでIME入力すると、入力したテキストが消えることがある
 									詳細：テキスト 変換 状態で続けてテキストを入力し、確定すると最初のテキストが消える
 									原因：変換時にテキストが選択状態になり、それが残っている？
-1269 ● C 04/15            │ToDo│
-1270 ● C 04/15            │ToDo│
+1269 ● C 04/15            │問題│プレビュー：文字列選択し、Edit > Cut を行うと、被選択文字列まで削除される場合がある？
+1270 ◎ C 04/15 04/15 01223│ToDo│README_ja.md, README.md > 主な特徴 部分をリライト
+1271 ● C 04/15            │ToDo│
+1272 ● C 04/15            │ToDo│
+1273 ● C 04/15            │ToDo│
+1274 ● C 04/15            │ToDo│
+1275 ● C 04/15            │ToDo│
+1276 ● C 04/15            │ToDo│
+1277 ● C 04/15            │ToDo│
+1278 ● C 04/15            │ToDo│
+1279 ● C 04/15            │ToDo│
+1280 ● C 04/15            │ToDo│
