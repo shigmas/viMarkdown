@@ -212,6 +212,7 @@ protected:
     void	onAction_Print();
     void	onAction_Undo();
     void	onAction_Redo();
+    void	onAction_Cut();
     void	onAction_SelectAll();
     void	onAction_Paste();
     void	onAction_Heading();
