@@ -1307,6 +1307,8 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 	bool is_checkbox = match.hasMatch();		//	チェックボックス（"- [ ] "）の場合
 	if( is_checkbox ) {
 		for(;;) {
+			if( match.capturedLength() == srcBlock.text().size() )
+				buf += ZWSP;
 			updateCharFlags(srcBlock);
 			BlockData* data = getBlockData(srcBlock);
 			for(int i = 0; i < match.capturedLength(); ++i)
