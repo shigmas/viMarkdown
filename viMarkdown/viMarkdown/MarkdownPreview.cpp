@@ -25,6 +25,7 @@ bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign);
 
 
 const QChar endOfCell(0xfdd0);		//	セル終端文字
+const QChar ZWSP(0x200b);			//	ゼロ幅空白文字
 
 extern CharType getCharType(QChar ch);
 
@@ -1330,6 +1331,8 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 	} else {		//	リストの場合
 		//static QRegularExpression re(R"(^( *)- )");
 		auto mch = re_list.match(srcBlock.text());
+		if( mch.capturedLength() == srcBlock.text().size() )
+			buf += ZWSP;
 		BlockData* data = getBlockData(srcBlock);
 		for(int i = 0; i < mch.capturedLength(); ++i)
 			data->m_charFlags[i] = PCF_LIST_MARK;
@@ -1347,6 +1350,8 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 			if( mch.hasMatch() ) {	//	リスト行
 				++n_item;
 				buf += u'\n' + text;
+				if( mch.capturedLength() == text.size() )
+					buf += ZWSP;
 				isPrevlist = true;
 				//int length = mch.capturedLength();
 				BlockData* data = getBlockData(srcBlock);
