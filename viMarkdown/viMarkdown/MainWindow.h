@@ -191,6 +191,7 @@ protected:
     void	onChangePreviewFontSize(int);
     void	updateEditorFontSize(int);
     void	onSettingsChanged();
+    void	onCutTriggered();
     void	onUndoTriggered();
     void	onRedoTriggered();
     void	onPrvPosContextChanged(const struct PosContext&, const PosContext &acontext);

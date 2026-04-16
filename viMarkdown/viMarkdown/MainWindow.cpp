@@ -689,6 +689,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(markdownPreview, &MarkdownPreview::Tab_pressed, this, &MainWindow::onTab_pressed);
 	connect(markdownPreview, &MarkdownPreview::BS_pressed, this, &MainWindow::onBS_pressed);
 	connect(markdownPreview, &MarkdownPreview::Del_pressed, this, &MainWindow::onDel_pressed);
+	connect(markdownPreview, &MarkdownPreview::cut_triggered, this, &MainWindow::onCutTriggered);
 	connect(markdownPreview, &MarkdownPreview::undo_triggered, this, &MainWindow::onUndoTriggered);
 	connect(markdownPreview, &MarkdownPreview::redo_triggered, this, &MainWindow::onRedoTriggered);
 	connect(markdownPreview, &MarkdownPreview::changeFontSize, this, &MainWindow::onChangePreviewFontSize);
@@ -978,6 +979,11 @@ void MainWindow::onBS_pressed(bool ctrl) {
 	}
 	docWidget->m_editor->setTextCursor(cursor);
 	//syncPreviewCursorWithEditor();
+}
+void MainWindow::onCutTriggered() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	docWidget->m_editor->cut();
 }
 void MainWindow::onUndoTriggered() {
 	DocWidget *docWidget = getCurDocWidget();

@@ -8,8 +8,8 @@
 効率性を追求する 研究者・エンジニア・ライター・理系学生 に向けて設計されています。
 
 <!--<img width="700" alt="image" src="./screen.png" />-->
-![image](screen.png)
 
+![image](screen.png)
 
 ## 主な特徴
 - **エディタとプレビューの完全同期**

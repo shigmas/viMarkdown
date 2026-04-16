@@ -49,6 +49,7 @@ MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, DocWidget *docWid
 	//document()->setDefaultStyleSheet(css);
 	//setStyleSheet("QTextEdit { caret-color: red; }");
 	connect(this, &MarkdownPreview::cursorPositionChanged, this, &MarkdownPreview::onCursorPosChanged);
+	//connect(ui->action_Cut, &QAction::triggered, this, &MarkdownPreview::onAction_Cut);
 	connect(document(), &QTextDocument::contentsChange, this, &MarkdownPreview::onContentsChanged);
 	QFont font = this->font();
 	font.setPointSize(12);
@@ -62,8 +63,11 @@ void MarkdownPreview::inputMethodEvent(QInputMethodEvent *event) {
 	//	emit textInserted(txt);
 	QTextEdit::inputMethodEvent(event);
 }
+void MarkdownPreview::onAction_Cut() {
+}
 void MarkdownPreview::onCursorPosChanged() {
 	if( m_procContentsChanged ) return;
+	if (!m_commitString.isEmpty()) return;
 	QTextCursor cursor = this->textCursor();
 	m_lastCurBlockText = cursor.block().text();
 	viewport()->update();	//	強制再描画
@@ -260,6 +264,10 @@ void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 			QTextCursor cursor = textCursor();
 			moveToPrevWord(cursor, shift);
 			setTextCursor(cursor);
+			return;
+		}
+		if (e->key() == Qt::Key_X ) {
+			emit cut_triggered();
 			return;
 		}
 		if (e->key() == Qt::Key_Z ) {

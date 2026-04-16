@@ -68,6 +68,7 @@ signals:
     void	Tab_pressed();		//	Tab
     void	BS_pressed(bool);		//	BackSpace
     void	Del_pressed(bool);		//	Delete
+    void	cut_triggered();
     void	undo_triggered();
     void	redo_triggered();
     void	posContextChanged(const PosContext &context, const PosContext &acontext);
@@ -89,6 +90,8 @@ protected:
     	e->ignore();
     }
     void	inputMethodEvent(QInputMethodEvent *event) override;
+
+    void	onAction_Cut();
 
     void	onCursorPosChanged();
     void	onContentsChanged(int position, int charsRemoved, int charsAdded);
