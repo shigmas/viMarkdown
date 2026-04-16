@@ -1302,8 +1302,9 @@ SPR# 状 P Open Close ver     Type  概要
 1272 ● C 04/16            │問題│インデントされたリスト行があると、行頭カーソル位置での PtoE カーソル同期処理が不正（インデント分が考慮されない）になる？
 1273 ◎ C 04/16 04/16 01224│問題│プレビュー：Ctrl + X で余分に文字列が削除される？
 1274 ◎ C 04/16 04/16 01224│問題│IME入力が確定した状態では、MarkdownPreview::onCursorPosChanged() は何も処理を行わない方がよい
-1275 ● C 04/16            │ToDo│
-1276 ● C 04/16            │ToDo│
+1275 ◎ C 04/16 04/16 01224│問題│プレビュー：xyz の x 位置に「あいう」をIME入力すると、カーソルが y 位置に移動してしまう
+									メモ：「あいうx」が挿入されたと処理されている
+1276 ● C 04/16            │問題│実行時エラーが出ている：QRegularExpressionPrivate::doMatch(): called on an invalid QRegularExpression object (pattern is '(?<![\*\\])(\~\~([^\\\*]+)\~\~')
 1277 ● C 04/16            │ToDo│
 1278 ● C 04/16            │ToDo│
 1279 ● C 04/16            │ToDo│
