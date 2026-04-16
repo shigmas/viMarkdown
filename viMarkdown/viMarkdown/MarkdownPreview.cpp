@@ -67,7 +67,7 @@ void MarkdownPreview::onAction_Cut() {
 }
 void MarkdownPreview::onCursorPosChanged() {
 	if( m_procContentsChanged ) return;
-	if (!m_commitString.isEmpty()) return;
+	//if (!m_commitString.isEmpty()) return;
 	QTextCursor cursor = this->textCursor();
 	m_lastCurBlockText = cursor.block().text();
 	viewport()->update();	//	強制再描画

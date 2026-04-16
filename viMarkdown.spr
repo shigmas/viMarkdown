@@ -1306,6 +1306,6 @@ SPR# 状 P Open Close ver     Type  概要
 									メモ：「あいうx」が挿入されたと処理されている
 1276 ◎ C 04/16 04/16 01224│問題│実行時エラーが出ている：QRegularExpressionPrivate::doMatch(): called on an invalid QRegularExpression object (pattern is '(?<![\*\\])(\~\~([^\\\*]+)\~\~')
 1277 ◎ C 04/16 04/16 01224│問題│MarkdownEditor::onContentsChanged()：共通末尾削除処理が行先頭の場合に動作不良
-1278 ● C 04/16            │ToDo│
-1279 ● C 04/16            │ToDo│
+1278 ◎ C 04/16 04/16 01224│問題│プレビュー：文字列を選択肢、Delete or BackSpace で被選択文字列が削除されない
+1279 ◎ B 04/16 04/16 01224│問題│PtoE カーソル位置同期が動作していない。原因：問題対処の副作用と思われる ^^;;;
 1280 ● C 04/16            │ToDo│
