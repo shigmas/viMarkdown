@@ -1789,7 +1789,7 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 		charsRemoved = qMin(charsRemoved, strRemoved.size());		//	行末を超えている場合対応
 		charsAdded = qMin(charsAdded, strAdded.size());		//	行末を超えている場合対応
 		int c = 0;
-		while(charsAdded-c-1 > 0 && charsRemoved-c-1 > 0 &&
+		while(charsAdded-c-1 >= 0 && charsRemoved-c-1 >= 0 &&
 			strAdded[charsAdded-c-1] == strRemoved[charsRemoved-c-1] )
 		{
 			++c;	//	末尾共通部分

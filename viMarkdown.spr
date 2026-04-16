@@ -1305,7 +1305,7 @@ SPR# 状 P Open Close ver     Type  概要
 1275 ◎ C 04/16 04/16 01224│問題│プレビュー：xyz の x 位置に「あいう」をIME入力すると、カーソルが y 位置に移動してしまう
 									メモ：「あいうx」が挿入されたと処理されている
 1276 ● C 04/16            │問題│実行時エラーが出ている：QRegularExpressionPrivate::doMatch(): called on an invalid QRegularExpression object (pattern is '(?<![\*\\])(\~\~([^\\\*]+)\~\~')
-1277 ● C 04/16            │ToDo│
+1277 ◎ C 04/16 04/16 01224│問題│MarkdownEditor::onContentsChanged()：共通末尾削除処理が行先頭の場合に動作不良
 1278 ● C 04/16            │ToDo│
 1279 ● C 04/16            │ToDo│
 1280 ● C 04/16            │ToDo│
