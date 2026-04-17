@@ -1003,6 +1003,13 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 		event->acceptProposedAction();
 	}
 }
+bool isImageFile(const QString &fullPath) {
+	static const QStringList imageExtensions = {
+        "png", "jpg", "jpeg", "bmp", "gif", "svg", "webp"
+    };
+	QFileInfo info(fullPath);
+	return imageExtensions.contains(info.suffix().toLower());
+}
 void MainWindow::dropEvent(QDropEvent *event)
 {
 	const QList<QUrl> urls = event->mimeData()->urls();    // ドロップされたデータのURLリストを取得
@@ -1010,7 +1017,10 @@ void MainWindow::dropEvent(QDropEvent *event)
 	for(const QUrl &url : urls ) {
 		QString fullPath = url.toLocalFile();
 		qDebug() << "dropped fullPath = " << fullPath;
-		do_open("", fullPath);
+		if( isImageFile(fullPath) ) {
+			//
+		} else
+			do_open("", fullPath);
 	}
 }
 #if 0

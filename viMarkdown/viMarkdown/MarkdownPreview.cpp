@@ -67,11 +67,11 @@ void MarkdownPreview::inputMethodEvent(QInputMethodEvent *event) {
 void MarkdownPreview::onAction_Cut() {
 }
 void MarkdownPreview::onCursorPosChanged() {
-	if( m_procContentsChanged ) return;
-	//if (!m_commitString.isEmpty()) return;
 	QTextCursor cursor = this->textCursor();
 	m_lastCurBlockText = cursor.block().text();
 	viewport()->update();	//	強制再描画
+	if( m_procContentsChanged ) return;
+	//if (!m_commitString.isEmpty()) return;
 	//	カーソル同期処理
 	if( m_processing || m_mainWindow->isCursorCyncing() ) return;		//	再入禁止
 	m_processing = true;
