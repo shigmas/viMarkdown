@@ -2248,6 +2248,10 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			ch = STX;
 		else
 			ch = ix == 0 ? STX : ETX;
+	} else if( block.userState() == US_KEISEN_BEGIN ) {
+		ch = STX;
+	} else if( block.userState() == US_KEISEN_BLOCK ) {
+		ch = ETX;
 	} else {
 		bool found = false;
 		if( ix != data->m_charFlags.size() && (ix == 0 || ix > 0 && data->m_charFlags[ix-1] != PCF_VISIBLE) ) {		//	直前が非表示文字の場合
@@ -2299,28 +2303,6 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			pc.m_offset += 1;
 		}
 		ch = doc->characterAt(pos);
-#if 0
-		while( pos > 0 && ch == QChar::ParagraphSeparator ) {	//	改行位置にいる場合
-			if( pos == block.position() ) {		//	空行の場合
-				if( !block.previous().isValid() ) {
-					//ch = ETX;
-					break;
-				}
-				block = block.previous();
-			}
-			ch = doc->characterAt(--pos);
-			int ix = pos - block.position();
-			if( ch != QChar::ParagraphSeparator || pos > block.position() )
-				pc.m_offset += 1;		//	空行が続かない場合
-			if( pos > 0 && doc->characterAt(pos-1) != u'\\' && block.userState() == US_TABLE && ch == u'|' ) {
-				//pc.m_offset += 1;
-				ch = doc->characterAt(--pos);
-			}
-			while( pos > 0 && doc->characterAt(pos-1) != u'\\' && (ch == u'*' || ch == u'_' || ch == u'~' ) ) {
-				ch = doc->characterAt(--pos);
-			}
-		}
-#endif
 		if( pos > 0 && doc->characterAt(pos-1) != u'\\' ) {
 			//while( ch == u'*' || ch == u'_' || ch == u'~' )
 			while( ix < data->m_charFlags.size() && data->m_charFlags[ix] != PCF_VISIBLE ) {
@@ -2348,6 +2330,7 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const
 	//static QRegularExpression re("^(#+ *| *- (\\[[ xX]\\] )?| *\\d+[\\.)] |(> )+)");
 	int count = ch == STX ? 0 : 1;
 	while( block.isValid() ) {
+		auto t = block.text();
 		const BlockData *data = getBlockData(block);
 		//printCharFlags(block);
 		if( block.userState() == US_KEISEN_BEGIN ) {
@@ -2356,7 +2339,10 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const
 			do {
 				block = block.next();
 			} while( block.isValid() && block.userState() == US_KEISEN_BLOCK );
-			if (block.position() > pos) break;
+			if (block.position() > pos) {
+				if (ch == ETX) --count;
+				break;
+			}
 			continue;
 		}
 		if( ch == STX ) {		//	行頭の場合
@@ -2375,6 +2361,9 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const
 			if( block.position() >= pos ) break;
 		} else if( ch == ETX ) {		//	行末の場合
 			if( !block.next().isValid() ) break;		//	最終行の場合
+			//if( block.userState() == US_KEISEN_BLOCK ) {
+			//	if( block.position() + block.text().size() >= pos ) break;
+			//} else
 			if( !block.text().startsWith("```") ) {		//	``` 行は無視
 #if 1	//	GFM
 				if( pos >= block.position() && pos < block.next().position() ) break;
