@@ -816,7 +816,21 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 				while( block.userState() == US_KEISEN_BEGIN || block.userState() == US_KEISEN_BLOCK )
 					block = block.next();
 			} else
-			block = block.next();
+				block = block.next();
+			continue;
+		}
+		if( ch == EOB ) {	//	罫線ブロック末尾
+			if( block.userState() == US_KEISEN_BEGIN ) {
+				if( --nth == 0 ) {
+					while( block.next().isValid() && !block.next().text().startsWith("```") )
+						block = block.next();
+					ix = block.text().size();
+					break;
+				}
+				while( block.userState() == US_KEISEN_BEGIN || block.userState() == US_KEISEN_BLOCK )
+					block = block.next();
+			} else
+				block = block.next();
 			continue;
 		}
 		if( block.userState() == US_KEISEN_BLOCK ) {
