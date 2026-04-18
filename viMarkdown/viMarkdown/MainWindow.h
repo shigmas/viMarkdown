@@ -58,6 +58,7 @@ enum {
 
 const QChar STX(0x0002);		//	行頭仮想文字
 const QChar ETX(0x0003);		//	行末仮想文字
+const QChar EOB(0x0017);		//	罫線ブロック末仮想文字
 
 struct PosContext {
     QChar	m_anchorChar;			//	アンカー文字、行末の場合は QChar() かもしれない
