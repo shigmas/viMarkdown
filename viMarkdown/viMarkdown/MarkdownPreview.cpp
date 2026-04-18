@@ -1681,7 +1681,7 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 	}
 	pc.m_prvHBlockNum = block.blockNumber();
 	//	pos の {chPrev, chNext} が見出し行先頭から何番目かを計算
-	int count = 1;
+	int count = pc.m_anchorChar == EOB ? 0 : 1;
 	bool found = false;
 	if( pc.m_anchorChar == STX ) {			//	行頭の場合
 		while( block.isValid() ) {
@@ -1723,6 +1723,14 @@ PosContext MarkdownPreview::contextAt(int pos) {	//	pos 位置から PosContext 
 					++count;
 			}
 			block = block.next();
+		}
+	} else if( pc.m_anchorChar == EOB ) {	//	罫線ブロック末の場合
+		while( block.isValid() ) {
+			if( block.userState() == US_KEISEN_BLOCK )
+				++count;
+			if( block.position() + block.text().size() >= pos ) break;
+			block = block.next();
+
 		}
 	} else if( pc.m_anchorChar == QChar(U_KEISEN_BLOCK) ) {		//	罫線ブロックの場合
 		while( block.isValid() ) {
