@@ -669,7 +669,7 @@ SPR# 状 P Open Close ver     Type  概要
 0666 ◎ C 02/11 02/11 01102│ToDo│class MarkdownViewer → MarkdownPreview に変更
 0667 ◎ C 02/11 02/11 01102│ToDo│DocWidget::m_mdEditor → m_editor, m_markdownPreview → m_preview にリネーム
 0668 ◎ C 02/11 02/11 01102│ToDo│PosContext MarkdownViewer::contextAt(int pos) const; 追加
-0669 ● C 02/11            │問題│文書開きっぱなしでも Alt + 左右 で文書を切り替えるとカーソルが先頭行に移動してしまう？
+0669 ◎ C 02/11 04/18 01225│問題│文書開きっぱなしでも Alt + 左右 で文書を切り替えるとカーソルが先頭行に移動してしまう？
 									メモ：フォーカスを失うときに、現在行番号を保存する必要がある？
 0670 ◎ C 02/11 02/11 01102│問題│メニュー、メインツールバーが2行？なので、スペースを消費してしまう。無理やり1行にした方がよい？
 0671 ◎ C 02/11 02/11 01103│ToDo│PosContext：int m_indexOfPrevNext; 追加

@@ -261,6 +261,9 @@ void MainWindow::onAction_MarkdownTable_CSV() {
 }
 void MainWindow::onAction_NaviBack() {
 	if( m_docLocIX < 1 ) return;
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget != nullptr )
+		m_docLocHist[m_docLocIX].m_position = docWidget->m_editor->textCursor().position();
 	const auto &item = m_docLocHist[--m_docLocIX];
 	m_processing = true;
 	do_open(item.m_title, item.m_fullPath, item.m_title);
@@ -275,6 +278,9 @@ void MainWindow::onAction_NaviBack() {
 }
 void MainWindow::onAction_NaviForward() {
 	if( m_docLocIX + 1 >= m_docLocHist.size() ) return;
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget != nullptr )
+		m_docLocHist[m_docLocIX].m_position = docWidget->m_editor->textCursor().position();
 	const auto &item = m_docLocHist[++m_docLocIX];
 	m_processing = true;
 	do_open(item.m_title, item.m_fullPath, item.m_title);
