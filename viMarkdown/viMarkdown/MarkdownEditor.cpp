@@ -436,6 +436,8 @@ void MarkdownEditor::insertFromMimeData(const QMimeData *source) {
 	if (source->hasImage()) {
 		if( m_docWidget->m_fullPath.isEmpty() ) {
 			qDebug() << "has not fullpath, please save first.";
+			QApplication::beep();
+			m_mainWindow->statusBar()->showMessage(tr("To paste images, please save your document first."), 5000);
 			return;
 		}
 		QImage image = qvariant_cast<QImage>(source->imageData());
