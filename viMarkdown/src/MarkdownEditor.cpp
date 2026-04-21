@@ -923,6 +923,12 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 		int pos = block.position() + ix + offset + context.m_offset;
 		if( block.userState() == US_CSV_BLOCK ) {
 			pos = qMin(pos, block.position() + block.text().size());
+			int ix = pos - block.position();
+			const BlockData* data = getBlockData(block);
+			if( ch == STX && data->m_charFlags[ix] != PCF_VISIBLE )
+				++pos;
+			else if( ch == ETX && ix > 0 && data->m_charFlags[ix-1] != PCF_VISIBLE )
+				--pos;
 		}
 		return pos;
 	} else
