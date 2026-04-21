@@ -71,6 +71,7 @@ struct PosContext {
 
 class DocWidget;
 class BlockData;
+class QTreeWidgetItem;
 
 #define		N_PATH_HIST		32
 
