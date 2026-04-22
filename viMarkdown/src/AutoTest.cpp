@@ -61,6 +61,16 @@ enum {
 };
 
 const QString QA_MD_TEXT_2 =
+	"```CSV\n"	//	CSVブロック開始
+	"abc, xy, z123\n"
+	"id, , h3\n"
+	"id, h*h*h2, **h3**\n"
+	"69, ""hasshi"", h\\*o\\*ge\n"
+	",,\n"
+	"\"\",\"\",\n"	//	途中のセルが ""
+	",,\"\"\n"	//	最後のセルが ""
+	"```\n"		//	CSVブロック終了
+	"text\n"
 	//"```CSV\n"
 	//",,,\n"
 	//"```\n"
@@ -104,7 +114,7 @@ const QString QA_MD_TEXT_2 =
 	"text\n"
 	"\n"
 #endif
-#if 1
+#if 0
 	"TEST\n"
 	"<!-- comment -->\n"
 	"# title\n"
@@ -117,6 +127,7 @@ const QString QA_MD_TEXT_2 =
 	"hoge*fuga*foo\n"
 	"hoge\\*fuga\\*foo\n"
 	"hoge**fuga**foo\n"
+	"hoge**fuga** **fuga**\n"
 	"hoge***fuga***foo\n"
 	"hoge~~fuga~~foo\n"
 	"h'a\\*bc*xyz*abc'x\n"
@@ -176,7 +187,7 @@ const QString QA_MD_TEXT_2 =
 	"```CSV\n"	//	CSVブロック開始
 	"abc, xy, z123\n"
 	"id, , h3\n"
-	"id, h*h*h2, h3\n"
+	"id, h*h*h2, **h3**\n"
 	"69, ""hasshi"", h\\*o\\*ge\n"
 	",,\n"
 	"\"\",\"\",\n"	//	途中のセルが ""
