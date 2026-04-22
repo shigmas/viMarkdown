@@ -878,8 +878,10 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 				!(block.text().isEmpty() && block.previous().isValid() && block.previous().text().isEmpty()) )	//	連続空行ではない
 			{
 				if( --nth == 0 ) {
-					while( ix < charFlags.size() && charFlags[ix] > PCF_IMAGE_BEGIN && block.text()[ix] != u',' )
+					while (ix < charFlags.size() && charFlags[ix] > PCF_IMAGE_BEGIN && block.text()[ix] != u',') {
 						++ix;		//	非表示文字をスキップ
+						if( block.text()[ix] == u'"' ) break;	//	"" の場合は最初の " だけスキップ
+					}
 					break;
 				}
 			}
@@ -925,9 +927,10 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			pos = qMin(pos, block.position() + block.text().size());
 			int ix = pos - block.position();
 			const BlockData* data = getBlockData(block);
-			if( ch == STX && data->m_charFlags[ix] != PCF_VISIBLE )
-				++pos;
-			else if( ch == ETX && ix > 0 && data->m_charFlags[ix-1] != PCF_VISIBLE )
+			//if( ch == STX && data->m_charFlags[ix] != PCF_CELL_SEPARATOR && data->m_charFlags[ix] != PCF_VISIBLE )
+			//	++pos;
+			//else
+			if( ch == ETX && ix > 0 && data->m_charFlags[ix-1] != PCF_CELL_SEPARATOR && data->m_charFlags[ix-1] != PCF_VISIBLE )
 				--pos;
 		}
 		return pos;
