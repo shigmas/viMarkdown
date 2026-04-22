@@ -179,6 +179,8 @@ const QString QA_MD_TEXT_2 =
 	"id, h*h*h2, h3\n"
 	"69, ""hasshi"", h\\*o\\*ge\n"
 	",,\n"
+	"\"\",\"\",\n"	//	途中のセルが ""
+	",,\"\"\n"	//	最後のセルが ""
 	"```\n"		//	CSVブロック終了
 	"text\n"
 #endif
