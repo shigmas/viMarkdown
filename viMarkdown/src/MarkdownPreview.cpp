@@ -510,6 +510,8 @@ void MarkdownPreview::do_body(QTextBlock srcBlock, QTextCursor& cursor, bool las
 			blankLine = true;
 		} else
 			blankLine = false;
+		static QRegularExpression re(" +$");	//	行末半角空白列
+		txt.replace(re, "&nbsp;");
 		cursor.mergeBlockFormat(blockFormat);
 		cursor.insertMarkdown(txt);
 		cursor.insertBlock(QTextBlockFormat(), QTextCharFormat());
