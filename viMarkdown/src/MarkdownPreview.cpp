@@ -1337,11 +1337,12 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 		}
 #endif
 	} else {		//	リストの場合
-		buf.replace(re_tailspc, "&nbsp;");
 		//static QRegularExpression re(R"(^( *)- )");
 		auto mch = re_list.match(srcBlock.text());
 		if( mch.capturedLength() == srcBlock.text().size() )
 			buf += ZWSP;	//	ゼロ幅空白文字
+		else
+			buf.replace(re_tailspc, "&nbsp;");
 		BlockData* data = getBlockData(srcBlock);
 		for(int i = 0; i < mch.capturedLength(); ++i)
 			data->m_charFlags[i] = PCF_LIST_MARK;
