@@ -27,6 +27,8 @@ bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign);
 const QChar endOfCell(0xfdd0);		//	セル終端文字
 const QChar ZWSP(0x200b);			//	ゼロ幅空白文字
 
+static QRegularExpression re_tailspc(" +$");	//	行末半角空白列
+
 extern CharType getCharType(QChar ch);
 
 MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, DocWidget *docWidget, QWidget* parent, bool readOnly)
@@ -510,8 +512,7 @@ void MarkdownPreview::do_body(QTextBlock srcBlock, QTextCursor& cursor, bool las
 			blankLine = true;
 		} else
 			blankLine = false;
-		static QRegularExpression re(" +$");	//	行末半角空白列
-		txt.replace(re, "&nbsp;");
+		txt.replace(re_tailspc, "&nbsp;");
 		cursor.mergeBlockFormat(blockFormat);
 		cursor.insertMarkdown(txt);
 		cursor.insertBlock(QTextBlockFormat(), QTextCharFormat());
@@ -1302,6 +1303,7 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 #endif
 	if( m_nSpaces > 0 )
 		buf = QString(m_nSpaces, QChar(u' ')) + buf;
+	//buf.replace(re_tailspc, "&nbsp;");
 	static QRegularExpression re_checkbox(R"(^( *)- \[[ xX]\] )");
 	int pos = cursor.position();
 	int n_item = 1;
@@ -1311,7 +1313,7 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 	if( is_checkbox ) {
 		for(;;) {
 			if( match.capturedLength() == srcBlock.text().size() )
-				buf += ZWSP;
+				buf += ZWSP;	//	ゼロ幅空白文字
 			updateCharFlags(srcBlock);
 			BlockData* data = getBlockData(srcBlock);
 			for(int i = 0; i < match.capturedLength(); ++i)
@@ -1324,6 +1326,7 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 			srcBlock = srcBlock.next();
 			//data = getBlockData(srcBlock);
 			buf += u'\n' + m_lst[m_ln];
+			//buf.replace(re_tailspc, "&nbsp;");
 			++n_item;
 		}
 #if 0
@@ -1334,10 +1337,11 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 		}
 #endif
 	} else {		//	リストの場合
+		buf.replace(re_tailspc, "&nbsp;");
 		//static QRegularExpression re(R"(^( *)- )");
 		auto mch = re_list.match(srcBlock.text());
 		if( mch.capturedLength() == srcBlock.text().size() )
-			buf += ZWSP;
+			buf += ZWSP;	//	ゼロ幅空白文字
 		BlockData* data = getBlockData(srcBlock);
 		for(int i = 0; i < mch.capturedLength(); ++i)
 			data->m_charFlags[i] = PCF_LIST_MARK;
@@ -1357,6 +1361,8 @@ void MarkdownPreview::do_list(QTextBlock srcBlock, QTextCursor& cursor, QString 
 				buf += u'\n' + text;
 				if( mch.capturedLength() == text.size() )
 					buf += ZWSP;
+				else
+					buf.replace(re_tailspc, "&nbsp;");
 				isPrevlist = true;
 				//int length = mch.capturedLength();
 				BlockData* data = getBlockData(srcBlock);

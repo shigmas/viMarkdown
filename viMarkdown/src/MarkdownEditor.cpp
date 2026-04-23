@@ -2092,7 +2092,7 @@ void MarkdownEditor::lnAreaMousePressEvent(QMouseEvent *event) {
 	QTextCursor cursor = cursorForPosition(QPoint(0, (int)pos.y()));
 	cursor.movePosition(QTextCursor::StartOfBlock);			 // 行頭へ移動
 	m_anchorStartPosition = cursor.position();
-	cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor); // 行末まで選択
+	cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor); // 次行先頭まで選択
 	m_selStart = cursor.selectionStart();
 	m_selEnd = cursor.selectionEnd();
 	m_curBlockNum = m_anchorBlockNum = cursor.blockNumber();
@@ -2108,7 +2108,7 @@ void MarkdownEditor::lnAreaMouseMoveEvent(QMouseEvent *event) {
 	if( cbn == m_curBlockNum ) return;
 	m_curBlockNum = cbn;
 	if( cbn >= m_anchorBlockNum ) {
-		cursor.movePosition(QTextCursor::EndOfBlock);	// 行末移動
+		cursor.movePosition(QTextCursor::NextBlock);	// 次行先頭移動
 		//if( m_isCursorAboveAnchor )
 			cursor.setPosition(m_anchorStartPosition, QTextCursor::KeepAnchor);
 		//else

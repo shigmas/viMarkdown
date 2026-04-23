@@ -61,6 +61,7 @@ enum {
 };
 
 const QString QA_MD_TEXT_2 =
+#if 0
 	"```CSV\n"	//	CSVブロック開始
 	"abc, xy, z123\n"
 	"id, , h3\n"
@@ -79,6 +80,7 @@ const QString QA_MD_TEXT_2 =
 	//"\n"
 	//"![v](url)\n"	//	画像
 	//"\n"
+#endif
 #if 0
 	"<!-- comment -->\n"
 	"# title\n"
@@ -114,7 +116,7 @@ const QString QA_MD_TEXT_2 =
 	"text\n"
 	"\n"
 #endif
-#if 0
+#if 1
 	"TEST\n"
 	"<!-- comment -->\n"
 	"# title\n"
