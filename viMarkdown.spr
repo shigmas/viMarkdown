@@ -1341,7 +1341,7 @@ SPR# 状 P Open Close ver     Type  概要
 1294 ◎ C 04/23 04/23 02002│問題│プレビュー：リスト行末に半角空白を入力しても、それがプレビューに反映されないのはいかがなものか？
 1295 ◎ C 04/23 04/24 02002│ToDo│CMakeLists.txt, src/CMakeLists 更新
 1296 ◎ C 04/23 04/24 02002│ToDo│"MainWindow.cpp": #include "ui_mainwindow.h" 追加
-1297 ● C 04/23            │ToDo│
-1298 ● C 04/23            │ToDo│
-1299 ● C 04/23            │ToDo│
-1300 ● C 04/23            │ToDo│
+1297 ◎ C 04/24 04/24 02003│問題│QtCreator で CMakeLists.txt をプロジェクトとして開くと、src/ 以下が認識されない
+1298 ● C 04/24            │ToDo│
+1299 ● C 04/24            │ToDo│
+1300 ● C 04/24            │ToDo│
