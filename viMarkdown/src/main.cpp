@@ -16,5 +16,6 @@ int main(int argc, char *argv[])
         window.do_open("", filePath);
     }
     window.show();
+    qDebug() << "OK";
     return app.exec(); 
 }

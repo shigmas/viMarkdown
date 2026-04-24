@@ -1,0 +1,1012 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindowClass</class>
+ <widget class="QMainWindow" name="MainWindowClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>-1</number>
+      </property>
+      <property name="movable">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>600</width>
+     <height>33</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <widget class="QMenu" name="menu_RecentFiles">
+     <property name="title">
+      <string>RecentFiles(&amp;1)</string>
+     </property>
+     <addaction name="actiondummy"/>
+    </widget>
+    <widget class="QMenu" name="menu_FavoriteFiles">
+     <property name="title">
+      <string>&amp;FavoriteFile</string>
+     </property>
+     <addaction name="action_AddThisFavorite"/>
+     <addaction name="separator"/>
+    </widget>
+    <widget class="QMenu" name="menu_Exoirt">
+     <property name="title">
+      <string>&amp;Export</string>
+     </property>
+     <addaction name="action_AsPDF"/>
+    </widget>
+    <addaction name="action_New"/>
+    <addaction name="action_NewTab"/>
+    <addaction name="action_Open"/>
+    <addaction name="action_Reload"/>
+    <addaction name="action_Save"/>
+    <addaction name="action_SaveAs"/>
+    <addaction name="menu_Exoirt"/>
+    <addaction name="action_Close"/>
+    <addaction name="menu_RecentFiles"/>
+    <addaction name="menu_FavoriteFiles"/>
+    <addaction name="action_Print"/>
+    <addaction name="separator"/>
+    <addaction name="action_Exit"/>
+   </widget>
+   <widget class="QMenu" name="menu_View">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="action_OutlineBar"/>
+    <addaction name="action_FocusOutline"/>
+    <addaction name="action_NextTab"/>
+    <addaction name="action_PrevTab"/>
+    <addaction name="action_ToggleFocus"/>
+    <addaction name="action_SwitchToAltFile"/>
+    <addaction name="action_NaviBack"/>
+    <addaction name="action_NaviForward"/>
+    <addaction name="action_TagJump"/>
+   </widget>
+   <widget class="QMenu" name="menu_Edit">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+    <widget class="QMenu" name="menuinline">
+     <property name="title">
+      <string>In&amp;line</string>
+     </property>
+     <addaction name="separator"/>
+     <addaction name="action_Bold"/>
+     <addaction name="action_Italic"/>
+     <addaction name="action_Strikethrough"/>
+     <addaction name="action_Link"/>
+    </widget>
+    <widget class="QMenu" name="menublock">
+     <property name="title">
+      <string>&amp;Block</string>
+     </property>
+     <addaction name="action_List"/>
+     <addaction name="action_NumList"/>
+     <addaction name="action_Checkbox"/>
+     <addaction name="action_Heading"/>
+    </widget>
+    <widget class="QMenu" name="menu_format">
+     <property name="title">
+      <string>&amp;format</string>
+     </property>
+     <addaction name="action_AlignLeft"/>
+     <addaction name="action_AlignCenter"/>
+     <addaction name="action_AlignRight"/>
+    </widget>
+    <widget class="QMenu" name="menu_Insert">
+     <property name="title">
+      <string>&amp;Insert</string>
+     </property>
+     <addaction name="action_TodayString_1"/>
+     <addaction name="action_TodayString_2"/>
+     <addaction name="action_TodayString_3"/>
+    </widget>
+    <widget class="QMenu" name="menu_Convert">
+     <property name="title">
+      <string>Convert(&amp;X)</string>
+     </property>
+     <addaction name="action_CSV_MarkdownTable"/>
+     <addaction name="action_MarkdownTable_CSV"/>
+    </widget>
+    <addaction name="action_Undo"/>
+    <addaction name="action_Redo"/>
+    <addaction name="separator"/>
+    <addaction name="action_Cut"/>
+    <addaction name="action_Copy"/>
+    <addaction name="action_Paste"/>
+    <addaction name="action_SelectAll"/>
+    <addaction name="separator"/>
+    <addaction name="menublock"/>
+    <addaction name="menuinline"/>
+    <addaction name="menu_format"/>
+    <addaction name="action_Indent"/>
+    <addaction name="action_UnIndent"/>
+    <addaction name="menu_Insert"/>
+    <addaction name="menu_Convert"/>
+   </widget>
+   <widget class="QMenu" name="menu_Help">
+    <property name="title">
+     <string>&amp;Other</string>
+    </property>
+    <widget class="QMenu" name="menu_Test">
+     <property name="title">
+      <string>&amp;Test</string>
+     </property>
+     <addaction name="action_TestCharFlags"/>
+     <addaction name="action_TestContextAt"/>
+     <addaction name="action_TestLineCrsp"/>
+     <addaction name="action_TestEtoPCurSync"/>
+     <addaction name="action_TestAll"/>
+     <addaction name="action_DumpCharFlags"/>
+     <addaction name="action_DumpBlockUserStates"/>
+    </widget>
+    <addaction name="action_Settings"/>
+    <addaction name="action_Help"/>
+    <addaction name="menu_Test"/>
+    <addaction name="action_AboutViMarkdown"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menu_Search">
+    <property name="title">
+     <string>&amp;Search</string>
+    </property>
+    <addaction name="action_Find"/>
+    <addaction name="action_ForwardAgain"/>
+    <addaction name="action_BackwardAgain"/>
+    <addaction name="action_FindWord"/>
+    <addaction name="action_ClearSearchHighlights"/>
+    <addaction name="action_Replace"/>
+   </widget>
+   <widget class="QMenu" name="menu_Tool">
+    <property name="title">
+     <string>&amp;Tool</string>
+    </property>
+    <addaction name="action_KeisenMode"/>
+    <addaction name="action_ThinKeisen"/>
+    <addaction name="action_ThickKeisen"/>
+    <addaction name="action_OpenPrev"/>
+    <addaction name="action_OpenNext"/>
+   </widget>
+   <addaction name="menu_File"/>
+   <addaction name="menu_Edit"/>
+   <addaction name="menu_Search"/>
+   <addaction name="menu_View"/>
+   <addaction name="menu_Tool"/>
+   <addaction name="menu_Help"/>
+  </widget>
+  <widget class="QToolBar" name="fileToolBar">
+   <attribute name="toolBarArea">
+    <enum>LeftToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="action_New"/>
+   <addaction name="action_NewTab"/>
+   <addaction name="action_Open"/>
+   <addaction name="action_Save"/>
+   <addaction name="action_SaveAs"/>
+   <addaction name="action_Close"/>
+   <addaction name="separator"/>
+   <addaction name="action_NaviBack"/>
+   <addaction name="action_NaviForward"/>
+   <addaction name="separator"/>
+   <addaction name="action_Settings"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="separator"/>
+   <addaction name="action_Undo"/>
+   <addaction name="action_Redo"/>
+   <addaction name="separator"/>
+   <addaction name="action_List"/>
+   <addaction name="action_NumList"/>
+   <addaction name="action_Checkbox"/>
+   <addaction name="action_Heading"/>
+   <addaction name="action_Bold"/>
+   <addaction name="action_Italic"/>
+   <addaction name="action_Strikethrough"/>
+   <addaction name="action_Link"/>
+   <addaction name="separator"/>
+   <addaction name="action_Indent"/>
+   <addaction name="action_UnIndent"/>
+   <addaction name="action_KeisenMode"/>
+   <addaction name="action_ThinKeisen"/>
+   <addaction name="action_ThickKeisen"/>
+   <addaction name="action_AlignLeft"/>
+   <addaction name="action_AlignCenter"/>
+   <addaction name="action_AlignRight"/>
+   <addaction name="separator"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QDockWidget" name="outlineBar">
+   <property name="windowTitle">
+    <string>OutlineBar</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QTreeWidget" name="treeWidget">
+       <property name="headerHidden">
+        <bool>true</bool>
+       </property>
+       <column>
+        <property name="text">
+         <string notr="true">1</string>
+        </property>
+       </column>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <action name="action_New">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/new_main_window_48.png</normaloff>:/MainWindow/images/new_main_window_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;NewWin</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="action_Close">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/close_48.png</normaloff>:/MainWindow/images/close_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Close</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
+   </property>
+  </action>
+  <action name="action_HTML">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;HTML</string>
+   </property>
+  </action>
+  <action name="action_Source">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Source</string>
+   </property>
+   <property name="toolTip">
+    <string>Source</string>
+   </property>
+  </action>
+  <action name="action_Open">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/file_open_48.png</normaloff>:/MainWindow/images/file_open_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Open</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="action_Save">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/save_48.png</normaloff>:/MainWindow/images/save_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="action_Bold">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/format_bold_48.png</normaloff>:/MainWindow/images/format_bold_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Bold</string>
+   </property>
+  </action>
+  <action name="action_Italic">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/format_italic_48.png</normaloff>:/MainWindow/images/format_italic_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Italic</string>
+   </property>
+  </action>
+  <action name="action_Undo">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/undo_48.png</normaloff>:/MainWindow/images/undo_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Undo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="action_Redo">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../../Users/ntsud/.designer/backup/images/redo_48.png</normaloff>
+     <normalon>:/MainWindow/images/redo_48.png</normalon>../../../../../Users/ntsud/.designer/backup/images/redo_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Redo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="action_List">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../../Users/ntsud/.designer/backup/images/format_list_bulleted_48.png</normaloff>
+     <normalon>:/MainWindow/images/format_list_bulleted_48.png</normalon>../../../../../Users/ntsud/.designer/backup/images/format_list_bulleted_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;List</string>
+   </property>
+  </action>
+  <action name="action_NumList">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../../Users/ntsud/.designer/backup/images/format_list_numbered_48.png</normaloff>
+     <normalon>:/MainWindow/images/format_list_numbered_48.png</normalon>../../../../../Users/ntsud/.designer/backup/images/format_list_numbered_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;NumList</string>
+   </property>
+  </action>
+  <action name="action_Indent">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../../Users/ntsud/.designer/backup/images/format_indent_increase_48.png</normaloff>
+     <normalon>:/MainWindow/images/format_indent_increase_48.png</normalon>../../../../../Users/ntsud/.designer/backup/images/format_indent_increase_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>Inden&amp;t</string>
+   </property>
+   <property name="shortcut">
+    <string>Tab</string>
+   </property>
+  </action>
+  <action name="action_UnIndent">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../../Users/ntsud/.designer/backup/images/format_indent_decrease_48.png</normaloff>
+     <normalon>:/MainWindow/images/format_indent_decrease_48.png</normalon>../../../../../Users/ntsud/.designer/backup/images/format_indent_decrease_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>u&amp;nIndent</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+Tab</string>
+   </property>
+  </action>
+  <action name="action_OutlineBar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;OutlineBar</string>
+   </property>
+  </action>
+  <action name="actiondummy">
+   <property name="text">
+    <string>dummy</string>
+   </property>
+  </action>
+  <action name="action_AboutViMarkdown">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../../Users/ntsud/.designer/backup/images/info_48.png</normaloff>
+     <normalon>:/MainWindow/images/info_48.png</normalon>../../../../../Users/ntsud/.designer/backup/images/info_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;About viMarkdown</string>
+   </property>
+  </action>
+  <action name="action_Strikethrough">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../../Users/ntsud/.designer/backup/images/strikethrough_s_48.png</normaloff>
+     <normalon>:/MainWindow/images/strikethrough_s_48.png</normalon>../../../../../Users/ntsud/.designer/backup/images/strikethrough_s_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Strikethrough</string>
+   </property>
+   <property name="toolTip">
+    <string>Strikethrough</string>
+   </property>
+  </action>
+  <action name="action_Checkbox">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/format_checkbox_48.png</normaloff>:/MainWindow/images/format_checkbox_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Checkbox</string>
+   </property>
+  </action>
+  <action name="action_Cut">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/content_cut_48.png</normaloff>:/MainWindow/images/content_cut_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>Cu&amp;t</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="action_Copy">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/content_copy_48.png</normaloff>:/MainWindow/images/content_copy_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Copy</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="action_Paste">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/content_paste_48.png</normaloff>:/MainWindow/images/content_paste_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Paste</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="action_FocusOutline">
+   <property name="text">
+    <string>Focus Outline (&amp;Q)</string>
+   </property>
+   <property name="toolTip">
+    <string>Focus to OutlineBar</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="action_Find">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/search_48.png</normaloff>:/MainWindow/images/search_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Find</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="action_ForwardAgain">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/search_forward_48.png</normaloff>:/MainWindow/images/search_forward_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>ForwardAgain</string>
+   </property>
+   <property name="toolTip">
+    <string>Forward Search Again</string>
+   </property>
+   <property name="shortcut">
+    <string>F3</string>
+   </property>
+  </action>
+  <action name="action_BackwardAgain">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/search_backard_48.png</normaloff>:/MainWindow/images/search_backard_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>BackwardAgain</string>
+   </property>
+   <property name="toolTip">
+    <string>Backward Search Again</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F3</string>
+   </property>
+  </action>
+  <action name="action_FindWord">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/search_word_48.png</normaloff>:/MainWindow/images/search_word_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>Find&amp;Word</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F3</string>
+   </property>
+  </action>
+  <action name="action_SaveAs">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/save_as_48.png</normaloff>:/MainWindow/images/save_as_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save&amp;As...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="action_AddThisFavorite">
+   <property name="text">
+    <string>AddThis(&amp;@)</string>
+   </property>
+   <property name="toolTip">
+    <string>Add This to Favorite Files</string>
+   </property>
+  </action>
+  <action name="action_Exit">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/exit_to_app_48.png</normaloff>:/MainWindow/images/exit_to_app_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>e&amp;xit</string>
+   </property>
+  </action>
+  <action name="action_AsHTML">
+   <property name="text">
+    <string>As &amp;HTML...</string>
+   </property>
+  </action>
+  <action name="action_AsPDF">
+   <property name="text">
+    <string>As &amp;PDF</string>
+   </property>
+  </action>
+  <action name="action_SelectAll">
+   <property name="text">
+    <string>Select&amp;All</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="action_Print">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/print_48.png</normaloff>:/MainWindow/images/print_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Print</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="action_KeisenMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/table_edit_48.png</normaloff>
+     <normalon>:/MainWindow/images/table_edit_48.png</normalon>:/MainWindow/images/table_edit_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;KeisenMode</string>
+   </property>
+   <property name="toolTip">
+    <string>Keisen Mode</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F5</string>
+   </property>
+  </action>
+  <action name="action_Heading">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/format_heading_48.png</normaloff>:/MainWindow/images/format_heading_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Heading</string>
+   </property>
+  </action>
+  <action name="action_AlignLeft">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/format_align_left_48.png</normaloff>:/MainWindow/images/format_align_left_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>Align&amp;Left</string>
+   </property>
+   <property name="toolTip">
+    <string>AlignLeft</string>
+   </property>
+  </action>
+  <action name="action_AlignCenter">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/format_align_center_48.png</normaloff>:/MainWindow/images/format_align_center_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>Align&amp;Center</string>
+   </property>
+   <property name="toolTip">
+    <string>AlignCenter</string>
+   </property>
+  </action>
+  <action name="action_AlignRight">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/format_align_right_48.png</normaloff>:/MainWindow/images/format_align_right_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>Align&amp;Right</string>
+   </property>
+   <property name="toolTip">
+    <string>AlignRight</string>
+   </property>
+  </action>
+  <action name="actionTickness">
+   <property name="text">
+    <string>Tickness</string>
+   </property>
+  </action>
+  <action name="action_OpenNext">
+   <property name="text">
+    <string>Open&amp;Next</string>
+   </property>
+   <property name="shortcut">
+    <string>F7</string>
+   </property>
+  </action>
+  <action name="action_ThinKeisen">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/thin_48.png</normaloff>:/MainWindow/images/thin_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;ThinKeisen</string>
+   </property>
+   <property name="toolTip">
+    <string>ThinKeisen</string>
+   </property>
+  </action>
+  <action name="action_ThickKeisen">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/thick_48.png</normaloff>:/MainWindow/images/thick_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>ThickKeisen(&amp;F)</string>
+   </property>
+   <property name="toolTip">
+    <string>ThickKeisen</string>
+   </property>
+  </action>
+  <action name="action_NewTab">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/new_tab_48.png</normaloff>:/MainWindow/images/new_tab_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>New&amp;Tab</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
+   </property>
+  </action>
+  <action name="action_TodayString_1">
+   <property name="text">
+    <string>&amp;1 Today'sString</string>
+   </property>
+   <property name="toolTip">
+    <string>Today's string</string>
+   </property>
+  </action>
+  <action name="action_OpenPrev">
+   <property name="text">
+    <string>Open&amp;Prev</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F7</string>
+   </property>
+  </action>
+  <action name="action_NextTab">
+   <property name="text">
+    <string>&amp;NextTab</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Tab</string>
+   </property>
+  </action>
+  <action name="action_PrevTab">
+   <property name="text">
+    <string>&amp;PrevTab</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Backtab</string>
+   </property>
+  </action>
+  <action name="action_TodayString_2">
+   <property name="text">
+    <string>&amp;2 Today'sString</string>
+   </property>
+  </action>
+  <action name="action_TodayString_3">
+   <property name="text">
+    <string>&amp;3 Today'sString</string>
+   </property>
+  </action>
+  <action name="action_Reload">
+   <property name="text">
+    <string>&amp;Reload</string>
+   </property>
+  </action>
+  <action name="action_CSV_MarkdownTable">
+   <property name="text">
+    <string>CSV -&gt; &amp;MarkdownTable</string>
+   </property>
+  </action>
+  <action name="action_MarkdownTable_CSV">
+   <property name="text">
+    <string>MarkdownTable -&gt; &amp;CSV</string>
+   </property>
+  </action>
+  <action name="action_Settings">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/settings_48.png</normaloff>:/MainWindow/images/settings_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Settings...</string>
+   </property>
+   <property name="shortcut">
+    <string>F8</string>
+   </property>
+  </action>
+  <action name="action_ToggleFocus">
+   <property name="text">
+    <string>&amp;ToggleFocus</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+\</string>
+   </property>
+  </action>
+  <action name="action_SwitchToAltFile">
+   <property name="text">
+    <string>Switch to &amp;Alt File</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+^</string>
+   </property>
+  </action>
+  <action name="action_NaviBack">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/arrow_back_48.png</normaloff>:/MainWindow/images/arrow_back_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Back</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+Left</string>
+   </property>
+  </action>
+  <action name="action_NaviForward">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/arrow_forward_48.png</normaloff>:/MainWindow/images/arrow_forward_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Forward</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+Right</string>
+   </property>
+  </action>
+  <action name="action_ClearSearchHighlights">
+   <property name="text">
+    <string>&amp;ClearSearchHighlights</string>
+   </property>
+   <property name="toolTip">
+    <string>ClearSearchHighlights</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+F3</string>
+   </property>
+  </action>
+  <action name="action_Replace">
+   <property name="text">
+    <string>&amp;Replace...</string>
+   </property>
+   <property name="shortcut">
+    <string>F4</string>
+   </property>
+  </action>
+  <action name="action_Help">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/help_48.png</normaloff>:/MainWindow/images/help_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Help</string>
+   </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
+  </action>
+  <action name="action_TagJump">
+   <property name="text">
+    <string>&amp;TagJump</string>
+   </property>
+   <property name="shortcut">
+    <string>F9</string>
+   </property>
+  </action>
+  <action name="action_Link">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/link_48.png</normaloff>:/MainWindow/images/link_48.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Link</string>
+   </property>
+  </action>
+  <action name="action_TestCharFlags">
+   <property name="text">
+    <string>&amp;CharFlags</string>
+   </property>
+   <property name="toolTip">
+    <string>Test CharFlags</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+1</string>
+   </property>
+  </action>
+  <action name="action_TestAll">
+   <property name="text">
+    <string>&amp;All</string>
+   </property>
+   <property name="toolTip">
+    <string>Test All</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+T</string>
+   </property>
+  </action>
+  <action name="action_TestLineCrsp">
+   <property name="text">
+    <string>&amp;LineCoresponding</string>
+   </property>
+   <property name="toolTip">
+    <string>Test LineCoresponding</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+3</string>
+   </property>
+  </action>
+  <action name="action_TestEtoPCurSync">
+   <property name="text">
+    <string>&amp;EtoP CurSync</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+4</string>
+   </property>
+  </action>
+  <action name="action_TestContextAt">
+   <property name="text">
+    <string>Conte&amp;xtAt</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+2</string>
+   </property>
+  </action>
+  <action name="action_DumpBlockUserStates">
+   <property name="text">
+    <string>Dump&amp;BlockUserStates</string>
+   </property>
+   <property name="toolTip">
+    <string>DumpBlockUserStates</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+B</string>
+   </property>
+  </action>
+  <action name="action_DumpCharFlags">
+   <property name="text">
+    <string>DumpChar&amp;Flags</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+F</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="MainWindow.qrc"/>
+ </resources>
+ <connections/>
+</ui>
