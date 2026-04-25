@@ -3,7 +3,8 @@
 #include <QTextCursor>
 #include <QDragEnterEvent>
 #include <QScrollBar>
-#include "C:\Qt\6.10.0\msvc2022_64\include\QtWidgets\qtextedit.h"
+#include <QTextEdit>
+//#include "C:\Qt\6.10.0\msvc2022_64\include\QtWidgets\qtextedit.h"
 
 class MainWindow;
 class DocWidget;

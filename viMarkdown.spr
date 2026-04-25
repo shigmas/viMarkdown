@@ -1345,7 +1345,7 @@ SPR# 状 P Open Close ver     Type  概要
 1298 ◎ C 04/24 04/24 02003│問題│"viMarkdown_ja_JP.ts" が無い
 1299 ◎ C 04/25 04/25 02003│ToDo│なんかいろいろうまくいかないので、viMarkdown/viMarkdownCMake/ に QtCreator で新規プロジェクトを作成
 1300 ◎ C 04/25 04/25 02003│ToDo│なんかいろいろ事情があるみたいなので、viMarkdown/viMarkdownCMake/src/ 下にソースをコピー（２重化してしまうがやむなし。0.3 以降はこっちをマスターとする）
-1301 ● C 04/25            │ToDo│
+1301 ◎ C 04/25 04/25 02003│問題│#include "絶対パス.h" と記述している箇所がある
 1302 ● C 04/25            │ToDo│
 1303 ● C 04/25            │ToDo│
 1304 ● C 04/25            │ToDo│
