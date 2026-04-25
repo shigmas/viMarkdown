@@ -45,22 +45,27 @@
 ---
 ## ■ 現状
 ### 2025年末から忘年会のノリで開発開始
-- [vi の名を冠するマークダウンエディタを 忘年会のノリで開発開始してしまった話](https://qiita.com/vivisuke2025/items/448a87b20ba7dd6e2132) Qiita
-- [vi の名を冠するマークダウンエディタを 忘年会のノリで開発開始してしまった話](https://zenn.dev/vivisuke/articles/5fe9e5e0c25aae) Zenn
+- Qiita: [vi の名を冠するマークダウンエディタを 忘年会のノリで開発開始してしまった話](https://qiita.com/vivisuke2025/items/448a87b20ba7dd6e2132) 
+- Zenn: [vi の名を冠するマークダウンエディタを 忘年会のノリで開発開始してしまった話](https://zenn.dev/vivisuke/articles/5fe9e5e0c25aae) 
 ### Githubにてソース公開
 - https://github.com/vivisuke/viMarkdown/
 ### 窓の杜アップデートに、（土日を除き）全バージョンが掲載
 - https://forest.watch.impress.co.jp/category/other/topic/update/
-- undone: スクショ
+
+![画像](image_20260425_120913.png)
 ### ４月末に ver 0.2 安定版リリース
 - https://github.com/vivisuke/viMarkdown/releases
 ### バイナリ累計ダウンロード数：約600
-- undone: スクショ
+- https://github-release-stats.alpha49.com/
+
+![画像](image_20260425_120551.png)
 
 ---
 ## ■ 基本機能
 ### エディタ・プレビュー方式
 - undone: 画面スクショ？
+
+![画像](image_20260425_121348.png)
 ### コモンマークダウン・GFM 準拠
 ### 軽量・高速
 - Qt6 C++ 採用
