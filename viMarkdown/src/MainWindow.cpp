@@ -1,8 +1,4 @@
-﻿#ifdef	#ifdef Q_OS_WIN
-#include <windows.h>
-#endif
-
-#include <vector>
+﻿#include <vector>
 #include <qsplitter.h>
 #include <qplaintextedit>
 #include <qtextedit>
@@ -35,6 +31,12 @@
 #include "MarkdownPreview.h"
 #include "SettingsDialog.h"
 #include "ReplaceDialog.h"
+
+#ifdef Q_OS_WIN
+//#ifdef _WIN32
+#include <windows.h>
+#endif
+
 
 using namespace std;
 
@@ -1139,11 +1141,14 @@ void MainWindow::onAction_Help() {
 	qDebug() << "appDir = " << QCoreApplication::applicationDirPath();
 	QDir dir = QCoreApplication::applicationDirPath();		//	viMarkdown/viMarkdown/x64/Debug or Release
 //#ifdef	_DEBUG
+#ifdef Q_OS_WIN
+//#ifdef _WIN32
 	if( IsDebuggerPresent() ) {
 		dir.cdUp();			//	viMarkdown/viMarkdown/x64
 		dir.cdUp();			//	viMarkdown/viMarkdown
 		dir.cdUp();			//	viMarkdown
 	}
+#endif
 //#endif
 	dir.cd("docs/ja");
 	qDebug() << "helpdir = " << dir.path();

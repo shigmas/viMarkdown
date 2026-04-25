@@ -1347,7 +1347,7 @@ SPR# 状 P Open Close ver     Type  概要
 1300 ◎ C 04/25 04/25 02003│ToDo│なんかいろいろ事情があるみたいなので、viMarkdown/viMarkdownCMake/src/ 下にソースをコピー（２重化してしまうがやむなし。0.3 以降はこっちをマスターとする）
 1301 ◎ C 04/25 04/25 02003│問題│#include "絶対パス.h" と記述している箇所がある
 1302 ◎ C 04/25 04/26 02003│ToDo│#include "windows.h" は #ifdef Q_OS_WIN で囲っておく
-1303 ● C 04/25            │ToDo│
+1303 ◎ C 04/25 04/26 02003│問題│IsDebuggerPresent() コールでコンパイルエラーになる
 1304 ● C 04/25            │ToDo│
 1305 ● C 04/25            │ToDo│
 1306 ● C 04/25            │ToDo│

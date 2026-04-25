@@ -1,4 +1,4 @@
-﻿#ifdef	#ifdef Q_OS_WIN
+﻿#ifdef Q_OS_WIN
 #include <windows.h>
 #endif
 
