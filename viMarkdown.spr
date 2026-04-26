@@ -1352,8 +1352,8 @@ SPR# 状 P Open Close ver     Type  概要
 									原因：空行 <!-- ... --> 空行 が、連続空行と認識されていない
 1305 ◎ C 04/26 04/26 02003│ToDo│QtCreator でビルドすると下記エラーが出る
 									MarkdownPreview.cpp.obj : error LNK2019: 未解決の外部シンボル "bool __cdecl isUnderlineHeading(class QString const &)"
-1306 ● C 04/26            │ToDo│
-1307 ● C 04/26            │ToDo│
+1306 ◎ C 04/26 04/26 02003│ToDo│Lingust 初期化コードを main.cpp にマージ
+1307 ◎ C 04/26 04/26 02003│ToDo│viMarkdown/viMarkdownCMake/ 以下は削除
 1308 ● C 04/26            │ToDo│
 1309 ● C 04/26            │ToDo│
 1310 ● C 04/26            │ToDo│

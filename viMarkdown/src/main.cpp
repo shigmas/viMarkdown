@@ -1,6 +1,8 @@
 #include <QDir>
 #include "MainWindow.h"
 #include <QtWidgets/QApplication>
+#include <QLocale>
+#include <QTranslator>
 
 int main(int argc, char *argv[])
 {
@@ -10,6 +12,17 @@ int main(int argc, char *argv[])
     app.setWindowIcon(QIcon(":/MainWindow/images/viMarkdown.png"));
     QCoreApplication::setOrganizationName("VisualSoftLab");
     QCoreApplication::setApplicationName("viMarkdown");
+
+    QTranslator translator;
+    const QStringList uiLanguages = QLocale::system().uiLanguages();
+    for (const QString &locale : uiLanguages) {
+        const QString baseName = "viMarkdown_" + QLocale(locale).name();
+        if (translator.load(":/i18n/" + baseName)) {
+            app.installTranslator(&translator);
+            break;
+        }
+    }
+    
     MainWindow window;
     if (app.arguments().count() > 1) {
         QString filePath = app.arguments().at(1);
