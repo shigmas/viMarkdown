@@ -96,7 +96,6 @@
     <ClCompile Include="DocWidget.cpp" />
     <ClCompile Include="MarkdownPreview.cpp" />
     <ClCompile Include="MarkdownEditor.cpp" />
-    <ClCompile Include="MarkdownToHtmlConvertor.cpp" />
     <ClCompile Include="ReplaceDialog.cpp" />
     <ClCompile Include="SettingsDialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />

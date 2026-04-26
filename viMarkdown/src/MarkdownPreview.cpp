@@ -162,7 +162,7 @@ void MarkdownPreview::onContentsChanged(int position, int charsRemoved, int char
 	((MainWindow*)m_mainWindow)->syncEditorToPreviewCursor();	//	暫定的、undone: シグナルスロットに変更
 }
 
-bool isUnderlineHeading(const QString& txt);
+//bool isUnderlineHeading(const QString& txt);
 #if 1
 #else
 bool MarkdownPreview::isTableLine(const QString& lnStr) {

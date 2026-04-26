@@ -796,6 +796,16 @@ int indexOf(bool &inComment, const QString& buf, int ix, QChar ch, bool isNextBl
 	if( !inComment && !isNextBlankLine && ch == u' ' ) return ix;
 	return -1;
 }
+bool isPrevEmptyBlock(QTextBlock block) {
+	QString txt;
+	do {
+		if( !block.previous().isValid() ) return false;
+		block = block.previous();
+		txt = block.text();
+		if( !txt.isEmpty() ) return false;
+	} while( txt.startsWith("<!--") && txt.endsWith("-->") );		//	全体コメント行はスキップ
+	return true;
+}
 int MarkdownEditor::findPosition(const PosContext &context) {
 	qDebug() << "MarkdownEditor::findPosition():";
 	qDebug() << ".ancharChar = " << context.m_anchorChar << ", nth = " << context.m_nth << ", offset = " << context.m_offset;
@@ -875,7 +885,8 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 				}
 			}
 			if( !block.text().startsWith("```") &&
-				!(block.text().isEmpty() && block.previous().isValid() && block.previous().text().isEmpty()) )	//	連続空行ではない
+				!(block.text().isEmpty() && isPrevEmptyBlock(block)) )
+				//!(block.text().isEmpty() && block.previous().isValid() && block.previous().text().isEmpty()) )	//	連続空行ではない
 			{
 				if( --nth == 0 ) {
 					while (ix < charFlags.size() && charFlags[ix] > PCF_IMAGE_BEGIN && block.text()[ix] != u',') {
@@ -896,7 +907,8 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 				}
 			} else if( block.userState() != US_KEISEN_BLOCK &&
 				!block.text().startsWith("```") &&
-				!(block.text().isEmpty() && block.previous().isValid() && block.previous().text().isEmpty()) )	//	連続空行ではない
+				!(block.text().isEmpty() && isPrevEmptyBlock(block)) )
+				//!(block.text().isEmpty() && block.previous().isValid() && block.previous().text().isEmpty()) )	//	連続空行ではない
 			{
 				while( block.userState() == US_KEISEN_BLOCK /*&& block.next().isValid() && !block.next().text().startsWith("```")*/) {
 					block = block.next();

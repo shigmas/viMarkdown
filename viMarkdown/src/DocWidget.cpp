@@ -216,6 +216,10 @@ bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign, Bloc
 	} else
 		return false;
 }
+bool isUnderlineHeading(const QString &txt) {
+	static QRegularExpression re(R"(^(=+|-+)$)");
+	return re.match(txt).hasMatch();
+}
 bool isEscapedChar(QChar ch) {
 	return ch.unicode() >= u' ' && ch.unicode() <= u'/' ||
 			ch.unicode() >= u'[' && ch.unicode() <= u']' ||		//	[ \ ]
