@@ -63,11 +63,13 @@ The project is currently developed and tested on **Windows 11** using **Visual S
 4. **Build Solution** (Ctrl+Shift+B).
 
 ### QtCreator / macOS / Linux
-**Call for Contributors:**
-Currently, build verification using Linux, macOS, or QtCreator (via `CMakeLists.txt`) has **not been performed**.  
-When using these environments, you may need to manually generate the CMakeLists.txt files.  
-I highly appreciate your contributions (help and pull requests) regarding CMake support!
+As of the end of April 2025, the project successfully builds on Windows 11 using Qt Creator and CMake. However, it has not yet been ported to macOS or Linux. Please expect numerous build errors if you attempt to build it on those platforms.
 
+**Build Instructions:**
+1. Clone the repository.
+2. Open `CMakeLists.txt` as a project in QtCreator.
+3. Configure the project settings as needed.
+4. **Build the project** (Ctrl+B).
 <!--
 ![Alt](https://repobeats.axiom.co/api/embed/ded0b1e170a452dde43e18e212ebe0a4fe41be1d.svg "Repobeats analytics image")
 -->
