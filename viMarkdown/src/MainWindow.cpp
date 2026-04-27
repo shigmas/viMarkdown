@@ -1961,7 +1961,7 @@ void MainWindow::onOutlineBarVisibilityChanged(bool v) {
 	ui->action_OutlineBar->setChecked(v);
 }
 int MainWindow::treeItemToTabIndex(QTreeWidgetItem *current) {
-	if( current == nullptr ) -1;
+	if( current == nullptr ) return -1;
 	auto top = current;
 	while( top->parent() != nullptr ) top = top->parent();		//	親のトップレベルアイテムまで移動
 	QString fullPath = top->data(0, Qt::UserRole).toString();

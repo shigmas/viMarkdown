@@ -1,5 +1,9 @@
 ﻿cmake_minimum_required(VERSION 3.16)
 
+if(APPLE)
+  set(CMAKE_PREFIX_PATH "/Users/vivisuke/Qt/6.10.2/macos")
+endif()
+
 add_compile_definitions(BUILD_WITH_CMAKE)
 
 project(viMarkdown VERSION 0.1 LANGUAGES CXX)

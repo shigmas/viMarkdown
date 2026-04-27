@@ -2,7 +2,7 @@
 #include <QStringConverter>
 #include <QWidget.h>
 //#include "C:\Qt\6.10.0\msvc2022_64\include\QtWidgets\qwidget.h"
-#include "markdowntohtmlconvertor.h"
+//#include "markdowntohtmlconvertor.h"
 
 #define		CODE_IMAGE		0xfffc		//	プレビュー：画像アイコン
 #define		LINE_SEPARATOR	0x2028		//	リスト文字列内改行コード

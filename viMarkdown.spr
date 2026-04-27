@@ -1355,5 +1355,16 @@ SPR# 状 P Open Close ver     Type  概要
 1306 ◎ C 04/26 04/26 02003│ToDo│Lingust 初期化コードを main.cpp にマージ
 1307 ◎ C 04/26 04/26 02003│ToDo│viMarkdown/viMarkdownCMake/ 以下は削除
 1308 ◎ C 04/27 04/27 02003│ToDo│Qt Creator の設定ファイル 等を .gitignore に登録し、リポジトリにプッシュしないようにしないとだめ
-1309 ● C 04/27            │ToDo│
-1310 ● C 04/27            │ToDo│
+1309 ● C 04/28            │ToDo│MacOS: QtCreator で CMakeLists.txt を開くと、src/ 以下が認識されない
+									対処：set(CMAKE_PREFIX_PATH "/Users/vivisuke/Qt/6.10.2/macos") 追加
+1310 ◎ C 04/28 04/28 02003│問題│"DocWidget.h": #include "markdowntohtmlconvertor.h" が残っている
+1311 ◎ C 04/28 04/28 02003│ToDo│if( current == nullptr ) return -1; というコードが何故か存在している
+1312 ● C 04/28            │ToDo│
+1313 ● C 04/28            │ToDo│
+1314 ● C 04/28            │ToDo│
+1315 ● C 04/28            │ToDo│
+1316 ● C 04/28            │ToDo│
+1317 ● C 04/28            │ToDo│
+1318 ● C 04/28            │ToDo│
+1319 ● C 04/28            │ToDo│
+1320 ● C 04/28            │ToDo│
