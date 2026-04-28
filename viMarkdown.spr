@@ -1326,7 +1326,7 @@ SPR# 状 P Open Close ver     Type  概要
 1290 ◎ C 04/18 04/19 01225│問題│エディタ：CSV セル文字列が空のとき、EtoP カーソル同期が不正（ひとつ前のセル末尾にカーソルが設定されてしまう）
 									原因：セルセパレータの数が offset に反映されていない
 1290 ◎ C 04/20 04/20 01225│ToDo│未保存文書で画像ペーストした場合、エラーメッセージが何も表示されない
-1290 ● D 04/21            │問題│水平線（---）を入力すると、余分な空行が生成されてしまう
+1290 ● D 04/21            │問題│水平線（---）を入力すると、直前に余分な空行が生成されてしまう（Qt6 の仕様？）
 1290 ◎ C 04/21 04/21 02001│ToDo│version を 0.2.001 rc（RC1）に
 1290 ◎ C 04/21 04/21 02001│ToDo│README{_ja}.md：「←いまここ」を rc に、日付明記
 1290 ◎ C 04/21 04/21 02002│ToDo│ソース格納ディレクトリ名：viMarkdown → src にリネーム、.slnx もそれに合わせて修正
@@ -1362,9 +1362,9 @@ SPR# 状 P Open Close ver     Type  概要
 1312 ◎ C 04/28 04/28 02003│問題│"DocWidget.h": MarkdownToHtmlConvertor	m_htmlComvertor; は削除しておくべき
 1313 ◎ C 04/28 04/28 02003│ToDo│VS tools 版：バージョン文字列に "(VS tools ver)" 付加
 1314 ◎ C 04/28 04/28 02003│ToDo│README{_ja}.md: QtCreator(CMake使用、Windows/MacOs）によるビルド方法を記述
-1315 ● C 04/28            │ToDo│
-1316 ● C 04/28            │ToDo│
-1317 ● C 04/28            │ToDo│
-1318 ● C 04/28            │ToDo│
-1319 ● C 04/28            │ToDo│
-1320 ● C 04/28            │ToDo│
+1315 ◎ C 04/29 04/29 02004│問題│ホイールマウスが接続していないノートPC（特にMacBook）では、Ctrl + ホイール操作が難しい → Ctrl +/-（macos: Cmd +/-）をこっそり実装しておいた方がよい
+1316 ◎ C 04/29 04/29 02004│問題│MainWindow::onChangePreviewFontSize(int delta) の中身が未実装
+1317 ● C 04/29            │ToDo│
+1318 ● C 04/29            │ToDo│
+1319 ● C 04/29            │ToDo│
+1320 ● C 04/29            │ToDo│

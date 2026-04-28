@@ -163,6 +163,8 @@ protected:
     void	do_replace_all(const QString, const QString);
     void	do_undo_replaceDlg();
     void	do_redo_replaceDlg();
+    void	zoomIn();
+    void	zoomOut();
 
     void	onOutlineBarVisibilityChanged(bool visible);
     void	onTreeCurrentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
@@ -192,6 +194,7 @@ protected:
     void	onChangeEditorFontSize(int);
     void	onChangePreviewFontSize(int);
     void	updateEditorFontSize(int);
+    void	updatePreviewFontSize(int);
     void	onSettingsChanged();
     void	onCutTriggered();
     void	onUndoTriggered();

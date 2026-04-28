@@ -23,6 +23,7 @@
 #include <QLineEdit>
 #include <QToolButton>
 #include <QTextTable>
+#include <QShortcut>
 #include "ver.h"
 #include "MainWindow.h"
 #include "ui_mainwindow.h"
@@ -80,6 +81,18 @@ MainWindow::MainWindow(QWidget *parent)
 	setAcceptDrops(true);		//	ファイルドロップ可
 	setup_tabMenu();
 	setup_connections();
+	// 拡大 (自動的に Windows: Ctrl++, Mac: Cmd++)
+	QShortcut *shortcutZoomIn = new QShortcut(QKeySequence::ZoomIn, this);
+	connect(shortcutZoomIn, &QShortcut::activated, this, [=](){
+	    // ここに拡大処理（または関数の呼び出し）
+	    zoomIn(); 
+	});
+	// 縮小 (自動的に Windows: Ctrl+-, Mac: Cmd+-)
+	QShortcut *shortcutZoomOut = new QShortcut(QKeySequence::ZoomOut, this);
+	connect(shortcutZoomOut, &QShortcut::activated, this, [=](){
+	    // ここに縮小処理
+	    zoomOut();
+	});
 	QSettings settings;
 	//m_editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE).toInt();
 	restore_win();
@@ -860,8 +873,23 @@ void MainWindow::onPreviewCurPosChanged() {		//	MarkdownPreview でカーソル�
 	docWidget->m_editor->setCursorAtNthPat(cursor.blockNumber(), pat, nth, tail);
 	m_processing = false;
 }
+void MainWindow::zoomIn() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	if( docWidget->m_editor->hasFocus() )
+		onChangeEditorFontSize(1);
+	else
+		onChangePreviewFontSize(1);
+}
+void MainWindow::zoomOut() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	if( docWidget->m_editor->hasFocus() )
+		onChangeEditorFontSize(-1);
+	else
+		onChangePreviewFontSize(-1);
+}
 void MainWindow::onChangeEditorFontSize(int delta) {
-	//int sz = g.m_editorFontSize
 	if( delta > 0 ) {
 		g.m_editorFontSize = qMin(64, g.m_editorFontSize + 1);
 	} else {
@@ -873,6 +901,15 @@ void MainWindow::onChangeEditorFontSize(int delta) {
 	updateEditorFontSize(g.m_editorFontSize);
 }
 void MainWindow::onChangePreviewFontSize(int delta) {
+	if( delta > 0 ) {
+		g.m_previewFontSize = qMin(64, g.m_previewFontSize + 1);
+	} else {
+		g.m_previewFontSize = qMax(3, g.m_previewFontSize - 1);
+	}
+	statusBar()->showMessage(QString("preview font size = %1").arg(g.m_previewFontSize), 5000);
+	QSettings settings;
+	settings.setValue(KEY_PREVIEW_FONT_SIZE, g.m_previewFontSize);
+	updatePreviewFontSize(g.m_previewFontSize);
 }
 void MainWindow::updateEditorFontSize(int sz) {
 	g.m_editorFontSize = sz;
@@ -889,6 +926,19 @@ void MainWindow::updateEditorFontSize(int sz) {
 		docWidget->m_editor->rehighlight();				//	再ハイライト
 		docWidget->m_editor->highlightSearchText(m_srcText);				//	再ハイライト
 		docWidget->m_editor->viewport()->update();		//	再表示
+	}
+}
+void MainWindow::updatePreviewFontSize(int sz) {
+	g.m_previewFontSize = sz;
+	for(int i = 0; i < ui->tabWidget->count(); ++i) {
+		DocWidget *docWidget = (DocWidget*)ui->tabWidget->widget(i);
+		//docWidget->m_editor->setStyleSheet(QString("font-size: %1pt;  line-height: 120%;").arg(g.m_editorFontSize));
+		QFont font = docWidget->m_preview->font();
+		font.setPointSize(g.m_previewFontSize);
+		docWidget->m_preview->setFont(font);
+		//docWidget->m_preview->updateViewportMargines();
+		//docWidget->m_preview->updateInlineColors();
+		docWidget->m_preview->viewport()->update();		//	再表示
 	}
 }
 void MainWindow::onMarkdownPreviewLineClicked(/*int nth,*/ bool checked) {
