@@ -1361,7 +1361,7 @@ SPR# 状 P Open Close ver     Type  概要
 1311 ◎ C 04/28 04/28 02003│ToDo│if( current == nullptr ) return -1; というコードが何故か存在している
 1312 ● C 04/28            │問題│"DocWidget.h": MarkdownToHtmlConvertor	m_htmlComvertor; は削除しておくべき
 1313 ◎ C 04/28 04/28 02003│ToDo│VS tools 版：バージョン文字列に "(VS tools ver)" 付加
-1314 ● C 04/28            │ToDo│
+1314 ◎ C 04/28 04/28 02003│ToDo│README{_ja}.md: QtCreator(CMake使用、Windows/MacOs）によるビルド方法を記述
 1315 ● C 04/28            │ToDo│
 1316 ● C 04/28            │ToDo│
 1317 ● C 04/28            │ToDo│

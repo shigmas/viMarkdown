@@ -46,30 +46,27 @@ It is designed for developers and writers who love efficiency.
 
 \* This roadmap is current and subject to change without notice at the author's sole discretion.
 
-## How to build
-
-### Windows (Recommended)
-The project is currently developed and tested on **Windows 11** using **Visual Studio 2026** with **Qt VS Tools**.
+## Build Instructions
+### Visual Studio on Windows (Recommended)
+This project is primarily developed and tested on Windows 11 using Visual Studio 2026 and Qt VS Tools.
 
 **Prerequisites:**
-- **Visual Studio 2026** or later
-- **Qt VS Tools** extension
-- **Qt 6 SDK** (MSVC build)
+- Visual Studio 2022 or later
+- Qt VS Tools extension
+- Qt 6 SDK (MSVC build)
 
-**Build Instructions**:
-1. Clone the repository.
+**Build Steps for Visual Studio:**
+1. Clone this repository.
 2. Open `viMarkdown.slnx` in Visual Studio.
-3. If prompted, configure the Qt Version in the Qt VS Tools settings to match your installed Qt SDK.
-4. **Build Solution** (Ctrl+Shift+B).
+3. If necessary, configure the Qt VS Tools settings (Qt Versions) to match your installed Qt SDK.
+4. Build the solution (`Ctrl` + `Shift` + `B`).
 
-### QtCreator / macOS / Linux
-As of the end of April 2025, the project successfully builds on Windows 11 using Qt Creator and CMake. However, it has not yet been ported to macOS or Linux. Please expect numerous build errors if you attempt to build it on those platforms.
+### Qt Creator (CMake) on macOS / Windows / Linux
+Multi-platform builds using Qt Creator and CMake are also supported.
+*Note: As of April 2025, builds have been verified on Windows 11 and macOS. The Linux environment is currently untested, so build errors may occur.*
 
-**Build Instructions:**
-1. Clone the repository.
-2. Open `CMakeLists.txt` as a project in QtCreator.
-3. Configure the project settings as needed.
-4. **Build the project** (Ctrl+B).
-<!--
-![Alt](https://repobeats.axiom.co/api/embed/ded0b1e170a452dde43e18e212ebe0a4fe41be1d.svg "Repobeats analytics image")
--->
+**Build Steps for Qt Creator:**
+1. Clone this repository.
+2. Launch Qt Creator, select "Open Project", and choose `viMarkdown/CMakeLists.txt` from the repository.
+3. When the Configure Project screen appears, check the Qt Kit you want to use (e.g., `Qt 6.x.x for macOS`) and click "Configure Project".
+4. Build the project (Windows/Linux: `Ctrl` + `B`, Mac: `Cmd` + `B`).

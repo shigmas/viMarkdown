@@ -82,26 +82,27 @@ Electronベースのエディタとは一線を画す、圧倒的な軽量さと
 - ダウンロード：[Release](https://github.com/vivisuke/viMarkdown/releases)
 
 ## ビルド方法
-### Windows (推奨)
-本プロジェクトは、現在 **Windows 11** 環境にて **Visual Studio 2026** と **Qt VS Tools** を使用して開発およびテストされています。
+### Visual Studio on Windows (推奨)
+
+本プロジェクトは、主に Windows 11 環境にて Visual Studio 2026 と Qt VS Tools を使用して開発およびテストを行っています。
 
 **前提条件:**
-- **Visual Studio 2026** 以降
-- **Qt VS Tools** 拡張機能
-- **Qt 6 SDK** (MSVC ビルド版)
+- Visual Studio 2022 以降
+- Qt VS Tools 拡張機能
+- Qt 6 SDK (MSVC ビルド版)
 
-**ビルド手順:**
-1. リポジトリをクローンします。
+**Visual Studio でのビルド手順:**
+1. 本リポジトリをクローンします。
 2. Visual Studio で `viMarkdown.slnx` を開きます。
-3. 必要に応じて、Qt VS Tools の設定でインストール済みの Qt SDK とバージョンが一致するように構成してください。
-4. **ソリューションのビルド** (Ctrl+Shift+B) を実行します。
+3. 必要に応じて、Qt VS Tools の設定（Qt Versions）が、インストール済みの Qt SDK と一致するように設定してください。
+4. ソリューションのビルド（`Ctrl` + `Shift` + `B`）を実行します。
 
-### QtCreator / MacOS / Linux
-2025/04末時点で、Windows 11 環境にて QtCreator/CMake を用いたビルドに成功しました。
-が、MacOS / Linux でのビルドには未だ成功していません。多数のエラーが出ると予想されます。
+### QtCreator (CMake) on MacOS / Windows / Linux
+Qt Creator と CMake を使用したマルチプラットフォームでのビルドにも対応しています。
+※ 2025年4月現在、Windows 11 および MacOS 環境でのビルドを確認済みです。Linux 環境は未検証のため、ビルド時にエラーが発生する可能性があります。
 
-**ビルド手順:**
-1. リポジトリをクローンします。
-2. QtCreator で `CMakeLists.txt` をプロジェクトとして開きます。
-3. 必要に応じて、プロジェクト設定を行ってください。
-4. **プロジェクトをビルド** (Ctrl+B) を実行します。
+**Qt Creator でのビルド手順:**
+1. 本リポジトリをクローンします。
+2. Qt Creator を起動し、「プロジェクトを開く」からリポジトリ内の `viMarkdown/CMakeLists.txt` を選択します。
+3. プロジェクトの構成（Configure Project）画面が表示されたら、使用する Qt の Kit（例: `Qt 6.x.x for macOS` など）にチェックを入れて「Configure Project」をクリックします。
+4. プロジェクトをビルド（Windows/Linux: `Ctrl` + `B`、Mac: `Cmd` + `B`）します。
