@@ -1364,7 +1364,7 @@ SPR# 状 P Open Close ver     Type  概要
 1314 ◎ C 04/28 04/28 02003│ToDo│README{_ja}.md: QtCreator(CMake使用、Windows/MacOs）によるビルド方法を記述
 1315 ◎ C 04/29 04/29 02004│問題│ホイールマウスが接続していないノートPC（特にMacBook）では、Ctrl + ホイール操作が難しい → Ctrl +/-（macos: Cmd +/-）をこっそり実装しておいた方がよい
 1316 ◎ C 04/29 04/29 02004│問題│MainWindow::onChangePreviewFontSize(int delta) の中身が未実装
-1317 ● C 04/29            │ToDo│
-1318 ● C 04/29            │ToDo│
+1317 ● E 04/29            │問題│設定ダイアログ：エディタフォントサイズは参照・変更可能なのに、プレビューでそれが出来ないのはいかがなものか？
+1318 ◎ C 04/29 04/29 02004│問題│設定ダイアログ：cursor の綴りが間違っている
 1319 ● C 04/29            │ToDo│
 1320 ● C 04/29            │ToDo│
