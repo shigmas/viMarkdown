@@ -451,11 +451,11 @@ void MarkdownPreview::wheelEvent(QWheelEvent *event) {
 	qDebug() << "MarkdownPreview::wheelEvent()";
 	qDebug() << "e->angleDelta() = " << event->angleDelta();
 	if ((event->modifiers() & Qt::ControlModifier) != 0)  {
-		//emit changeFontSize(event->angleDelta().y());
-		if (event->angleDelta().y() > 0)
-            zoomIn();
-        else
-            zoomOut();
+		emit fontSizeChanged(event->angleDelta().y());
+		//if (event->angleDelta().y() > 0)
+        //    zoomIn();
+        //else
+        //    zoomOut();
 		event->accept();
 	} else
 		QTextEdit::wheelEvent(event);

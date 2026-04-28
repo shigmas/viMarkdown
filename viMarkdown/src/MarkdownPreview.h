@@ -73,7 +73,7 @@ signals:
     void	undo_triggered();
     void	redo_triggered();
     void	posContextChanged(const PosContext &context, const PosContext &acontext);
-    void	changeFontSize(int delta);
+    void	fontSizeChanged(int delta);
 
 protected:
     void	keyPressEvent(QKeyEvent *e) override;

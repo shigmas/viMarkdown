@@ -240,12 +240,15 @@ void MainWindow::onEncodingChanged(int ix) {
     docWidget->m_encoding = (QStringConverter::Encoding)(data / 2);
     docWidget->m_withBOM = (data&1) != 0;
 #if 1
-	QString mess = "UTF-8";
+	QString mess;
 	switch( docWidget->m_encoding ) {
 	case QStringConverter::Utf16:
 	case QStringConverter::Utf16BE:
 	case QStringConverter::Utf16LE:
 		mess = "UTF-16";
+		break;
+	default:
+		mess = "UTF-8";
 		break;
 	}
 	if( docWidget->m_withBOM )
@@ -717,7 +720,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(markdownPreview, &MarkdownPreview::cut_triggered, this, &MainWindow::onCutTriggered);
 	connect(markdownPreview, &MarkdownPreview::undo_triggered, this, &MainWindow::onUndoTriggered);
 	connect(markdownPreview, &MarkdownPreview::redo_triggered, this, &MainWindow::onRedoTriggered);
-	connect(markdownPreview, &MarkdownPreview::changeFontSize, this, &MainWindow::onChangePreviewFontSize);
+	connect(markdownPreview, &MarkdownPreview::fontSizeChanged, this, &MainWindow::onChangePreviewFontSize);
 	//connect(markdownPreview, &MarkdownPreview::cursorPositionChanged, this, &MainWindow::onPreviewCurPosChanged);
 	connect(markdownPreview, &MarkdownPreview::posContextChanged, this, &MainWindow::onPrvPosContextChanged);
 	splitter->addWidget(mdEditor);

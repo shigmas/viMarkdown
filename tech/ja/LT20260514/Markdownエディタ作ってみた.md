@@ -7,7 +7,7 @@
 #と思って作ったのが viMarkdown です
 -->
 
-# author: N.Tsuda (vivisuke)
+#  N.Tsuda (vivisuke)
 # 自宅研究員（首席）
 
 --- マークダウンエディタを作ってみたので、反応が知りたくて登壇してみた ---

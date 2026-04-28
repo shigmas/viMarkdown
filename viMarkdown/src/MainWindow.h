@@ -127,6 +127,8 @@ public:
     bool	isEdittingInPreview() const { return m_edittingInPreview; }
     bool	do_open(const QString& title, const QString& fullPath, const QString name = QString(), bool readOnly = false);
     void	syncEditorToPreviewCursor();
+    void	onChangeEditorFontSize(int);
+    void	onChangePreviewFontSize(int);
 
 protected:
     void	load_settings();
@@ -191,8 +193,6 @@ protected:
     void	onBS_pressed(bool);
     void	onDel_pressed(bool);
     //void	syncPreviewCursorWithEditor();
-    void	onChangeEditorFontSize(int);
-    void	onChangePreviewFontSize(int);
     void	updateEditorFontSize(int);
     void	updatePreviewFontSize(int);
     void	onSettingsChanged();

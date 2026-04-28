@@ -1366,5 +1366,15 @@ SPR# 状 P Open Close ver     Type  概要
 1316 ◎ C 04/29 04/29 02004│問題│MainWindow::onChangePreviewFontSize(int delta) の中身が未実装
 1317 ● E 04/29            │問題│設定ダイアログ：エディタフォントサイズは参照・変更可能なのに、プレビューでそれが出来ないのはいかがなものか？
 1318 ◎ C 04/29 04/29 02004│問題│設定ダイアログ：cursor の綴りが間違っている
-1319 ● C 04/29            │ToDo│
-1320 ● C 04/29            │ToDo│
+1319 ◎ C 04/29 04/29 02004│問題│MarkdownPreview::wheelEvent()：拡大縮小処理は MainWindow のそれをコールすべき
+1320 ◎ C 04/29 04/29 02004│問題│macos でビルドすると switch( docWidget->m_encoding ) 部分で警告が出る
+1321 ● C 04/29            │ToDo│
+1322 ● C 04/29            │ToDo│
+1323 ● C 04/29            │ToDo│
+1324 ● C 04/29            │ToDo│
+1325 ● C 04/29            │ToDo│
+1326 ● C 04/29            │ToDo│
+1327 ● C 04/29            │ToDo│
+1328 ● C 04/29            │ToDo│
+1329 ● C 04/29            │ToDo│
+1330 ● C 04/29            │ToDo│
