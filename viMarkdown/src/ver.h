@@ -9,10 +9,12 @@
 
 #pragma once
 
+#define		VER_STR_0		"ver 0.2.003 rc"
+
 #ifdef BUILD_WITH_CMAKE
-#define		VER_STR			QString("ver 0.2.002 rc (CMake ver)")
+#define		VER_STR			QString(VER_STR_0" (CMake ver)")
 #else
-#define		VER_STR			QString("ver 0.2.002 rc")
+#define		VER_STR			QString(VER_STR_0" (VS tools ver)")
 #endif
 
 
