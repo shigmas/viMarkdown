@@ -816,6 +816,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 	int ix = 0;
 	int offset = 0;
 	bool inComment = false;
+	bool isPrevLineEmpty = false;
 	while( block.isValid() ) {
 		if( isCommentOuted(getBlockData(block)) ) {
 			block = block.next();
@@ -863,6 +864,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 #endif
 		const auto charFlags = getCharFlags(block);
 		QString buf = block.text();
+		bool isLineEmpty = buf.isEmpty();
 		if( ch == QChar(CODE_IMAGE) ) {
 			for(ix = 0; ix < charFlags.size(); ++ix) {
 				if( charFlags[ix] == PCF_IMAGE_BEGIN ) {
@@ -872,6 +874,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			if( nth == 0 ) break;
 			block = block.next();
 			ix = 0;
+			isPrevLineEmpty = isLineEmpty;
 			continue;
 		}
 		//buf.remove(re);				//	/# /, /- / などを削除
@@ -885,7 +888,8 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 				}
 			}
 			if( !block.text().startsWith("```") &&
-				!(block.text().isEmpty() && isPrevEmptyBlock(block)) )
+				!(isLineEmpty && isPrevLineEmpty) )
+				//!(block.text().isEmpty() && isPrevEmptyBlock(block)) )
 				//!(block.text().isEmpty() && block.previous().isValid() && block.previous().text().isEmpty()) )	//	連続空行ではない
 			{
 				if( --nth == 0 ) {
@@ -907,7 +911,8 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 				}
 			} else if( block.userState() != US_KEISEN_BLOCK &&
 				!block.text().startsWith("```") &&
-				!(block.text().isEmpty() && isPrevEmptyBlock(block)) )
+				!(isLineEmpty && isPrevLineEmpty) )
+				//!(block.text().isEmpty() && isPrevEmptyBlock(block)) )
 				//!(block.text().isEmpty() && block.previous().isValid() && block.previous().text().isEmpty()) )	//	連続空行ではない
 			{
 				while( block.userState() == US_KEISEN_BLOCK /*&& block.next().isValid() && !block.next().text().startsWith("```")*/) {
@@ -932,6 +937,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			block = block.next();
 			ix = 0;
 		}
+		isPrevLineEmpty = isLineEmpty;
 	}
 	if( block.isValid() ) {
 		int pos = block.position() + ix + offset + context.m_offset;

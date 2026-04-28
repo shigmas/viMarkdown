@@ -1348,7 +1348,7 @@ SPR# 状 P Open Close ver     Type  概要
 1301 ◎ C 04/25 04/25 02003│問題│#include "絶対パス.h" と記述している箇所がある
 1302 ◎ C 04/26 04/26 02003│ToDo│#include "windows.h" は #ifdef Q_OS_WIN で囲っておく
 1303 ◎ C 04/26 04/26 02003│問題│IsDebuggerPresent() コールでコンパイルエラーになる
-1304 ● C 04/26            │問題│コメントアウトされた見出し行があると？、PtoE カーソル位置同期が動作不良になる
+1304 ◎ C 04/26 04/28 02003│問題│コメントアウトされた見出し行があると？、PtoE カーソル位置同期が動作不良になる
 									原因：空行 <!-- ... --> 空行 が、連続空行と認識されていない
 1305 ◎ C 04/26 04/26 02003│ToDo│QtCreator でビルドすると下記エラーが出る
 									MarkdownPreview.cpp.obj : error LNK2019: 未解決の外部シンボル "bool __cdecl isUnderlineHeading(class QString const &)"
