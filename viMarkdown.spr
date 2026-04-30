@@ -7,7 +7,7 @@ SPR# 状 P Open Close ver     Type  概要
 0004 ◎ C 04/13 04/30 03001│ToDo│"AutoText.cpp": #include <Windows.h> は不必要なので削除
 0005 ◎ C 04/13 04/30 03001│ToDo│Test > Run PTS（PreviewTestScript）追加
 0006 ◎ C 04/13 04/30 03001│問題│設定ダイアログ：プレビューフォントサイズを変更後、再起動すると元の値に戻っている？
-0007 ● C 04/13            │ToDo│
+0007 ◎ C 04/13 04/30 03001│問題│スクリプト実行結果が正しくない？
 0008 ● C 04/13            │ToDo│
 0009 ● C 04/13            │ToDo│
 0010 ● C 04/13            │ToDo│

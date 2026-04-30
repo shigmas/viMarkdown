@@ -771,6 +771,8 @@ void MainWindow::onAction_DumpBlockUserStates() {
 static QString g_script_1 = R"(
 	TYPE "hoge"
 	CRLF
+	TYPE "xyzzzz"
+	CRLF
 	UP
 )";
 void MainWindow::onAction_RunPTS() {
@@ -779,9 +781,11 @@ void MainWindow::onAction_RunPTS() {
 void MainWindow::run_previewTestScript(const QString &script) {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	QTextCursor cursor = docWidget->m_preview->textCursor();
 	QStringList lst = script.split('\n', Qt::SkipEmptyParts);
 	for (const QString& line : lst) {
+		QCoreApplication::processEvents();		//	溜まっているイベント処理
+		QTextCursor cursor = docWidget->m_preview->textCursor();
+		int pos = cursor.position();
         QString trimmed = line.trimmed();
         if (trimmed.isEmpty() || trimmed.startsWith("//") || trimmed.startsWith("#")) continue; // 空行やコメントをスキップ
 
@@ -796,16 +800,11 @@ void MainWindow::run_previewTestScript(const QString &script) {
         }
         if( cmd == "TYPE" ) {
         	if( !arg.isEmpty() ) cursor.insertText(arg);
-        	continue;
-        }
-        if( cmd == "CRLF" ) {
+        } else if( cmd == "CRLF" ) {
         	cursor.insertText("\n");
-        	continue;
-        }
-        if( cmd == "UP" ) {
+        } else if( cmd == "UP" ) {
         	cursor.movePosition(QTextCursor::Up);
-        	continue;
         }
+		docWidget->m_preview->setTextCursor(cursor);
 	}
-	docWidget->m_preview->setTextCursor(cursor);
 }
