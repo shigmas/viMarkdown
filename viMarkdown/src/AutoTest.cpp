@@ -779,6 +779,7 @@ void MainWindow::onAction_RunPTS() {
 void MainWindow::run_previewTestScript(const QString &script) {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
+	QTextCursor cursor = docWidget->m_preview->textCursor();
 	QStringList lst = script.split('\n', Qt::SkipEmptyParts);
 	for (const QString& line : lst) {
         QString trimmed = line.trimmed();
@@ -793,5 +794,18 @@ void MainWindow::run_previewTestScript(const QString &script) {
         if (arg.startsWith('"') && arg.endsWith('"')) {
             arg = arg.mid(1, arg.length() - 2);
         }
+        if( cmd == "TYPE" ) {
+        	if( !arg.isEmpty() ) cursor.insertText(arg);
+        	continue;
+        }
+        if( cmd == "CRLF" ) {
+        	cursor.insertText("\n");
+        	continue;
+        }
+        if( cmd == "UP" ) {
+        	cursor.movePosition(QTextCursor::Up);
+        	continue;
+        }
 	}
+	docWidget->m_preview->setTextCursor(cursor);
 }
