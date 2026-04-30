@@ -26,7 +26,7 @@
 #include <QShortcut>
 #include "ver.h"
 #include "MainWindow.h"
-#include "ui_mainwindow.h"
+//#include "ui_mainwindow.h"
 #include "DocWidget.h"
 #include "MarkdownEditor.h"
 #include "MarkdownPreview.h"
