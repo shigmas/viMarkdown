@@ -1223,6 +1223,7 @@ void MainWindow::onAction_Settings() {
 }
 void MainWindow::onSettingsChanged() {
 	updateEditorFontSize(g.m_editorFontSize);
+	updatePreviewFontSize(g.m_previewFontSize);
 }
 void MainWindow::onAction_Exit() {
 	this->close(); // メインウィンドウを閉じる

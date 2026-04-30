@@ -35,7 +35,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QSpinBox" name="fontSize">
+           <widget class="QSpinBox" name="editorFontSize">
             <property name="maximumSize">
              <size>
               <width>100</width>
@@ -185,7 +185,7 @@
           <string>Preview</string>
          </property>
          <layout class="QFormLayout" name="formLayout_2">
-          <item row="0" column="0">
+          <item row="1" column="0">
            <widget class="QLabel" name="label_3">
             <property name="text">
              <string>Table Header color:</string>
@@ -195,7 +195,7 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
+          <item row="1" column="1">
            <widget class="QPushButton" name="CSVHeaderPB">
             <property name="maximumSize">
              <size>
@@ -208,7 +208,7 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
+          <item row="2" column="0">
            <widget class="QLabel" name="label_4">
             <property name="text">
              <string>Table Zebra-1 color:</string>
@@ -218,7 +218,7 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
+          <item row="2" column="1">
            <widget class="QPushButton" name="CSVZebra1PB">
             <property name="maximumSize">
              <size>
@@ -231,7 +231,7 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
+          <item row="3" column="0">
            <widget class="QLabel" name="label_5">
             <property name="text">
              <string>Table Zebra-2 color:</string>
@@ -241,7 +241,7 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
+          <item row="3" column="1">
            <widget class="QPushButton" name="CSVZebra2PB">
             <property name="maximumSize">
              <size>
@@ -254,45 +254,62 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="0">
+          <item row="4" column="0">
            <widget class="QLabel" name="label_12">
             <property name="text">
              <string>Quote color:</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="1">
+          <item row="4" column="1">
            <widget class="QPushButton" name="quotePB">
             <property name="text">
              <string/>
             </property>
            </widget>
           </item>
-          <item row="4" column="0">
+          <item row="5" column="0">
            <widget class="QLabel" name="label_13">
             <property name="text">
              <string>Code block color:</string>
             </property>
            </widget>
           </item>
-          <item row="5" column="0">
+          <item row="6" column="0">
            <widget class="QLabel" name="label_14">
             <property name="text">
              <string>Keisen block color:</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="1">
+          <item row="5" column="1">
            <widget class="QPushButton" name="codeBlockPB">
             <property name="text">
              <string/>
             </property>
            </widget>
           </item>
-          <item row="5" column="1">
+          <item row="6" column="1">
            <widget class="QPushButton" name="keisenBlockPB">
             <property name="text">
              <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_16">
+            <property name="text">
+             <string>Font Size</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QSpinBox" name="previewFontSize">
+            <property name="minimum">
+             <number>3</number>
+            </property>
+            <property name="maximum">
+             <number>64</number>
             </property>
            </widget>
           </item>
@@ -421,7 +438,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
-  <tabstop>fontSize</tabstop>
+  <tabstop>editorFontSize</tabstop>
   <tabstop>headingsColorPB</tabstop>
   <tabstop>boldItalicColorPB</tabstop>
   <tabstop>boldColorPB</tabstop>

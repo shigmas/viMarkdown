@@ -18,7 +18,8 @@ public:
 protected:
 	void accept() override;
 
-	void onFontSizeChanged(int);
+	void onEditorFontSizeChanged(int);
+	void onPreviewFontSizeChanged(int);
 	void onHeadingColorButtonClicked();
 	void onActiveLineColorButtonClicked();
 	void onInactiveLineColorButtonClicked();

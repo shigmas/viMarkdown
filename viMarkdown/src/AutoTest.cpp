@@ -1,8 +1,4 @@
-﻿#ifdef Q_OS_WIN
-#include <windows.h>
-#endif
-
-#include <vector>
+﻿#include <vector>
 #include <qsplitter.h>
 #include <qplaintextedit>
 #include <qtextedit>
