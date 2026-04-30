@@ -106,7 +106,7 @@ void MainWindow::load_settings() {
 	QSettings settings;
 	g.m_ignoreCase = settings.value(KEY_IGNORE_CASE, true).toBool();
 	g.m_editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE, 12).toInt();		//	デフォルト：12pt
-	g.m_previewFontSize = settings.value(KEY_EDITOR_FONT_SIZE, 12).toInt();		//	デフォルト：12pt
+	g.m_previewFontSize = settings.value(KEY_PREVIEW_FONT_SIZE, 12).toInt();		//	デフォルト：12pt
 	g.m_activeLnColor = settings.value(KEY_ACTIVA_LINE_COLOR, QColor("#ff0000")).value<QColor>();
 	g.m_inactiveLnColor = settings.value(KEY_INACTIVA_LINE_COLOR, QColor("#800000")).value<QColor>();
 	g.m_headingsColor = settings.value(KEY_HEADINGS_COLOR, QColor("#800000")).value<QColor>();		//	デフォルト：ダークレッド
@@ -457,6 +457,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_TestLineCrsp, &QAction::triggered, this, &MainWindow::onAction_TestLineCrsp);
 	connect(ui->action_TestEtoPCurSync, &QAction::triggered, this, &MainWindow::onAction_TestEtoPCurSync);
 	connect(ui->action_TestAll, &QAction::triggered, this, &MainWindow::onAction_TestAll);
+	connect(ui->action_RunPTS, &QAction::triggered, this, &MainWindow::onAction_RunPTS);
 	connect(ui->action_DumpCharFlags, &QAction::triggered, this, &MainWindow::onAction_DumpCharFlags);
 	connect(ui->action_DumpBlockUserStates, &QAction::triggered, this, &MainWindow::onAction_DumpBlockUserStates);
 	connect(ui->action_AddThisFavorite, &QAction::triggered, this, &MainWindow::onAction_AddThisFavorite);

@@ -177,6 +177,7 @@
      <addaction name="action_TestAll"/>
      <addaction name="action_DumpCharFlags"/>
      <addaction name="action_DumpBlockUserStates"/>
+     <addaction name="action_RunPTS"/>
     </widget>
     <addaction name="action_Settings"/>
     <addaction name="action_Help"/>
@@ -1001,6 +1002,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+F</string>
+   </property>
+  </action>
+  <action name="action_RunPTS">
+   <property name="text">
+    <string>&amp;Run PTS</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+P</string>
    </property>
   </action>
  </widget>

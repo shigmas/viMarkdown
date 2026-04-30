@@ -768,3 +768,30 @@ void MainWindow::onAction_DumpBlockUserStates() {
 	cursor.insertText(txt);
 	docWidget->m_editor->setTextCursor(cursor);
 }
+static QString g_script_1 = R"(
+	TYPE "hoge"
+	CRLF
+	UP
+)";
+void MainWindow::onAction_RunPTS() {
+	run_previewTestScript(g_script_1);
+}
+void MainWindow::run_previewTestScript(const QString &script) {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	QStringList lst = script.split('\n', Qt::SkipEmptyParts);
+	for (const QString& line : lst) {
+        QString trimmed = line.trimmed();
+        if (trimmed.isEmpty() || trimmed.startsWith("//") || trimmed.startsWith("#")) continue; // 空行やコメントをスキップ
+
+        // コマンドと引数に分割 (最初のスペースで分ける)
+        int ix = trimmed.indexOf(' ');
+        QString cmd = trimmed.left(ix).toUpper();
+        QString arg = (ix != -1) ? trimmed.mid(ix + 1) : "";
+
+        // 引数のダブルクォーテーションを外す (もしあれば)
+        if (arg.startsWith('"') && arg.endsWith('"')) {
+            arg = arg.mid(1, arg.length() - 2);
+        }
+	}
+}

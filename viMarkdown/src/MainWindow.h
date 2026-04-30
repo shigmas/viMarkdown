@@ -207,6 +207,7 @@ protected:
     void	test_contextAt(DocWidget*);
     void	do_test(int type);
     void	do_test(DocWidget*, int nth_path);
+    void	run_previewTestScript(const QString&);
 
     void	onAction_New();
     void	onAction_NewTab();
@@ -273,6 +274,7 @@ protected:
     void	onAction_TestAll();
     void	onAction_DumpCharFlags();
     void	onAction_DumpBlockUserStates();
+    void	onAction_RunPTS();
     void	onAction_Exit();
 
     void	onAboutToShow_RecentFiles();
