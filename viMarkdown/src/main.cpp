@@ -14,6 +14,11 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("viMarkdown");
 
     QTranslator translator;
+#if 1
+    if (translator.load(":/MainWindow/viMarkdown_ja.qm")) {
+        app.installTranslator(&translator);
+    }
+#else
     const QStringList uiLanguages = QLocale::system().uiLanguages();
     for (const QString &locale : uiLanguages) {
         const QString baseName = "viMarkdown_" + QLocale(locale).name();
@@ -22,6 +27,7 @@ int main(int argc, char *argv[])
             break;
         }
     }
+#endif
     
     MainWindow window;
     if (app.arguments().count() > 1) {

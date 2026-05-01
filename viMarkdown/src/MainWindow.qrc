@@ -50,5 +50,6 @@
         <file>images/help_48.png</file>
         <file>images/add_48.png</file>
         <file>images/link_48.png</file>
+        <file>viMarkdown_ja.qm</file>
     </qresource>
 </RCC>
