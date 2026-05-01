@@ -770,10 +770,10 @@ void MainWindow::onAction_DumpBlockUserStates() {
 }
 static QString g_script_1 = R"(
 	TYPE "hoge"
-	CRLF
-	TYPE "xyzzzz"
-	CRLF
-	UP
+	#CRLF
+	#TYPE "xyzzzz"
+	#CRLF
+	#UP
 )";
 void MainWindow::onAction_RunPTS() {
 	run_previewTestScript(g_script_1);
@@ -781,6 +781,7 @@ void MainWindow::onAction_RunPTS() {
 void MainWindow::run_previewTestScript(const QString &script) {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
+	docWidget->m_preview->setFocus();
 	QStringList lst = script.split('\n', Qt::SkipEmptyParts);
 	for (const QString& line : lst) {
 		QCoreApplication::processEvents();		//	溜まっているイベント処理
