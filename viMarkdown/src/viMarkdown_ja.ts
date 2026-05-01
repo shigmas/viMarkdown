@@ -51,7 +51,7 @@
         <location filename="src/x64/Debug/qt/uic/ui_MainWindow.h" line="868"/>
         <location filename="src/x64/Release/qt/uic/ui_MainWindow.h" line="860"/>
         <source>&amp;File</source>
-        <translation type="unfinished">ﾌｧｲﾙ(&amp;F)</translation>
+        <translation type="unfinished">ファイル(&amp;F)</translation>
     </message>
     <message>
         <location filename="src/MainWindow.ui" line="57"/>
@@ -149,7 +149,7 @@
         <location filename="src/x64/Debug/qt/uic/ui_MainWindow.h" line="882"/>
         <location filename="src/x64/Release/qt/uic/ui_MainWindow.h" line="874"/>
         <source>&amp;Tool</source>
-        <translation type="unfinished">ﾂｰﾙ(&amp;T)</translation>
+        <translation type="unfinished">ツール(&amp;T)</translation>
     </message>
     <message>
         <location filename="src/MainWindow.ui" line="268"/>
