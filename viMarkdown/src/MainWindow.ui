@@ -179,6 +179,7 @@
      <addaction name="action_DumpBlockUserStates"/>
      <addaction name="action_RunPTS"/>
     </widget>
+    <addaction name="action_Language"/>
     <addaction name="action_Settings"/>
     <addaction name="action_Help"/>
     <addaction name="menu_Test"/>
@@ -1010,6 +1011,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+P</string>
+   </property>
+  </action>
+  <action name="action_Language">
+   <property name="text">
+    <string>&amp;Language...</string>
    </property>
   </action>
  </widget>

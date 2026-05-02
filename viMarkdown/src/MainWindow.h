@@ -26,6 +26,13 @@ QT_END_NAMESPACE
 #define	KEY_QUOTE_COLOR				u"quoteColor"
 #define	KEY_CODE_BLOCK_COLOR		u"codeBlockColor"
 #define	KEY_KEISEN_BLOCK_COLOR		u"keisenBlockColor"
+#define	KEY_LANGUAGE				u"language"
+
+enum {
+    SystemDefault = 0,  // Localeに従う（OSの設定に依存）
+    English,            // 強制的に英語
+    Japanese            // 強制的に日本語
+};
 
 enum CharType {
 	Type_Other,
@@ -264,6 +271,7 @@ protected:
     void	onAction_TagJump();
     void	onAction_About();
     void	onAction_AddThisFavorite();
+    void	onAction_Language();
     void	onAction_Settings();
     void	onAction_Help();
     void	onAction_Test();

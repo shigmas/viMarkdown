@@ -94,11 +94,13 @@
   <ItemGroup>
     <ClCompile Include="AutoTest.cpp" />
     <ClCompile Include="DocWidget.cpp" />
+    <ClCompile Include="LangDialog.cpp" />
     <ClCompile Include="MarkdownPreview.cpp" />
     <ClCompile Include="MarkdownEditor.cpp" />
     <ClCompile Include="ReplaceDialog.cpp" />
     <ClCompile Include="SettingsDialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
+    <QtUic Include="LangDialog.ui" />
     <QtUic Include="MainWindow.ui" />
     <QtMoc Include="MainWindow.h" />
     <ClCompile Include="MainWindow.cpp" />
@@ -110,9 +112,9 @@
     <ClInclude Include="DocWidget.h" />
     <QtMoc Include="MarkdownPreview.h" />
     <QtMoc Include="MarkdownEditor.h" />
-    <ClInclude Include="MarkdownToHtmlConvertor.h" />
     <QtMoc Include="SettingsDialog.h" />
     <QtMoc Include="ReplaceDialog.h" />
+    <QtMoc Include="LangDialog.h" />
     <ClInclude Include="ver.h" />
   </ItemGroup>
   <ItemGroup>

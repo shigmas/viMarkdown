@@ -30,6 +30,7 @@
 #include "DocWidget.h"
 #include "MarkdownEditor.h"
 #include "MarkdownPreview.h"
+#include "LangDialog.h"
 #include "SettingsDialog.h"
 #include "ReplaceDialog.h"
 
@@ -449,6 +450,7 @@ void MainWindow::setup_connections() {
 	connect(ui->menu_Insert, &QMenu::aboutToShow, this, &MainWindow::onAboutToShow_Insert);
 	connect(m_watcher, &QFileSystemWatcher::fileChanged, this, &MainWindow::onFileChanged);
 	connect(ui->action_Exit, &QAction::triggered, this, &MainWindow::onAction_Exit);
+	connect(ui->action_Language, &QAction::triggered, this, &MainWindow::onAction_Language);
 	connect(ui->action_Settings, &QAction::triggered, this, &MainWindow::onAction_Settings);
 	connect(ui->action_Help, &QAction::triggered, this, &MainWindow::onAction_Help);
 	//connect(ui->action_Test, &QAction::triggered, this, &MainWindow::onAction_Test);
@@ -1207,6 +1209,12 @@ void MainWindow::onAction_Help() {
 	dir.cd("docs/ja");
 	qDebug() << "helpdir = " << dir.path();
 	do_open("", dir.path() + "/help.md", QString(), true);
+}
+void MainWindow::onAction_Language() {
+	LangDialog dlg(this);
+	if (dlg.exec() == QDialog::Accepted) {
+	} else {
+	}
 }
 void MainWindow::onAction_Settings() {
 	Global g0 = g;

@@ -58,11 +58,11 @@
     <ClCompile Include="AutoTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LangDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MarkdownToHtmlConvertor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DocWidget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -88,12 +88,18 @@
     <QtMoc Include="ReplaceDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="LangDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="SettingsDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="ReplaceDialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="LangDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
