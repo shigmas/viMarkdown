@@ -318,7 +318,7 @@
         <location filename="MainWindow.ui" line="452"/>
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="654"/>
         <source>U&amp;nIndent</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">逆インデント(&amp;N)</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="455"/>
@@ -332,7 +332,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="658"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="654"/>
         <source>&amp;OutlineBar</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">アウトラインバー(&amp;O)</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="468"/>
@@ -437,7 +437,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="685"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="681"/>
         <source>&amp;Find</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">検索(&amp;F)</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="559"/>
@@ -451,7 +451,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="689"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="685"/>
         <source>ForwardAgain</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">順方向再検索</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="571"/>
@@ -472,7 +472,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="696"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="692"/>
         <source>BackwardAgain</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">逆方向再検索</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="586"/>
@@ -605,14 +605,14 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="733"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="729"/>
         <source>&amp;Heading</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">見出し(&amp;H)</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="697"/>
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="734"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="730"/>
         <source>Align&amp;Left</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">左寄せ(&amp;L)</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="700"/>
@@ -626,7 +626,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="738"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="734"/>
         <source>Align&amp;Center</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">中央揃え(&amp;C)</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="712"/>
@@ -640,7 +640,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="742"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="738"/>
         <source>Align&amp;Right</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">右寄せ(&amp;R)</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="724"/>
@@ -661,7 +661,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="747"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="743"/>
         <source>Open&amp;Next</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">直後行オープン(&amp;N)</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="737"/>
@@ -731,7 +731,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="767"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="763"/>
         <source>Open&amp;Prev</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">直前行オープン(&amp;P)</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="795"/>
@@ -745,7 +745,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="771"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="767"/>
         <source>&amp;NextTab</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">直後タブ(&amp;N)</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="803"/>
@@ -759,7 +759,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="775"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="771"/>
         <source>&amp;PrevTab</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">直前タブ(&amp;P)</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="811"/>
@@ -808,7 +808,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="784"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="780"/>
         <source>&amp;Settings...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">設定(&amp;S)...</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="848"/>
@@ -822,7 +822,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="788"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="784"/>
         <source>&amp;ToggleFocus</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">エディタ・プレビューフォーカス切り替え(&amp;T)</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="856"/>
@@ -850,7 +850,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="796"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="792"/>
         <source>&amp;Back</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">戻る(&amp;B)</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="876"/>
@@ -864,7 +864,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="800"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="796"/>
         <source>&amp;Forward</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">進む(&amp;F)</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="888"/>
@@ -878,7 +878,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="804"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="800"/>
         <source>&amp;ClearSearchHighlights</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">検索ハイライトクリア(&amp;C)</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="896"/>
@@ -927,7 +927,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="819"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="815"/>
         <source>&amp;TagJump</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">タグジャンプ(&amp;T)</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="927"/>
