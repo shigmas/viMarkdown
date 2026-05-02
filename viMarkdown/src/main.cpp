@@ -1,4 +1,4 @@
-#include <QDir>
+﻿#include <QDir>
 #include "MainWindow.h"
 #include <QtWidgets/QApplication>
 #include <QLocale>
@@ -14,20 +14,12 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("viMarkdown");
 
     QTranslator translator;
-#if 1
-    if (translator.load(":/MainWindow/viMarkdown_ja.qm")) {
-        app.installTranslator(&translator);
+    QLocale systemLocale = QLocale::system();
+    if (systemLocale.language() == QLocale::Japanese) {		//	日本語環境の場合
+	    if (translator.load(":/MainWindow/viMarkdown_ja.qm")) {
+	        app.installTranslator(&translator);
+	    }
     }
-#else
-    const QStringList uiLanguages = QLocale::system().uiLanguages();
-    for (const QString &locale : uiLanguages) {
-        const QString baseName = "viMarkdown_" + QLocale(locale).name();
-        if (translator.load(":/i18n/" + baseName)) {
-            app.installTranslator(&translator);
-            break;
-        }
-    }
-#endif
     
     MainWindow window;
     if (app.arguments().count() > 1) {
