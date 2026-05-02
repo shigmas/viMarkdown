@@ -125,7 +125,7 @@
     </widget>
     <widget class="QMenu" name="menu_format">
      <property name="title">
-      <string>&amp;format</string>
+      <string>&amp;Format</string>
      </property>
      <addaction name="action_AlignLeft"/>
      <addaction name="action_AlignCenter"/>
@@ -449,7 +449,7 @@
      <normalon>:/MainWindow/images/format_indent_decrease_48.png</normalon>../../../../../Users/ntsud/.designer/backup/images/format_indent_decrease_48.png</iconset>
    </property>
    <property name="text">
-    <string>u&amp;nIndent</string>
+    <string>U&amp;nIndent</string>
    </property>
    <property name="shortcut">
     <string>Shift+Tab</string>
