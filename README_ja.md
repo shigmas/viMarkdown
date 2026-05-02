@@ -85,7 +85,6 @@ Electronベースのエディタとは一線を画す、圧倒的な軽量さと
 - 最新版（ver 0.3.x）ダウンロード：[Release](https://github.com/vivisuke/viMarkdown/releases)
 - 安定版（ver 0.2.x）ダウンロード：[Release](https://github.com/vivisuke/viMarkdown/releases/v0.2.004)
 
-
 ## ビルド方法
 ### Visual Studio on Windows (推奨)
 

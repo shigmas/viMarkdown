@@ -48,6 +48,12 @@ It is designed for developers and writers who love efficiency.
 
 \* This roadmap is current and subject to change without notice at the author's sole discretion.
 
+## Installation & Execution (Windows)
+Download the `viMarkdown-0xxxx.zip` file from the link below, extract it, and run `viMarkdown.exe`.
+
+- Download Latest Version (ver 0.3.x): [Release](https://github.com/vivisuke/viMarkdown/releases)
+- Download Stable Version (ver 0.2.x): [Release](https://github.com/vivisuke/viMarkdown/releases/v0.2.004)
+
 ## Build Instructions
 ### Visual Studio on Windows (Recommended)
 This project is primarily developed and tested on Windows 11 using Visual Studio 2026 and Qt VS Tools.
