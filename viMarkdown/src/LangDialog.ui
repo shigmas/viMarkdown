@@ -131,16 +131,9 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton">
-         <property name="text">
-          <string>OK</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_2">
-         <property name="text">
-          <string>Cancel</string>
+        <widget class="QDialogButtonBox" name="buttonBox">
+         <property name="standardButtons">
+          <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok</set>
          </property>
         </widget>
        </item>

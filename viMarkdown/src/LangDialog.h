@@ -15,6 +15,9 @@ public:
 	LangDialog(QWidget *parent = nullptr);
 	~LangDialog();
 
+protected:
+	void accept() override;
+
 private:
 	Ui::LangDialogClass *ui;
 };

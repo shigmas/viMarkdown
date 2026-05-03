@@ -1017,6 +1017,9 @@
    <property name="text">
     <string>&amp;Language...</string>
    </property>
+   <property name="shortcut">
+    <string>Shift+F8</string>
+   </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
