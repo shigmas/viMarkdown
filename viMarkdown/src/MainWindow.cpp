@@ -692,14 +692,14 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
 	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onSrcCursorPosChanged);
 	//QTextEdit *mdEditor = new QTextEdit(splitter);
-	mdEditor->setPlaceholderText(R"(
+	mdEditor->setPlaceholderText(g.m_japanese ? R"(
 ここにMarkdownを入力
 
 マークダウン書式：
 # タイトル
 ## 大見出し
 ### 中見出し
-本文...		//	for GFM
+本文...
 **ボールド** *イタリック* ~~打ち消し線~~
 1. 連番
 - リスト
@@ -718,7 +718,33 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 罫線モード: Shift + F5
 　罫線描画: Ctrl + 上下左右キー
 　罫線消去: Ctrl + Shift + 上下左右キー
-)");
+)" : R"(
+Enter your Markdown here
+
+Markdown syntax:
+# Title
+## Heading 1
+### Heading 2
+Body text...
+**Bold** *Italic* ~~Strikethrough~~
+1. Numbered list
+- Bullet list
+- [ ] Checkbox
+Link: [Text](url) or [Text](filename.md#heading)
+Image: ![Text](image.png) or Paste image
+Table:
+|Header|Header|
+|-----:|------|
+|   123|abc   |
+
+```CSV
+Header, Header
+123, abc
+```
+Keisen mode: Shift + F5
+　Draw: Ctrl + Arrow keys
+　Erase: Ctrl + Shift + Arrow keys
+)" );
 	MarkdownPreview *markdownPreview = docWidget->m_preview = new MarkdownPreview(this, docWidget, splitter, readOnly);
 	//markdownPreview->setReadOnly(readOnly);
 	markdownPreview->setMouseTracking(true); // マウスの動きを常に追跡
