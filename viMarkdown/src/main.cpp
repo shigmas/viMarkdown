@@ -5,6 +5,8 @@
 #include <QLocale>
 #include <QTranslator>
 
+extern Global g;
+
 int main(int argc, char *argv[])
 {
 	QString exeDir = QCoreApplication::applicationDirPath();
@@ -25,7 +27,9 @@ int main(int argc, char *argv[])
     QTranslator translator;
     if( lang == Japanese && translator.load(":/MainWindow/viMarkdown_ja.qm")) {
         app.installTranslator(&translator);
-    }
+	    g.m_japanese = true;
+    } else
+	    g.m_japanese = false;
     
     MainWindow window;
     if (app.arguments().count() > 1) {

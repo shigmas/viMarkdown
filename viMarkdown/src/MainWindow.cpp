@@ -709,7 +709,9 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	MarkdownPreview *markdownPreview = docWidget->m_preview = new MarkdownPreview(this, docWidget, splitter, readOnly);
 	//markdownPreview->setReadOnly(readOnly);
 	markdownPreview->setMouseTracking(true); // マウスの動きを常に追跡
-	markdownPreview->setPlaceholderText("プレビュー画面　ここで簡単な編集もできるよ\n");
+	markdownPreview->setPlaceholderText(g.m_japanese ?
+										"プレビュー画面　ここで簡単な編集もできるよ\n" :
+										"Preview: Simple editing is supported here.\n");
 	//markdownPreview->setStyleSheet("font-size: 12pt;");
 	//##markdownPreview->setStyleSheet("font-size: 12pt; line-height: 2.0;");
 	connect(markdownPreview, &MarkdownPreview::checkboxLineClicked, this, &MainWindow::onMarkdownPreviewLineClicked);

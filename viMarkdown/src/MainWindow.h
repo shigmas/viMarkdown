@@ -99,6 +99,7 @@ public:
 
 struct Global {
 	bool	m_ignoreCase;			//	検索時：大文字小文字同一視
+	bool	m_japanese;
 	int		m_editorFontSize;
 	int		m_previewFontSize;
 	QColor	m_activeLnColor;		//	アクティブ時アンダーライン行カーソル色
