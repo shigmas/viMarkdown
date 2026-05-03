@@ -1,6 +1,7 @@
 ﻿#include <QDir>
 #include "MainWindow.h"
 #include <QtWidgets/QApplication>
+#include <QSettings>
 #include <QLocale>
 #include <QTranslator>
 
@@ -13,12 +14,17 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("VisualSoftLab");
     QCoreApplication::setApplicationName("viMarkdown");
 
+	QSettings settings;
+	int lang = settings.value(KEY_LANGUAGE, SystemDefault).toInt();
+	if( lang == SystemDefault ) {
+	    QLocale systemLocale = QLocale::system();
+	    if (systemLocale.language() == QLocale::Japanese)		//	日本語環境の場合
+	    	lang = Japanese;
+	}
+
     QTranslator translator;
-    QLocale systemLocale = QLocale::system();
-    if (systemLocale.language() == QLocale::Japanese) {		//	日本語環境の場合
-	    if (translator.load(":/MainWindow/viMarkdown_ja.qm")) {
-	        app.installTranslator(&translator);
-	    }
+    if( lang == Japanese && translator.load(":/MainWindow/viMarkdown_ja.qm")) {
+        app.installTranslator(&translator);
     }
     
     MainWindow window;
