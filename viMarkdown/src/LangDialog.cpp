@@ -1,5 +1,4 @@
 #include "LangDialog.h"
-#include "ui_LangDialog.h"
 
 LangDialog::LangDialog(QWidget *parent)
 	: QDialog(parent)
