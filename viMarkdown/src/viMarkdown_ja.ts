@@ -1104,70 +1104,70 @@
         <location filename="x64/Debug/qt/uic/ui_ReplaceDialog.h" line="175"/>
         <location filename="x64/Release/qt/uic/ui_ReplaceDialog.h" line="175"/>
         <source>Search Text:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">検索文字列：</translation>
     </message>
     <message>
         <location filename="ReplaceDialog.ui" line="51"/>
         <location filename="x64/Debug/qt/uic/ui_ReplaceDialog.h" line="176"/>
         <location filename="x64/Release/qt/uic/ui_ReplaceDialog.h" line="176"/>
         <source>Replace To:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">置換文字列：</translation>
     </message>
     <message>
         <location filename="ReplaceDialog.ui" line="67"/>
         <location filename="x64/Debug/qt/uic/ui_ReplaceDialog.h" line="177"/>
         <location filename="x64/Release/qt/uic/ui_ReplaceDialog.h" line="177"/>
         <source>IgnoreCase</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">大文字・小文字同一視</translation>
     </message>
     <message>
         <location filename="ReplaceDialog.ui" line="89"/>
         <location filename="x64/Debug/qt/uic/ui_ReplaceDialog.h" line="178"/>
         <location filename="x64/Release/qt/uic/ui_ReplaceDialog.h" line="178"/>
         <source>&amp;Undo</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">戻す</translation>
     </message>
     <message>
         <location filename="ReplaceDialog.ui" line="96"/>
         <location filename="x64/Debug/qt/uic/ui_ReplaceDialog.h" line="179"/>
         <location filename="x64/Release/qt/uic/ui_ReplaceDialog.h" line="179"/>
         <source>Re&amp;do</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">再実行</translation>
     </message>
     <message>
         <location filename="ReplaceDialog.ui" line="138"/>
         <location filename="x64/Debug/qt/uic/ui_ReplaceDialog.h" line="180"/>
         <location filename="x64/Release/qt/uic/ui_ReplaceDialog.h" line="180"/>
         <source>Search &amp;Prev</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">前検索</translation>
     </message>
     <message>
         <location filename="ReplaceDialog.ui" line="145"/>
         <location filename="x64/Debug/qt/uic/ui_ReplaceDialog.h" line="181"/>
         <location filename="x64/Release/qt/uic/ui_ReplaceDialog.h" line="181"/>
         <source>Search &amp;Next</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">次検索</translation>
     </message>
     <message>
         <location filename="ReplaceDialog.ui" line="158"/>
         <location filename="x64/Debug/qt/uic/ui_ReplaceDialog.h" line="182"/>
         <location filename="x64/Release/qt/uic/ui_ReplaceDialog.h" line="182"/>
         <source>&amp;Replace &amp; Next</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">置換・次検索</translation>
     </message>
     <message>
         <location filename="ReplaceDialog.ui" line="165"/>
         <location filename="x64/Debug/qt/uic/ui_ReplaceDialog.h" line="183"/>
         <location filename="x64/Release/qt/uic/ui_ReplaceDialog.h" line="183"/>
         <source>Replace&amp;All</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">全置換</translation>
     </message>
     <message>
         <location filename="ReplaceDialog.ui" line="178"/>
         <location filename="x64/Debug/qt/uic/ui_ReplaceDialog.h" line="184"/>
         <location filename="x64/Release/qt/uic/ui_ReplaceDialog.h" line="184"/>
         <source>&amp;Close</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">閉じる</translation>
     </message>
 </context>
 <context>
