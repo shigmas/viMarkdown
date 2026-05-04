@@ -105,7 +105,7 @@
     <message>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="868"/>
         <source>&amp;format</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">書式(&amp;F)</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="136"/>
@@ -360,7 +360,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="663"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="659"/>
         <source>Strikethrough</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">打ち消し線</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="500"/>
@@ -423,7 +423,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="680"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="676"/>
         <source>Focus to OutlineBar</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">アウトラインバーにフォーカス設定</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="547"/>
@@ -479,7 +479,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="698"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="694"/>
         <source>Backward Search Again</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">逆方向再検索</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="589"/>
@@ -493,7 +493,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="703"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="699"/>
         <source>Find&amp;Word</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">単語検索</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="601"/>
@@ -591,7 +591,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="728"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="724"/>
         <source>Keisen Mode</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">罫線モード</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="679"/>
@@ -619,7 +619,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="736"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="732"/>
         <source>AlignLeft</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">左寄せ</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="709"/>
@@ -647,7 +647,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="744"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="740"/>
         <source>AlignRight</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">右寄せ</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="729"/>
@@ -696,7 +696,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="757"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="753"/>
         <source>ThickKeisen</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">太罫線</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="776"/>
@@ -717,14 +717,14 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="763"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="759"/>
         <source>&amp;1 Today&apos;sString</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">今日の日付文字列</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="787"/>
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="765"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="761"/>
         <source>Today&apos;s string</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">今日の日付文字列</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="792"/>
@@ -794,14 +794,14 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="782"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="778"/>
         <source>CSV -&gt; &amp;MarkdownTable</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">CSV → GFM表</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="836"/>
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="783"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="779"/>
         <source>MarkdownTable -&gt; &amp;CSV</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">GFM表 → CSV</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="845"/>
@@ -836,7 +836,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="792"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="788"/>
         <source>Switch to &amp;Alt File</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Altファイル</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="864"/>
@@ -857,7 +857,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="798"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="794"/>
         <source>Alt+Left</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">戻る</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="885"/>
@@ -871,7 +871,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="802"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="798"/>
         <source>Alt+Right</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">進む</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="893"/>
@@ -885,7 +885,7 @@
         <location filename="x64/Debug/qt/uic/ui_MainWindow.h" line="806"/>
         <location filename="x64/Release/qt/uic/ui_MainWindow.h" line="802"/>
         <source>ClearSearchHighlights</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">検索ハイライトをクリア</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="899"/>
