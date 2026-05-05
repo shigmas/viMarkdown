@@ -1184,125 +1184,125 @@
         <location filename="x64/Debug/qt/uic/ui_SettingsDialog.h" line="370"/>
         <location filename="x64/Release/qt/uic/ui_SettingsDialog.h" line="356"/>
         <source>Editor</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">エディタ</translation>
     </message>
     <message>
         <location filename="SettingsDialog.ui" line="30"/>
         <location filename="x64/Debug/qt/uic/ui_SettingsDialog.h" line="371"/>
         <location filename="x64/Release/qt/uic/ui_SettingsDialog.h" line="357"/>
         <source>Font Size:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">フォントサイズ：</translation>
     </message>
     <message>
         <location filename="SettingsDialog.ui" line="56"/>
         <location filename="x64/Debug/qt/uic/ui_SettingsDialog.h" line="372"/>
         <location filename="x64/Release/qt/uic/ui_SettingsDialog.h" line="358"/>
         <source>Title/Headdings:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">タイトル/見出し：</translation>
     </message>
     <message>
         <location filename="SettingsDialog.ui" line="79"/>
         <location filename="x64/Debug/qt/uic/ui_SettingsDialog.h" line="374"/>
         <location filename="x64/Release/qt/uic/ui_SettingsDialog.h" line="360"/>
         <source>Bold color:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ボールド：</translation>
     </message>
     <message>
         <location filename="SettingsDialog.ui" line="102"/>
         <location filename="x64/Debug/qt/uic/ui_SettingsDialog.h" line="376"/>
         <location filename="x64/Release/qt/uic/ui_SettingsDialog.h" line="362"/>
         <source>Match color:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">検索マッチ：</translation>
     </message>
     <message>
         <location filename="SettingsDialog.ui" line="122"/>
         <location filename="x64/Debug/qt/uic/ui_SettingsDialog.h" line="378"/>
         <location filename="x64/Release/qt/uic/ui_SettingsDialog.h" line="364"/>
         <source>Italic color:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">イタリック：</translation>
     </message>
     <message>
         <location filename="SettingsDialog.ui" line="129"/>
         <location filename="x64/Debug/qt/uic/ui_SettingsDialog.h" line="379"/>
         <location filename="x64/Release/qt/uic/ui_SettingsDialog.h" line="365"/>
         <source>Strikethrough:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">打ち消し線：</translation>
     </message>
     <message>
         <location filename="SettingsDialog.ui" line="162"/>
         <location filename="x64/Debug/qt/uic/ui_SettingsDialog.h" line="382"/>
         <location filename="x64/Release/qt/uic/ui_SettingsDialog.h" line="368"/>
         <source>Bold Italic color:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ボールドイタリック：</translation>
     </message>
     <message>
         <location filename="SettingsDialog.ui" line="185"/>
         <location filename="x64/Debug/qt/uic/ui_SettingsDialog.h" line="384"/>
         <location filename="x64/Release/qt/uic/ui_SettingsDialog.h" line="370"/>
         <source>Preview</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">プレビュー</translation>
     </message>
     <message>
         <location filename="SettingsDialog.ui" line="191"/>
         <location filename="x64/Debug/qt/uic/ui_SettingsDialog.h" line="385"/>
         <location filename="x64/Release/qt/uic/ui_SettingsDialog.h" line="371"/>
         <source>Table Header color:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">表ヘッダ：</translation>
     </message>
     <message>
         <location filename="SettingsDialog.ui" line="214"/>
         <location filename="x64/Debug/qt/uic/ui_SettingsDialog.h" line="387"/>
         <location filename="x64/Release/qt/uic/ui_SettingsDialog.h" line="373"/>
         <source>Table Zebra-1 color:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">表ゼブラカラー１：</translation>
     </message>
     <message>
         <location filename="SettingsDialog.ui" line="237"/>
         <location filename="x64/Debug/qt/uic/ui_SettingsDialog.h" line="389"/>
         <location filename="x64/Release/qt/uic/ui_SettingsDialog.h" line="375"/>
         <source>Table Zebra-2 color:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">表ゼブラカラー２：</translation>
     </message>
     <message>
         <location filename="SettingsDialog.ui" line="260"/>
         <location filename="x64/Debug/qt/uic/ui_SettingsDialog.h" line="391"/>
         <location filename="x64/Release/qt/uic/ui_SettingsDialog.h" line="377"/>
         <source>Quote color:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">引用：</translation>
     </message>
     <message>
         <location filename="SettingsDialog.ui" line="274"/>
         <location filename="x64/Debug/qt/uic/ui_SettingsDialog.h" line="393"/>
         <location filename="x64/Release/qt/uic/ui_SettingsDialog.h" line="379"/>
         <source>Code block color:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">コードブロック：</translation>
     </message>
     <message>
         <location filename="SettingsDialog.ui" line="281"/>
         <location filename="x64/Debug/qt/uic/ui_SettingsDialog.h" line="394"/>
         <location filename="x64/Release/qt/uic/ui_SettingsDialog.h" line="380"/>
         <source>Keisen block color:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">罫線ブロック：</translation>
     </message>
     <message>
         <location filename="SettingsDialog.ui" line="302"/>
         <location filename="x64/Debug/qt/uic/ui_SettingsDialog.h" line="397"/>
         <source>Font Size</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">フォントサイズ：</translation>
     </message>
     <message>
         <location filename="SettingsDialog.ui" line="328"/>
         <location filename="x64/Debug/qt/uic/ui_SettingsDialog.h" line="398"/>
         <location filename="x64/Release/qt/uic/ui_SettingsDialog.h" line="383"/>
         <source>Active line cursor:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">アクティブ行カーソル：</translation>
     </message>
     <message>
         <location filename="SettingsDialog.ui" line="351"/>
         <location filename="x64/Debug/qt/uic/ui_SettingsDialog.h" line="400"/>
         <location filename="x64/Release/qt/uic/ui_SettingsDialog.h" line="385"/>
         <source>Inactive line cursor:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">非アクティブ行カーソル：</translation>
     </message>
     <message>
         <location filename="SettingsDialog.ui" line="406"/>
@@ -1316,7 +1316,7 @@
         <location filename="x64/Debug/qt/uic/ui_SettingsDialog.h" line="403"/>
         <location filename="x64/Release/qt/uic/ui_SettingsDialog.h" line="388"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">キャンセル</translation>
     </message>
 </context>
 </TS>
