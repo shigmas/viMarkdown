@@ -7,6 +7,8 @@
 #include <QAbstractTextDocumentLayout>
 #include <QScrollbar>
 #include <QDir>
+#include <QImage>
+#include <QSvgRenderer>
 #include <qpainter.h>
 #include <assert.h>
 #include "MarkdownPreview.h"
@@ -16,6 +18,16 @@
 using namespace std;
 
 extern Global g;
+
+#if 0
+class SvgImage : public QImage {
+public:
+	SvgImage() : QImage() {}
+	SvgImage(int width, int height, QImage::Format format)
+		: QImage(width, height, format)
+	{}
+};
+#endif
 
 #if 0
 bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens);
@@ -642,6 +654,9 @@ void MarkdownPreview::setMarkdown(QTextDocument *doc) {		//	doc: markdown ソー
 		} else if( buf.startsWith("```keisen", Qt::CaseInsensitive) ) {
 			do_body(srcBlock0, cursor);
 			do_keisen_block(srcBlock, cursor);
+		} else if( buf.startsWith("```SVG", Qt::CaseInsensitive) ) {
+			do_body(srcBlock0, cursor);
+			do_SVG(srcBlock, cursor);
 		} else if( buf.startsWith("```") ) {
 			do_body(srcBlock0, cursor);
 			do_code(srcBlock, cursor);
@@ -1015,7 +1030,6 @@ void MarkdownPreview::do_keisen_block(QTextBlock& srcBlock, QTextCursor& cursor)
 	BlockData *data = getBlockData(srcBlock);
 	data->m_charFlags.fill(PCF_KEISEN);
 	srcBlock.setUserData(data);
-	QFont font;
 	QStringView buf = m_lst[m_ln].mid(QString("```keisen").size());
 	QColor bgcolor = g.m_keisenBlockColor;
 	QColor color("black");
@@ -1038,6 +1052,7 @@ void MarkdownPreview::do_keisen_block(QTextBlock& srcBlock, QTextCursor& cursor)
 		} else
 			break;
 	}
+	QFont font;
 	font.setFamilies({"MS Gothic", "MS UI Gothic", "Osaka-mono", "monospace"});
 	font.setFixedPitch(true);
 	font.setPointSizeF(12);
@@ -1077,6 +1092,39 @@ void MarkdownPreview::do_keisen_block(QTextBlock& srcBlock, QTextCursor& cursor)
 	cursor.insertImage(img);
 	cursor.insertBlock();
 	//cursor.setBlockFormat(QTextBlockFormat());		//	トップマージンリセット
+}
+void MarkdownPreview::do_SVG(QTextBlock& srcBlock, QTextCursor& cursor) {
+	srcBlock.setUserState(US_SVG_BEGIN);
+	BlockData *data = getBlockData(srcBlock);
+	data->m_charFlags.fill(PCF_SVG);
+	srcBlock.setUserData(data);
+	QString buf;
+	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
+		srcBlock = srcBlock.next();
+		srcBlock.setUserState(US_SVG_BLOCK);
+		buf += m_lst[m_ln] + "\n";
+	}
+	srcBlock = srcBlock.next();
+	if( srcBlock.isValid() ) {
+		srcBlock.setUserState(US_SVG_BLOCK);
+		data = getBlockData(srcBlock);
+		data->m_charFlags.fill(PCF_SVG);
+		srcBlock.setUserData(data);
+	}
+	int width = 320;
+	int height = 200;
+	QImage img(width, height, QImage::Format_ARGB32);
+	img.fill(Qt::white);
+	QPainter painter(&img);
+	QSvgRenderer renderer(buf.toUtf8());
+	if (!renderer.isValid()) {
+	    qDebug() << "SVGの読み込みに失敗しました:" << buf;
+	}
+	renderer.render(&painter);
+	painter.end();
+	cursor.block().setUserState(US_SVG_BLOCK);
+	cursor.insertImage(img);
+	cursor.insertBlock();
 }
 void MarkdownPreview::do_code(QTextBlock srcBlock, QTextCursor& cursor) {
 #if 0

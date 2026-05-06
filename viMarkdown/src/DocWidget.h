@@ -30,6 +30,7 @@ enum {
     //PCF_CELL,			//	表セルブロック
     PCF_CELL_SEPARATOR,	//	表区切り文字（, |）、ただし行頭・行末の | は区切り文字と見なさない
     PCF_KEISEN,
+    PCF_SVG,
     PCF_EMPHASIZED,		//	ボールド、イタリック等
 };
 class BlockData : public QTextBlockUserData

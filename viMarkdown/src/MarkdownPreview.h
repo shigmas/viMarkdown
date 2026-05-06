@@ -111,6 +111,7 @@ protected:
     void	do_quote(QTextBlock&, QTextCursor&, QString buf);
     void	do_code(QTextBlock, QTextCursor&);
     void	do_keisen_block(QTextBlock&, QTextCursor&);
+    void	do_SVG(QTextBlock&, QTextCursor&);
     void	do_CSV(QTextBlock&, QTextCursor&);
 
 private:
