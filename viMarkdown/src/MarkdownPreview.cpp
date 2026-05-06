@@ -9,6 +9,7 @@
 #include <QDir>
 #include <QImage>
 #include <QSvgRenderer>
+#include <QXmlStreamReader>
 #include <qpainter.h>
 #include <assert.h>
 #include "MarkdownPreview.h"
@@ -1099,10 +1100,26 @@ void MarkdownPreview::do_SVG(QTextBlock& srcBlock, QTextCursor& cursor) {
 	data->m_charFlags.fill(PCF_SVG);
 	srcBlock.setUserData(data);
 	QString buf;
+	int width = 320;
+	int height = 200;
 	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
 		srcBlock = srcBlock.next();
 		srcBlock.setUserState(US_SVG_BLOCK);
-		buf += m_lst[m_ln] + "\n";
+		QString t = m_lst[m_ln].trimmed();
+		if( t.startsWith("<svg", Qt::CaseInsensitive) ) {
+			QXmlStreamReader reader(t);
+			while (!reader.atEnd()) {
+				QXmlStreamReader::TokenType token = reader.readNext();
+				if (token == QXmlStreamReader::StartElement && reader.name() == "svg") {
+					if (reader.attributes().hasAttribute("width"))
+						width = reader.attributes().value("width").toInt();
+					if (reader.attributes().hasAttribute("height"))
+						height = reader.attributes().value("height").toInt();
+					break;
+				}
+			}
+		}
+		buf += t + "\n";
 	}
 	srcBlock = srcBlock.next();
 	if( srcBlock.isValid() ) {
@@ -1111,8 +1128,6 @@ void MarkdownPreview::do_SVG(QTextBlock& srcBlock, QTextCursor& cursor) {
 		data->m_charFlags.fill(PCF_SVG);
 		srcBlock.setUserData(data);
 	}
-	int width = 320;
-	int height = 200;
 	QImage img(width, height, QImage::Format_ARGB32);
 	img.fill(Qt::white);
 	QPainter painter(&img);
