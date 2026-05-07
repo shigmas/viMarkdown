@@ -9,6 +9,7 @@ const int LN_WIDTH = 7;
 
 class MainWindow;
 class DocWidget;
+class QTextEdit;
 
 #define		MarkdownBaseEdit	QPlainTextEdit
 //#define		MarkdownBaseEdit	QTextEdit		//	QPlainTextEdit にしかないシグナルがあるため無理
@@ -129,6 +130,7 @@ private:
 	QString	m_lastCurBlockText;				//	事前のカーソルブロックテキスト
     class MarkdownHighlighter *m_highlighter;
 	class LnAreaWidget	*m_lnAreaWidget = nullptr;
+	QTextEdit	*m_svgCompleter = nullptr;
     DocWidget	*m_docWidget;
     const MainWindow *m_mainWindow = nullptr;
 };

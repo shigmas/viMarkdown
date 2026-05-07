@@ -1887,8 +1887,36 @@ void MarkdownEditor::syncPreviewCursorFromEditor() {
 }
 void MarkdownEditor::onCursorPosChanged() {
 	QTextCursor cursor = this->textCursor();
-	m_lastCurBlockText = cursor.block().text();
+	QTextBlock block = cursor.block();
+	m_lastCurBlockText = block.text();
 	viewport()->update();
+	//	SVGブロック補完
+	if( block.userState() == US_SVG_BLOCK && m_lastCurBlockText.isEmpty() && block.previous().userState() == US_SVG_BEGIN) {
+		qDebug() << "to show completion widget.";
+		QString txt = R"(
+<svg width="320" height="200">
+
+</svg>
+)";
+		m_svgCompleter = new QTextEdit(this);
+		m_svgCompleter->setWindowFlags(Qt::Popup); 
+		m_svgCompleter->setReadOnly(true);			//	リードオンリー
+        m_svgCompleter->resize(250, 95);
+        QTextCharFormat format;
+		format.setBackground(QColor("#e0e0e0")); // 背景色
+		QTextCursor cur = m_svgCompleter->textCursor();
+        cur.insertText(txt, format);
+        QRect cr = cursorRect();
+        QPoint pos = viewport()->mapToGlobal(cr.bottomLeft());
+        pos.setY(pos.y() + 2);
+        m_svgCompleter->move(pos);
+		m_svgCompleter->show();
+	} else {
+		if( m_svgCompleter != nullptr ) {
+			delete m_svgCompleter;
+			m_svgCompleter = nullptr;
+		}
+	}
 	//	Undone: プレビューの対応段落（見出し行＋本文）を画面内に
 	syncPreviewCursorFromEditor();
 }

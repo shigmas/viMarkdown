@@ -36,7 +36,7 @@ SPR# 状 P Open Close ver     Type  概要
 0033 ◎ C 05/07 05/07 03003│問題│"src/CMakeLists.txt": LangDialog.* が含まれていない
 0034 ◎ C 05/07 05/07 03003│問題│QtCreatot でビルドすると以下のエラーが出る fatal error: QSvgRenderer: No such file or directory
 0035 ◎ C 05/08 05/08 03003│ToDo│自動テストケースに SVGブロック を追加
-0036 ● C 05/08            │ToDo│
+0036 ◎ C 05/08 05/08 03003│ToDo│SVG補完ダイアログ：QTextEdit をとりあえず表示してみる
 0037 ● C 05/08            │ToDo│
 0038 ● C 05/08            │ToDo│
 0039 ● C 05/08            │ToDo│
