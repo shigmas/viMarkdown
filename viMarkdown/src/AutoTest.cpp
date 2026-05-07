@@ -183,6 +183,13 @@ const QString QA_MD_TEXT_2 =
 	"└───┘\n"
 	"```\n"		//	罫線ブロック終了
 	"text\n"
+	"```SVG\n"	//	SVGブロック開始
+	"<svg width='200' height='100'>\n"
+	"  <rect x='10' y='10' width='180' height='80' rx='5' fill='green' />\n"
+	"  <circle cx='100' cy='50' r='35' fill='yellow' />\n"
+	"</svg>\n"
+	"```\n"		//	SVGブロック終了
+	"text\n"
 #if 1
 	"## table\n"
 	"```CSV\n"	//	CSVブロック開始
