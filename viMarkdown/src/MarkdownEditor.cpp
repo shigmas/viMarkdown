@@ -552,6 +552,17 @@ void MarkdownEditor::backSpaceWord() {
 	cursor.deleteChar();
 	setTextCursor(cursor);
 }
+void SvgCompleter::keyPressEvent(QKeyEvent *e) {
+	if (e->key() == Qt::Key_Escape ) {
+		emit esc_pressed();
+		return;
+	}
+	QTextEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
+}
+void MarkdownEditor::svg_esc_pressed() {
+	delete m_svgCompleter;
+	m_svgCompleter = nullptr;
+}
 void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	QTextCursor cursor = this->textCursor();
 	if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {		//	改行入力
@@ -569,10 +580,15 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 		return;
 	} else if (e->key() == Qt::Key_Escape ) {
 		emit esc_pressed();
-		QTextCursor cursor = this->textCursor();
-		if (cursor.hasSelection()) {
-			cursor.clearSelection();
-			setTextCursor(cursor);
+		if( m_svgCompleter != nullptr ) {
+			delete m_svgCompleter;
+			m_svgCompleter = nullptr;
+		} else {
+			QTextCursor cursor = this->textCursor();
+			if (cursor.hasSelection()) {
+				cursor.clearSelection();
+				setTextCursor(cursor);
+			}
 		}
 		return;
 	} else if (e->key() == Qt::Key_Delete && (e->modifiers() & Qt::ControlModifier) != 0) {
@@ -1898,7 +1914,8 @@ void MarkdownEditor::onCursorPosChanged() {
 
 </svg>
 )";
-		m_svgCompleter = new QTextEdit(this);
+		m_svgCompleter = new SvgCompleter(this);
+		connect(m_svgCompleter, &SvgCompleter::esc_pressed, this, &MarkdownEditor::svg_esc_pressed);
 		m_svgCompleter->setWindowFlags(Qt::Popup); 
 		m_svgCompleter->setReadOnly(true);			//	リードオンリー
         m_svgCompleter->resize(250, 95);

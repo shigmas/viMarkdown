@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <QTextEdit>
 #include <QScrollBar>
 #include <QPlainTextEdit>
 //#include "C:\Qt\6.10.0\msvc2022_64\include\QtWidgets\qplaintextedit.h"
@@ -9,7 +10,20 @@ const int LN_WIDTH = 7;
 
 class MainWindow;
 class DocWidget;
-class QTextEdit;
+//class QTextEdit;
+//class SvgCompleter;
+
+class SvgCompleter : public QTextEdit
+{
+	Q_OBJECT
+public:
+	SvgCompleter(QWidget* parent) : QTextEdit(parent) {}
+signals:
+    void	tab_pressed();
+    void	esc_pressed();
+protected:
+    void	keyPressEvent(QKeyEvent *e) override;
+};
 
 #define		MarkdownBaseEdit	QPlainTextEdit
 //#define		MarkdownBaseEdit	QTextEdit		//	QPlainTextEdit にしかないシグナルがあるため無理
@@ -114,6 +128,7 @@ protected:
 	void	applyAlignment(Align align);
 	bool	isInComment(int pos) const;
 	bool	isInLinkURL(int pos, int& openIX, int& closeIX) const;
+	void	svg_esc_pressed();
 
 private:
 	bool	m_ignoreContentsChanged = false;
@@ -130,8 +145,8 @@ private:
 	QString	m_lastCurBlockText;				//	事前のカーソルブロックテキスト
     class MarkdownHighlighter *m_highlighter;
 	class LnAreaWidget	*m_lnAreaWidget = nullptr;
-	QTextEdit	*m_svgCompleter = nullptr;
-    DocWidget	*m_docWidget;
-    const MainWindow *m_mainWindow = nullptr;
+	SvgCompleter		*m_svgCompleter = nullptr;
+    DocWidget			*m_docWidget;
+    const MainWindow	*m_mainWindow = nullptr;
 };
 

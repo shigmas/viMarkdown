@@ -96,7 +96,12 @@
     <ClCompile Include="DocWidget.cpp" />
     <ClCompile Include="LangDialog.cpp" />
     <ClCompile Include="MarkdownPreview.cpp" />
-    <ClCompile Include="MarkdownEditor.cpp" />
+    <QtMoc Include="MarkdownEditor.cpp">
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).moc</QtMocFileName>
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|x64'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName>
+    </QtMoc>
     <ClCompile Include="ReplaceDialog.cpp" />
     <ClCompile Include="SettingsDialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />

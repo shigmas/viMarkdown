@@ -43,9 +43,6 @@
     <ClCompile Include="DocWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MarkdownEditor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MarkdownPreview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -90,6 +87,9 @@
     </QtMoc>
     <QtMoc Include="LangDialog.h">
       <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="MarkdownEditor.cpp">
+      <Filter>Source Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
