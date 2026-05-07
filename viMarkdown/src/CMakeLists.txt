@@ -1,6 +1,6 @@
 ﻿cmake_minimum_required(VERSION 3.16)
 
-set(TS_FILES viMarkdown_ja_JP.ts)
+set(TS_FILES viMarkdown_ja.ts)
 
 set(PROJECT_SOURCES
         AutoTest.cpp
