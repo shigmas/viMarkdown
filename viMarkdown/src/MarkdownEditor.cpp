@@ -569,6 +569,7 @@ void MarkdownEditor::svg_enter_pressed() {
 	cursor.insertText(m_completerText);
 	//cursor.movePosition(QTextCursor::Up);	//	泥縄的
 	cursor.movePosition(QTextCursor::Up, QTextCursor::MoveAnchor, 3);	//	泥縄的
+	cursor.movePosition(QTextCursor::EndOfLine);	//	行末
 	setTextCursor(cursor);
 }
 void MarkdownEditor::svg_esc_pressed() {
@@ -1923,7 +1924,7 @@ void MarkdownEditor::check_svg_completer() {	//	SVGブロック補完
 	if( block.userState() == US_SVG_BLOCK && m_lastCurBlockText.isEmpty() && block.previous().userState() == US_SVG_BEGIN) {
 		qDebug() << "to show completion widget.";
 		m_completerText = R"(<svg width="320" height="200">
-
+  
 </svg>
 ```
 )";
