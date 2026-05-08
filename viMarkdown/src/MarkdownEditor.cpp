@@ -562,6 +562,7 @@ const QStringList svg_elements_lst = {
 	R"(<line x1="10" y1="10" x2="200" y2="100" stroke="black" stroke-width="1"/>\n)",
 	R"(<rect x="20" y="10" width="100" height="80" rx="10" fill="white" stroke="black" stroke-width="1"/>\n)",
 	R"(<circle cx="100" cy="50" r="40" fill="white" stroke="blue" stroke-width="2"/>\n)",
+	R"(<ellipse cx="100" cy="50" rx="60" ry="30" fill="yellow" stroke="green" stroke-width="2"/>\n)",
 };
 SvgCompleter::SvgCompleter(QWidget* parent, bool svgtag) : QTextEdit(parent) {
 	m_cmpl_lst = svgtag ? svg_tag_lst : svg_elements_lst;
