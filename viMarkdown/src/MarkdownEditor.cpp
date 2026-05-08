@@ -608,12 +608,15 @@ void SvgCompleter::keyPressEvent(QKeyEvent *e) {
 void MarkdownEditor::svg_enter_pressed() {
 	QString txt = m_svgCompleter->completerText();
 	txt.replace("\\n", "\n");
+	int cix = txt.indexOf('|');
 	svg_esc_pressed();		//	close SvgCompleter
 	QTextCursor cursor = this->textCursor();
+	int pos = cursor.position();
 	cursor.insertText(txt);
-	//cursor.movePosition(QTextCursor::Up);	//	泥縄的
-	cursor.movePosition(QTextCursor::Up, QTextCursor::MoveAnchor, 3);	//	泥縄的
-	cursor.movePosition(QTextCursor::EndOfLine);	//	行末
+	if( cix >= 0 ) {
+		cursor.setPosition(pos + cix);
+		cursor.deleteChar();
+	}
 	setTextCursor(cursor);
 }
 void MarkdownEditor::svg_esc_pressed() {
