@@ -586,6 +586,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 		} else {
 			cursor.insertText("\n");
 		}
+		check_svg_completer();
 		return;
 	} else if (e->key() == Qt::Key_Tab ) {
 		emit tab_pressed();
@@ -1913,12 +1914,9 @@ void MarkdownEditor::syncPreviewCursorFromEditor() {
 	m_mainWindow->setCursorCyncing(false);
 	m_processing = false;
 }
-void MarkdownEditor::onCursorPosChanged() {
+void MarkdownEditor::check_svg_completer() {	//	SVGブロック補完
 	QTextCursor cursor = this->textCursor();
 	QTextBlock block = cursor.block();
-	m_lastCurBlockText = block.text();
-	viewport()->update();
-	//	SVGブロック補完
 	if( block.userState() == US_SVG_BLOCK && m_lastCurBlockText.isEmpty() && block.previous().userState() == US_SVG_BEGIN) {
 		qDebug() << "to show completion widget.";
 		m_completerText = R"(<svg width="320" height="200">
@@ -1945,6 +1943,13 @@ void MarkdownEditor::onCursorPosChanged() {
 			m_svgCompleter = nullptr;
 		}
 	}
+}
+void MarkdownEditor::onCursorPosChanged() {
+	QTextCursor cursor = this->textCursor();
+	QTextBlock block = cursor.block();
+	m_lastCurBlockText = block.text();
+	viewport()->update();
+	check_svg_completer();
 	//	Undone: プレビューの対応段落（見出し行＋本文）を画面内に
 	syncPreviewCursorFromEditor();
 }

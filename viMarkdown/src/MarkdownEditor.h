@@ -86,6 +86,7 @@ public:
 	void	deleteWord();
 	void	backSpaceWord();
     void	onCursorPosChanged();
+    void	check_svg_completer();
 
 signals:
     void	tab_pressed();
