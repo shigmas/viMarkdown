@@ -52,12 +52,12 @@ SPR# 状 P Open Close ver     Type  概要
 0049 ◎ C 05/09 05/09 03004│ToDo│SVG補完ダイアログ：選択状態の場合は表示しない方がよい
 0050 ● C 05/09            │ToDo│SVG補完ダイアログを自動で表示するかどうかを設定可能にする？
 0051 ◎ C 05/09 05/09 03004│ToDo│SVG補完：ellipse 追加
-0052 ● C 05/09            │ToDo│SVG補完：polyline, polygon 追加
-0053 ● C 05/09            │ToDo│SVG補完：text 追加
+0052 ◎ C 05/09 05/09 03004│ToDo│SVG補完：polyline, polygon 追加
+0053 ◎ C 05/09 05/09 03004│ToDo│SVG補完：text 追加
 0054 ● C 05/09            │ToDo│SVG補完：path 追加
 0055 ● C 05/09            │ToDo│SVG補完ダイアログ：Home, End で最初、最後を選択
-0056 ● C 05/09            │ToDo│
-0057 ● C 05/09            │ToDo│
+0056 ● C 05/09            │ToDo│SVG補完ダイアログ：PageUp, PageDown でスクロール
+0057 ● C 05/09            │ToDo│SVG補完ダイアログ：マウスで補完候補選択
 0058 ● C 05/09            │ToDo│
 0059 ● C 05/09            │ToDo│
 0060 ● C 05/09            │ToDo│
