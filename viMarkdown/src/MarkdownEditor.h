@@ -17,7 +17,7 @@ class SvgCompleter : public QTextEdit
 {
 	Q_OBJECT
 public:
-	SvgCompleter(QWidget* parent);
+	SvgCompleter(QWidget* parent, bool svgtag);
 	//SvgCompleter(QWidget* parent) : QTextEdit(parent) {}
 
 	const QString&	completerText() const { return m_cmpl_lst[m_curix]; }
@@ -153,7 +153,7 @@ private:
 	int		m_selEnd = 0;
 	int		m_linkClickedPos = -1;			//	リンククリック位置
 	QString	m_lastCurBlockText;				//	事前のカーソルブロックテキスト
-	QString	m_completerText;
+	//QString	m_completerText;
     class MarkdownHighlighter *m_highlighter;
 	class LnAreaWidget	*m_lnAreaWidget = nullptr;
 	SvgCompleter		*m_svgCompleter = nullptr;

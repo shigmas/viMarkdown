@@ -552,13 +552,18 @@ void MarkdownEditor::backSpaceWord() {
 	cursor.deleteChar();
 	setTextCursor(cursor);
 }
-const QStringList svg_cmpl_lst = {
+const QStringList svg_tag_lst = {
 	R"(<svg width="" height="">\n  |\n</svg>\n```\n)",
 	R"(<svg width="320" height="200">\n  |\n</svg>\n```\n)",
 	R"(<svg width="640" height="400">\n  |\n</svg>\n```\n)",
 };
-SvgCompleter::SvgCompleter(QWidget* parent) : QTextEdit(parent) {
-	m_cmpl_lst = svg_cmpl_lst;
+const QStringList svg_elements_lst = {
+	R"(<line x1="" y1="" x2="" y2="" stroke="black" stroke-width="1"/>\n)",
+	R"(<rect x="" y="" width="" height="" fill="white" stroke="black" stroke-width="1"/>\n)",
+	R"(<circle cx="" cy="" r="" fill="white" stroke="black" stroke-width="1"/>\n)",
+};
+SvgCompleter::SvgCompleter(QWidget* parent, bool svgtag) : QTextEdit(parent) {
+	m_cmpl_lst = svgtag ? svg_tag_lst : svg_elements_lst;
 	QTextCursor cur = textCursor();
 	for(auto txt: m_cmpl_lst) {
 		cur.insertText(txt + "\n");
@@ -1968,14 +1973,14 @@ void MarkdownEditor::syncPreviewCursorFromEditor() {
 void MarkdownEditor::check_svg_completer() {	//	SVGブロック補完
 	QTextCursor cursor = this->textCursor();
 	QTextBlock block = cursor.block();
-	if( block.userState() == US_SVG_BLOCK && m_lastCurBlockText.isEmpty() && block.previous().userState() == US_SVG_BEGIN) {
+	if( block.userState() == US_SVG_BLOCK && m_lastCurBlockText.trimmed().isEmpty() ) {
 		qDebug() << "to show completion widget.";
 //		m_completerText = R"(<svg width="320" height="200">
 //  
 //</svg>
 //```
 //)";
-		m_svgCompleter = new SvgCompleter(this);
+		m_svgCompleter = new SvgCompleter(this, block.previous().userState() == US_SVG_BEGIN);
 		connect(m_svgCompleter, &SvgCompleter::enter_pressed, this, &MarkdownEditor::svg_enter_pressed);
 		connect(m_svgCompleter, &SvgCompleter::esc_pressed, this, &MarkdownEditor::svg_esc_pressed);
 		m_svgCompleter->setWindowFlags(Qt::Popup); 
