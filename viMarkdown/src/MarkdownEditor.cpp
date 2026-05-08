@@ -610,6 +610,9 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	} else if (e->key() == Qt::Key_Backspace && (e->modifiers() & Qt::ControlModifier) != 0) {
 		backSpaceWord();
 		return;
+	} else if (e->key() == Qt::Key_Space && (e->modifiers() & Qt::ControlModifier) != 0) {
+		check_svg_completer();
+		return;
 	} else if( !m_mainWindow->isKeisenMode() ) {		//	非罫線モードの場合
 		if( (e->modifiers() & Qt::ControlModifier) != 0 ) {
 			bool shift = (e->modifiers() & Qt::ShiftModifier) != 0;
