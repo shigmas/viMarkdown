@@ -19,6 +19,7 @@ class SvgCompleter : public QTextEdit
 public:
 	SvgCompleter(QWidget* parent) : QTextEdit(parent) {}
 signals:
+    void	enter_pressed();
     void	tab_pressed();
     void	esc_pressed();
 protected:
@@ -128,6 +129,7 @@ protected:
 	void	applyAlignment(Align align);
 	bool	isInComment(int pos) const;
 	bool	isInLinkURL(int pos, int& openIX, int& closeIX) const;
+	void	svg_enter_pressed();
 	void	svg_esc_pressed();
 
 private:
@@ -143,6 +145,7 @@ private:
 	int		m_selEnd = 0;
 	int		m_linkClickedPos = -1;			//	リンククリック位置
 	QString	m_lastCurBlockText;				//	事前のカーソルブロックテキスト
+	QString	m_completerText;
     class MarkdownHighlighter *m_highlighter;
 	class LnAreaWidget	*m_lnAreaWidget = nullptr;
 	SvgCompleter		*m_svgCompleter = nullptr;

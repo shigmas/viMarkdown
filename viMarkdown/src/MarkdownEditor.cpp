@@ -553,11 +553,23 @@ void MarkdownEditor::backSpaceWord() {
 	setTextCursor(cursor);
 }
 void SvgCompleter::keyPressEvent(QKeyEvent *e) {
+	if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {		//	改行入力
+		emit enter_pressed();
+		return;
+	}
 	if (e->key() == Qt::Key_Escape ) {
 		emit esc_pressed();
 		return;
 	}
 	QTextEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
+}
+void MarkdownEditor::svg_enter_pressed() {
+	svg_esc_pressed();		//	close SvgCompleter
+	QTextCursor cursor = this->textCursor();
+	cursor.insertText(m_completerText);
+	cursor.movePosition(QTextCursor::Up);	//	泥縄的
+	//cursor.movePosition(QTextCursor::Up, QTextCursor::MoveAnchor, 2);	//	泥縄的
+	setTextCursor(cursor);
 }
 void MarkdownEditor::svg_esc_pressed() {
 	delete m_svgCompleter;
@@ -1909,23 +1921,22 @@ void MarkdownEditor::onCursorPosChanged() {
 	//	SVGブロック補完
 	if( block.userState() == US_SVG_BLOCK && m_lastCurBlockText.isEmpty() && block.previous().userState() == US_SVG_BEGIN) {
 		qDebug() << "to show completion widget.";
-		QString txt = R"(
-<svg width="320" height="200">
+		m_completerText = R"(<svg width="320" height="200">
 
-</svg>
-)";
+</svg>)";
 		m_svgCompleter = new SvgCompleter(this);
+		connect(m_svgCompleter, &SvgCompleter::enter_pressed, this, &MarkdownEditor::svg_enter_pressed);
 		connect(m_svgCompleter, &SvgCompleter::esc_pressed, this, &MarkdownEditor::svg_esc_pressed);
 		m_svgCompleter->setWindowFlags(Qt::Popup); 
 		m_svgCompleter->setReadOnly(true);			//	リードオンリー
-        m_svgCompleter->resize(250, 95);
+        m_svgCompleter->resize(250, 60);
         QTextCharFormat format;
 		format.setBackground(QColor("#e0e0e0")); // 背景色
 		QTextCursor cur = m_svgCompleter->textCursor();
-        cur.insertText(txt, format);
+        cur.insertText(m_completerText, format);
         QRect cr = cursorRect();
         QPoint pos = viewport()->mapToGlobal(cr.bottomLeft());
-        pos.setY(pos.y() + 2);
+        pos.setY(pos.y() + 4);
         m_svgCompleter->move(pos);
 		m_svgCompleter->show();
 	} else {
