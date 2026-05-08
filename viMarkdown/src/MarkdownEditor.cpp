@@ -558,9 +558,10 @@ const QStringList svg_tag_lst = {
 	R"(<svg width="640" height="400">\n  |\n</svg>\n```\n)",
 };
 const QStringList svg_elements_lst = {
-	R"(<line x1="" y1="" x2="" y2="" stroke="black" stroke-width="1"/>\n)",
-	R"(<rect x="" y="" width="" height="" fill="white" stroke="black" stroke-width="1"/>\n)",
-	R"(<circle cx="" cy="" r="" fill="white" stroke="black" stroke-width="1"/>\n)",
+	R"(<line x1="" y1="" x2="" y2="" stroke="" stroke-width=""/>\n)",
+	R"(<line x1="10" y1="10" x2="200" y2="100" stroke="black" stroke-width="1"/>\n)",
+	R"(<rect x="20" y="10" width="100" height="80" rx="10" fill="white" stroke="black" stroke-width="1"/>\n)",
+	R"(<circle cx="100" cy="50" r="40" fill="white" stroke="blue" stroke-width="2"/>\n)",
 };
 SvgCompleter::SvgCompleter(QWidget* parent, bool svgtag) : QTextEdit(parent) {
 	m_cmpl_lst = svgtag ? svg_tag_lst : svg_elements_lst;
@@ -1972,6 +1973,7 @@ void MarkdownEditor::syncPreviewCursorFromEditor() {
 }
 void MarkdownEditor::check_svg_completer() {	//	SVGブロック補完
 	QTextCursor cursor = this->textCursor();
+	if( cursor.hasSelection() ) return;			//	選択状態の場合は表示しない
 	QTextBlock block = cursor.block();
 	if( block.userState() == US_SVG_BLOCK && m_lastCurBlockText.trimmed().isEmpty() ) {
 		qDebug() << "to show completion widget.";
@@ -1985,7 +1987,7 @@ void MarkdownEditor::check_svg_completer() {	//	SVGブロック補完
 		connect(m_svgCompleter, &SvgCompleter::esc_pressed, this, &MarkdownEditor::svg_esc_pressed);
 		m_svgCompleter->setWindowFlags(Qt::Popup); 
 		m_svgCompleter->setReadOnly(true);			//	リードオンリー
-        m_svgCompleter->resize(320, 100);
+        m_svgCompleter->resize(400, 200);
 #if 0
         QTextCharFormat format;
 		format.setBackground(QColor("#e0e0e0")); // 背景色
