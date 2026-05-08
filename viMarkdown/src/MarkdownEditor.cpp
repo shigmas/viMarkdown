@@ -567,8 +567,8 @@ void MarkdownEditor::svg_enter_pressed() {
 	svg_esc_pressed();		//	close SvgCompleter
 	QTextCursor cursor = this->textCursor();
 	cursor.insertText(m_completerText);
-	cursor.movePosition(QTextCursor::Up);	//	泥縄的
-	//cursor.movePosition(QTextCursor::Up, QTextCursor::MoveAnchor, 2);	//	泥縄的
+	//cursor.movePosition(QTextCursor::Up);	//	泥縄的
+	cursor.movePosition(QTextCursor::Up, QTextCursor::MoveAnchor, 3);	//	泥縄的
 	setTextCursor(cursor);
 }
 void MarkdownEditor::svg_esc_pressed() {
@@ -1924,13 +1924,15 @@ void MarkdownEditor::check_svg_completer() {	//	SVGブロック補完
 		qDebug() << "to show completion widget.";
 		m_completerText = R"(<svg width="320" height="200">
 
-</svg>)";
+</svg>
+```
+)";
 		m_svgCompleter = new SvgCompleter(this);
 		connect(m_svgCompleter, &SvgCompleter::enter_pressed, this, &MarkdownEditor::svg_enter_pressed);
 		connect(m_svgCompleter, &SvgCompleter::esc_pressed, this, &MarkdownEditor::svg_esc_pressed);
 		m_svgCompleter->setWindowFlags(Qt::Popup); 
 		m_svgCompleter->setReadOnly(true);			//	リードオンリー
-        m_svgCompleter->resize(250, 60);
+        m_svgCompleter->resize(250, 80);
         QTextCharFormat format;
 		format.setBackground(QColor("#e0e0e0")); // 背景色
 		QTextCursor cur = m_svgCompleter->textCursor();
