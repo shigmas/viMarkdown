@@ -552,6 +552,34 @@ void MarkdownEditor::backSpaceWord() {
 	cursor.deleteChar();
 	setTextCursor(cursor);
 }
+const QStringList svg_cmpl_lst = {
+	R"(<svg width="" height="">\n  |\n</svg>\n```\n)",
+	R"(<svg width="320" height="200">\n  |\n</svg>\n```\n)",
+	R"(<svg width="640" height="400">\n  |\n</svg>\n```\n)",
+};
+SvgCompleter::SvgCompleter(QWidget* parent) : QTextEdit(parent) {
+	m_cmpl_lst = svg_cmpl_lst;
+	QTextCursor cur = textCursor();
+	for(auto txt: m_cmpl_lst) {
+		cur.insertText(txt + "\n");
+	}
+	highlight_cur_line();
+}
+void SvgCompleter::highlight_cur_line() {
+	QTextCursor cursor = textCursor();
+	QTextBlock block = document()->begin();
+	int ln = 0;
+	QTextCharFormat format, format0;
+    format.setBackground(QColor(220, 220, 220));
+    format0.setBackground(Qt::transparent);
+	while( block.isValid() ) {
+		cursor.setPosition(block.position());
+		cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+		cursor.mergeCharFormat(ln == m_curix ? format : format0);
+		block = block.next();
+		++ln;
+	}
+}
 void SvgCompleter::keyPressEvent(QKeyEvent *e) {
 	if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {		//	改行入力
 		emit enter_pressed();
@@ -561,12 +589,28 @@ void SvgCompleter::keyPressEvent(QKeyEvent *e) {
 		emit esc_pressed();
 		return;
 	}
+	if (e->key() == Qt::Key_Up ) {
+		if( m_curix > 0 ) {
+			--m_curix;
+			highlight_cur_line();
+		}
+		return;
+	}
+	if (e->key() == Qt::Key_Down ) {
+		if( m_curix + 1 < m_cmpl_lst.size() ) {
+			++m_curix;
+			highlight_cur_line();
+		}
+		return;
+	}
 	QTextEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
 }
 void MarkdownEditor::svg_enter_pressed() {
+	QString txt = m_svgCompleter->completerText();
+	txt.replace("\\n", "\n");
 	svg_esc_pressed();		//	close SvgCompleter
 	QTextCursor cursor = this->textCursor();
-	cursor.insertText(m_completerText);
+	cursor.insertText(txt);
 	//cursor.movePosition(QTextCursor::Up);	//	泥縄的
 	cursor.movePosition(QTextCursor::Up, QTextCursor::MoveAnchor, 3);	//	泥縄的
 	cursor.movePosition(QTextCursor::EndOfLine);	//	行末
@@ -1923,21 +1967,23 @@ void MarkdownEditor::check_svg_completer() {	//	SVGブロック補完
 	QTextBlock block = cursor.block();
 	if( block.userState() == US_SVG_BLOCK && m_lastCurBlockText.isEmpty() && block.previous().userState() == US_SVG_BEGIN) {
 		qDebug() << "to show completion widget.";
-		m_completerText = R"(<svg width="320" height="200">
-  
-</svg>
-```
-)";
+//		m_completerText = R"(<svg width="320" height="200">
+//  
+//</svg>
+//```
+//)";
 		m_svgCompleter = new SvgCompleter(this);
 		connect(m_svgCompleter, &SvgCompleter::enter_pressed, this, &MarkdownEditor::svg_enter_pressed);
 		connect(m_svgCompleter, &SvgCompleter::esc_pressed, this, &MarkdownEditor::svg_esc_pressed);
 		m_svgCompleter->setWindowFlags(Qt::Popup); 
 		m_svgCompleter->setReadOnly(true);			//	リードオンリー
-        m_svgCompleter->resize(250, 80);
+        m_svgCompleter->resize(320, 100);
+#if 0
         QTextCharFormat format;
 		format.setBackground(QColor("#e0e0e0")); // 背景色
 		QTextCursor cur = m_svgCompleter->textCursor();
         cur.insertText(m_completerText, format);
+#endif
         QRect cr = cursorRect();
         QPoint pos = viewport()->mapToGlobal(cr.bottomLeft());
         pos.setY(pos.y() + 4);

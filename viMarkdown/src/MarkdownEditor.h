@@ -17,13 +17,20 @@ class SvgCompleter : public QTextEdit
 {
 	Q_OBJECT
 public:
-	SvgCompleter(QWidget* parent) : QTextEdit(parent) {}
+	SvgCompleter(QWidget* parent);
+	//SvgCompleter(QWidget* parent) : QTextEdit(parent) {}
+
+	const QString&	completerText() const { return m_cmpl_lst[m_curix]; }
+	void	highlight_cur_line();
 signals:
     void	enter_pressed();
     void	tab_pressed();
     void	esc_pressed();
 protected:
     void	keyPressEvent(QKeyEvent *e) override;
+private:
+    int		m_curix = 0;		//	現補完候補
+    QStringList	m_cmpl_lst;		//	補完候補
 };
 
 #define		MarkdownBaseEdit	QPlainTextEdit
