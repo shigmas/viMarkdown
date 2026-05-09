@@ -16,6 +16,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 	QSettings settings;
 	ui->editorFontSize->setValue(g.m_editorFontSize);
 	ui->previewFontSize->setValue(g.m_previewFontSize);
+	ui->autoSvgCompleter->setChecked(g.m_auto_svg_completer);
 	updateColorButtons();
 	//QColor color("#800000");
 	connect(ui->editorFontSize, &QSpinBox::valueChanged, this, &SettingsDialog::onEditorFontSizeChanged);
@@ -112,6 +113,7 @@ void SettingsDialog::accept() {
 	QSettings settings;
 	settings.setValue(KEY_EDITOR_FONT_SIZE, ui->editorFontSize->value());
 	settings.setValue(KEY_PREVIEW_FONT_SIZE, ui->previewFontSize->value());
+	settings.setValue(KEY_AUTO_SVG_CMPL, g.m_auto_svg_completer = ui->autoSvgCompleter->isChecked());
 	QDialog::accept();
 }
 void SettingsDialog::pickColor(QColor &targetColor, const QString &title) {

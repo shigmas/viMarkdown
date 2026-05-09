@@ -106,6 +106,7 @@ MainWindow::~MainWindow()
 void MainWindow::load_settings() {
 	QSettings settings;
 	g.m_ignoreCase = settings.value(KEY_IGNORE_CASE, true).toBool();
+	g.m_auto_svg_completer = settings.value(KEY_AUTO_SVG_CMPL, true).toBool();
 	g.m_editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE, 12).toInt();		//	デフォルト：12pt
 	g.m_previewFontSize = settings.value(KEY_PREVIEW_FONT_SIZE, 12).toInt();		//	デフォルト：12pt
 	g.m_activeLnColor = settings.value(KEY_ACTIVA_LINE_COLOR, QColor("#ff0000")).value<QColor>();
@@ -126,6 +127,7 @@ void MainWindow::load_settings() {
 void MainWindow::save_settings() {
     QSettings settings;
     settings.setValue(KEY_IGNORE_CASE, g.m_ignoreCase);
+    settings.setValue(KEY_AUTO_SVG_CMPL, g.m_auto_svg_completer);
     settings.setValue(KEY_EDITOR_FONT_SIZE, g.m_editorFontSize);
     settings.setValue(KEY_PREVIEW_FONT_SIZE, g.m_previewFontSize);
     settings.setValue(KEY_HEADINGS_COLOR, g.m_headingsColor);

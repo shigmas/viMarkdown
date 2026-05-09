@@ -368,6 +368,13 @@
            </property>
           </widget>
          </item>
+         <item row="2" column="1">
+          <widget class="QCheckBox" name="autoSvgCompleter">
+           <property name="text">
+            <string>Auto SVG completer</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
       </layout>

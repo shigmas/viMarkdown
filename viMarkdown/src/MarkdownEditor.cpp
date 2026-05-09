@@ -644,7 +644,8 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 		} else {
 			cursor.insertText("\n");
 		}
-		check_svg_completer();
+		if( g.m_auto_svg_completer )
+			check_svg_completer();
 		return;
 	} else if (e->key() == Qt::Key_Tab ) {
 		emit tab_pressed();
@@ -2015,7 +2016,8 @@ void MarkdownEditor::onCursorPosChanged() {
 	QTextBlock block = cursor.block();
 	m_lastCurBlockText = block.text();
 	viewport()->update();
-	check_svg_completer();
+	if( g.m_auto_svg_completer )
+		check_svg_completer();
 	//	Undone: プレビューの対応段落（見出し行＋本文）を画面内に
 	syncPreviewCursorFromEditor();
 }

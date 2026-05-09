@@ -27,6 +27,7 @@ QT_END_NAMESPACE
 #define	KEY_CODE_BLOCK_COLOR		u"codeBlockColor"
 #define	KEY_KEISEN_BLOCK_COLOR		u"keisenBlockColor"
 #define	KEY_LANGUAGE				u"language"
+#define	KEY_AUTO_SVG_CMPL			u"autoSvgCmpl"
 
 enum {
     SystemDefault = 0,  // Localeに従う（OSの設定に依存）
@@ -102,6 +103,7 @@ public:
 struct Global {
 	bool	m_ignoreCase;			//	検索時：大文字小文字同一視
 	bool	m_japanese;
+	bool	m_auto_svg_completer;	//	SVG補完ダイアログ自動表示
 	int		m_editorFontSize;
 	int		m_previewFontSize;
 	QColor	m_activeLnColor;		//	アクティブ時アンダーライン行カーソル色
