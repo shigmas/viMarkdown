@@ -2510,12 +2510,12 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const
 		auto t = block.text();
 		const BlockData *data = getBlockData(block);
 		//printCharFlags(block);
-		if( block.userState() == US_KEISEN_BEGIN ) {
+		if( block.userState() == US_KEISEN_BEGIN || block.userState() == US_SVG_BEGIN ) {
 			if( ch == STX || ch == ETX )
 				++count;
 			do {
 				block = block.next();
-			} while( block.isValid() && block.userState() == US_KEISEN_BLOCK );
+			} while( block.isValid() && (block.userState() == US_KEISEN_BLOCK || block.userState() == US_SVG_BLOCK) );
 			if (block.position() > pos) {
 				if (ch == ETX) --count;
 				break;
