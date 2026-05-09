@@ -59,5 +59,15 @@ SPR# 状 P Open Close ver     Type  概要
 0056 ◎ C 05/09 05/09 03004│問題│SVG補完ダイアログ：現補完候補が見えるよう自動スクロールすべき
 0057 ● C 05/09            │ToDo│SVG補完ダイアログ：PageUp, PageDown でスクロール
 0058 ● C 05/09            │ToDo│SVG補完ダイアログ：マウスで補完候補選択
-0059 ● C 05/09            │ToDo│
+0059 ● C 05/09            │ToDo│QSvgRenderer renderer(buf.toUtf8()); がエラーの場合：XMLパースしてエラー表示？
 0060 ● C 05/09            │ToDo│
+0061 ● C 05/09            │ToDo│
+0062 ● C 05/09            │ToDo│
+0063 ● C 05/09            │ToDo│
+0064 ● C 05/09            │ToDo│
+0065 ● C 05/09            │ToDo│
+0066 ● C 05/09            │ToDo│
+0067 ● C 05/09            │ToDo│
+0068 ● C 05/09            │ToDo│
+0069 ● C 05/09            │ToDo│
+0070 ● C 05/09            │ToDo│
