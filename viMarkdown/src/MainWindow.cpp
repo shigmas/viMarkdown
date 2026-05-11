@@ -2028,6 +2028,7 @@ void MainWindow::onAction_OutputBar(bool checked) {
 	ui->outputBar->setVisible(checked);
 }
 void MainWindow::do_output(const QString& txt) {
+	ui->outputBar->setVisible(true);
 	ui->plainTextEdit->appendPlainText(txt);
 }
 void MainWindow::onAction_FocusOutline() {
