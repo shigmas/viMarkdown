@@ -512,6 +512,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_HTML, &QAction::toggled, this, &MainWindow::onAction_HTML);
 	connect(ui->action_Source, &QAction::toggled, this, &MainWindow::onAction_Source);
 	connect(ui->action_OutlineBar, &QAction::toggled, this, &MainWindow::onAction_OutlineBar);
+	connect(ui->action_OutputBar, &QAction::toggled, this, &MainWindow::onAction_OutputBar);
 	connect(ui->action_FocusOutline, &QAction::triggered, this, &MainWindow::onAction_FocusOutline);
 	connect(ui->action_NextTab, &QAction::triggered, this, &MainWindow::onAction_NextTab);
 	connect(ui->action_PrevTab, &QAction::triggered, this, &MainWindow::onAction_PrevTab);
@@ -519,6 +520,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_SwitchToAltFile, &QAction::triggered, this, &MainWindow::onAction_SwitchToAltFile);
 	connect(ui->action_TagJump, &QAction::triggered, this, &MainWindow::onAction_TagJump);
 	connect(ui->outlineBar, &QDockWidget::visibilityChanged, this, &MainWindow::onOutlineBarVisibilityChanged);
+	connect(ui->outputBar, &QDockWidget::visibilityChanged, this, &MainWindow::onOutputBarVisibilityChanged);
 	connect(ui->treeWidget, &QTreeWidget::currentItemChanged, this, &MainWindow::onTreeCurrentItemChanged);
 	//connect(ui->treeWidget, &QTreeWidget::itemDoubleClicked, this, &MainWindow::onTreeItemDoubleClicked);
 	connect(ui->treeWidget, &QTreeWidget::itemActivated, this, &MainWindow::onTreeItemActivated);				//	ダブルクリック or Enter 押下
@@ -2021,6 +2023,9 @@ void MainWindow::onAction_TagJump() {
 void MainWindow::onAction_OutlineBar(bool checked) {
 	ui->outlineBar->setVisible(checked);
 }
+void MainWindow::onAction_OutputBar(bool checked) {
+	ui->outputBar->setVisible(checked);
+}
 void MainWindow::onAction_FocusOutline() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
@@ -2065,6 +2070,9 @@ void MainWindow::onAction_SwitchToAltFile() {
 }
 void MainWindow::onOutlineBarVisibilityChanged(bool v) {
 	ui->action_OutlineBar->setChecked(v);
+}
+void MainWindow::onOutputBarVisibilityChanged(bool v) {
+	ui->action_OutputBar->setChecked(v);
 }
 int MainWindow::treeItemToTabIndex(QTreeWidgetItem *current) {
 	if( current == nullptr ) return -1;

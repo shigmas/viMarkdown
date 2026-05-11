@@ -181,6 +181,7 @@ protected:
     void	zoomOut();
 
     void	onOutlineBarVisibilityChanged(bool visible);
+    void	onOutputBarVisibilityChanged(bool visible);
     void	onTreeCurrentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
     void	onTreeItemActivated(QTreeWidgetItem *current, int);
     void	onMdEditCurPosChanged();
@@ -268,6 +269,7 @@ protected:
     void	onAction_HTML(bool);
     void	onAction_Source(bool);
     void	onAction_OutlineBar(bool);
+    void	onAction_OutputBar(bool);
     void	onAction_FocusOutline();
     void	onAction_NextTab();
     void	onAction_PrevTab();

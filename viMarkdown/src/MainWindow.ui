@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>400</height>
+    <width>707</width>
+    <height>580</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -44,7 +44,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>600</width>
+     <width>707</width>
      <height>33</height>
     </rect>
    </property>
@@ -91,6 +91,7 @@
     </property>
     <addaction name="separator"/>
     <addaction name="action_OutlineBar"/>
+    <addaction name="action_OutputBar"/>
     <addaction name="action_FocusOutline"/>
     <addaction name="action_NextTab"/>
     <addaction name="action_PrevTab"/>
@@ -296,6 +297,36 @@
         </property>
        </column>
       </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="outputBar">
+   <property name="windowTitle">
+    <string>OutputBar</string>
+   </property>
+   <property name="dockLocation">
+    <enum>Qt::DockWidgetArea::BottomDockWidgetArea</enum>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QPlainTextEdit" name="plainTextEdit"/>
      </item>
     </layout>
    </widget>
@@ -1019,6 +1050,14 @@
    </property>
    <property name="shortcut">
     <string>Shift+F8</string>
+   </property>
+  </action>
+  <action name="action_OutputBar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>OutputBar</string>
    </property>
   </action>
  </widget>
