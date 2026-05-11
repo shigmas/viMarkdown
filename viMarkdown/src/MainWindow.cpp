@@ -771,6 +771,7 @@ Keisen mode: Shift + F5
 	connect(markdownPreview, &MarkdownPreview::fontSizeChanged, this, &MainWindow::onChangePreviewFontSize);
 	//connect(markdownPreview, &MarkdownPreview::cursorPositionChanged, this, &MainWindow::onPreviewCurPosChanged);
 	connect(markdownPreview, &MarkdownPreview::posContextChanged, this, &MainWindow::onPrvPosContextChanged);
+	connect(markdownPreview, &MarkdownPreview::do_output, this, &MainWindow::do_output);
 	splitter->addWidget(mdEditor);
 	splitter->addWidget(markdownPreview);
 	splitter->setSizes(QList<int>() << 500 << 500);
@@ -2025,6 +2026,9 @@ void MainWindow::onAction_OutlineBar(bool checked) {
 }
 void MainWindow::onAction_OutputBar(bool checked) {
 	ui->outputBar->setVisible(checked);
+}
+void MainWindow::do_output(const QString& txt) {
+	ui->plainTextEdit->appendPlainText(txt);
 }
 void MainWindow::onAction_FocusOutline() {
 	DocWidget *docWidget = getCurDocWidget();

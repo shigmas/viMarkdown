@@ -74,6 +74,7 @@ signals:
     void	redo_triggered();
     void	posContextChanged(const PosContext &context, const PosContext &acontext);
     void	fontSizeChanged(int delta);
+    void	do_output(const QString&);
 
 protected:
     void	keyPressEvent(QKeyEvent *e) override;

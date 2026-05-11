@@ -221,6 +221,7 @@ protected:
     void	do_test(int type);
     void	do_test(DocWidget*, int nth_path);
     void	run_previewTestScript(const QString&);
+    void	do_output(const QString&);
 
     void	onAction_New();
     void	onAction_NewTab();

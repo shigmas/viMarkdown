@@ -1131,11 +1131,15 @@ void MarkdownPreview::do_SVG(QTextBlock& srcBlock, QTextCursor& cursor) {
 	QImage img(width, height, QImage::Format_ARGB32);
 	img.fill(Qt::white);
 	QPainter painter(&img);
-	QSvgRenderer renderer(buf.toUtf8());
-	if (!renderer.isValid()) {
-	    qDebug() << "SVGの読み込みに失敗しました:" << buf;
+	if( !buf.trimmed().isEmpty() ) {
+		QSvgRenderer renderer(buf.toUtf8());
+		if (!renderer.isValid()) {
+		    QString mess = "SVGの読み込みに失敗しました:\n" + buf;
+		    qDebug() << mess;
+		    emit do_output(mess);
+		}
+		renderer.render(&painter);
 	}
-	renderer.render(&painter);
 	painter.end();
 	cursor.block().setUserState(US_SVG_BLOCK);
 	cursor.insertImage(img);
