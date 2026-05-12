@@ -270,8 +270,9 @@ protected:
     void	onAction_HTML(bool);
     void	onAction_Source(bool);
     void	onAction_OutlineBar(bool);
-    void	onAction_OutputBar(bool);
     void	onAction_FocusOutline();
+    void	onAction_OutputBar(bool);
+    void	onAction_ClearOutput();
     void	onAction_NextTab();
     void	onAction_PrevTab();
     void	onAction_ToggleFocus();

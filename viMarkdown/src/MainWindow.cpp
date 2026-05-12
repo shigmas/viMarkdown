@@ -512,8 +512,9 @@ void MainWindow::setup_connections() {
 	connect(ui->action_HTML, &QAction::toggled, this, &MainWindow::onAction_HTML);
 	connect(ui->action_Source, &QAction::toggled, this, &MainWindow::onAction_Source);
 	connect(ui->action_OutlineBar, &QAction::toggled, this, &MainWindow::onAction_OutlineBar);
-	connect(ui->action_OutputBar, &QAction::toggled, this, &MainWindow::onAction_OutputBar);
 	connect(ui->action_FocusOutline, &QAction::triggered, this, &MainWindow::onAction_FocusOutline);
+	connect(ui->action_OutputBar, &QAction::toggled, this, &MainWindow::onAction_OutputBar);
+	connect(ui->action_ClearOutput, &QAction::triggered, this, &MainWindow::onAction_ClearOutput);
 	connect(ui->action_NextTab, &QAction::triggered, this, &MainWindow::onAction_NextTab);
 	connect(ui->action_PrevTab, &QAction::triggered, this, &MainWindow::onAction_PrevTab);
 	connect(ui->action_ToggleFocus, &QAction::triggered, this, &MainWindow::onAction_ToggleFocus);
@@ -2024,13 +2025,6 @@ void MainWindow::onAction_TagJump() {
 void MainWindow::onAction_OutlineBar(bool checked) {
 	ui->outlineBar->setVisible(checked);
 }
-void MainWindow::onAction_OutputBar(bool checked) {
-	ui->outputBar->setVisible(checked);
-}
-void MainWindow::do_output(const QString& txt) {
-	ui->outputBar->setVisible(true);
-	ui->plainTextEdit->appendPlainText(txt);
-}
 void MainWindow::onAction_FocusOutline() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
@@ -2039,6 +2033,24 @@ void MainWindow::onAction_FocusOutline() {
 	QTreeWidgetItem* item = findTopLevelItemByFullPath(docWidget->m_title, docWidget->m_fullPath);
 	if( item != nullptr )
 		ui->treeWidget->setCurrentItem(item);
+}
+void MainWindow::onAction_OutputBar(bool checked) {
+	ui->outputBar->setVisible(checked);
+}
+void MainWindow::onAction_ClearOutput() {
+	QTextCursor cursor = ui->plainTextEdit->textCursor();
+	cursor.movePosition(QTextCursor::Start);
+	cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
+	cursor.deleteChar();
+	ui->plainTextEdit->setTextCursor(cursor);
+}
+void MainWindow::do_output(const QString& txt) {
+	ui->outputBar->setVisible(true);
+	//ui->plainTextEdit->appendPlainText(txt);
+	QTextCursor cursor = ui->plainTextEdit->textCursor();
+	cursor.movePosition(QTextCursor::End);
+	cursor.insertText(txt);
+	ui->plainTextEdit->setTextCursor(cursor);
 }
 void MainWindow::onAction_NextTab() {
 	if( ui->tabWidget->count() <= 1 ) return;

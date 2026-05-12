@@ -72,7 +72,7 @@ SPR# 状 P Open Close ver     Type  概要
 0069 ◎ C 05/12 05/12 03005│ToDo│自動テスト結果：OutputBar に出力
 0070 ● C 05/12            │ToDo│自動テスト結果：終了後にまとめて出力ではなく、即時表示
 0071 ◎ C 05/12 05/12 03005│ToDo│ASSERT() 等関数を MainWindow のメンバ関数に変更
-0072 ● C 05/12            │ToDo│
+0072 ◎ C 05/12 05/12 03005│ToDo│View > ClearOutput メニュー追加
 0073 ● C 05/12            │ToDo│
 0074 ● C 05/12            │ToDo│
 0075 ● C 05/12            │ToDo│

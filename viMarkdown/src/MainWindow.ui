@@ -91,8 +91,9 @@
     </property>
     <addaction name="separator"/>
     <addaction name="action_OutlineBar"/>
-    <addaction name="action_OutputBar"/>
     <addaction name="action_FocusOutline"/>
+    <addaction name="action_OutputBar"/>
+    <addaction name="action_ClearOutput"/>
     <addaction name="action_NextTab"/>
     <addaction name="action_PrevTab"/>
     <addaction name="action_ToggleFocus"/>
@@ -1058,6 +1059,11 @@
    </property>
    <property name="text">
     <string>OutputBar</string>
+   </property>
+  </action>
+  <action name="action_ClearOutput">
+   <property name="text">
+    <string>&amp;ClearOutput</string>
    </property>
   </action>
  </widget>

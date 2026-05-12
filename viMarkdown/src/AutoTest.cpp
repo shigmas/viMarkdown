@@ -225,7 +225,7 @@ bool MainWindow::ASSERT(bool actual, int ln) {
 	++g_tested_count;
 	if( actual ) return true;
 	++g_failed_count;
-	g_result += QString("%1: true expected. but false\n").arg(ln+1);
+	do_output(QString("%1: true expected. but false\n").arg(ln+1));
 	return false;
 }
 //	undone: テンプレート関数化
@@ -239,7 +239,7 @@ bool MainWindow::ASSERT_EQ(int expected, int actual, int ln) {
 	++g_tested_count;
 	if( actual == expected ) return true;
 	++g_failed_count;
-	g_result += QString("%1: %2 expected. but %3\n").arg(ln+1).arg(expected).arg(actual);
+	do_output(QString("%1: %2 expected. but %3\n").arg(ln+1).arg(expected).arg(actual));
 	return false;
 }
 bool MainWindow::ASSERT_EQ(int expected, int actual, int ln, QChar ch, int ix, int type) {
@@ -247,23 +247,23 @@ bool MainWindow::ASSERT_EQ(int expected, int actual, int ln, QChar ch, int ix, i
 	if( actual == expected ) return true;
 	++g_failed_count;
 	if( type == TEST_EtoP_CUR_SYNC )
-		g_result += QString("%1: E [%2] '%3' -> P ix: %4 expected. but %5\n").arg(ln+1).arg(ix).arg(ch).arg(expected).arg(actual);
+		do_output(QString("%1: E [%2] '%3' -> P ix: %4 expected. but %5\n").arg(ln+1).arg(ix).arg(ch).arg(expected).arg(actual));
 	else
-		g_result += QString("%1: P [%2] '%3' -> E ix: %4 expected. but %5\n").arg(ln+1).arg(ix).arg(ch).arg(expected).arg(actual);
+		do_output(QString("%1: P [%2] '%3' -> E ix: %4 expected. but %5\n").arg(ln+1).arg(ix).arg(ch).arg(expected).arg(actual));
 	return false;
 }
 bool MainWindow::ASSERT_EQ(const QChar expected, const QChar actual, int ln) {
 	++g_tested_count;
 	if( actual == expected ) return true;
 	++g_failed_count;
-	g_result += QString("%1: '%2' expected. but '%3'\n").arg(ln+1).arg(expected).arg(actual);
+	do_output(QString("%1: '%2' expected. but '%3'\n").arg(ln+1).arg(expected).arg(actual));
 	return false;
 }
 bool MainWindow::ASSERT_EQ(const QString &expected, const QString &actual, int ln) {
 	++g_tested_count;
 	if( actual == expected ) return true;
 	++g_failed_count;
-	g_result += QString("%1: '%2' expected. but '%3'\n").arg(ln+1).arg(expected).arg(actual);
+	do_output(QString("%1: '%2' expected. but '%3'\n").arg(ln+1).arg(expected).arg(actual));
 	return false;
 }
 bool isCommentOuted(const BlockData* data) {
@@ -298,12 +298,12 @@ void MainWindow::do_test(int type) {
 	if( docWidget == nullptr ) return;
 	int total_tested = 0;
 	int total_failed = 0;
-	g_result = "\n# Test Result:\n\n";
+	do_output("\n# Test Result:\n\n");
 	if( (type & TEST_CHAR_FLAGS) != 0 ) {
 		g_tested_count = 0;
 		g_failed_count = 0;
 		test_charFlags(docWidget);			//	m_charFlags[] テスト
-		g_result += QString("\nTest char flags: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count);
+		do_output(QString("\nTest char flags: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count));
 		total_tested += g_tested_count;
 		total_failed += g_failed_count;
 	}
@@ -311,7 +311,7 @@ void MainWindow::do_test(int type) {
 		g_tested_count = 0;
 		g_failed_count = 0;
 		test_contextAt(docWidget);			//	MarkdownEditor::contextAt テスト
-		g_result += QString("\nTest MarkdownEditor::contextAt: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count);
+		do_output(QString("\nTest MarkdownEditor::contextAt: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count));
 		total_tested += g_tested_count;
 		total_failed += g_failed_count;
 	}
@@ -320,7 +320,7 @@ void MainWindow::do_test(int type) {
 		g_failed_count = 0;
 		docWidget->m_editor->setPlainText(QA_MD_TEXT_2);
 		do_test(docWidget, TEST_LINE_CRSP);
-		g_result += QString("\nTest Line Corresponding: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count);
+		do_output(QString("\nTest Line Corresponding: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count));
 		total_tested += g_tested_count;
 		total_failed += g_failed_count;
 	}
@@ -330,7 +330,7 @@ void MainWindow::do_test(int type) {
 		do_test(docWidget, TEST_EtoP_CUR_SYNC);		//	EtoP 行内表示文字一致テスト
 		//g_tested_count -= n_testted;	//	重複数分
 		//g_failed_count -= n_failed;
-		g_result += QString("\nTest EtoP CurSync: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count);
+		do_output(QString("\nTest EtoP CurSync: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count));
 		total_tested += g_tested_count;
 		total_failed += g_failed_count;
 	}
@@ -341,17 +341,17 @@ void MainWindow::do_test(int type) {
 		do_test(docWidget, TEST_PtoE_CUR_SYNC);		//	PtoE 行内表示文字一致テスト
 		//g_tested_count -= n_testted;	//	重複数分
 		//g_failed_count -= n_failed;
-		g_result += QString("\nTest PtoE CurSync: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count);
+		do_output(QString("\nTest PtoE CurSync: %1 failed / %2 tested.\n\n").arg(g_failed_count).arg(g_tested_count));
 		total_tested += g_tested_count;
 		total_failed += g_failed_count;
 	}
 	//do_test(docWidget, PATH_3);		//	PtoE 行内表示文字一致テスト
 	//QString mess = QString("Total: %1 failed / %2 tested. (Fail:%3%)")
 	//				.arg(total_failed).arg(total_tested).arg(total_failed*100.0/total_tested, 0, 'f', 1);
-	QString mess = QString("Total: %1 failed / %2 tested. (Success:%3%)")
+	QString mess = QString("\nTotal: %1 failed / %2 tested. (Success:%3%)")
 					.arg(total_failed).arg(total_tested).arg(100.0 - total_failed*100.0/total_tested, 0, 'f', 1);
 	statusBar()->showMessage(mess);
-	//g_result += "\n" + mess;
+	//g_result += mess;
 	do_output(mess);
 #if 0
 	qDebug() << "test result:\n" << g_result;
