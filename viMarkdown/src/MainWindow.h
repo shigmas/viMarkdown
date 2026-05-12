@@ -302,6 +302,13 @@ protected:
     void dropEvent(QDropEvent *event) override;
     void closeEvent(QCloseEvent *event) override;
 
+    bool ASSERT(bool actual, int ln);
+    bool ASSERT_EQ(bool expected, bool actual, int ln);
+    bool ASSERT_EQ(int expected, int actual, int ln);
+    bool ASSERT_EQ(int expected, int actual, int ln, QChar ch, int ix, int type);
+    bool ASSERT_EQ(const QChar expected, const QChar actual, int ln);
+    bool ASSERT_EQ(const QString &expected, const QString &actual, int ln);
+
 private:
     bool	m_processing = false;
     //bool	m_ignoreContentsChanged = false;

@@ -221,7 +221,7 @@ const QString QA_MD_TEXT_2 =
 int g_tested_count = 0;
 int g_failed_count = 0;
 QString g_result;
-bool ASSERT(bool actual, int ln) {
+bool MainWindow::ASSERT(bool actual, int ln) {
 	++g_tested_count;
 	if( actual ) return true;
 	++g_failed_count;
@@ -229,20 +229,20 @@ bool ASSERT(bool actual, int ln) {
 	return false;
 }
 //	undone: テンプレート関数化
-bool ASSERT_EQ(bool expected, bool actual, int ln) {
+bool MainWindow::ASSERT_EQ(bool expected, bool actual, int ln) {
 	++g_tested_count;
 	if( actual == expected ) return true;
 	++g_failed_count;
 	return false;
 }
-bool ASSERT_EQ(int expected, int actual, int ln) {
+bool MainWindow::ASSERT_EQ(int expected, int actual, int ln) {
 	++g_tested_count;
 	if( actual == expected ) return true;
 	++g_failed_count;
 	g_result += QString("%1: %2 expected. but %3\n").arg(ln+1).arg(expected).arg(actual);
 	return false;
 }
-bool ASSERT_EQ(int expected, int actual, int ln, QChar ch, int ix, int type) {
+bool MainWindow::ASSERT_EQ(int expected, int actual, int ln, QChar ch, int ix, int type) {
 	++g_tested_count;
 	if( actual == expected ) return true;
 	++g_failed_count;
@@ -252,14 +252,14 @@ bool ASSERT_EQ(int expected, int actual, int ln, QChar ch, int ix, int type) {
 		g_result += QString("%1: P [%2] '%3' -> E ix: %4 expected. but %5\n").arg(ln+1).arg(ix).arg(ch).arg(expected).arg(actual);
 	return false;
 }
-bool ASSERT_EQ(const QChar expected, const QChar actual, int ln) {
+bool MainWindow::ASSERT_EQ(const QChar expected, const QChar actual, int ln) {
 	++g_tested_count;
 	if( actual == expected ) return true;
 	++g_failed_count;
 	g_result += QString("%1: '%2' expected. but '%3'\n").arg(ln+1).arg(expected).arg(actual);
 	return false;
 }
-bool ASSERT_EQ(const QString &expected, const QString &actual, int ln) {
+bool MainWindow::ASSERT_EQ(const QString &expected, const QString &actual, int ln) {
 	++g_tested_count;
 	if( actual == expected ) return true;
 	++g_failed_count;
@@ -351,8 +351,8 @@ void MainWindow::do_test(int type) {
 	QString mess = QString("Total: %1 failed / %2 tested. (Success:%3%)")
 					.arg(total_failed).arg(total_tested).arg(100.0 - total_failed*100.0/total_tested, 0, 'f', 1);
 	statusBar()->showMessage(mess);
-	g_result += "\n" + mess;
-	do_output(g_result);
+	//g_result += "\n" + mess;
+	do_output(mess);
 #if 0
 	qDebug() << "test result:\n" << g_result;
 	QTextCursor cursor = docWidget->m_editor->textCursor();
