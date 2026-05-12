@@ -1,4 +1,5 @@
-﻿#include <QPlainTextEdit>
+﻿#include <QApplication>
+#include <QPlainTextEdit>
 #include <QTextEdit>
 #include <QTextCursor>
 #include <QTextBlock>
@@ -11,6 +12,7 @@
 #include <QMimeData>
 #include <QFileInfo>
 #include <QDir>
+#include <QStatusBar>
 #include "MarkdownEditor.h"
 #include "MainWindow.h"
 #include "DocWidget.h"

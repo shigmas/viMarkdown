@@ -60,9 +60,21 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <IncludePath>$(SolutionDir)3rdparty/lunasvg/3rdparty/plutovg/include;$(SolutionDir)3rdparty/lunasvg/include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <IncludePath>$(SolutionDir)3rdparty/lunasvg/3rdparty/plutovg/include;$(SolutionDir)3rdparty/lunasvg/include;$(IncludePath)</IncludePath>
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>LUNASVG_STATIC;PLUTOVG_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>LUNASVG_STATIC;PLUTOVG_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -117,9 +129,9 @@
     <ClInclude Include="DocWidget.h" />
     <QtMoc Include="MarkdownPreview.h" />
     <QtMoc Include="MarkdownEditor.h" />
-    <QtMoc Include="SettingsDialog.h" />
     <QtMoc Include="ReplaceDialog.h" />
     <QtMoc Include="LangDialog.h" />
+    <QtMoc Include="SettingsDialog.h" />
     <ClInclude Include="ver.h" />
   </ItemGroup>
   <ItemGroup>

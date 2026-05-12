@@ -82,13 +82,13 @@
     <QtMoc Include="MarkdownEditor.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="SettingsDialog.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="ReplaceDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="LangDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="SettingsDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

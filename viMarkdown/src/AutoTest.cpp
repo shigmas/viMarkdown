@@ -24,6 +24,7 @@
 #include <QToolButton>
 #include <QTextTable>
 #include <QRegularExpression>
+#include <QStatusBar>
 #include "ver.h"
 #include "MainWindow.h"
 #include "DocWidget.h"
@@ -351,10 +352,13 @@ void MainWindow::do_test(int type) {
 					.arg(total_failed).arg(total_tested).arg(100.0 - total_failed*100.0/total_tested, 0, 'f', 1);
 	statusBar()->showMessage(mess);
 	g_result += "\n" + mess;
+	do_output(g_result);
+#if 0
 	qDebug() << "test result:\n" << g_result;
 	QTextCursor cursor = docWidget->m_editor->textCursor();
 	cursor.movePosition(QTextCursor::End);
 	cursor.insertText(g_result);
+#endif
 }
 void MainWindow::do_test(DocWidget *docWidget, int type) {
 	QTextBlock block1 = docWidget->m_editor->document()->firstBlock();

@@ -11,6 +11,7 @@
 #include <QSvgRenderer>
 #include <QXmlStreamReader>
 #include <qpainter.h>
+#include <QStatusBar>
 #include <assert.h>
 #include "MarkdownPreview.h"
 #include "MainWindow.h"

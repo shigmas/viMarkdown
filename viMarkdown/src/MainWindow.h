@@ -2,7 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include <qsplitter>
-#include "ui_MainWindow.h"
+//#include "ui_MainWindow.h"
 //#include "markdowntohtmlconvertor.h"
 
 QT_BEGIN_NAMESPACE
