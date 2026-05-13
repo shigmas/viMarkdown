@@ -345,7 +345,8 @@ void MainWindow::onAction_Grep() {
 			QStringList filters;
 		    filters << "*.md";
 		    QFileInfoList fileList = directory.entryInfoList(filters, QDir::Files | QDir::NoDotAndDotDot);
-		    do_output(QString("Grepping '%1' under '%2' [*.md]...\n").arg(searchText).arg(dirPath));
+		    do_output(QString(tr("Grepping '%1' in *.md under '%2' ...\n")).arg(searchText).arg(dirPath));
+		    int cnt = 0;
 		    for (const QFileInfo &fileInfo : fileList) {
 		        QFile file(fileInfo.absoluteFilePath());
 		        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) continue;
@@ -361,10 +362,13 @@ void MainWindow::onAction_Grep() {
 					        do_output("\n\"" + fileInfo.fileName() + "\"\n");
 		            	}
 		            	do_output(QString("%1: %2\n").arg(lineNum, 4).arg(line));
+		            	++cnt;
 		            }
 		        }
 		        file.close();
 		    }
+		    do_output(QString(tr("\nGrepped '%1' in *.md under '%2'.\n")).arg(searchText).arg(dirPath));
+		    do_output(QString(tr("%1 lines matched.")).arg(cnt));
 		}
 	}
 }
