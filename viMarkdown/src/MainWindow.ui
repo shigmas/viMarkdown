@@ -198,6 +198,7 @@
     <addaction name="action_FindWord"/>
     <addaction name="action_ClearSearchHighlights"/>
     <addaction name="action_Replace"/>
+    <addaction name="action_Grep"/>
    </widget>
    <widget class="QMenu" name="menu_Tool">
     <property name="title">
@@ -1068,6 +1069,14 @@
   <action name="action_ClearOutput">
    <property name="text">
     <string>&amp;ClearOutput</string>
+   </property>
+  </action>
+  <action name="action_Grep">
+   <property name="text">
+    <string>&amp;Grep...</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F4</string>
    </property>
   </action>
  </widget>

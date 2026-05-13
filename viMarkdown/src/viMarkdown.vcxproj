@@ -106,6 +106,7 @@
   <ItemGroup>
     <ClCompile Include="AutoTest.cpp" />
     <ClCompile Include="DocWidget.cpp" />
+    <ClCompile Include="GrepDialog.cpp" />
     <ClCompile Include="LangDialog.cpp" />
     <ClCompile Include="MarkdownPreview.cpp" />
     <ClCompile Include="MarkdownEditor.cpp">
@@ -117,6 +118,7 @@
     <ClCompile Include="ReplaceDialog.cpp" />
     <ClCompile Include="SettingsDialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
+    <QtUic Include="GrepDialog.ui" />
     <QtUic Include="LangDialog.ui" />
     <QtUic Include="MainWindow.ui" />
     <QtMoc Include="MainWindow.h" />
@@ -132,6 +134,7 @@
     <QtMoc Include="ReplaceDialog.h" />
     <QtMoc Include="LangDialog.h" />
     <QtMoc Include="SettingsDialog.h" />
+    <QtMoc Include="GrepDialog.h" />
     <ClInclude Include="ver.h" />
   </ItemGroup>
   <ItemGroup>

@@ -61,6 +61,9 @@
     <ClCompile Include="MarkdownEditor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GrepDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DocWidget.h">
@@ -91,6 +94,9 @@
     <QtMoc Include="SettingsDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="GrepDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="SettingsDialog.ui">
@@ -100,6 +106,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="LangDialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="GrepDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

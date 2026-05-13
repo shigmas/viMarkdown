@@ -24,6 +24,8 @@
 #include <QToolButton>
 #include <QTextTable>
 #include <QShortcut>
+#include <QFile>
+#include <QTextStream>
 #include "ver.h"
 #include "MainWindow.h"
 #include "ui_mainwindow.h"
@@ -33,6 +35,7 @@
 #include "LangDialog.h"
 #include "SettingsDialog.h"
 #include "ReplaceDialog.h"
+#include "GrepDialog.h"
 
 #ifdef Q_OS_WIN
 //#ifdef _WIN32
@@ -327,7 +330,41 @@ void MainWindow::onAction_Replace() {
 	connect(&dlg, &ReplaceDialog::do_redo, this, &MainWindow::do_redo_replaceDlg);
 	if (dlg.exec() == QDialog::Accepted) {
 	}
-
+}
+void MainWindow::onAction_Grep() {
+	GrepDialog dlg(this);
+	if (dlg.exec() == QDialog::Accepted) {
+		const QString searchText = dlg.searchText();
+		const QString dirPath = dlg.dirText();
+		qDebug() << "searchText = " << dlg.searchText();
+		qDebug() << "dir = " << dlg.dirText();
+		if( !searchText.isEmpty() ) {
+			QDir directory(dirPath);
+			QStringList filters;
+		    filters << "*.md";
+		    QFileInfoList fileList = directory.entryInfoList(filters, QDir::Files | QDir::NoDotAndDotDot);
+		    do_output("Grep...\n");
+		    for (const QFileInfo &fileInfo : fileList) {
+		        QFile file(fileInfo.absoluteFilePath());
+		        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) continue;
+		        bool fn_printed = false;
+	        	QTextStream in(&file);
+		        int lineNum = 0;
+		        while (!in.atEnd()) {
+		            lineNum++;
+		            QString line = in.readLine();
+		            if (line.contains(searchText, Qt::CaseInsensitive)) {
+		            	if( !fn_printed ) {
+		            		fn_printed = true;
+					        do_output("\n\"" + fileInfo.fileName() + "\"\n");
+		            	}
+		            	do_output(QString("%1: %2\n").arg(lineNum, 4).arg(line));
+		            }
+		        }
+		        file.close();
+		    }
+		}
+	}
 }
 void MainWindow::onAction_Find() {
 	m_searchCB->setFocus();
@@ -504,6 +541,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_FindWord, &QAction::triggered, this, &MainWindow::onAction_FindWord);
 	connect(ui->action_ClearSearchHighlights, &QAction::triggered, this, &MainWindow::onAction_ClearSearchHighlights);
 	connect(ui->action_Replace, &QAction::triggered, this, &MainWindow::onAction_Replace);
+	connect(ui->action_Grep, &QAction::triggered, this, &MainWindow::onAction_Grep);
 	connect(ui->action_KeisenMode, &QAction::toggled, this, &MainWindow::onAction_KeisenMode);
 	connect(ui->action_ThinKeisen, &QAction::toggled, this, &MainWindow::onAction_ThinKeisen);
 	connect(ui->action_ThickKeisen, &QAction::toggled, this, &MainWindow::onAction_ThickKeisen);
@@ -2336,4 +2374,4 @@ void MainWindow::onAction_About() {
 		"<br>Powered by Qt 6 and C++</p>"
 	);
 }
-//----------------------------------------------------------------------
+//---------------------------------------------------------------------

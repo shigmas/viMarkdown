@@ -262,6 +262,7 @@ protected:
     void	onAction_FindWord();
     void	onAction_ClearSearchHighlights();
     void	onAction_Replace();
+    void	onAction_Grep();
     void	onAction_KeisenMode(bool);
     void	onAction_ThinKeisen(bool);
     void	onAction_ThickKeisen(bool);
