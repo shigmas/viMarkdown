@@ -36,6 +36,7 @@
 #include "SettingsDialog.h"
 #include "ReplaceDialog.h"
 #include "GrepDialog.h"
+#include "OutputView.h"
 
 #ifdef Q_OS_WIN
 //#ifdef _WIN32
@@ -62,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent)
 	load_settings();
 	//static bool to_restore_win = true;
 	ui->setupUi(this);
+	connect(ui->plainTextEdit, &OutputView::do_open, this, &MainWindow::do_open_pl);
 	ui->mainToolBar->setStyleSheet(
 	    "QToolButton:checked {"
 	    "   background-color: rgba(0, 120, 215, 60);" // 淡い青色（RGBAの最後が透明度 0-255）
@@ -1449,6 +1451,9 @@ bool hasBOM(QFile &file) {
 	QByteArray header = file.peek(3);
 	return header.startsWith("\xEF\xBB\xBF") ||		//	UTF-8
 			header.startsWith("\xFF\xFE") || header.startsWith("\xFE\xFF");		//	UTF-16 BE, LE
+}
+void MainWindow::do_open_pl(const QString fullPath, int ln) {
+	do_open("", fullPath);
 }
 bool MainWindow::do_open(const QString& title0, const QString& fullPath, const QString name, bool readOnly) {
 	qDebug() << "do_open(" << title0 << ", " << fullPath << ")";
