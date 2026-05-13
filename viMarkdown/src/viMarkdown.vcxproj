@@ -115,6 +115,7 @@
       <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|x64'">input</DynamicSource>
       <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName>
     </ClCompile>
+    <ClCompile Include="OutputView.cpp" />
     <ClCompile Include="ReplaceDialog.cpp" />
     <ClCompile Include="SettingsDialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
@@ -135,6 +136,7 @@
     <QtMoc Include="LangDialog.h" />
     <QtMoc Include="SettingsDialog.h" />
     <QtMoc Include="GrepDialog.h" />
+    <QtMoc Include="OutputView.h" />
     <ClInclude Include="ver.h" />
   </ItemGroup>
   <ItemGroup>

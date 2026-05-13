@@ -343,7 +343,7 @@ void MainWindow::onAction_Grep() {
 			QStringList filters;
 		    filters << "*.md";
 		    QFileInfoList fileList = directory.entryInfoList(filters, QDir::Files | QDir::NoDotAndDotDot);
-		    do_output("Grep...\n");
+		    do_output(QString("Grepping '%1' under '%2' [*.md]...\n").arg(searchText).arg(dirPath));
 		    for (const QFileInfo &fileInfo : fileList) {
 		        QFile file(fileInfo.absoluteFilePath());
 		        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) continue;
