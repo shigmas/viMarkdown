@@ -23,6 +23,11 @@ set(PROJECT_SOURCES
         LangDialog.cpp
         LangDialog.h
         LangDialog.ui
+        GrepDialog.h
+        GrepDialog.cpp
+        GrepDialog.ui
+        OutputView.h
+        OutputView.cpp
         ver.h
         ${TS_FILES}
 )
