@@ -347,6 +347,7 @@ void MainWindow::onAction_Grep() {
 		    QFileInfoList fileList = directory.entryInfoList(filters, QDir::Files | QDir::NoDotAndDotDot);
 		    do_output(QString(tr("Grepping '%1' in *.md under '%2' ...\n")).arg(searchText).arg(dirPath));
 		    int cnt = 0;
+		    auto ic = g.m_ignoreCase ? Qt::CaseInsensitive : Qt::CaseSensitive;
 		    for (const QFileInfo &fileInfo : fileList) {
 		        QFile file(fileInfo.absoluteFilePath());
 		        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) continue;
@@ -356,7 +357,7 @@ void MainWindow::onAction_Grep() {
 		        while (!in.atEnd()) {
 		            lineNum++;
 		            QString line = in.readLine();
-		            if (line.contains(searchText, Qt::CaseInsensitive)) {
+		            if (line.contains(searchText, ic)) {
 		            	if( !fn_printed ) {
 		            		fn_printed = true;
 					        do_output("\n\"" + fileInfo.fileName() + "\"\n");
