@@ -1456,8 +1456,14 @@ bool hasBOM(QFile &file) {
 	return header.startsWith("\xEF\xBB\xBF") ||		//	UTF-8
 			header.startsWith("\xFF\xFE") || header.startsWith("\xFE\xFF");		//	UTF-16 BE, LE
 }
-void MainWindow::do_open_pl(const QString fullPath, int ln) {
-	do_open("", fullPath);
+void MainWindow::do_open_pl(const QString fullPath, int ln) {		//	ln: 0 orgin
+	if( !do_open("", fullPath) ) return;
+	DocWidget *docWidget = getCurDocWidget();;
+	if( docWidget == nullptr ) return;
+	QTextBlock block = docWidget->m_editor->document()->findBlockByNumber(ln);
+	QTextCursor cursor(block);
+	docWidget->m_editor->setTextCursor(cursor);
+	docWidget->m_editor->ensureCursorVisible();
 }
 bool MainWindow::do_open(const QString& title0, const QString& fullPath, const QString name, bool readOnly) {
 	qDebug() << "do_open(" << title0 << ", " << fullPath << ")";

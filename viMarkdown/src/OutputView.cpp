@@ -23,5 +23,5 @@ void OutputView::mouseDoubleClickEvent(QMouseEvent *e) {
 	QString path = block.text();
 	path = path.mid(1, path.size() - 2);		//	前後の " を削除
 	qDebug() << "path = " << path;
-	emit do_open(path, ln);
+	emit do_open(path, ln-1);
 }
