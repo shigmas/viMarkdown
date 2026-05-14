@@ -81,7 +81,7 @@ SPR# 状 P Open Close ver     Type  概要
 0078 ◎ C 05/14 05/14 03006│ToDo│OutputBar > QPlainTextEdit：サブクラス化
 0079 ◎ C 05/14 05/14 03006│ToDo│Grep マッチ行ダブルクリックでその文書を開く
 0080 ◎ C 05/14 05/14 03006│ToDo│Grep マッチ行ダブルクリック：当該行にジャンプ
-0081 ● C 05/14            │ToDo│Grep ダイアログ：検索履歴設定
+0081 ◎ C 05/14 05/14 03006│ToDo│Grep ダイアログ：検索履歴設定
 0082 ● C 05/14            │ToDo│Grep 終了時：マッチ部分背景強調
 0083 ◎ C 05/14 05/14 03006│ToDo│Grep ダイアログ：ignore case チェックボックス追加
 0084 ● C 05/14            │ToDo│

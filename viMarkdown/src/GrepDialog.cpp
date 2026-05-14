@@ -4,12 +4,14 @@
 
 extern Global g;
 
-GrepDialog::GrepDialog(QWidget *parent)
+GrepDialog::GrepDialog(const QStringList &hist, QWidget *parent)
 	: QDialog(parent)
 	, ui(new Ui::GrepDialogClass())
 {
 	ui->setupUi(this);
 	QString currentPath = QDir::currentPath();
+    ui->searchTextCB->clear();
+	ui->searchTextCB->addItems(hist);
 	ui->dirCB->addItem(currentPath);
 	ui->dirCB->setCurrentText(currentPath);
 	ui->ignoreCase->setCheckState(g.m_ignoreCase ? Qt::Checked : Qt::Unchecked);

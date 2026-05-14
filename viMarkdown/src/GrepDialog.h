@@ -12,7 +12,7 @@ class GrepDialog : public QDialog
 	Q_OBJECT
 
 public:
-	GrepDialog(QWidget *parent = nullptr);
+	GrepDialog(const QStringList &hist, QWidget *parent = nullptr);
 	~GrepDialog();
 
 	const QString searchText() const { return ui->searchTextCB->currentText(); }

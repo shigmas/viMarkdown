@@ -334,13 +334,15 @@ void MainWindow::onAction_Replace() {
 	}
 }
 void MainWindow::onAction_Grep() {
-	GrepDialog dlg(this);
+	GrepDialog dlg(m_searchHist, this);
 	if (dlg.exec() == QDialog::Accepted) {
 		const QString searchText = dlg.searchText();
 		const QString dirPath = dlg.dirText();
 		qDebug() << "searchText = " << dlg.searchText();
 		qDebug() << "dir = " << dlg.dirText();
 		if( !searchText.isEmpty() ) {
+			m_searchHist.push_front(searchText);
+			m_searchHist.removeDuplicates();	//	重複削除
 			QDir directory(dirPath);
 			QStringList filters;
 		    filters << "*.md";
