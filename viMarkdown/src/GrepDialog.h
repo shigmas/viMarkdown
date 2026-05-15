@@ -19,7 +19,8 @@ public:
 	const QString dirText() const { return ui->dirCB->currentText(); }
 
 protected:
-	void	onCheckStateChanged(Qt::CheckState state);
+	void	onIgnoreCaseCheckStateChanged(Qt::CheckState state);
+	void	onRegexpCheckStateChanged(Qt::CheckState state);
 
 private:
 	Ui::GrepDialogClass *ui;

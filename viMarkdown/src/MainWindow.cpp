@@ -111,6 +111,7 @@ MainWindow::~MainWindow()
 void MainWindow::load_settings() {
 	QSettings settings;
 	g.m_ignoreCase = settings.value(KEY_IGNORE_CASE, true).toBool();
+	g.m_regexp = settings.value(KEY_REGEXP, true).toBool();
 	g.m_auto_svg_completer = settings.value(KEY_AUTO_SVG_CMPL, true).toBool();
 	g.m_editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE, 12).toInt();		//	デフォルト：12pt
 	g.m_previewFontSize = settings.value(KEY_PREVIEW_FONT_SIZE, 12).toInt();		//	デフォルト：12pt
@@ -132,6 +133,7 @@ void MainWindow::load_settings() {
 void MainWindow::save_settings() {
     QSettings settings;
     settings.setValue(KEY_IGNORE_CASE, g.m_ignoreCase);
+    settings.setValue(KEY_REGEXP, g.m_regexp);
     settings.setValue(KEY_AUTO_SVG_CMPL, g.m_auto_svg_completer);
     settings.setValue(KEY_EDITOR_FONT_SIZE, g.m_editorFontSize);
     settings.setValue(KEY_PREVIEW_FONT_SIZE, g.m_previewFontSize);
@@ -350,6 +352,9 @@ void MainWindow::onAction_Grep() {
 		    do_output(QString(tr("Grepping '%1' in *.md under '%2' ...\n")).arg(searchText).arg(dirPath));
 		    int cnt = 0;
 		    auto ic = g.m_ignoreCase ? Qt::CaseInsensitive : Qt::CaseSensitive;
+		    QRegularExpression re;
+		    if( g.m_regexp )
+				re = QRegularExpression(searchText);
 		    for (const QFileInfo &fileInfo : fileList) {
 		        QFile file(fileInfo.absoluteFilePath());
 		        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) continue;
@@ -359,7 +364,9 @@ void MainWindow::onAction_Grep() {
 		        while (!in.atEnd()) {
 		            lineNum++;
 		            QString line = in.readLine();
-		            if (line.contains(searchText, ic)) {
+		            if (!g.m_regexp && line.contains(searchText, ic) ||
+		            	g.m_regexp && re.match(line).hasMatch())
+		            {
 		            	if( !fn_printed ) {
 		            		fn_printed = true;
 					        do_output("\n\"" + fileInfo.fileName() + "\"\n");

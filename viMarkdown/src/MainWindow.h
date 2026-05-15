@@ -10,6 +10,7 @@ namespace Ui { class MainWindowClass; };
 QT_END_NAMESPACE
 
 #define	KEY_IGNORE_CASE				u"ignoreCase"
+#define	KEY_REGEXP					u"regexp"
 #define	KEY_EDITOR_FONT_SIZE		u"editorFontSize"
 #define	KEY_PREVIEW_FONT_SIZE		u"previewFontSize"
 #define	KEY_ACTIVA_LINE_COLOR		u"activeLineColor"
@@ -102,6 +103,7 @@ public:
 
 struct Global {
 	bool	m_ignoreCase;			//	検索時：大文字小文字同一視
+	bool	m_regexp;				//	正規表現検索
 	bool	m_japanese;
 	bool	m_auto_svg_completer;	//	SVG補完ダイアログ自動表示
 	int		m_editorFontSize;
