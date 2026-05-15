@@ -345,6 +345,7 @@ void MainWindow::onAction_Grep() {
 		qDebug() << "searchText = " << dlg.searchText();
 		qDebug() << "dir = " << dlg.dirText();
 		if( !searchText.isEmpty() ) {
+			save_settings();
 			if( g.m_clearOutput ) onAction_ClearOutput();
 			m_searchHist.push_front(searchText);
 			m_searchHist.removeDuplicates();	//	重複削除
