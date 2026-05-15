@@ -377,7 +377,7 @@ void MainWindow::onAction_Grep() {
 		            	if( !fn_printed ) {
 		            		++nfiles;
 		            		fn_printed = true;
-					        do_output("\n\"" + fileInfo.fileName() + "\"\n");
+					        do_output("\n\"" + fileInfo.absoluteFilePath() + "\"\n");
 		            	}
 		            	do_output(QString("%1: %2\n").arg(lineNum, 4).arg(line));
 		            	++cnt;
