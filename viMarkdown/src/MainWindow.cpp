@@ -184,6 +184,7 @@ void MainWindow::insertSearchComboBox() {
 	m_replaceHist = settings.value("search/replace").toStringList();
     m_searchCB->clear();
     m_searchCB->addItems(m_searchHist);
+	m_grepDirHist = settings.value("search/grepDir").toStringList();
     //	ついでに最近のファイル・ディレクトリをカレントディレクトリに設定
 	QStringList recentFilePaths = settings.value(KEY_RECENT_FILES).toStringList();
 	if( !recentFilePaths.isEmpty() ) {
@@ -338,7 +339,7 @@ void MainWindow::onAction_Replace() {
 	}
 }
 void MainWindow::onAction_Grep() {
-	GrepDialog dlg(m_searchHist, this);
+	GrepDialog dlg(m_searchHist, m_grepDirHist, this);
 	if (dlg.exec() == QDialog::Accepted) {
 		const QString searchText = dlg.searchText();
 		const QString dirPath = dlg.dirText();
@@ -349,6 +350,8 @@ void MainWindow::onAction_Grep() {
 			if( g.m_clearOutput ) onAction_ClearOutput();
 			m_searchHist.push_front(searchText);
 			m_searchHist.removeDuplicates();	//	重複削除
+			m_grepDirHist.push_front(dirPath);
+			m_grepDirHist.removeDuplicates();	//	重複削除
 			QDir directory(dirPath);
 			QStringList filters;
 		    filters << "*.md";
@@ -626,6 +629,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     //    history << m_searchCB->itemText(i);
     //}
     settings.setValue("search/history", m_searchHist);
+    settings.setValue("search/grepDir", m_grepDirHist);
 	settings.beginGroup("MainWindow");
 	settings.setValue("geometry", saveGeometry()); // 位置・サイズ
 	settings.setValue("windowState", saveState()); // ツールバー・ドックの状態
