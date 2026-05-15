@@ -112,6 +112,7 @@ void MainWindow::load_settings() {
 	QSettings settings;
 	g.m_ignoreCase = settings.value(KEY_IGNORE_CASE, true).toBool();
 	g.m_regexp = settings.value(KEY_REGEXP, true).toBool();
+	g.m_clearOutput = settings.value(KEY_CLEAR_OUTPUT, true).toBool();
 	g.m_auto_svg_completer = settings.value(KEY_AUTO_SVG_CMPL, true).toBool();
 	g.m_editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE, 12).toInt();		//	デフォルト：12pt
 	g.m_previewFontSize = settings.value(KEY_PREVIEW_FONT_SIZE, 12).toInt();		//	デフォルト：12pt
@@ -134,6 +135,7 @@ void MainWindow::save_settings() {
     QSettings settings;
     settings.setValue(KEY_IGNORE_CASE, g.m_ignoreCase);
     settings.setValue(KEY_REGEXP, g.m_regexp);
+    settings.setValue(KEY_CLEAR_OUTPUT, g.m_clearOutput);
     settings.setValue(KEY_AUTO_SVG_CMPL, g.m_auto_svg_completer);
     settings.setValue(KEY_EDITOR_FONT_SIZE, g.m_editorFontSize);
     settings.setValue(KEY_PREVIEW_FONT_SIZE, g.m_previewFontSize);
@@ -343,6 +345,7 @@ void MainWindow::onAction_Grep() {
 		qDebug() << "searchText = " << dlg.searchText();
 		qDebug() << "dir = " << dlg.dirText();
 		if( !searchText.isEmpty() ) {
+			if( g.m_clearOutput ) onAction_ClearOutput();
 			m_searchHist.push_front(searchText);
 			m_searchHist.removeDuplicates();	//	重複削除
 			QDir directory(dirPath);
