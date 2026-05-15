@@ -19,6 +19,7 @@ public:
 	const QString dirText() const { return ui->dirCB->currentText(); }
 
 protected:
+	void	onDirBtnClicked();
 	void	onIgnoreCaseCheckStateChanged(Qt::CheckState state);
 	void	onRegexpCheckStateChanged(Qt::CheckState state);
 

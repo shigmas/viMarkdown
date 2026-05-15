@@ -194,7 +194,7 @@ protected:
     void	onModificationChanged(bool);
     void	onSearchCBActivated();
     void	onMarkdownPreviewLineClicked(/*int,*/ bool);
-    void	onEditorCurPosChanged();
+    //void	onEditorCurPosChanged();
     void	onPreviewCurPosChanged();
     //void	onAnchorClicked(const QString&);
     void	onCurrentTabChanged(int);

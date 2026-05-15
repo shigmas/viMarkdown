@@ -1,3 +1,4 @@
+﻿#include <QFileDialog>
 #include <QDir>
 #include "GrepDialog.h"
 #include "MainWindow.h"
@@ -16,6 +17,7 @@ GrepDialog::GrepDialog(const QStringList &hist, QWidget *parent)
 	ui->dirCB->setCurrentText(currentPath);
 	ui->ignoreCase->setCheckState(g.m_ignoreCase ? Qt::Checked : Qt::Unchecked);
 	ui->regexp->setCheckState(g.m_regexp ? Qt::Checked : Qt::Unchecked);
+	connect(ui->dirPB, &QPushButton::pressed, this, &GrepDialog::onDirBtnClicked);
 	connect(ui->ignoreCase, &QCheckBox::checkStateChanged, this, &GrepDialog::onIgnoreCaseCheckStateChanged);
 	connect(ui->regexp, &QCheckBox::checkStateChanged, this, &GrepDialog::onRegexpCheckStateChanged);
 	connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
@@ -27,6 +29,20 @@ GrepDialog::~GrepDialog()
 	delete ui;
 }
 
+void GrepDialog::onDirBtnClicked() {
+	QString initialDir = ui->dirCB->currentText();
+    if (initialDir.isEmpty())
+        initialDir = QDir::currentPath();
+    QString dir = QFileDialog::getExistingDirectory(
+        this, 
+        tr("Select Directory"), // ダイアログのタイトル
+        initialDir,             // 開始ディレクトリ
+        QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks
+    );
+    if (!dir.isEmpty()) {
+        ui->dirCB->setCurrentText(dir);
+    }
+}
 void GrepDialog::onIgnoreCaseCheckStateChanged(Qt::CheckState state) {
 	g.m_ignoreCase = state == Qt::Checked;
 	qDebug() << "g.m_ignoreCase = " << g.m_ignoreCase;

@@ -350,7 +350,7 @@ void MainWindow::onAction_Grep() {
 		    filters << "*.md";
 		    QFileInfoList fileList = directory.entryInfoList(filters, QDir::Files | QDir::NoDotAndDotDot);
 		    do_output(QString(tr("Grepping '%1' in *.md under '%2' ...\n")).arg(searchText).arg(dirPath));
-		    int cnt = 0;
+		    int cnt = 0, nfiles = 0;
 		    auto ic = g.m_ignoreCase ? Qt::CaseInsensitive : Qt::CaseSensitive;
 		    QRegularExpression re;
 		    if( g.m_regexp )
@@ -368,6 +368,7 @@ void MainWindow::onAction_Grep() {
 		            	g.m_regexp && re.match(line).hasMatch())
 		            {
 		            	if( !fn_printed ) {
+		            		++nfiles;
 		            		fn_printed = true;
 					        do_output("\n\"" + fileInfo.fileName() + "\"\n");
 		            	}
@@ -378,7 +379,7 @@ void MainWindow::onAction_Grep() {
 		        file.close();
 		    }
 		    do_output(QString(tr("\nGrepped '%1' in *.md under '%2'.\n")).arg(searchText).arg(dirPath));
-		    do_output(QString(tr("%1 lines matched.")).arg(cnt));
+		    do_output(QString(tr("%1 lines matches in %2 files.")).arg(cnt).arg(nfiles));
 		}
 	}
 }
