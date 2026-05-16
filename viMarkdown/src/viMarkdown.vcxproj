@@ -104,6 +104,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-blend.c" />
+    <ClCompile Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-canvas.c" />
+    <ClCompile Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-font.c" />
+    <ClCompile Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-ft-math.c" />
+    <ClCompile Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-ft-raster.c" />
+    <ClCompile Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-ft-stroker.c" />
+    <ClCompile Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-matrix.c" />
+    <ClCompile Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-paint.c" />
+    <ClCompile Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-path.c" />
+    <ClCompile Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-rasterize.c" />
+    <ClCompile Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-surface.c" />
+    <ClCompile Include="..\3rdparty\lunasvg\source\graphics.cpp" />
+    <ClCompile Include="..\3rdparty\lunasvg\source\lunasvg.cpp" />
+    <ClCompile Include="..\3rdparty\lunasvg\source\svgelement.cpp" />
+    <ClCompile Include="..\3rdparty\lunasvg\source\svggeometryelement.cpp" />
+    <ClCompile Include="..\3rdparty\lunasvg\source\svglayoutstate.cpp" />
+    <ClCompile Include="..\3rdparty\lunasvg\source\svgpaintelement.cpp" />
+    <ClCompile Include="..\3rdparty\lunasvg\source\svgparser.cpp" />
+    <ClCompile Include="..\3rdparty\lunasvg\source\svgproperty.cpp" />
+    <ClCompile Include="..\3rdparty\lunasvg\source\svgrenderstate.cpp" />
+    <ClCompile Include="..\3rdparty\lunasvg\source\svgtextelement.cpp" />
     <ClCompile Include="AutoTest.cpp" />
     <ClCompile Include="DocWidget.cpp" />
     <ClCompile Include="GrepDialog.cpp" />
@@ -129,6 +150,26 @@
     <QtUic Include="SettingsDialog.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\3rdparty\lunasvg\3rdparty\plutovg\include\plutovg.h" />
+    <ClInclude Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-ft-math.h" />
+    <ClInclude Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-ft-raster.h" />
+    <ClInclude Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-ft-stroker.h" />
+    <ClInclude Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-ft-types.h" />
+    <ClInclude Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-private.h" />
+    <ClInclude Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-stb-image-write.h" />
+    <ClInclude Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-stb-image.h" />
+    <ClInclude Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-stb-truetype.h" />
+    <ClInclude Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-utils.h" />
+    <ClInclude Include="..\3rdparty\lunasvg\include\lunasvg.h" />
+    <ClInclude Include="..\3rdparty\lunasvg\source\graphics.h" />
+    <ClInclude Include="..\3rdparty\lunasvg\source\svgelement.h" />
+    <ClInclude Include="..\3rdparty\lunasvg\source\svggeometryelement.h" />
+    <ClInclude Include="..\3rdparty\lunasvg\source\svglayoutstate.h" />
+    <ClInclude Include="..\3rdparty\lunasvg\source\svgpaintelement.h" />
+    <ClInclude Include="..\3rdparty\lunasvg\source\svgparserutils.h" />
+    <ClInclude Include="..\3rdparty\lunasvg\source\svgproperty.h" />
+    <ClInclude Include="..\3rdparty\lunasvg\source\svgrenderstate.h" />
+    <ClInclude Include="..\3rdparty\lunasvg\source\svgtextelement.h" />
     <ClInclude Include="DocWidget.h" />
     <QtMoc Include="MarkdownPreview.h" />
     <QtMoc Include="MarkdownEditor.h" />
