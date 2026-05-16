@@ -10,6 +10,8 @@ public:
 	OutputView(QWidget *parent);
 	~OutputView();
 
+    void	highlightSearchText(const QString &searchText);
+
 signals:
 	void	do_open(const QString path, int ln);
 

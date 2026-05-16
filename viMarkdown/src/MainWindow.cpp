@@ -389,6 +389,11 @@ void MainWindow::onAction_Grep() {
 		    }
 		    do_output(QString(tr("\nGrepped '%1' in *.md under '%2'.\n")).arg(searchText).arg(dirPath));
 		    do_output(QString(tr("%1 lines matches in %2 files.")).arg(cnt).arg(nfiles));
+
+			DocWidget *docWidget = getCurDocWidget();
+			if( docWidget != nullptr )
+				docWidget->m_editor->highlightSearchText(searchText);
+			ui->plainTextEdit->highlightSearchText(searchText);
 		}
 	}
 }
