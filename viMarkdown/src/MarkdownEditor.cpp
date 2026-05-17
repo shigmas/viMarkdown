@@ -569,7 +569,8 @@ const QStringList svg_elements_lst = {
 	R"(<polygon points="50 50 100 0 150 50 100 100" fill="yellow" stroke="orange" stroke-width="2"/>\n)",
 	R"(<text x="20" y="40" font-family="Arial" font-size="24" text-anchor="" dy="" fill="blue">\nHello SVG!\n</text>\n)",
 	R"(<path d="" />\n)",
-	R"(<path d="\n M 20,100      /* MoveTo: 開始点へ移動 */\n L 50,100      /* LineTo: 直線を引く */\n H 100         /* Horizontal: 水平線を引く */\n V 50          /* Vertical: 垂直線を引く */\n C 120,20 180,20 200,50   /* Cubic Bézier: 3次ベジェ曲線 (制御点1, 制御点2, 終点) */\n S 280,80 250,100         /* Smooth Cubic: 滑らかな3次ベジェ (制御点2, 終点) */\n Q 300,150 250,180        /* Quadratic Bézier: 2次ベジェ曲線 (制御点, 終点) */\n T 150,180                /* Smooth Quadratic: 滑らかな2次ベジェ (終点) */\n A 50,50 0 0 1 100,150    /* Elliptical Arc: 円弧 (半径rx, ry, 回転, 太線フラグ, 方向フラグ, 終点) */\n Z             /* ClosePath: パスを閉じて開始点へ戻る */\n " \n fill="lightgreen" \n stroke="darkgreen" \n stroke-width="3" \n />)",
+	R"(<path d="\n M 20,100\n L 50,100\n H 100\n V 50\n C 120,20 180,20 200,50\n S 280,80 250,100\n Q 300,150 250,180\n T 150,180\n A 50,50 0 0 1 100,150\n Z\n " \n fill="lightgreen" \n stroke="darkgreen" \n stroke-width="3" \n />)",
+	R"SVG(<g fill="yellow" stroke="black" transform="translate(10,20) rotate(30)">\n  \n</g>\n)SVG",
 };
 SvgCompleter::SvgCompleter(QWidget* parent, bool svgtag) : QTextEdit(parent) {
 	m_cmpl_lst = svgtag ? svg_tag_lst : svg_elements_lst;
