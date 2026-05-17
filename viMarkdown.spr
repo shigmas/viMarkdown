@@ -95,7 +95,7 @@ SPR# 状 P Open Close ver     Type  概要
 0092 ◎ A 05/15 05/16 03007│問題│MacOS ではすべてのメニューがグレイアウトされて実行できない
 0093 ◎ C 05/17 05/17 03008│ToDo│AboutDialog：powered by に「LunaSVG」追加
 0094 ◎ C 05/17 05/17 03008│ToDo│SVG 描画：LunaSVG に変更
-0095 ● C 05/17            │ToDo│
+0095 ◎ C 05/17 05/17 03008│ToDo│svg > text に text-anchor="" dy="" 追加
 0096 ● C 05/17            │ToDo│
 0097 ● C 05/17            │ToDo│
 0098 ● C 05/17            │ToDo│
