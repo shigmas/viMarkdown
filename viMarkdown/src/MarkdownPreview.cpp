@@ -16,6 +16,7 @@
 #include "MarkdownPreview.h"
 #include "MainWindow.h"
 #include "DocWidget.h"
+#include "lunasvg.h"
 
 using namespace std;
 
@@ -1129,9 +1130,24 @@ void MarkdownPreview::do_SVG(QTextBlock& srcBlock, QTextCursor& cursor) {
 		data->m_charFlags.fill(PCF_SVG);
 		srcBlock.setUserData(data);
 	}
-	QImage img(width, height, QImage::Format_ARGB32);
-	img.fill(Qt::white);
-	QPainter painter(&img);
+	QImage image(width, height, QImage::Format_ARGB32);
+	image.fill(Qt::white);
+#if 1
+    auto document = lunasvg::Document::loadFromData(buf.toUtf8());
+    if (!document) {
+        // ロード失敗（SVGの構文エラーなど）
+        qDebug() << "load failed.";
+        return;
+    }
+    lunasvg::Bitmap bitmap(
+        image.bits(),
+        image.width(),
+        image.height(),
+        image.bytesPerLine()
+    );
+    document->render(bitmap);
+#else
+	QPainter painter(&image);
 	if( !buf.trimmed().isEmpty() ) {
 		QSvgRenderer renderer(buf.toUtf8());
 		if (!renderer.isValid()) {
@@ -1142,8 +1158,9 @@ void MarkdownPreview::do_SVG(QTextBlock& srcBlock, QTextCursor& cursor) {
 		renderer.render(&painter);
 	}
 	painter.end();
+#endif
 	cursor.block().setUserState(US_SVG_BLOCK);
-	cursor.insertImage(img);
+	cursor.insertImage(image);
 	cursor.insertBlock();
 }
 void MarkdownPreview::do_code(QTextBlock srcBlock, QTextCursor& cursor) {
