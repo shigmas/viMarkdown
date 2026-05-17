@@ -635,6 +635,21 @@ void SvgCompleter::keyPressEvent(QKeyEvent *e) {
 		}
 		return;
 	}
+	QString txt = e->text();
+	qDebug() << "txt = " << txt;
+	if( !txt.isEmpty() ) {
+		int ix = m_curix;
+		for(;;) {
+			if( ++ix == m_cmpl_lst.size() ) ix = 0;
+			if( ix == m_curix ) break;
+			if( m_cmpl_lst[ix].startsWith("<" + txt) ) {
+				m_curix = ix;
+				highlight_cur_line();
+				return;
+			}
+		}
+		return;
+	}
 	QTextEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
 }
 void MarkdownEditor::svg_enter_pressed() {
