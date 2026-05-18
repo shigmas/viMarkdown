@@ -69,11 +69,13 @@ MainWindow::MainWindow(QWidget *parent)
 	    "   background-color: rgba(0, 120, 215, 60);" // 淡い青色（RGBAの最後が透明度 0-255）
 	    "   border: 1px solid #0078d7;"              // 少し濃い目の枠線で引き締める
 	    "   border-radius: 2px;"                     // 角を少し丸くするとモダンになります
+	    "   color: black;"
 	    "}"
 	    "QToolButton:hover {"
 	    "   background-color: rgba(0, 120, 215, 30);" // マウスホバー時も淡く反応させる
 	    "}" );
 	insertSearchComboBox();
+	updateSearchOptions();
 	//updateHTMLModeCheck();		//	HTML or Source チェック状態に
 	updateThinThickCheck();		//	細・太罫線モード
 	ui->action_OutlineBar->setChecked(true);	//	暫定的
@@ -167,7 +169,7 @@ void MainWindow::insertSearchComboBox() {
 			this->onAction_ClearSearchHighlights();
 	    });
 	}
-	ui->mainToolBar->insertWidget(ui->action_List, m_searchCB);
+	ui->mainToolBar->insertWidget(ui->action_IgnoreCase, m_searchCB);
 	//connect(m_searchCB, &QComboBox::activated, this, &MainWindow::onSearchCBActivated);
 	connect(m_searchCB->lineEdit(), &QLineEdit::returnPressed, this, [this]() {
 		QString text = m_searchCB->currentText();
@@ -334,6 +336,7 @@ void MainWindow::onAction_Replace() {
 	connect(&dlg, &ReplaceDialog::do_undo, this, &MainWindow::do_undo_replaceDlg);
 	connect(&dlg, &ReplaceDialog::do_redo, this, &MainWindow::do_redo_replaceDlg);
 	if (dlg.exec() == QDialog::Accepted) {
+		updateSearchOptions();
 	}
 }
 void MainWindow::onAction_Grep() {
@@ -2078,6 +2081,10 @@ void MainWindow::onAction_ThickKeisen(bool checked) {
 void MainWindow::updateThinThickCheck() {
 	ui->action_ThinKeisen->setChecked(!m_thickKeisen);
 	ui->action_ThickKeisen->setChecked(m_thickKeisen);
+}
+void MainWindow::updateSearchOptions() {
+	ui->action_IgnoreCase->setChecked(g.m_ignoreCase);
+	ui->action_RegExp->setChecked(g.m_regexp);
 }
 void MainWindow::onAction_OpenPrev() {
 	DocWidget *docWidget = getCurDocWidget();

@@ -199,6 +199,8 @@
     <addaction name="action_ClearSearchHighlights"/>
     <addaction name="action_Replace"/>
     <addaction name="action_Grep"/>
+    <addaction name="action_IgnoreCase"/>
+    <addaction name="action_RegExp"/>
    </widget>
    <widget class="QMenu" name="menu_Tool">
     <property name="title">
@@ -247,6 +249,8 @@
    <addaction name="action_Undo"/>
    <addaction name="action_Redo"/>
    <addaction name="separator"/>
+   <addaction name="action_IgnoreCase"/>
+   <addaction name="action_RegExp"/>
    <addaction name="action_List"/>
    <addaction name="action_NumList"/>
    <addaction name="action_Checkbox"/>
@@ -1077,6 +1081,22 @@
    </property>
    <property name="shortcut">
     <string>Shift+F4</string>
+   </property>
+  </action>
+  <action name="action_IgnoreCase">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;IgnoreCase</string>
+   </property>
+  </action>
+  <action name="action_RegExp">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Reg&amp;Exp</string>
    </property>
   </action>
  </widget>

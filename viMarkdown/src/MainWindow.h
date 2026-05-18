@@ -165,6 +165,7 @@ protected:
     void	addTopItemToTreeWidget(const QString& title, const QString fullPath);
     void	updateHTMLModeCheck();
     void	updateThinThickCheck();
+    void	updateSearchOptions();
     void	updatePreview();
     void	updateOutlineTree();
     void	insertInline(const QString&);
