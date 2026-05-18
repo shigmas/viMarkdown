@@ -443,7 +443,12 @@ void MainWindow::do_search(const QString srcText, bool backward) {
 			flags |= QTextDocument::FindBackward;
 		if( !g.m_ignoreCase )
 			flags |= QTextDocument::FindCaseSensitively;
-		bool found = mdEditor->find(srcText, flags);
+		bool found;
+		if( !g.m_regexp )
+			found = mdEditor->find(srcText, flags);
+		else {
+			found = mdEditor->find(QRegularExpression(srcText), flags);
+		}
 		if (!found) {
 	        if( !backward )
 				mdEditor->moveCursor(QTextCursor::Start);
