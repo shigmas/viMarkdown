@@ -194,7 +194,7 @@ protected:
     void	onMdEditEscPressed();
     void	onFileChanged(const QString&);
     void	onModificationChanged(bool);
-    void	onSearchCBActivated();
+    //void	onSearchCBActivated();
     void	onMarkdownPreviewLineClicked(/*int,*/ bool);
     //void	onEditorCurPosChanged();
     void	onPreviewCurPosChanged();

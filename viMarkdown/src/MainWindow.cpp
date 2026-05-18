@@ -167,18 +167,14 @@ void MainWindow::insertSearchComboBox() {
 			this->onAction_ClearSearchHighlights();
 	    });
 	}
-#if 0
-	connect(m_searchCB->lineEdit(), &QLineEdit::textChanged, this, [=](const QString &text){
-	    //if (text.isEmpty())
-	    if (m_searchCB->currentText().isEmpty())
-	    {
-			this->onAction_ClearSearchHighlights();
-	    }
-	});
-#endif
-	//m_searchCB->setInsertPolicy(QComboBox::InsertAtTop); // 検索履歴を一番上に追加する設定
 	ui->mainToolBar->insertWidget(ui->action_List, m_searchCB);
-	connect(m_searchCB, &QComboBox::activated, this, &MainWindow::onSearchCBActivated);
+	//connect(m_searchCB, &QComboBox::activated, this, &MainWindow::onSearchCBActivated);
+	connect(m_searchCB->lineEdit(), &QLineEdit::returnPressed, this, [this]() {
+		QString text = m_searchCB->currentText();
+		if (text.isEmpty()) return;
+		qDebug() << "text = " << text;
+		do_find();
+		});
 	QSettings settings;
 	m_searchHist = settings.value("search/history").toStringList();
 	m_replaceHist = settings.value("search/replace").toStringList();
@@ -437,6 +433,7 @@ void MainWindow::do_replace_all(const QString srcText, const QString dstText) {
 	}
 }
 void MainWindow::do_search(const QString srcText, bool backward) {
+	qDebug() << "MainWindow::do_search()";
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	MarkdownEditor *mdEditor = docWidget->m_editor;
@@ -472,9 +469,11 @@ void MainWindow::do_find(bool backward) {
 	if( srcText.isEmpty() ) return;
 	do_search(srcText, backward);
 }
+#if 0
 void MainWindow::onSearchCBActivated() {
 	do_find();
 }
+#endif
 void MainWindow::do_undo_replaceDlg() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;

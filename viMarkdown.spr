@@ -104,7 +104,7 @@ SPR# 状 P Open Close ver     Type  概要
 0101 ● C 05/18            │ToDo│SVG補完ダイアログ：マウスダブルクリックで補完確定
 0102 ● C 05/18            │ToDo│SVG 補完 > <text>：dominant-baseline="central" も追加
 0103 ● C 05/18            │ToDo│fill="", stroke=""："" 間にカーソルがある場合は色名補完ダイアログ表示？
-0104 ● C 05/18            │問題│検索ボックスに文字列を入力し、Enter を押しても検索処理が行われない（F3 を押してやっと検索される）
+0104 ◎ C 05/18 05/18 03008│問題│検索ボックスに文字列を入力し、Enter を押しても検索処理が行われない（F3 を押してやっと検索される）
 0105 ● C 05/18            │ToDo│AboutDialog：powered by ..., and LunaSVG に変更 
 0106 ● C 05/18            │ToDo│
 0107 ● C 05/18            │ToDo│
