@@ -2,6 +2,7 @@
 #include <QTextEdit>
 #include <QScrollBar>
 #include <QPlainTextEdit>
+#include <QTimer>
 //#include "C:\Qt\6.10.0\msvc2022_64\include\QtWidgets\qplaintextedit.h"
 
 enum class Align { Left, Center, Right };
@@ -129,6 +130,7 @@ protected:
     void	tagJump_sub(QTextCursor);
     //void	getWordStartEnd(QTextCursor, int& start, int&end);
     void	selectWordAt(QTextCursor&);
+    void	toggleCursor();
 
     void	do_keisen_left(bool erase = false, bool thickKeisen = false);
     void	do_keisen_right(bool erase = false, bool thickKeisen = false);
@@ -152,6 +154,8 @@ private:
 	int		m_selStart = 0;
 	int		m_selEnd = 0;
 	int		m_linkClickedPos = -1;			//	リンククリック位置
+	QTimer	*m_blinkTimer;
+    bool	m_cursorVisible = true;
 	QString	m_lastCurBlockText;				//	事前のカーソルブロックテキスト
 	//QString	m_completerText;
     class MarkdownHighlighter *m_highlighter;

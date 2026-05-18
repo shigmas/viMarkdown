@@ -4,6 +4,7 @@
 #include <QTextCursor>
 #include <QTextBlock>
 #include <QSyntaxHighlighter>
+#include <QPalette>
 #include <QPainter>
 #include <QRegularExpression>
 #include <QInputMethod>
@@ -391,6 +392,7 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, DocWidget* docWidge
 	this->setFont(font);
 	setCursorWidth(2);
 	setLineSpacing(150);
+	setCursorWidth(0);		//	デフォルトテキストカーソルを非表示に
 	//QPalette pal = palette();
 	//pal.setColor(QPalette::TextCursor, Qt::red);
 	//setPalette(pal);
@@ -398,9 +400,12 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, DocWidget* docWidge
 		onKeisenMode(true);
 	setViewportMargins(lnAreaWidth(), 0, 0, 0);
 	m_lnAreaWidget = new LnAreaWidget(this);
-	connect(this, &MarkdownEditor::updateRequest, this, &MarkdownEditor::updateLnArea);
+    connect(this, &MarkdownEditor::updateRequest, this, &MarkdownEditor::updateLnArea);
 	connect(this, &MarkdownEditor::cursorPositionChanged, this, &MarkdownEditor::onCursorPosChanged);
 	connect(document(), &QTextDocument::contentsChange, this, &MarkdownEditor::onContentsChanged);
+    m_blinkTimer = new QTimer(this);	// カーソル点滅用タイマーの設定 (500ms)
+    connect(m_blinkTimer, &QTimer::timeout, this, &MarkdownEditor::toggleCursor);
+    m_blinkTimer->start(500);
 }
 void MarkdownEditor::rehighlight() { m_highlighter->rehighlight(); }
 //void MarkdownEditor::setBoldColor(QColor col) {
@@ -2137,6 +2142,10 @@ void drawEOF(QPainter &p, QRect r) {
 	p.drawLine(x, y_top, x + char_w, y_top);
 	p.drawLine(x, y_mid, x + char_w - 1, y_mid);
 }
+void MarkdownEditor::toggleCursor() {
+	m_cursorVisible = !m_cursorVisible;
+    this->viewport()->update(); 
+}
 void MarkdownEditor::paintEvent(QPaintEvent *e) {
 	MarkdownBaseEdit::paintEvent(e); // 先にテキストを普通に描画
 
@@ -2176,12 +2185,14 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
 	if( !isReadOnly() ) {
 		//	カーソル描画
 		QRect rect = cursorRect();
-		if( !hasFocus() ) {
-			p.setPen(Qt::gray);
-			p.setBrush(Qt::gray);
+		auto col = hasFocus() ? g.m_activeLnColor : g.m_inactiveLnColor;
+		if( m_cursorVisible ) {
+			rect.setWidth(3);
+			p.setPen(col);
+			p.setBrush(col);
 			p.drawRect(rect);
 		}
-		QPen pen(hasFocus() ? g.m_activeLnColor: g.m_inactiveLnColor, 1); // 色、太さ1px
+		QPen pen(col, 1); // 色、太さ1px
 		if( !hasFocus() ) pen.setStyle(Qt::DashLine);	//	破線
 		p.setPen(pen);
 		int y = rect.bottom();

@@ -106,7 +106,9 @@
   <ItemGroup>
     <ClCompile Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-blend.c" />
     <ClCompile Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-canvas.c" />
-    <ClCompile Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-font.c" />
+    <ClCompile Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-font.c">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Disabled</Optimization>
+    </ClCompile>
     <ClCompile Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-ft-math.c" />
     <ClCompile Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-ft-raster.c" />
     <ClCompile Include="..\3rdparty\lunasvg\3rdparty\plutovg\source\plutovg-ft-stroker.c" />

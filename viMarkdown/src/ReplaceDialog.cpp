@@ -19,13 +19,15 @@ ReplaceDialog::ReplaceDialog(const QStringList &hist, const QStringList &replace
     ui->replaceCB->clear();
 	ui->replaceCB->addItems(replace);
 	ui->ignoreCase->setCheckState(g.m_ignoreCase ? Qt::Checked : Qt::Unchecked);
+	ui->regexp->setCheckState(g.m_regexp ? Qt::Checked : Qt::Unchecked);
 	connect(ui->searchPrev, &QPushButton::clicked, this, &ReplaceDialog::onSearchPrev);
 	connect(ui->searchNext, &QPushButton::clicked, this, &ReplaceDialog::onSearchNext);
 	connect(ui->replaceNext, &QPushButton::clicked, this, &ReplaceDialog::onReplaceNext);
 	connect(ui->replaceAll, &QPushButton::clicked, this, &ReplaceDialog::onReplaceAll);
 	connect(ui->undoPB, &QPushButton::clicked, this, &ReplaceDialog::onUndo);
 	connect(ui->redoPB, &QPushButton::clicked, this, &ReplaceDialog::onRedo);
-	connect(ui->ignoreCase, &QCheckBox::checkStateChanged, this, &ReplaceDialog::onCheckStateChanged);
+	connect(ui->ignoreCase, &QCheckBox::checkStateChanged, this, &ReplaceDialog::onIgnoreCaseChanged);
+	connect(ui->regexp, &QCheckBox::checkStateChanged, this, &ReplaceDialog::onRegexpChanged);
 	QShortcut *undoShortcut = new QShortcut(QKeySequence::Undo, this);
 		connect(undoShortcut, &QShortcut::activated, this, [this]() {
 		    emit do_undo(); 
@@ -62,9 +64,12 @@ void ReplaceDialog::onReplaceAll() {
 	if( src.isEmpty() ) return;
 	emit do_replace_all(src, dst);
 }
-void ReplaceDialog::onCheckStateChanged(Qt::CheckState state) {
+void ReplaceDialog::onIgnoreCaseChanged(Qt::CheckState state) {
 	g.m_ignoreCase = state == Qt::Checked;
 	qDebug() << "g.m_ignoreCase = " << g.m_ignoreCase;
+}
+void ReplaceDialog::onRegexpChanged(Qt::CheckState state) {
+	g.m_regexp = state == Qt::Checked;
 }
 void ReplaceDialog::onUndo() {
 	emit do_undo();

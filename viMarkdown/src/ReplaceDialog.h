@@ -20,7 +20,8 @@ protected:
 	void	onSearchNext();
 	void	onReplaceNext();
 	void	onReplaceAll();
-	void	onCheckStateChanged(Qt::CheckState state);
+	void	onIgnoreCaseChanged(Qt::CheckState state);
+	void	onRegexpChanged(Qt::CheckState state);
 	void	onUndo();
 	void	onRedo();
 
