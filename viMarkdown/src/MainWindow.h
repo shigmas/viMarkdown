@@ -262,6 +262,8 @@ protected:
     void	onAction_MarkdownTable_CSV();
     void	onAction_NaviForward();
     void	onAction_NaviBack();
+    void	onAction_IgnoreCase(bool);
+    void	onAction_RegExp(bool);
     void	onAction_Find();
     void	onAction_ForwardAgain();
     void	onAction_BackwardAgain();

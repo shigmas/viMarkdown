@@ -573,6 +573,8 @@ void MainWindow::setup_connections() {
 	connect(ui->action_MarkdownTable_CSV, &QAction::triggered, this, &MainWindow::onAction_MarkdownTable_CSV);
 	connect(ui->action_NaviForward, &QAction::triggered, this, &MainWindow::onAction_NaviForward);
 	connect(ui->action_NaviBack, &QAction::triggered, this, &MainWindow::onAction_NaviBack);
+	connect(ui->action_IgnoreCase, &QAction::toggled, this, &MainWindow::onAction_IgnoreCase);
+	connect(ui->action_RegExp, &QAction::toggled, this, &MainWindow::onAction_RegExp);
 	connect(ui->action_Find, &QAction::triggered, this, &MainWindow::onAction_Find);
 	connect(ui->action_ForwardAgain, &QAction::triggered, this, &MainWindow::onAction_ForwardAgain);
 	connect(ui->action_BackwardAgain, &QAction::triggered, this, &MainWindow::onAction_BackwardAgain);
@@ -2061,6 +2063,12 @@ void MainWindow::onAction_AlignRight() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	docWidget->m_editor->onAlignRight();
+}
+void MainWindow::onAction_IgnoreCase(bool checked) {
+	g.m_ignoreCase = checked;
+}
+void MainWindow::onAction_RegExp(bool checked) {
+	g.m_regexp = checked;
 }
 void MainWindow::onAction_KeisenMode(bool checked) {
 	m_keisenMode = checked;
