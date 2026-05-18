@@ -567,7 +567,7 @@ const QStringList svg_elements_lst = {
 	R"(<ellipse cx="100" cy="50" rx="60" ry="30" fill="yellow" stroke="green" stroke-width="2"/>\n)",
 	R"(<polyline points="50 50 100 0 150 50 100 100" fill="white" stroke="orange" stroke-width="2"/>\n)",
 	R"(<polygon points="50 50 100 0 150 50 100 100" fill="yellow" stroke="orange" stroke-width="2"/>\n)",
-	R"(<text x="20" y="40" font-family="Arial" font-size="24" text-anchor="" dy="" fill="blue">\nHello SVG!\n</text>\n)",
+	R"(<text x="20" y="40" font-family="Arial" font-size="24" text-anchor="middle" dominant-baseline="central" dy="" fill="blue">\nHello SVG!\n</text>\n)",
 	R"(<path d="" />\n)",
 	R"(<path d="\n M 20,100\n L 50,100\n H 100\n V 50\n C 120,20 180,20 200,50\n S 280,80 250,100\n Q 300,150 250,180\n T 150,180\n A 50,50 0 0 1 100,150\n Z\n " \n fill="lightgreen" \n stroke="darkgreen" \n stroke-width="3" \n />)",
 	R"SVG(<g fill="yellow" stroke="black" transform="translate(10,20) rotate(30)">\n  \n</g>\n)SVG",

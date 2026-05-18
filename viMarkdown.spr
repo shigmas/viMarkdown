@@ -31,7 +31,7 @@ SPR# 状 P Open Close ver     Type  概要
 0028 ● C 05/03            │問題│日本語化されていない Tool Tip がいくつもある
 0029 ◎ C 05/05 05/06 03003│ToDo│とりあえず ```SVG <svg width=200 height=100> ... </svg> ``` を実装してみる
 0030 ◎ C 05/05 05/06 03003│ToDo│<svg width="320" height="200"> を認識し、SVG画像サイズを正しく設定
-0031 ● C 05/05            │ToDo│```SVG 改行 時点で、「<svg width="320" height="200"> 改行 改行 </svg>」の補完ダイアログ表示？
+0031 ◎ C 05/05 05/18 03003│ToDo│```SVG 改行 時点で、「<svg width="320" height="200"> 改行 改行 </svg>」の補完ダイアログ表示？
 0032 ◎ C 05/07 05/07 03003│問題│"src/CMakeLists.txt": ts ファイル名が間違っている
 0033 ◎ C 05/07 05/07 03003│問題│"src/CMakeLists.txt": LangDialog.* が含まれていない
 0034 ◎ C 05/07 05/07 03003│問題│QtCreatot でビルドすると以下のエラーが出る fatal error: QSvgRenderer: No such file or directory
@@ -100,4 +100,14 @@ SPR# 状 P Open Close ver     Type  概要
 0097 ● C 05/17            │問題│SVG図形の下側が表示されない場合がある
 0098 ◎ C 05/18 05/18 03008│ToDo│SVG 補完：<g fill="yellow" stroke="black" transform="translate(10,20) rotate(30)">\n  \n</g> 追加
 0099 ◎ C 05/18 05/18 03008│ToDo│SVG 補完：１文字キー検索
-0100 ● C 05/18            │ToDo│
+0100 ● C 05/18            │ToDo│テキストカーソルを自前描画し、カーソル色設定を反映させる？
+0101 ● C 05/18            │ToDo│SVG補完ダイアログ：マウスダブルクリックで補完確定
+0102 ● C 05/18            │ToDo│SVG 補完 > <text>：dominant-baseline="central" も追加
+0103 ● C 05/18            │ToDo│fill="", stroke=""："" 間にカーソルがある場合は色名補完ダイアログ表示？
+0104 ● C 05/18            │問題│検索ボックスに文字列を入力し、Enter を押しても検索処理が行われない（F3 を押してやっと検索される）
+0105 ● C 05/18            │ToDo│AboutDialog：powered by ..., and LunaSVG に変更 
+0106 ● C 05/18            │ToDo│
+0107 ● C 05/18            │ToDo│
+0108 ● C 05/18            │ToDo│
+0109 ● C 05/18            │ToDo│
+0110 ● C 05/18            │ToDo│
