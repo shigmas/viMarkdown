@@ -1087,6 +1087,10 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/match_case_off.png</normaloff>:/MainWindow/images/match_case_off.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;IgnoreCase</string>
    </property>
@@ -1094,6 +1098,10 @@
   <action name="action_RegExp">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/regexp.png</normaloff>:/MainWindow/images/regexp.png</iconset>
    </property>
    <property name="text">
     <string>Reg&amp;Exp</string>

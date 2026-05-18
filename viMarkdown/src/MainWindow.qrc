@@ -51,5 +51,7 @@
         <file>images/add_48.png</file>
         <file>images/link_48.png</file>
         <file>viMarkdown_ja.qm</file>
+        <file>images/match_case_off.png</file>
+        <file>images/regexp.png</file>
     </qresource>
 </RCC>
