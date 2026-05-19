@@ -4,6 +4,7 @@
 #include <QDragEnterEvent>
 #include <QScrollBar>
 #include <QTextEdit>
+#include <QTimer>
 //#include "C:\Qt\6.10.0\msvc2022_64\include\QtWidgets\qtextedit.h"
 
 class MainWindow;
@@ -100,6 +101,7 @@ protected:
     //bool	isTableLine(const QString&);
     //bool	isTableHyphenLine(const QString&);
     int		countCheckBox(QTextBlock block);
+    void	toggleCursor();
 
     void	do_body(QTextBlock srcBlock, QTextCursor&, bool = false);
     void	do_body_sub(QTextCursor&, const QString&);
@@ -137,6 +139,8 @@ private:
 	//QList<QStringView>	m_tableTokens;
 	QStringList			m_tableTokens;
 	std::vector<char>	m_tableAlign;		//	各カラムの水平方向アライメント
+	QTimer	*m_blinkTimer;
+    bool	m_cursorVisible = true;
 
 	class DocWidget	*m_docWidget;
     const MainWindow *m_mainWindow = nullptr;

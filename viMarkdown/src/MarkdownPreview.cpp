@@ -52,7 +52,7 @@ MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, DocWidget *docWid
 	setReadOnly(readOnly);
 	setUndoRedoEnabled(false);
 	setFrameStyle(QFrame::NoFrame);
-	setCursorWidth(2);
+	setCursorWidth(0);
 #if 0
 	document()->setDefaultStyleSheet(
 	    "blockquote {"
@@ -72,6 +72,9 @@ MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, DocWidget *docWid
 	QFont font = this->font();
 	font.setPointSize(12);
 	setFont(font);
+    m_blinkTimer = new QTimer(this);	// カーソル点滅用タイマーの設定 (500ms)
+    connect(m_blinkTimer, &QTimer::timeout, this, &MarkdownPreview::toggleCursor);
+    m_blinkTimer->start(500);
 }
 void MarkdownPreview::inputMethodEvent(QInputMethodEvent *event) {
 	m_isComposing = !event->preeditString().isEmpty();
@@ -476,18 +479,24 @@ void MarkdownPreview::wheelEvent(QWheelEvent *event) {
 		QTextEdit::wheelEvent(event);
 }
 #endif
+void MarkdownPreview::toggleCursor() {
+	m_cursorVisible = !m_cursorVisible;
+    this->viewport()->update(); 
+}
 void MarkdownPreview::paintEvent(QPaintEvent *e) {
 	QTextEdit::paintEvent(e); // 先にテキストを普通に描画
 	QPainter p(viewport());
-	//	カーソル描画
 	if( !isReadOnly() ) {
+		//	カーソル描画
 		QRect rect = cursorRect();
-		if( !hasFocus() ) {
-			p.setPen(Qt::gray);
-			p.setBrush(Qt::gray);
+		auto col = hasFocus() ? g.m_activeLnColor : g.m_inactiveLnColor;
+		if( m_cursorVisible ) {
+			rect.setWidth(3);
+			p.setPen(col);
+			p.setBrush(col);
 			p.drawRect(rect);
 		}
-		QPen pen(hasFocus() ? g.m_activeLnColor: g.m_inactiveLnColor, 1); // 色、太さ1px
+		QPen pen(col, 1); // 色、太さ1px
 		if( !hasFocus() ) pen.setStyle(Qt::DashLine);	//	破線
 		p.setPen(pen);
 		int y = rect.bottom();
