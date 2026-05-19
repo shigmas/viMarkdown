@@ -118,6 +118,6 @@ SPR# 状 P Open Close ver     Type  概要
 0115 ◎ C 05/19 05/19 03009│ToDo│IgnoreCase アイコン
 0116 ◎ C 05/19 05/19 03009│ToDo│RegExp アイコン
 0117 ◎ C 05/19 05/19 03009│問題│CMake：lunasvg.h がインクルード出来ない
-0118 ● C 05/19            │ToDo│
+0118 ◎ C 05/19 05/19 03009│ToDo│Windows11 QtCreator でビルド確認
 0119 ● C 05/19            │ToDo│
 0120 ● C 05/19            │ToDo│
