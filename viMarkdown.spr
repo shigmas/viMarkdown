@@ -108,7 +108,7 @@ SPR# 状 P Open Close ver     Type  概要
 0105 ◎ C 05/18 05/18 03008│ToDo│AboutDialog：powered by ..., and LunaSVG に変更 
 0106 ◎ C 05/18 05/18 03008│問題│リリースモードでビルドすると、plutovg-font.c(774): fatal error C1001: 内部コンパイラ エラーが発生
 0107 ◎ C 05/19 05/19 03009│ToDo│ツールバー検索ボックス右？に【IgnoreCase】【Regexp】トグルボタン設置
-0108 ● B 05/19            │ToDo│CMakeLists.txt：LunaSVG ソースをコンパイル対象に
+0108 ◎ B 05/19 05/19 03009│ToDo│CMakeLists.txt：LunaSVG ソースをコンパイル対象に
 0109 ◎ C 05/19 05/19 03009│ToDo│置換ダイアログ > 検索：正規表現検索対応
 0110 ● C 05/19            │問題│置換ダイアログ > 検索：マッチしない時、カーソルが文書先頭（検索前の位置）に移動する？
 0111 ◎ C 05/19 05/19 03009│ToDo│検索 > 大文字小文字同一視、正規表現 トグルメニュー追加

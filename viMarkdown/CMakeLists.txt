@@ -2,7 +2,7 @@
 
 add_compile_definitions(BUILD_WITH_CMAKE)
 
-project(viMarkdown VERSION 0.1 LANGUAGES CXX)
+project(viMarkdown VERSION 0.1 LANGUAGES C CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -18,5 +18,6 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools Pri
 #	"${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/lunasvg/include"
 #	"${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/lunasvg/3rdparty/plutovg/include"
 #)
+add_subdirectory(3rdparty/lunasvg)
 add_subdirectory(src)
 

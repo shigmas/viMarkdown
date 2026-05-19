@@ -64,11 +64,17 @@ else()
 endif()
 
 target_include_directories(viMarkdown PRIVATE
-        "${CMAKE_SOURCE_DIR}/3rdparty/lunasvg/include"
-        "${CMAKE_SOURCE_DIR}/3rdparty/lunasvg/3rdparty/plutovg/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_SOURCE_DIR}/3rdparty/lunasvg/include"
+    "${CMAKE_SOURCE_DIR}/3rdparty/lunasvg/3rdparty/plutovg/include"
 )
 
-target_link_libraries(viMarkdown PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::PrintSupport Qt${QT_VERSION_MAJOR}::Svg)
+target_link_libraries(viMarkdown PRIVATE
+	Qt${QT_VERSION_MAJOR}::Widgets
+	Qt${QT_VERSION_MAJOR}::PrintSupport
+	Qt${QT_VERSION_MAJOR}::Svg
+	lunasvg
+)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
