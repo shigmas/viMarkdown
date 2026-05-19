@@ -14,5 +14,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools PrintSupport Svg)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools PrintSupport Svg)
 
+#target_include_directories(viMarkdown PRIVATE 
+#	"${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/lunasvg/include"
+#	"${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/lunasvg/3rdparty/plutovg/include"
+#)
 add_subdirectory(src)
 

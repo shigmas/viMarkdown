@@ -55,10 +55,18 @@ else()
         add_executable(viMarkdown
             ${PROJECT_SOURCES}
         )
+        get_target_property(MY_INC viMarkdown INCLUDE_DIRECTORIES)
+        message(STATUS "INCLUDE_DIRS=${MY_INC}")
     endif()
+
 
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
+
+target_include_directories(viMarkdown PRIVATE
+        "${CMAKE_SOURCE_DIR}/3rdparty/lunasvg/include"
+        "${CMAKE_SOURCE_DIR}/3rdparty/lunasvg/3rdparty/plutovg/include"
+)
 
 target_link_libraries(viMarkdown PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::PrintSupport Qt${QT_VERSION_MAJOR}::Svg)
 
