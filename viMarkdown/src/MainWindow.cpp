@@ -63,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent)
 	load_settings();
 	//static bool to_restore_win = true;
 	ui->setupUi(this);
+	ui->action_ViKeybindings->setChecked(g.m_viKeybindings);
 	connect(ui->plainTextEdit, &OutputView::do_open, this, &MainWindow::do_open_pl);
 	ui->mainToolBar->setStyleSheet(
 	    "QToolButton:checked {"
@@ -112,6 +113,7 @@ MainWindow::~MainWindow()
 }
 void MainWindow::load_settings() {
 	QSettings settings;
+	g.m_viKeybindings = settings.value(KEY_VI_KEYBINDINGS, false).toBool();
 	g.m_ignoreCase = settings.value(KEY_IGNORE_CASE, true).toBool();
 	g.m_regexp = settings.value(KEY_REGEXP, true).toBool();
 	g.m_clearOutput = settings.value(KEY_CLEAR_OUTPUT, true).toBool();
@@ -135,6 +137,7 @@ void MainWindow::load_settings() {
 }
 void MainWindow::save_settings() {
     QSettings settings;
+    settings.setValue(KEY_VI_KEYBINDINGS, g.m_viKeybindings);
     settings.setValue(KEY_IGNORE_CASE, g.m_ignoreCase);
     settings.setValue(KEY_REGEXP, g.m_regexp);
     settings.setValue(KEY_CLEAR_OUTPUT, g.m_clearOutput);
@@ -592,6 +595,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_OutlineBar, &QAction::toggled, this, &MainWindow::onAction_OutlineBar);
 	connect(ui->action_FocusOutline, &QAction::triggered, this, &MainWindow::onAction_FocusOutline);
 	connect(ui->action_OutputBar, &QAction::toggled, this, &MainWindow::onAction_OutputBar);
+	connect(ui->action_ViKeybindings, &QAction::toggled, this, &MainWindow::onAction_ViKeybindings);
 	connect(ui->action_ClearOutput, &QAction::triggered, this, &MainWindow::onAction_ClearOutput);
 	connect(ui->action_NextTab, &QAction::triggered, this, &MainWindow::onAction_NextTab);
 	connect(ui->action_PrevTab, &QAction::triggered, this, &MainWindow::onAction_PrevTab);
@@ -2064,11 +2068,17 @@ void MainWindow::onAction_AlignRight() {
 	if( docWidget == nullptr ) return;
 	docWidget->m_editor->onAlignRight();
 }
+void MainWindow::onAction_ViKeybindings(bool checked) {
+	g.m_viKeybindings = checked;
+	save_settings();
+}
 void MainWindow::onAction_IgnoreCase(bool checked) {
 	g.m_ignoreCase = checked;
+	save_settings();
 }
 void MainWindow::onAction_RegExp(bool checked) {
 	g.m_regexp = checked;
+	save_settings();
 }
 void MainWindow::onAction_KeisenMode(bool checked) {
 	m_keisenMode = checked;

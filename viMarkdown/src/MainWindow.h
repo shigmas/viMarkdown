@@ -9,6 +9,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindowClass; };
 QT_END_NAMESPACE
 
+#define	KEY_VI_KEYBINDINGS			u"viKeybindings"
 #define	KEY_IGNORE_CASE				u"ignoreCase"
 #define	KEY_REGEXP					u"regexp"
 #define	KEY_CLEAR_OUTPUT			u"clearOutput"
@@ -108,6 +109,8 @@ struct Global {
 	bool	m_clearOutput;			//	grep前に Output をクリア
 	bool	m_japanese;
 	bool	m_auto_svg_completer;	//	SVG補完ダイアログ自動表示
+	bool	m_viKeybindings;		//	vi コマンドキー割り当て有効/無効
+	bool	m_viCmdMode = false;
 	int		m_editorFontSize;
 	int		m_previewFontSize;
 	QColor	m_activeLnColor;		//	アクティブ時アンダーライン行カーソル色
@@ -291,6 +294,7 @@ protected:
     void	onAction_AddThisFavorite();
     void	onAction_Language();
     void	onAction_Settings();
+    void	onAction_ViKeybindings(bool);
     void	onAction_Help();
     void	onAction_Test();
     void	onAction_TestCharFlags();

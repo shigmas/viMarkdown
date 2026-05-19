@@ -183,6 +183,7 @@
     </widget>
     <addaction name="action_Language"/>
     <addaction name="action_Settings"/>
+    <addaction name="action_ViKeybindings"/>
     <addaction name="action_Help"/>
     <addaction name="menu_Test"/>
     <addaction name="action_AboutViMarkdown"/>
@@ -1105,6 +1106,17 @@
    </property>
    <property name="text">
     <string>Reg&amp;Exp</string>
+   </property>
+  </action>
+  <action name="action_ViKeybindings">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Vi Keybindings</string>
+   </property>
+   <property name="toolTip">
+    <string>Vi Keybindings</string>
    </property>
   </action>
  </widget>

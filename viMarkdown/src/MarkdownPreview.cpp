@@ -490,7 +490,7 @@ void MarkdownPreview::paintEvent(QPaintEvent *e) {
 		//	カーソル描画
 		QRect rect = cursorRect();
 		auto col = hasFocus() ? g.m_activeLnColor : g.m_inactiveLnColor;
-		if( m_cursorVisible ) {
+		if( !hasFocus() || m_cursorVisible ) {
 			rect.setWidth(3);
 			p.setPen(col);
 			p.setBrush(col);
