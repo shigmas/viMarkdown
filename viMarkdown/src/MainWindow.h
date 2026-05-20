@@ -2,6 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include <qsplitter>
+#include <QTimer>
 //#include "ui_MainWindow.h"
 //#include "markdowntohtmlconvertor.h"
 
@@ -232,6 +233,7 @@ protected:
     void	do_test(DocWidget*, int nth_path);
     void	run_previewTestScript(const QString&);
     void	do_output(const QString&);
+    void	toggleCursor();
 
     void	onAction_New();
     void	onAction_NewTab();
@@ -354,6 +356,8 @@ private:
     class QComboBox				*m_searchCB = nullptr;
     class QFileSystemWatcher	*m_watcher;
     //QList<QStringPair>			m_pathTitleList;
+	QTimer	*m_blinkTimer;
+    //bool	m_cursorVisible = true;
     int							m_docLocIX = -1;	//	m_docLocHist の現文書インデックス
     QList<DocLocation>			m_docLocHist;		//	文書履歴、新しい文書情報を末尾に置く（push_back）
 

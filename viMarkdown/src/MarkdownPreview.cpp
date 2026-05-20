@@ -73,9 +73,9 @@ MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, DocWidget *docWid
 	QFont font = this->font();
 	font.setPointSize(12);
 	setFont(font);
-    m_blinkTimer = new QTimer(this);	// カーソル点滅用タイマーの設定 (500ms)
-    connect(m_blinkTimer, &QTimer::timeout, this, &MarkdownPreview::toggleCursor);
-    m_blinkTimer->start(500);
+    //m_blinkTimer = new QTimer(this);	// カーソル点滅用タイマーの設定 (500ms)
+    //connect(m_blinkTimer, &QTimer::timeout, this, &MarkdownPreview::toggleCursor);
+    //m_blinkTimer->start(500);
 }
 void MarkdownPreview::inputMethodEvent(QInputMethodEvent *event) {
 	m_isComposing = !event->preeditString().isEmpty();
@@ -490,10 +490,10 @@ void MarkdownPreview::wheelEvent(QWheelEvent *event) {
 		QTextEdit::wheelEvent(event);
 }
 #endif
-void MarkdownPreview::toggleCursor() {
-	m_cursorVisible = !m_cursorVisible;
-    this->viewport()->update(); 
-}
+//void MarkdownPreview::toggleCursor() {
+//	m_cursorVisible = !m_cursorVisible;
+//    this->viewport()->update(); 
+//}
 void MarkdownPreview::paintEvent(QPaintEvent *e) {
 	QTextEdit::paintEvent(e); // 先にテキストを普通に描画
 	QPainter p(viewport());

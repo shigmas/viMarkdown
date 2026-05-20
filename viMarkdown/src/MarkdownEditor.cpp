@@ -403,9 +403,9 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, DocWidget* docWidge
     connect(this, &MarkdownEditor::updateRequest, this, &MarkdownEditor::updateLnArea);
 	connect(this, &MarkdownEditor::cursorPositionChanged, this, &MarkdownEditor::onCursorPosChanged);
 	connect(document(), &QTextDocument::contentsChange, this, &MarkdownEditor::onContentsChanged);
-    m_blinkTimer = new QTimer(this);	// カーソル点滅用タイマーの設定 (500ms)
-    connect(m_blinkTimer, &QTimer::timeout, this, &MarkdownEditor::toggleCursor);
-    m_blinkTimer->start(500);
+    //m_blinkTimer = new QTimer(this);	// カーソル点滅用タイマーの設定 (500ms)
+    //connect(m_blinkTimer, &QTimer::timeout, this, &MarkdownEditor::toggleCursor);
+    //m_blinkTimer->start(500);
 }
 void MarkdownEditor::rehighlight() { m_highlighter->rehighlight(); }
 //void MarkdownEditor::setBoldColor(QColor col) {
@@ -2152,10 +2152,10 @@ void drawEOF(QPainter &p, QRect r) {
 	p.drawLine(x, y_top, x + char_w, y_top);
 	p.drawLine(x, y_mid, x + char_w - 1, y_mid);
 }
-void MarkdownEditor::toggleCursor() {
-	g.m_cursorVisible = !g.m_cursorVisible;
-    this->viewport()->update(); 
-}
+//void MarkdownEditor::toggleCursor() {
+//	g.m_cursorVisible = !g.m_cursorVisible;
+//    this->viewport()->update(); 
+//}
 void drawTextCursor(QWidget *viewport, QPainter& p, QTextCursor cursor, QRect rect, QFontMetrics fontMetrics, bool hasFocus) {
 	if( g.m_viCmdMode ) {
 		auto ht = rect.height();

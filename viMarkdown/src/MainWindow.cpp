@@ -102,6 +102,9 @@ MainWindow::MainWindow(QWidget *parent)
 	    // ここに縮小処理
 	    zoomOut();
 	});
+    m_blinkTimer = new QTimer(this);	// カーソル点滅用タイマーの設定 (500ms)
+    connect(m_blinkTimer, &QTimer::timeout, this, &MainWindow::toggleCursor);
+    m_blinkTimer->start(500);
 	QSettings settings;
 	//m_editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE).toInt();
 	restore_win();
@@ -271,6 +274,13 @@ void MainWindow::onEncodingChanged(int ix) {
 		mess += " with BOM";
 	qDebug() << "encoding = " << mess;
 #endif
+}
+void MainWindow::toggleCursor() {
+	g.m_cursorVisible = !g.m_cursorVisible;
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+    docWidget->m_editor->viewport()->update(); 
+    docWidget->m_preview->viewport()->update(); 
 }
 void MainWindow::onAction_TodayString_1() {
 	DocWidget *docWidget = getCurDocWidget();

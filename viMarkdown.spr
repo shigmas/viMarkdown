@@ -134,7 +134,7 @@ SPR# 状 P Open Close ver     Type  概要
 0131 ● C 05/20            │問題│アプリアイコン：背景が透明なので、タスクバー背景が黒だとアイコンが認識できない
 0132 ◎ C 05/20 05/20 03010│問題│<SVG ... > が複数行にわたっていると、QImage サイズ取得に失敗する
 0133 ◎ C 05/21 05/21 03010│ToDo│QTimer *m_blinkTimer, bool m_cursorVisible を MainWindow に移動
-0134 ● C 05/21            │ToDo│
+0134 ◎ C 05/21 05/21 03010│ToDo│MarkdownPreview：カーソルブリンク関連のクリーンナップ
 0135 ● C 05/21            │ToDo│
 0136 ● C 05/21            │ToDo│
 0137 ● C 05/21            │ToDo│
