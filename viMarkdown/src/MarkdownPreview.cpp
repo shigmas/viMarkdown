@@ -231,6 +231,7 @@ void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 		return;
 	}
 	if (e->key() == Qt::Key_Escape) {
+		g.m_viCmdMode = true;
 		QTextCursor cursor = textCursor();
 		if( cursor.hasSelection() ) {	//	選択状態ならば
 			cursor.setPosition(cursor.position());		//	選択解除
@@ -297,6 +298,15 @@ void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 			if( block.userState() == US_TABLE /*&& block.previous().isValid() && block.previous().userState() == US_CELL*/ ) {
 				cursor.movePosition(QTextCursor::Left);
 				setTextCursor(cursor);
+			}
+			return;
+		}
+	}
+	if( g.m_viCmdMode ) {
+		QString txt = e->text();
+		if( !txt.isEmpty() ) {
+			if( txt == "i" ) {
+				g.m_viCmdMode = false;
 			}
 			return;
 		}
@@ -489,9 +499,18 @@ void MarkdownPreview::paintEvent(QPaintEvent *e) {
 	if( !isReadOnly() ) {
 		//	カーソル描画
 		QRect rect = cursorRect();
+		if( g.m_viCmdMode ) {
+			auto ht = rect.height();
+			rect.setY(rect.y() + ht/2);
+			rect.setHeight(ht - ht/2);
+			QTextCursor cursor = textCursor();
+			QChar ch = document()->characterAt(cursor.position());
+			if (ch.isNull() || ch < ' ') ch = 'W'; 
+			rect.setWidth(fontMetrics().horizontalAdvance(ch));
+		} else
+			rect.setWidth(3);
 		auto col = hasFocus() ? g.m_activeLnColor : g.m_inactiveLnColor;
 		if( !hasFocus() || m_cursorVisible ) {
-			rect.setWidth(3);
 			p.setPen(col);
 			p.setBrush(col);
 			p.drawRect(rect);
