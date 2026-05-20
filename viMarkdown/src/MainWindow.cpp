@@ -813,6 +813,11 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 見出し, 見出し
 123, abc
 ```
+```SVG
+<svg width="320" height="200">
+  .....
+</svg>
+```
 罫線モード: Shift + F5
 　罫線描画: Ctrl + 上下左右キー
 　罫線消去: Ctrl + Shift + 上下左右キー
@@ -838,6 +843,11 @@ Table:
 ```CSV
 Header, Header
 123, abc
+```
+```SVG
+<svg width="320" height="200">
+  .....
+</svg>
 ```
 Keisen mode: Shift + F5
 　Draw: Ctrl + Arrow keys
