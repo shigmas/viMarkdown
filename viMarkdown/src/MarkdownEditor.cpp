@@ -2153,8 +2153,33 @@ void drawEOF(QPainter &p, QRect r) {
 	p.drawLine(x, y_mid, x + char_w - 1, y_mid);
 }
 void MarkdownEditor::toggleCursor() {
-	m_cursorVisible = !m_cursorVisible;
+	g.m_cursorVisible = !g.m_cursorVisible;
     this->viewport()->update(); 
+}
+void drawTextCursor(QWidget *viewport, QPainter& p, QTextCursor cursor, QRect rect, QFontMetrics fontMetrics, bool hasFocus) {
+	if( g.m_viCmdMode ) {
+		auto ht = rect.height();
+		rect.setY(rect.y() + ht/2);
+		rect.setHeight(ht - ht/2);
+		//QTextCursor cursor = textCursor();
+		QChar ch = cursor.document()->characterAt(cursor.position());
+		if (ch.isNull() || ch < ' ') ch = 'W'; 
+		rect.setWidth(fontMetrics.horizontalAdvance(ch));
+	} else
+		rect.setWidth(3);
+	auto col = hasFocus ? g.m_activeLnColor : g.m_inactiveLnColor;
+	if( !hasFocus || g.m_cursorVisible ) {
+		p.setPen(col);
+		p.setBrush(col);
+		p.drawRect(rect);
+	}
+	QPen pen(col, 1); // 色、太さ1px
+	if( !hasFocus ) pen.setStyle(Qt::DashLine);	//	破線
+	p.setPen(pen);
+	int y = rect.bottom();
+	int left = 0;	//-lnAreaWidth();
+	int right = viewport->width();
+	p.drawLine(left, y, right, y);
 }
 void MarkdownEditor::paintEvent(QPaintEvent *e) {
 	MarkdownBaseEdit::paintEvent(e); // 先にテキストを普通に描画
@@ -2193,31 +2218,8 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
 		}
 	}
 	if( !isReadOnly() ) {
-		//	カーソル描画
 		QRect rect = cursorRect();
-		if( g.m_viCmdMode ) {
-			auto ht = rect.height();
-			rect.setY(rect.y() + ht/2);
-			rect.setHeight(ht - ht/2);
-			QTextCursor cursor = textCursor();
-			QChar ch = document()->characterAt(cursor.position());
-			if (ch.isNull() || ch < ' ') ch = 'W'; 
-			rect.setWidth(fontMetrics().horizontalAdvance(ch));
-		} else
-			rect.setWidth(3);
-		auto col = hasFocus() ? g.m_activeLnColor : g.m_inactiveLnColor;
-		if( !hasFocus() || m_cursorVisible ) {
-			p.setPen(col);
-			p.setBrush(col);
-			p.drawRect(rect);
-		}
-		QPen pen(col, 1); // 色、太さ1px
-		if( !hasFocus() ) pen.setStyle(Qt::DashLine);	//	破線
-		p.setPen(pen);
-		int y = rect.bottom();
-		int left = 0;	//-lnAreaWidth();
-		int right = viewport()->width();
-		p.drawLine(left, y, right, y);
+		drawTextCursor(viewport(), p, textCursor(), rect, fontMetrics(), hasFocus());		//	カーソル描画
 	}
 }
 void MarkdownEditor::highlightSearchText(const QString &searchText) {

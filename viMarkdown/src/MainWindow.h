@@ -104,6 +104,7 @@ public:
 };
 
 struct Global {
+	bool	m_cursorVisible = true;
 	bool	m_ignoreCase;			//	検索時：大文字小文字同一視
 	bool	m_regexp;				//	正規表現検索
 	bool	m_clearOutput;			//	grep前に Output をクリア

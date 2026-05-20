@@ -45,6 +45,7 @@ const QChar ZWSP(0x200b);			//	ゼロ幅空白文字
 static QRegularExpression re_tailspc(" +$");	//	行末半角空白列
 
 extern CharType getCharType(QChar ch);
+extern void drawTextCursor(QWidget *viewport, QPainter& p, QTextCursor cursor, QRect rect, QFontMetrics fontMetrics, bool hasFocus);
 
 MarkdownPreview::MarkdownPreview(const MainWindow *mainWindow, DocWidget *docWidget, QWidget* parent, bool readOnly)
 	: m_mainWindow(mainWindow), m_docWidget(docWidget), QTextEdit(parent)
@@ -497,8 +498,9 @@ void MarkdownPreview::paintEvent(QPaintEvent *e) {
 	QTextEdit::paintEvent(e); // 先にテキストを普通に描画
 	QPainter p(viewport());
 	if( !isReadOnly() ) {
-		//	カーソル描画
 		QRect rect = cursorRect();
+		drawTextCursor(viewport(), p, textCursor(), rect, fontMetrics(), hasFocus());		//	カーソル描画
+#if 0
 		if( g.m_viCmdMode ) {
 			auto ht = rect.height();
 			rect.setY(rect.y() + ht/2);
@@ -522,6 +524,7 @@ void MarkdownPreview::paintEvent(QPaintEvent *e) {
 		int left = 0;	//-lnAreaWidth();
 		int right = viewport()->width();
 		p.drawLine(left, y, right, y);
+#endif
 	}
 }
 
@@ -1132,10 +1135,13 @@ void MarkdownPreview::do_SVG(QTextBlock& srcBlock, QTextCursor& cursor) {
 	QString buf;
 	int width = 320;
 	int height = 200;
+	bool inSvgTag = false;
+	QString svg;
 	while( ++m_ln < m_lst.size() && !m_lst[m_ln].startsWith("```") ) {
 		srcBlock = srcBlock.next();
 		srcBlock.setUserState(US_SVG_BLOCK);
 		QString t = m_lst[m_ln].trimmed();
+#if 0
 		if( t.startsWith("<svg", Qt::CaseInsensitive) ) {
 			QXmlStreamReader reader(t);
 			while (!reader.atEnd()) {
@@ -1149,7 +1155,19 @@ void MarkdownPreview::do_SVG(QTextBlock& srcBlock, QTextCursor& cursor) {
 				}
 			}
 		}
+#endif
 		buf += t + "\n";
+	}
+	QXmlStreamReader reader(buf);
+	while (!reader.atEnd()) {
+		QXmlStreamReader::TokenType token = reader.readNext();
+		if (token == QXmlStreamReader::StartElement && reader.name() == "svg") {
+			if (reader.attributes().hasAttribute("width"))
+				width = reader.attributes().value("width").toInt();
+			if (reader.attributes().hasAttribute("height"))
+				height = reader.attributes().value("height").toInt();
+			break;
+		}
 	}
 	srcBlock = srcBlock.next();
 	if( srcBlock.isValid() ) {

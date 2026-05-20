@@ -155,7 +155,7 @@ private:
 	int		m_selEnd = 0;
 	int		m_linkClickedPos = -1;			//	リンククリック位置
 	QTimer	*m_blinkTimer;
-    bool	m_cursorVisible = true;
+    //bool	m_cursorVisible = true;
 	QString	m_lastCurBlockText;				//	事前のカーソルブロックテキスト
 	//QString	m_completerText;
     class MarkdownHighlighter *m_highlighter;
