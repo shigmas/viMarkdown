@@ -693,6 +693,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 		emit tab_pressed();
 		return;
 	} else if (e->key() == Qt::Key_Escape ) {
+		g.m_viCmdMode = true;
 		emit esc_pressed();
 		if( m_svgCompleter != nullptr ) {
 			delete m_svgCompleter;
@@ -752,6 +753,15 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 				return;
 			}
 			m_processing = false;
+		}
+	}
+	if( g.m_viCmdMode ) {
+		QString txt = e->text();
+		if( !txt.isEmpty() ) {
+			if( txt == "i" ) {
+				g.m_viCmdMode = false;
+			}
+			return;
 		}
 	}
 	MarkdownBaseEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
@@ -2185,9 +2195,18 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
 	if( !isReadOnly() ) {
 		//	カーソル描画
 		QRect rect = cursorRect();
+		if( g.m_viCmdMode ) {
+			auto ht = rect.height();
+			rect.setY(rect.y() + ht/2);
+			rect.setHeight(ht - ht/2);
+			QTextCursor cursor = textCursor();
+			QChar ch = document()->characterAt(cursor.position());
+			if (ch.isNull() || ch < ' ') ch = 'W'; 
+			rect.setWidth(fontMetrics().horizontalAdvance(ch));
+		} else
+			rect.setWidth(3);
 		auto col = hasFocus() ? g.m_activeLnColor : g.m_inactiveLnColor;
 		if( !hasFocus() || m_cursorVisible ) {
-			rect.setWidth(3);
 			p.setPen(col);
 			p.setBrush(col);
 			p.drawRect(rect);
