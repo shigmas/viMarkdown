@@ -326,6 +326,8 @@ protected:
     bool ASSERT_EQ(const QChar expected, const QChar actual, int ln);
     bool ASSERT_EQ(const QString &expected, const QString &actual, int ln);
 
+    void	do_viCmd(QString cmd);
+
 private:
     bool	m_processing = false;
     //bool	m_ignoreContentsChanged = false;

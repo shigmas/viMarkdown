@@ -103,6 +103,7 @@ signals:
     void	link_clicked(const QString& title, const QString&, const QString&, bool readOnly = false);
     void	changeFontSize(int delta);
     void	posContextChanged(const PosContext &context, const PosContext &acontext);
+    void	do_viCmd(QString);
 
 protected:
     void	keyPressEvent(QKeyEvent *e) override;

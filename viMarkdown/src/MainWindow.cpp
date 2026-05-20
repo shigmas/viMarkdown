@@ -782,12 +782,14 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(mdEditor, &MarkdownEditor::tab_pressed, this, &MainWindow::onMdEditTabPressed);
 	connect(mdEditor, &MarkdownEditor::esc_pressed, this, &MainWindow::onMdEditEscPressed);
 	connect(mdEditor, &MarkdownEditor::link_clicked, this, &MainWindow::do_open);
+	connect(mdEditor, &MarkdownEditor::do_viCmd, this, &MainWindow::do_viCmd);
 	//connect(mdEditor, &MarkdownEditor::title_clicked, this, &MainWindow::do_open);
 	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onEditorCurPosChanged);
 	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::syncPreviewCursorWithEditor);
 	connect(mdEditor, &MarkdownEditor::changeFontSize, this, &MainWindow::onChangeEditorFontSize);
 	connect(mdEditor, &MarkdownEditor::posContextChanged, this, &MainWindow::onSrcPosContextChanged);
 	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
+	connect(docWidget->m_preview, &MarkdownPreview::do_viCmd, this, &MainWindow::do_viCmd);
 	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onSrcCursorPosChanged);
 	//QTextEdit *mdEditor = new QTextEdit(splitter);
 	mdEditor->setPlaceholderText(g.m_japanese ? R"(
@@ -2463,5 +2465,17 @@ void MainWindow::onAction_About() {
 		"<br>Copyright (C) 2025, 2026 by N.Tsuda"
 		"<br>Powered by C++, Qt6, and LunaSVG</p>"
 	);
+}
+void MainWindow::do_viCmd(QString cmd) {
+	DocWidget *docWidget = getCurDocWidget();
+	if( cmd == "i" ) {
+		g.m_viCmdMode = false;
+		//	done: ビューカーソル強制描画
+		if( docWidget != nullptr ) {
+			docWidget->m_editor->viewport()->update();
+			docWidget->m_preview->viewport()->update();
+		}
+		return;
+	}
 }
 //---------------------------------------------------------------------

@@ -306,9 +306,10 @@ void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 	if( g.m_viCmdMode ) {
 		QString txt = e->text();
 		if( !txt.isEmpty() ) {
-			if( txt == "i" ) {
-				g.m_viCmdMode = false;
-			}
+			emit do_viCmd(txt);
+			//if( txt == "i" ) {
+			//	g.m_viCmdMode = false;
+			//}
 			return;
 		}
 	}
