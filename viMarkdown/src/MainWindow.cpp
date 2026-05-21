@@ -63,6 +63,9 @@ MainWindow::MainWindow(QWidget *parent)
 	load_settings();
 	//static bool to_restore_win = true;
 	ui->setupUi(this);
+	bool isDarkMode = (qApp->palette().color(QPalette::Window).lightness() < 128);
+	if( isDarkMode )
+		invertActionIcons(ui->menuBar);
 	ui->action_ViKeybindings->setChecked(g.m_viKeybindings);
 	connect(ui->plainTextEdit, &OutputView::do_open, this, &MainWindow::do_open_pl);
 	ui->mainToolBar->setStyleSheet(
@@ -113,6 +116,38 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
 	delete ui;
+}
+void MainWindow::invertActionIcons(QMenu *menu) {
+	if (!menu) return;
+	const QSize menuIconSize(48, 48);
+	for (QAction* action : menu->actions()) {
+		QIcon oldIcon = action->icon();
+	    if (!oldIcon.isNull()) {
+	    	QPixmap pixmap = oldIcon.pixmap(menuIconSize);
+	        QImage image = pixmap.toImage();
+	        for (int y = 0; y < image.height(); ++y) {
+	            for (int x = 0; x < image.width(); ++x) {
+	                QColor color = image.pixelColor(x, y);
+	                if (color.alpha() > 0) {
+	                    image.setPixelColor(x, y, QColor(240, 240, 240, color.alpha()));
+	                }
+	            }
+	        }
+	        QIcon newIcon(QPixmap::fromImage(image));
+	        action->setIcon(newIcon);
+	    }
+        if (action->menu()) {
+            invertActionIcons(action->menu());
+        }
+    }
+}
+void MainWindow::invertActionIcons(QMenuBar *menuBar) {
+	if( !menuBar ) return;
+	for (QAction* topLevelAction : menuBar->actions()) {
+		if (topLevelAction->menu()) {
+            invertActionIcons(topLevelAction->menu());
+        }
+	}
 }
 void MainWindow::load_settings() {
 	QSettings settings;

@@ -163,6 +163,8 @@ protected:
     void	restore_win();
     DocWidget	*newTabWidget(const QString& title, const QString& fullPath, bool readOnly = false);
     void	onMDTextChanged();
+    void	invertActionIcons(QMenuBar*);
+    void	invertActionIcons(QMenu*);
     QSplitter	*getCurTabSplitter();
     DocWidget	*getCurDocWidget();
     //DocWidget	*findDocWidget(const QString& fullPath);

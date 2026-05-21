@@ -62,7 +62,9 @@ protected:
 		QPainter painter(this);
 		QRect rc = event->rect();
 		//rc.setWidth(rc.width());
-		painter.fillRect(rc, QColor("lightgray"));
+		QColor bgColor = this->palette().color(QPalette::Window);
+		painter.fillRect(rc, bgColor);
+		//painter.fillRect(rc, QColor("lightgray"));
 		MarkdownEditor *mdEditor = (MarkdownEditor*)parent();
 		mdEditor->lnAreaPaintEvent(event);
 	}
@@ -2275,10 +2277,11 @@ void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
 	int charWidth = fontMetrics().horizontalAdvance('9');
 
 	// 画面内に見える範囲のブロックをループして描画
+	QColor textColor = this->palette().color(QPalette::Text);
 	while (block.isValid() && top <= event->rect().bottom()) {
 		if (block.isVisible() && bottom >= event->rect().top()) {
 			QString number = QString::number(blockNumber + 1);
-			painter.setPen(Qt::black); // 文字色
+			painter.setPen(textColor); // 文字色
 			
 			// 右詰めで描画するために幅を調整（右側に2ピクセルの余白）
 			painter.drawText(0, top, m_lnAreaWidget->width() - charWidth*2, fontMetrics().height(),
