@@ -2505,6 +2505,11 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, getRepeatCount());
 		break;
 	case u'0':
+		if( g.m_repeatCount == 0 ) {
+			cursor.movePosition(QTextCursor::StartOfBlock);
+			break;
+		}
+		//	するすると下にスルーする
 	case u'1':
 	case u'2':
 	case u'3':
