@@ -2466,6 +2466,10 @@ void MainWindow::onAction_About() {
 		"<br>Powered by C++, Qt6, and LunaSVG</p>"
 	);
 }
+int getRepeatCount() {
+	if( g.m_repeatCount == 0 ) return 1;
+	return g.m_repeatCount;
+}
 void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	if( cmd.isEmpty() ) return;
 	bool completed = true;
@@ -2474,24 +2478,38 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		g.m_viCmdMode = false;
 		break;
 	case u'k':
-		cursor.movePosition(QTextCursor::Up);
+		cursor.movePosition(QTextCursor::Up, QTextCursor::MoveAnchor, getRepeatCount());
 		break;
 	case u'j':
-		cursor.movePosition(QTextCursor::Down);
+		cursor.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor, getRepeatCount());
 		break;
 	case u'h':
 		//	undone: 行頭対応
-		cursor.movePosition(QTextCursor::Left);
+		cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, getRepeatCount());
 		break;
 	case u'l':
 	case u' ':
 		//	undone: 行末対応
-		cursor.movePosition(QTextCursor::Right);
+		cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, getRepeatCount());
+		break;
+	case u'0':
+	case u'1':
+	case u'2':
+	case u'3':
+	case u'4':
+	case u'5':
+	case u'6':
+	case u'7':
+	case u'8':
+	case u'9':
+		g.m_repeatCount = g.m_repeatCount * 10 + (cmd[0].unicode() - u'0');
+		completed = false;
 		break;
 	default:
 		completed = false;
 	}
 	if( completed ) {
+		g.m_repeatCount = 0;
 		DocWidget *docWidget = getCurDocWidget();
 		if( docWidget != nullptr ) {
 			docWidget->m_editor->viewport()->update();
