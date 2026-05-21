@@ -19,6 +19,10 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	int rcnt = getRepeatCount();
 	QTextBlock block = cursor.block();
 	switch( cmd[0].unicode() ) {
+	case u'a':
+		if( cursor.position() < block.position() + block.text().size() )
+			cursor.movePosition(QTextCursor::Right);
+		//	下にスルー
 	case u'i':
 		g.m_viCmdMode = false;
 		break;
