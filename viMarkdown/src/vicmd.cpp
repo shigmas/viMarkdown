@@ -27,10 +27,13 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		g.m_viCmdMode = false;
 		break;
 	case u'x':
-		if( rcnt > 1 ) {
-			while( --rcnt >= 0 && cursor.position() < block.position() + block.text().size() )	//	行末でない場合
-				cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-		}
+		while( --rcnt >= 0 && cursor.position() < block.position() + block.text().size() )	//	行末でない場合
+			cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+		cursor.deleteChar();
+		break;
+	case u'X':
+		while( --rcnt >= 0 && cursor.position() > block.position() )	//	行頭でない場合
+			cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor);
 		cursor.deleteChar();
 		break;
 	case u'w':
