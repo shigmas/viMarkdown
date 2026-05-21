@@ -130,6 +130,9 @@
     <ClCompile Include="..\3rdparty\lunasvg\source\svgtextelement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="vicmd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DocWidget.h">

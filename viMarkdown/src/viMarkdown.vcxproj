@@ -141,6 +141,7 @@
     <ClCompile Include="OutputView.cpp" />
     <ClCompile Include="ReplaceDialog.cpp" />
     <ClCompile Include="SettingsDialog.cpp" />
+    <ClCompile Include="vicmd.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="GrepDialog.ui" />
     <QtUic Include="LangDialog.ui" />
