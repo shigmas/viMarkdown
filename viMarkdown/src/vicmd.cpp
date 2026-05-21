@@ -42,6 +42,12 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		else
 			docWidget->m_preview->undo();
 		break;
+	case u'U':
+		if( isEditor )
+			docWidget->m_editor->redo();
+		else
+			docWidget->m_preview->redo();
+		break;
 	case u'w':
 		for(int i = 0; i < rcnt; ++i) {
 			auto pos = cursor.position();
