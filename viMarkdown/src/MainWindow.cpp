@@ -2466,16 +2466,37 @@ void MainWindow::onAction_About() {
 		"<br>Powered by C++, Qt6, and LunaSVG</p>"
 	);
 }
-void MainWindow::do_viCmd(QString cmd) {
-	DocWidget *docWidget = getCurDocWidget();
-	if( cmd == "i" ) {
+void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
+	if( cmd.isEmpty() ) return;
+	bool completed = true;
+	switch( cmd[0].unicode() ) {
+	case u'i':
 		g.m_viCmdMode = false;
-		//	done: ビューカーソル強制描画
+		break;
+	case u'k':
+		cursor.movePosition(QTextCursor::Up);
+		break;
+	case u'j':
+		cursor.movePosition(QTextCursor::Down);
+		break;
+	case u'h':
+		//	undone: 行頭対応
+		cursor.movePosition(QTextCursor::Left);
+		break;
+	case u'l':
+	case u' ':
+		//	undone: 行末対応
+		cursor.movePosition(QTextCursor::Right);
+		break;
+	default:
+		completed = false;
+	}
+	if( completed ) {
+		DocWidget *docWidget = getCurDocWidget();
 		if( docWidget != nullptr ) {
 			docWidget->m_editor->viewport()->update();
 			docWidget->m_preview->viewport()->update();
 		}
-		return;
 	}
 }
 //---------------------------------------------------------------------

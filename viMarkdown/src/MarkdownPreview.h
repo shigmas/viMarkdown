@@ -76,7 +76,7 @@ signals:
     void	posContextChanged(const PosContext &context, const PosContext &acontext);
     void	fontSizeChanged(int delta);
     void	do_output(const QString&);
-    void	do_viCmd(QString);
+    void	do_viCmd(QString, QTextCursor&);
 
 protected:
     void	keyPressEvent(QKeyEvent *e) override;

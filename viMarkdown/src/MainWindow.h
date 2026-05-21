@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <QtWidgets/QMainWindow>
+#include <QTextCursor>
 #include <qsplitter>
 #include <QTimer>
 //#include "ui_MainWindow.h"
@@ -326,7 +327,7 @@ protected:
     bool ASSERT_EQ(const QChar expected, const QChar actual, int ln);
     bool ASSERT_EQ(const QString &expected, const QString &actual, int ln);
 
-    void	do_viCmd(QString cmd);
+    void	do_viCmd(QString cmd, QTextCursor&);
 
 private:
     bool	m_processing = false;
