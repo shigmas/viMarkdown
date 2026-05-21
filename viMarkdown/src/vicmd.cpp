@@ -20,11 +20,18 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	QTextBlock block = cursor.block();
 	switch( cmd[0].unicode() ) {
 	case u'a':
-		if( cursor.position() < block.position() + block.text().size() )
+		if( cursor.position() < block.position() + block.text().size() )	//	行末でない場合
 			cursor.movePosition(QTextCursor::Right);
 		//	下にスルー
 	case u'i':
 		g.m_viCmdMode = false;
+		break;
+	case u'x':
+		if( rcnt > 1 ) {
+			while( --rcnt >= 0 && cursor.position() < block.position() + block.text().size() )	//	行末でない場合
+				cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+		}
+		cursor.deleteChar();
 		break;
 	case u'w':
 		for(int i = 0; i < rcnt; ++i) {
