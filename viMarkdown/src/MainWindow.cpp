@@ -2472,12 +2472,21 @@ int getRepeatCount() {
 }
 void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	if( cmd.isEmpty() ) return;
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	bool isEditor = cursor.document() == docWidget->m_editor->document();
 	bool completed = true;
 	int rcnt = getRepeatCount();
 	QTextBlock block = cursor.block();
 	switch( cmd[0].unicode() ) {
 	case u'i':
 		g.m_viCmdMode = false;
+		break;
+	case u'w':
+		if( isEditor )
+			docWidget->m_editor->moveToNextWord(cursor, /*shift = */false);
+		else
+			docWidget->m_preview->moveToNextWord(cursor, /*shift = */false);
 		break;
 	case u'k':
 		cursor.movePosition(QTextCursor::Up, QTextCursor::MoveAnchor, getRepeatCount());
@@ -2513,7 +2522,6 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	}
 	if( completed ) {
 		g.m_repeatCount = 0;
-		DocWidget *docWidget = getCurDocWidget();
 		if( docWidget != nullptr ) {
 			docWidget->m_editor->viewport()->update();
 			docWidget->m_preview->viewport()->update();
