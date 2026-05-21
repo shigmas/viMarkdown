@@ -33,9 +33,9 @@ It is designed for developers and writers who love efficiency.
 |0.1.1xx| alpha | Bug fixes and occasional feature additions | 10 Feb 2026 – |
 |0.1.2xx| beta | Bug fixes only | 10 Mar 2026 –|
 |0.2.xxx| rc | Bug fixes only (ensuring no side effects) | 21 Apr 2026 –  |
-|0.2.xxx| Stable | Maintenance mode | End Apr 2026 – (**Current**)|
-|0.3.0xx|dev|Feature implementation & verification|2026/08～|
-|0.3.1xx|alpha|Bug fixes and occasional feature additions|2026/12～|
+|0.2.xxx| Stable | Maintenance mode | End Apr 2026 – |
+|0.3.0xx|dev|Feature implementation & verification|May 2026～(**Current**)|
+|0.3.1xx|alpha|Bug fixes and occasional feature additions|Aug 2026～|
 
 ## Roadmap
 

@@ -789,7 +789,6 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(mdEditor, &MarkdownEditor::changeFontSize, this, &MainWindow::onChangeEditorFontSize);
 	connect(mdEditor, &MarkdownEditor::posContextChanged, this, &MainWindow::onSrcPosContextChanged);
 	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
-	connect(docWidget->m_preview, &MarkdownPreview::do_viCmd, this, &MainWindow::do_viCmd);
 	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onSrcCursorPosChanged);
 	//QTextEdit *mdEditor = new QTextEdit(splitter);
 	mdEditor->setPlaceholderText(g.m_japanese ? R"(
@@ -878,6 +877,7 @@ Keisen mode: Shift + F5
 	//connect(markdownPreview, &MarkdownPreview::cursorPositionChanged, this, &MainWindow::onPreviewCurPosChanged);
 	connect(markdownPreview, &MarkdownPreview::posContextChanged, this, &MainWindow::onPrvPosContextChanged);
 	connect(markdownPreview, &MarkdownPreview::do_output, this, &MainWindow::do_output);
+	connect(markdownPreview, &MarkdownPreview::do_viCmd, this, &MainWindow::do_viCmd);
 	splitter->addWidget(mdEditor);
 	splitter->addWidget(markdownPreview);
 	splitter->setSizes(QList<int>() << 500 << 500);
