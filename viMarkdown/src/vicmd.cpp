@@ -102,6 +102,14 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 			cursor.setPosition(block.position() + block.text().size() - 1);
 		}
 		break;
+	case '^':
+		cursor.movePosition(QTextCursor::StartOfBlock);
+		for(;;) {
+			QChar ch = cursor.document()->characterAt(cursor.position());
+			if( ch != u' ' && ch != u'\t' ) break;
+			cursor.movePosition(QTextCursor::Right);	//	空白だけの行で行末まで行っちゃうけど、まあいいか・・・
+		}
+		break;
 	case '0':
 		if( g.m_repeatCount == 0 ) {
 			cursor.movePosition(QTextCursor::StartOfBlock);
