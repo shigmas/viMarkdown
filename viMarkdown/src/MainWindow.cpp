@@ -2473,6 +2473,8 @@ int getRepeatCount() {
 void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	if( cmd.isEmpty() ) return;
 	bool completed = true;
+	int rcnt = getRepeatCount();
+	QTextBlock block = cursor.block();
 	switch( cmd[0].unicode() ) {
 	case u'i':
 		g.m_viCmdMode = false;
@@ -2483,10 +2485,11 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	case u'j':
 		cursor.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor, getRepeatCount());
 		break;
-	case u'h':
-		//	undone: 行頭対応
-		cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, getRepeatCount());
+	case u'h': {
+		rcnt = qMin(rcnt, cursor.position() - block.position());	//	行頭対応
+		cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, rcnt);
 		break;
+	}
 	case u'l':
 	case u' ':
 		//	undone: 行末対応
