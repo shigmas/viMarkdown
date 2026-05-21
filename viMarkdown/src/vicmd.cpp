@@ -26,6 +26,10 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	case u'i':
 		g.m_viCmdMode = false;
 		break;
+	case u'A':
+		cursor.setPosition(block.position() + block.text().size());
+		g.m_viCmdMode = false;
+		break;
 	case u'x':
 		while( --rcnt >= 0 && cursor.position() < block.position() + block.text().size() )	//	行末でない場合
 			cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
