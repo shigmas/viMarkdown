@@ -68,10 +68,10 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		}
 		break;
 	case u'k':
-		cursor.movePosition(QTextCursor::Up, QTextCursor::MoveAnchor, getRepeatCount());
+		cursor.movePosition(QTextCursor::Up, QTextCursor::MoveAnchor, rcnt);
 		break;
 	case u'j':
-		cursor.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor, getRepeatCount());
+		cursor.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor, rcnt);
 		break;
 	case u'h': {
 		rcnt = qMin(rcnt, cursor.position() - block.position());	//	行頭対応
@@ -79,10 +79,15 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		break;
 	}
 	case u'l':
-	case u' ':
+	case u' ': {
 		//	undone: 行末対応
-		cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, getRepeatCount());
+		int pos = block.position() + block.text().size() - 1;
+		if( cursor.position() < pos ) {
+			rcnt = qMin(rcnt, pos - cursor.position());
+			cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, rcnt);
+		}
 		break;
+	}
 	case u'0':
 		if( g.m_repeatCount == 0 ) {
 			cursor.movePosition(QTextCursor::StartOfBlock);
