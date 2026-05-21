@@ -34,7 +34,8 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	case u'X':
 		while( --rcnt >= 0 && cursor.position() > block.position() )	//	行頭でない場合
 			cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor);
-		cursor.deleteChar();
+		if( cursor.hasSelection() )
+			cursor.deleteChar();
 		break;
 	case u'u':
 		if( isEditor )
@@ -80,7 +81,6 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	}
 	case u'l':
 	case u' ': {
-		//	undone: 行末対応
 		int pos = block.position() + block.text().size() - 1;
 		if( cursor.position() < pos ) {
 			rcnt = qMin(rcnt, pos - cursor.position());
@@ -88,6 +88,11 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		}
 		break;
 	}
+	case u'$':
+		if( !block.text().isEmpty() ) {
+			cursor.setPosition(block.position() + block.text().size() - 1);
+		}
+		break;
 	case u'0':
 		if( g.m_repeatCount == 0 ) {
 			cursor.movePosition(QTextCursor::StartOfBlock);
