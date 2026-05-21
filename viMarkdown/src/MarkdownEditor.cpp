@@ -340,7 +340,8 @@ protected:
 			setFormat(0, text.length(), fmt_darkred);
 		} else {
 			// デフォルトの色（黒）
-			setFormat(0, text.length(), QColor("black"));
+			//QPalette currentPalette = parentWidget->palette();
+			//setFormat(0, text.length(), currentPalette.color(QPalette::Text));
 			auto it = m_boldItalicRegex.globalMatch(text);
 			while (it.hasNext()) {
 				QRegularExpressionMatch match = it.next();

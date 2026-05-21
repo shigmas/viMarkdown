@@ -2483,10 +2483,23 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		g.m_viCmdMode = false;
 		break;
 	case u'w':
-		if( isEditor )
-			docWidget->m_editor->moveToNextWord(cursor, /*shift = */false);
-		else
-			docWidget->m_preview->moveToNextWord(cursor, /*shift = */false);
+		for(int i = 0; i < rcnt; ++i) {
+			auto pos = cursor.position();
+			if( isEditor )
+				docWidget->m_editor->moveToNextWord(cursor, /*shift = */false);
+			else
+				docWidget->m_preview->moveToNextWord(cursor, /*shift = */false);
+			if( cursor.position() == pos ) break;
+		}
+		break;
+	case u'b':
+		for(int i = 0; i < rcnt; ++i) {
+			if( isEditor )
+				docWidget->m_editor->moveToPrevWord(cursor, /*shift = */false);
+			else
+				docWidget->m_preview->moveToPrevWord(cursor, /*shift = */false);
+			if( cursor.position() == 0 ) break;
+		}
 		break;
 	case u'k':
 		cursor.movePosition(QTextCursor::Up, QTextCursor::MoveAnchor, getRepeatCount());
