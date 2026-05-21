@@ -36,6 +36,12 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 			cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor);
 		cursor.deleteChar();
 		break;
+	case u'u':
+		if( isEditor )
+			docWidget->m_editor->undo();
+		else
+			docWidget->m_preview->undo();
+		break;
 	case u'w':
 		for(int i = 0; i < rcnt; ++i) {
 			auto pos = cursor.position();
