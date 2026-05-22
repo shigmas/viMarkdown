@@ -681,16 +681,21 @@ void MarkdownEditor::svg_esc_pressed() {
 void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	QTextCursor cursor = this->textCursor();
 	if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {		//	改行入力
-		QTextBlock currentBlock = cursor.block();
-		if( (e->modifiers() & Qt::ShiftModifier) == 0 &&		//	Shift + Enter でない
-			cursor.position() != currentBlock.position())		//	行頭にいない場合
-		{
-			insertEnter();
+		if( g.m_viCmdMode ) {
+			emit do_viCmd("\n", cursor);
+			setTextCursor(cursor);
 		} else {
-			cursor.insertText("\n");
+			QTextBlock currentBlock = cursor.block();
+			if( (e->modifiers() & Qt::ShiftModifier) == 0 &&		//	Shift + Enter でない
+				cursor.position() != currentBlock.position())		//	行頭にいない場合
+			{
+				insertEnter();
+			} else {
+				cursor.insertText("\n");
+			}
+			if( g.m_auto_svg_completer )
+				check_svg_completer();
 		}
-		if( g.m_auto_svg_completer )
-			check_svg_completer();
 		return;
 	} else if (e->key() == Qt::Key_Tab ) {
 		emit tab_pressed();

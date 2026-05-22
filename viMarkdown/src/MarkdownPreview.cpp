@@ -227,13 +227,19 @@ bool MarkdownPreview::isTableHyphenLine(const QString& lnStr) {
 #endif
 
 void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
+	QTextCursor cursor = textCursor();
 	if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {		//	改行入力
-		emit Enter_pressed();
+		if( g.m_viCmdMode ) {
+			emit do_viCmd("\n", cursor);
+			setTextCursor(cursor);
+		} else {
+			emit Enter_pressed();
+		}
 		return;
 	}
 	if (e->key() == Qt::Key_Escape) {
 		g.m_viCmdMode = true;
-		QTextCursor cursor = textCursor();
+		//QTextCursor cursor = textCursor();
 		if( cursor.hasSelection() ) {	//	選択状態ならば
 			cursor.setPosition(cursor.position());		//	選択解除
 			setTextCursor(cursor);
@@ -255,12 +261,12 @@ void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 	if( (e->modifiers() & Qt::ControlModifier) != 0 ) {		//	Ctrl +
 		bool shift = (e->modifiers() & Qt::ShiftModifier) != 0;
 		if (e->key() == Qt::Key_Right ) {
-			QTextCursor cursor = textCursor();
+			//QTextCursor cursor = textCursor();
 			moveToNextWord(cursor, shift);
 			setTextCursor(cursor);
 			return;
 		} else if (e->key() == Qt::Key_Left) {
-			QTextCursor cursor = textCursor();
+			//QTextCursor cursor = textCursor();
 			moveToPrevWord(cursor, shift);
 			setTextCursor(cursor);
 			return;
@@ -305,7 +311,7 @@ void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 	}
 	if( g.m_viCmdMode ) {
 		QString txt = e->text();
-		QTextCursor cursor = textCursor();
+		//QTextCursor cursor = textCursor();
 		if( !txt.isEmpty() ) {
 			emit do_viCmd(txt, cursor);
 			setTextCursor(cursor);

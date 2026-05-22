@@ -30,6 +30,15 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		cursor.setPosition(block.position() + block.text().size());
 		g.m_viCmdMode = false;
 		break;
+	case 'I':
+		cursor.movePosition(QTextCursor::StartOfBlock);
+		for(;;) {
+			QChar ch = cursor.document()->characterAt(cursor.position());
+			if( ch != u' ' && ch != u'\t' ) break;
+			cursor.movePosition(QTextCursor::Right);
+		}
+		g.m_viCmdMode = false;
+		break;
 	case 'o':
 		cursor.setPosition(block.position() + block.text().size());
 		cursor.insertText("\n");
@@ -102,6 +111,10 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 			cursor.setPosition(block.position() + block.text().size() - 1);
 		}
 		break;
+	case '\n':
+	case '+':
+		cursor.movePosition(QTextCursor::Down);
+		//	下にスルー
 	case '^':
 		cursor.movePosition(QTextCursor::StartOfBlock);
 		for(;;) {
