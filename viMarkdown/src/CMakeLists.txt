@@ -28,6 +28,7 @@ set(PROJECT_SOURCES
         GrepDialog.ui
         OutputView.h
         OutputView.cpp
+        vicmd.cpp
         ver.h
         ${TS_FILES}
 )
