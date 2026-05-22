@@ -10,6 +10,16 @@ int getRepeatCount() {
 	if( g.m_repeatCount == 0 ) return 1;
 	return g.m_repeatCount;
 }
+void do_cdy(QTextCursor& cursor) {
+	if( g.m_cdy == 'd' ) {
+		if( cursor.hasSelection() )
+			cursor.deleteChar();
+	} else if( g.m_cdy == 'c' ) {
+		if( cursor.hasSelection() )
+			cursor.deleteChar();
+		g.m_viCmdMode = false;
+	}
+}
 void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	if( cmd.isEmpty() ) return;
 	DocWidget *docWidget = getCurDocWidget();
@@ -17,8 +27,20 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	bool isEditor = cursor.document() == docWidget->m_editor->document();
 	bool completed = true;
 	int rcnt = getRepeatCount();
+	auto moveMode = g.m_cdy == ' ' ? QTextCursor::MoveAnchor : QTextCursor::KeepAnchor;
 	QTextBlock block = cursor.block();
 	switch( cmd[0].unicode() ) {
+	case 'c':
+		if( g.m_cdy == 'c' ) {
+			cursor.movePosition(QTextCursor::StartOfBlock);
+			cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor, rcnt);
+			cursor.deleteChar();
+			g.m_viCmdMode = false;
+		} else if( g.m_cdy == ' ' ) {
+			g.m_cdy = 'c';
+			completed = false;
+		}
+		break;
 	case 'd':
 		if( g.m_cdy == 'd' ) {
 			cursor.movePosition(QTextCursor::StartOfBlock);
@@ -81,30 +103,35 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		for(int i = 0; i < rcnt; ++i) {
 			auto pos = cursor.position();
 			if( isEditor )
-				docWidget->m_editor->moveToNextWord(cursor, /*shift = */false);
+				docWidget->m_editor->moveToNextWord(cursor, /*select = */g.m_cdy != ' ');
 			else
-				docWidget->m_preview->moveToNextWord(cursor, /*shift = */false);
+				docWidget->m_preview->moveToNextWord(cursor, /*select = */g.m_cdy != ' ');
 			if( cursor.position() == pos ) break;
 		}
+		do_cdy(cursor);
 		break;
 	case 'b':
 		for(int i = 0; i < rcnt; ++i) {
 			if( isEditor )
-				docWidget->m_editor->moveToPrevWord(cursor, /*shift = */false);
+				docWidget->m_editor->moveToPrevWord(cursor, /*select = */g.m_cdy != ' ');
 			else
-				docWidget->m_preview->moveToPrevWord(cursor, /*shift = */false);
+				docWidget->m_preview->moveToPrevWord(cursor, /*select = */g.m_cdy != ' ');
 			if( cursor.position() == 0 ) break;
 		}
+		do_cdy(cursor);
 		break;
 	case 'k':
-		cursor.movePosition(QTextCursor::Up, QTextCursor::MoveAnchor, rcnt);
+		cursor.movePosition(QTextCursor::Up, moveMode, rcnt);
+		do_cdy(cursor);
 		break;
 	case 'j':
-		cursor.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor, rcnt);
+		cursor.movePosition(QTextCursor::Down, moveMode, rcnt);
+		do_cdy(cursor);
 		break;
 	case 'h': {
 		rcnt = qMin(rcnt, cursor.position() - block.position());	//	行頭対応
-		cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, rcnt);
+		cursor.movePosition(QTextCursor::Left, moveMode, rcnt);
+		do_cdy(cursor);
 		break;
 	}
 	case 'l':
@@ -112,21 +139,23 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		int pos = block.position() + block.text().size() - 1;
 		if( cursor.position() < pos ) {
 			rcnt = qMin(rcnt, pos - cursor.position());
-			cursor.movePosition(QTextCursor::Right, QTextCursor::MoveAnchor, rcnt);
+			cursor.movePosition(QTextCursor::Right, moveMode, rcnt);
 		}
+		do_cdy(cursor);
 		break;
 	}
 	case '$':
 		if( !block.text().isEmpty() ) {
-			cursor.setPosition(block.position() + block.text().size() - 1);
+			cursor.setPosition(block.position() + block.text().size() - 1, moveMode);
 		}
+		do_cdy(cursor);
 		break;
 	case '-':
-		cursor.movePosition(QTextCursor::PreviousBlock, QTextCursor::MoveAnchor, rcnt);
+		cursor.movePosition(QTextCursor::PreviousBlock, moveMode, rcnt);
 		goto hat;
 	case '\n':
 	case '+':
-		cursor.movePosition(QTextCursor::NextBlock, QTextCursor::MoveAnchor, rcnt);
+		cursor.movePosition(QTextCursor::NextBlock, moveMode, rcnt);
 		goto hat;
 	case '^':
 hat:
@@ -134,12 +163,14 @@ hat:
 		for(;;) {
 			QChar ch = cursor.document()->characterAt(cursor.position());
 			if( ch != u' ' && ch != u'\t' ) break;
-			cursor.movePosition(QTextCursor::Right);	//	空白だけの行で行末まで行っちゃうけど、まあいいか・・・
+			cursor.movePosition(QTextCursor::Right, moveMode);	//	空白だけの行で行末まで行っちゃうけど、まあいいか・・・
 		}
+		do_cdy(cursor);
 		break;
 	case '0':
 		if( g.m_repeatCount == 0 ) {
-			cursor.movePosition(QTextCursor::StartOfBlock);
+			cursor.movePosition(QTextCursor::StartOfBlock, moveMode);
+			do_cdy(cursor);
 			break;
 		}
 		//	するすると下にスルーする
