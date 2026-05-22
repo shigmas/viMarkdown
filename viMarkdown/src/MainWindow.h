@@ -114,6 +114,7 @@ struct Global {
 	bool	m_auto_svg_completer;	//	SVG補完ダイアログ自動表示
 	bool	m_viKeybindings;		//	vi コマンドキー割り当て有効/無効
 	bool	m_viCmdMode = false;
+	char	m_cdy = ' ';			//	{c|d|y}<move> 部分
 	int		m_repeatCount = 0;		//	vi コマンド繰り返し回数
 	int		m_editorFontSize;
 	int		m_previewFontSize;

@@ -19,6 +19,16 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	int rcnt = getRepeatCount();
 	QTextBlock block = cursor.block();
 	switch( cmd[0].unicode() ) {
+	case 'd':
+		if( g.m_cdy == 'd' ) {
+			cursor.movePosition(QTextCursor::StartOfBlock);
+			cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor, rcnt);
+			cursor.deleteChar();
+		} else if( g.m_cdy == ' ' ) {
+			g.m_cdy = 'd';
+			completed = false;
+		}
+		break;
 	case 'a':
 		if( cursor.position() < block.position() + block.text().size() )	//	行末でない場合
 			cursor.movePosition(QTextCursor::Right);
@@ -111,11 +121,15 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 			cursor.setPosition(block.position() + block.text().size() - 1);
 		}
 		break;
+	case '-':
+		cursor.movePosition(QTextCursor::PreviousBlock, QTextCursor::MoveAnchor, rcnt);
+		goto hat;
 	case '\n':
 	case '+':
-		cursor.movePosition(QTextCursor::Down);
-		//	下にスルー
+		cursor.movePosition(QTextCursor::NextBlock, QTextCursor::MoveAnchor, rcnt);
+		goto hat;
 	case '^':
+hat:
 		cursor.movePosition(QTextCursor::StartOfBlock);
 		for(;;) {
 			QChar ch = cursor.document()->characterAt(cursor.position());
@@ -144,8 +158,9 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	default:
 		completed = false;
 	}
-	if( completed ) {
+	if( completed ) {	//	コマンド完結
 		g.m_repeatCount = 0;
+		g.m_cdy = ' ';
 		if( docWidget != nullptr ) {
 			docWidget->m_editor->viewport()->update();
 			docWidget->m_preview->viewport()->update();

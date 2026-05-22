@@ -702,6 +702,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 		return;
 	} else if (e->key() == Qt::Key_Escape ) {
 		g.m_viCmdMode = true;
+		//this->setAttribute(Qt::WA_InputMethodEnabled, false);		# 効かない
 		emit esc_pressed();
 		if( m_svgCompleter != nullptr ) {
 			delete m_svgCompleter;
