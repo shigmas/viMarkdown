@@ -31,6 +31,14 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	QTextBlock block = cursor.block();
 	g.m_pendingCommand += cmd[0];
 	switch( cmd[0].unicode() ) {
+	case 'g':
+		if( g.m_cdy == 'g' ) {
+			cursor.movePosition(QTextCursor::Start);
+		} else if( g.m_cdy == ' ' ) {
+			g.m_cdy = 'g';
+			completed = false;
+		}
+		break;
 	case 'c':
 		if( g.m_cdy == 'c' ) {
 			cursor.beginEditBlock();
