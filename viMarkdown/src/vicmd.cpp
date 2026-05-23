@@ -10,6 +10,14 @@ int getRepeatCount() {
 	if( g.m_repeatCount == 0 ) return 1;
 	return g.m_repeatCount;
 }
+void hat(QTextCursor& cursor, QTextCursor::MoveMode moveMode = QTextCursor::MoveAnchor) {
+	cursor.movePosition(QTextCursor::StartOfBlock);
+	for(;;) {
+		QChar ch = cursor.document()->characterAt(cursor.position());
+		if( ch != u' ' && ch != u'\t' ) break;
+		cursor.movePosition(QTextCursor::Right, moveMode);	//	空白だけの行で行末まで行っちゃうけど、まあいいか・・・
+	}
+}
 void do_cdy(QTextCursor& cursor) {
 	if( g.m_cdy == 'd' ) {
 		if( cursor.hasSelection() )
@@ -31,6 +39,15 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	QTextBlock block = cursor.block();
 	g.m_pendingCommand += cmd[0];
 	switch( cmd[0].unicode() ) {
+	case 'G':
+		if( g.m_repeatCount == 0 ) {
+			cursor.movePosition(QTextCursor::End);
+		} else {
+			block = cursor.document()->findBlockByNumber(g.m_repeatCount - 1);
+			cursor.setPosition(block.position());
+			hat(cursor);
+		}
+		break;
 	case 'g':
 		if( g.m_cdy == 'g' ) {
 			cursor.movePosition(QTextCursor::Start);
@@ -172,19 +189,17 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		break;
 	case '-':
 		cursor.movePosition(QTextCursor::PreviousBlock, moveMode, rcnt);
-		goto hat;
+		hat(cursor, moveMode);
+		do_cdy(cursor);
+		break;
 	case '\n':
 	case '+':
 		cursor.movePosition(QTextCursor::NextBlock, moveMode, rcnt);
-		goto hat;
+		hat(cursor, moveMode);
+		do_cdy(cursor);
+		break;
 	case '^':
-hat:
-		cursor.movePosition(QTextCursor::StartOfBlock);
-		for(;;) {
-			QChar ch = cursor.document()->characterAt(cursor.position());
-			if( ch != u' ' && ch != u'\t' ) break;
-			cursor.movePosition(QTextCursor::Right, moveMode);	//	空白だけの行で行末まで行っちゃうけど、まあいいか・・・
-		}
+		hat(cursor, moveMode);
 		do_cdy(cursor);
 		break;
 	case '0':
