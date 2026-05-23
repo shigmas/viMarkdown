@@ -29,9 +29,12 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	int rcnt = getRepeatCount();
 	auto moveMode = g.m_cdy == ' ' ? QTextCursor::MoveAnchor : QTextCursor::KeepAnchor;
 	QTextBlock block = cursor.block();
+	g.m_pendingCommand += cmd[0];
 	switch( cmd[0].unicode() ) {
 	case 'c':
 		if( g.m_cdy == 'c' ) {
+			cursor.beginEditBlock();
+			g.m_editBlockOpen = true;
 			cursor.movePosition(QTextCursor::StartOfBlock);
 			cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor, rcnt);
 			cursor.deleteChar();
@@ -50,6 +53,13 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 			g.m_cdy = 'd';
 			completed = false;
 		}
+		break;
+	case 's':
+		cursor.beginEditBlock();
+		g.m_editBlockOpen = true;
+		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+		if( cursor.hasSelection() ) cursor.deleteChar();
+		g.m_viCmdMode = false;
 		break;
 	case 'a':
 		if( cursor.position() < block.position() + block.text().size() )	//	行末でない場合
@@ -72,6 +82,8 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		g.m_viCmdMode = false;
 		break;
 	case 'o':
+		cursor.beginEditBlock();
+		g.m_editBlockOpen = true;
 		cursor.setPosition(block.position() + block.text().size());
 		cursor.insertText("\n");
 		g.m_viCmdMode = false;
@@ -192,6 +204,8 @@ hat:
 	if( completed ) {	//	コマンド完結
 		g.m_repeatCount = 0;
 		g.m_cdy = ' ';
+		g.m_lastCommand = g.m_pendingCommand;
+		g.m_pendingCommand.clear();
 		if( docWidget != nullptr ) {
 			docWidget->m_editor->viewport()->update();
 			docWidget->m_preview->viewport()->update();

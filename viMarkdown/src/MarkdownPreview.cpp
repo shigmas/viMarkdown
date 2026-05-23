@@ -238,6 +238,13 @@ void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 		return;
 	}
 	if (e->key() == Qt::Key_Escape) {
+		if( g.m_viKeybindings ) {
+			if( g.m_editBlockOpen ) {
+				cursor.endEditBlock();
+				g.m_editBlockOpen = false;
+			}
+			g.m_viCmdMode = true;
+		}
 		g.m_viCmdMode = true;
 		//QTextCursor cursor = textCursor();
 		if( cursor.hasSelection() ) {	//	選択状態ならば

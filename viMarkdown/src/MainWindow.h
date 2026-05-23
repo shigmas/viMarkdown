@@ -114,10 +114,13 @@ struct Global {
 	bool	m_auto_svg_completer;	//	SVG補完ダイアログ自動表示
 	bool	m_viKeybindings;		//	vi コマンドキー割り当て有効/無効
 	bool	m_viCmdMode = false;
+	bool	m_editBlockOpen = false;
 	char	m_cdy = ' ';			//	{c|d|y}<move> 部分
 	int		m_repeatCount = 0;		//	vi コマンド繰り返し回数
 	int		m_editorFontSize;
 	int		m_previewFontSize;
+	QString	m_lastCommand;			//	最後に実行した vi コマンド
+	QString	m_pendingCommand;		//	入力中の vi コマンド
 	QColor	m_activeLnColor;		//	アクティブ時アンダーライン行カーソル色
 	QColor	m_inactiveLnColor;		//	非アクティブ時アンダーライン行カーソル色
 	QColor	m_headingsColor;
