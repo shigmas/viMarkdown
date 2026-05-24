@@ -106,6 +106,14 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		}
 		g.m_viCmdMode = false;
 		break;
+	case 'O':
+		cursor.beginEditBlock();
+		g.m_editBlockOpen = true;
+		cursor.movePosition(QTextCursor::StartOfBlock);
+		cursor.insertText("\n");
+		cursor.movePosition(QTextCursor::PreviousBlock);
+		g.m_viCmdMode = false;
+		break;
 	case 'o':
 		cursor.beginEditBlock();
 		g.m_editBlockOpen = true;
@@ -137,6 +145,17 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 			docWidget->m_preview->redo();
 		break;
 	case 'w':
+		for(int i = 0; i < rcnt; ++i) {
+			auto pos = cursor.position();
+			if( isEditor )
+				docWidget->m_editor->moveToNextWord(cursor, /*select = */g.m_cdy != ' ');
+			else
+				docWidget->m_preview->moveToNextWord(cursor, /*select = */g.m_cdy != ' ');
+			if( cursor.position() == pos ) break;
+		}
+		do_cdy(cursor);
+		break;
+	case 'W':
 		for(int i = 0; i < rcnt; ++i) {
 			auto pos = cursor.position();
 			if( isEditor )
