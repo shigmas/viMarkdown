@@ -55,6 +55,7 @@ const QStringView KEY_FAVORITE_FILES(u"favoriteFilePaths");
 //const QStringView KEY_EDITOR_FONT_SIZE(u"editorFontSize");
 
 Global g;
+ViStatus gvi;
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)

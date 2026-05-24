@@ -19,6 +19,8 @@
 #include "DocWidget.h"
 
 extern Global g;
+extern ViStatus gvi;
+
 //extern bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment, bool &commented);
 //extern bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens);
 //extern bool isTableLine(const QString& lnStr, QStringList &tableTokens);
@@ -681,7 +683,7 @@ void MarkdownEditor::svg_esc_pressed() {
 void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	QTextCursor cursor = this->textCursor();
 	if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {		//	改行入力
-		if( g.m_viCmdMode ) {
+		if( gvi.m_viCmdMode ) {
 			emit do_viCmd("\n", cursor);
 			setTextCursor(cursor);
 		} else {
@@ -706,7 +708,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 				cursor.endEditBlock();
 				g.m_editBlockOpen = false;
 			}
-			g.m_viCmdMode = true;
+			gvi.m_viCmdMode = true;
 		}
 		//this->setAttribute(Qt::WA_InputMethodEnabled, false);		# 効かない
 		emit esc_pressed();
@@ -770,7 +772,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 			m_processing = false;
 		}
 	}
-	if( g.m_viCmdMode ) {
+	if( gvi.m_viCmdMode ) {
 		QString txt = e->text();
 		QTextCursor cursor = textCursor();
 		if( !txt.isEmpty() ) {
@@ -2172,7 +2174,7 @@ void drawEOF(QPainter &p, QRect r) {
 //    this->viewport()->update(); 
 //}
 void drawTextCursor(QWidget *viewport, QPainter& p, QTextCursor cursor, QRect rect, QFontMetrics fontMetrics, bool hasFocus) {
-	if( g.m_viCmdMode ) {
+	if( gvi.m_viCmdMode ) {
 		auto ht = rect.height();
 		rect.setY(rect.y() + ht/2);
 		rect.setHeight(ht - ht/2);

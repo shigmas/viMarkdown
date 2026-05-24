@@ -113,10 +113,7 @@ struct Global {
 	bool	m_japanese;
 	bool	m_auto_svg_completer;	//	SVG補完ダイアログ自動表示
 	bool	m_viKeybindings;		//	vi コマンドキー割り当て有効/無効
-	bool	m_viCmdMode = false;
 	bool	m_editBlockOpen = false;
-	char	m_cdy = ' ';			//	{c|d|y}<move> 部分
-	int		m_repeatCount = 0;		//	vi コマンド繰り返し回数
 	int		m_editorFontSize;
 	int		m_previewFontSize;
 	QString	m_lastCommand;			//	最後に実行した vi コマンド
@@ -135,6 +132,11 @@ struct Global {
 	QColor	m_quoteColor;			//	引用ブロック背景色
 	QColor	m_codeBlockColor;		//	コードブロック背景色
 	QColor	m_keisenBlockColor;		//	罫線ブロック背景色
+};
+struct ViStatus {
+    bool	m_viCmdMode = false;
+    char	m_cdy = ' ';			//	{c|d|y}<move> 部分
+    int		m_repeatCount = 0;		//	vi コマンド繰り返し回数
 };
 
 class MainWindow : public QMainWindow

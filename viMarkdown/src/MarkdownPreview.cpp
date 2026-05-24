@@ -21,6 +21,7 @@
 using namespace std;
 
 extern Global g;
+extern ViStatus gvi;
 
 #if 0
 class SvgImage : public QImage {
@@ -229,7 +230,7 @@ bool MarkdownPreview::isTableHyphenLine(const QString& lnStr) {
 void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 	QTextCursor cursor = textCursor();
 	if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {		//	改行入力
-		if( g.m_viCmdMode ) {
+		if( gvi.m_viCmdMode ) {
 			emit do_viCmd("\n", cursor);
 			setTextCursor(cursor);
 		} else {
@@ -243,9 +244,9 @@ void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 				cursor.endEditBlock();
 				g.m_editBlockOpen = false;
 			}
-			g.m_viCmdMode = true;
+			gvi.m_viCmdMode = true;
 		}
-		g.m_viCmdMode = true;
+		gvi.m_viCmdMode = true;
 		//QTextCursor cursor = textCursor();
 		if( cursor.hasSelection() ) {	//	選択状態ならば
 			cursor.setPosition(cursor.position());		//	選択解除
@@ -316,7 +317,7 @@ void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 			return;
 		}
 	}
-	if( g.m_viCmdMode ) {
+	if( gvi.m_viCmdMode ) {
 		QString txt = e->text();
 		//QTextCursor cursor = textCursor();
 		if( !txt.isEmpty() ) {
@@ -514,7 +515,7 @@ void MarkdownPreview::paintEvent(QPaintEvent *e) {
 		QRect rect = cursorRect();
 		drawTextCursor(viewport(), p, textCursor(), rect, fontMetrics(), hasFocus());		//	カーソル描画
 #if 0
-		if( g.m_viCmdMode ) {
+		if( gvi.m_viCmdMode ) {
 			auto ht = rect.height();
 			rect.setY(rect.y() + ht/2);
 			rect.setHeight(ht - ht/2);

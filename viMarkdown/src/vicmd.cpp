@@ -5,10 +5,11 @@
 #include "MarkdownPreview.h"
 
 extern Global g;
+extern ViStatus gvi;
 
 int getRepeatCount() {
-	if( g.m_repeatCount == 0 ) return 1;
-	return g.m_repeatCount;
+	if( gvi.m_repeatCount == 0 ) return 1;
+	return gvi.m_repeatCount;
 }
 void hat(QTextCursor& cursor, QTextCursor::MoveMode moveMode = QTextCursor::MoveAnchor) {
 	cursor.movePosition(QTextCursor::StartOfBlock);
@@ -19,13 +20,13 @@ void hat(QTextCursor& cursor, QTextCursor::MoveMode moveMode = QTextCursor::Move
 	}
 }
 void do_cdy(QTextCursor& cursor) {
-	if( g.m_cdy == 'd' ) {
+	if( gvi.m_cdy == 'd' ) {
 		if( cursor.hasSelection() )
 			cursor.deleteChar();
-	} else if( g.m_cdy == 'c' ) {
+	} else if( gvi.m_cdy == 'c' ) {
 		if( cursor.hasSelection() )
 			cursor.deleteChar();
-		g.m_viCmdMode = false;
+		gvi.m_viCmdMode = false;
 	}
 }
 void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
@@ -35,47 +36,47 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	bool isEditor = cursor.document() == docWidget->m_editor->document();
 	bool completed = true;
 	int rcnt = getRepeatCount();
-	auto moveMode = g.m_cdy == ' ' ? QTextCursor::MoveAnchor : QTextCursor::KeepAnchor;
+	auto moveMode = gvi.m_cdy == ' ' ? QTextCursor::MoveAnchor : QTextCursor::KeepAnchor;
 	QTextBlock block = cursor.block();
 	g.m_pendingCommand += cmd[0];
 	switch( cmd[0].unicode() ) {
 	case 'G':
-		if( g.m_repeatCount == 0 ) {
+		if( gvi.m_repeatCount == 0 ) {
 			cursor.movePosition(QTextCursor::End);
 		} else {
-			block = cursor.document()->findBlockByNumber(g.m_repeatCount - 1);
+			block = cursor.document()->findBlockByNumber(gvi.m_repeatCount - 1);
 			cursor.setPosition(block.position());
 			hat(cursor);
 		}
 		break;
 	case 'g':
-		if( g.m_cdy == 'g' ) {
+		if( gvi.m_cdy == 'g' ) {
 			cursor.movePosition(QTextCursor::Start);
-		} else if( g.m_cdy == ' ' ) {
-			g.m_cdy = 'g';
+		} else if( gvi.m_cdy == ' ' ) {
+			gvi.m_cdy = 'g';
 			completed = false;
 		}
 		break;
 	case 'c':
-		if( g.m_cdy == 'c' ) {
+		if( gvi.m_cdy == 'c' ) {
 			cursor.beginEditBlock();
 			g.m_editBlockOpen = true;
 			cursor.movePosition(QTextCursor::StartOfBlock);
 			cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor, rcnt);
 			cursor.deleteChar();
-			g.m_viCmdMode = false;
-		} else if( g.m_cdy == ' ' ) {
-			g.m_cdy = 'c';
+			gvi.m_viCmdMode = false;
+		} else if( gvi.m_cdy == ' ' ) {
+			gvi.m_cdy = 'c';
 			completed = false;
 		}
 		break;
 	case 'd':
-		if( g.m_cdy == 'd' ) {
+		if( gvi.m_cdy == 'd' ) {
 			cursor.movePosition(QTextCursor::StartOfBlock);
 			cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor, rcnt);
 			cursor.deleteChar();
-		} else if( g.m_cdy == ' ' ) {
-			g.m_cdy = 'd';
+		} else if( gvi.m_cdy == ' ' ) {
+			gvi.m_cdy = 'd';
 			completed = false;
 		}
 		break;
@@ -84,18 +85,18 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		g.m_editBlockOpen = true;
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 		if( cursor.hasSelection() ) cursor.deleteChar();
-		g.m_viCmdMode = false;
+		gvi.m_viCmdMode = false;
 		break;
 	case 'a':
 		if( cursor.position() < block.position() + block.text().size() )	//	行末でない場合
 			cursor.movePosition(QTextCursor::Right);
 		//	下にスルー
 	case 'i':
-		g.m_viCmdMode = false;
+		gvi.m_viCmdMode = false;
 		break;
 	case 'A':
 		cursor.setPosition(block.position() + block.text().size());
-		g.m_viCmdMode = false;
+		gvi.m_viCmdMode = false;
 		break;
 	case 'I':
 		cursor.movePosition(QTextCursor::StartOfBlock);
@@ -104,7 +105,7 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 			if( ch != u' ' && ch != u'\t' ) break;
 			cursor.movePosition(QTextCursor::Right);
 		}
-		g.m_viCmdMode = false;
+		gvi.m_viCmdMode = false;
 		break;
 	case 'O':
 		cursor.beginEditBlock();
@@ -112,14 +113,14 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		cursor.movePosition(QTextCursor::StartOfBlock);
 		cursor.insertText("\n");
 		cursor.movePosition(QTextCursor::PreviousBlock);
-		g.m_viCmdMode = false;
+		gvi.m_viCmdMode = false;
 		break;
 	case 'o':
 		cursor.beginEditBlock();
 		g.m_editBlockOpen = true;
 		cursor.setPosition(block.position() + block.text().size());
 		cursor.insertText("\n");
-		g.m_viCmdMode = false;
+		gvi.m_viCmdMode = false;
 		break;
 	case 'x':
 		while( --rcnt >= 0 && cursor.position() < block.position() + block.text().size() )	//	行末でない場合
@@ -148,9 +149,9 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		for(int i = 0; i < rcnt; ++i) {
 			auto pos = cursor.position();
 			if( isEditor )
-				docWidget->m_editor->moveToNextWord(cursor, /*select = */g.m_cdy != ' ');
+				docWidget->m_editor->moveToNextWord(cursor, /*select = */gvi.m_cdy != ' ');
 			else
-				docWidget->m_preview->moveToNextWord(cursor, /*select = */g.m_cdy != ' ');
+				docWidget->m_preview->moveToNextWord(cursor, /*select = */gvi.m_cdy != ' ');
 			if( cursor.position() == pos ) break;
 		}
 		do_cdy(cursor);
@@ -159,9 +160,9 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		for(int i = 0; i < rcnt; ++i) {
 			auto pos = cursor.position();
 			if( isEditor )
-				docWidget->m_editor->moveToNextWord(cursor, /*select = */g.m_cdy != ' ');
+				docWidget->m_editor->moveToNextWord(cursor, /*select = */gvi.m_cdy != ' ');
 			else
-				docWidget->m_preview->moveToNextWord(cursor, /*select = */g.m_cdy != ' ');
+				docWidget->m_preview->moveToNextWord(cursor, /*select = */gvi.m_cdy != ' ');
 			if( cursor.position() == pos ) break;
 		}
 		do_cdy(cursor);
@@ -169,9 +170,9 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	case 'b':
 		for(int i = 0; i < rcnt; ++i) {
 			if( isEditor )
-				docWidget->m_editor->moveToPrevWord(cursor, /*select = */g.m_cdy != ' ');
+				docWidget->m_editor->moveToPrevWord(cursor, /*select = */gvi.m_cdy != ' ');
 			else
-				docWidget->m_preview->moveToPrevWord(cursor, /*select = */g.m_cdy != ' ');
+				docWidget->m_preview->moveToPrevWord(cursor, /*select = */gvi.m_cdy != ' ');
 			if( cursor.position() == 0 ) break;
 		}
 		do_cdy(cursor);
@@ -222,7 +223,7 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		do_cdy(cursor);
 		break;
 	case '0':
-		if( g.m_repeatCount == 0 ) {
+		if( gvi.m_repeatCount == 0 ) {
 			cursor.movePosition(QTextCursor::StartOfBlock, moveMode);
 			do_cdy(cursor);
 			break;
@@ -237,15 +238,15 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	case '7':
 	case '8':
 	case '9':
-		g.m_repeatCount = g.m_repeatCount * 10 + (cmd[0].unicode() - u'0');
+		gvi.m_repeatCount = gvi.m_repeatCount * 10 + (cmd[0].unicode() - u'0');
 		completed = false;
 		break;
 	default:
 		completed = false;
 	}
 	if( completed ) {	//	コマンド完結
-		g.m_repeatCount = 0;
-		g.m_cdy = ' ';
+		gvi.m_repeatCount = 0;
+		gvi.m_cdy = ' ';
 		g.m_lastCommand = g.m_pendingCommand;
 		g.m_pendingCommand.clear();
 		if( docWidget != nullptr ) {
