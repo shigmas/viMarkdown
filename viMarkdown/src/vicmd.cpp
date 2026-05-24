@@ -125,13 +125,30 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	case 'x':
 		while( --rcnt >= 0 && cursor.position() < block.position() + block.text().size() )	//	行末でない場合
 			cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-		cursor.deleteChar();
+		if( cursor.hasSelection() ) {
+			gvi.m_yankBuffer = cursor.selectedText();
+			gvi.m_linewise = false;
+			cursor.deleteChar();
+		}
 		break;
 	case 'X':
 		while( --rcnt >= 0 && cursor.position() > block.position() )	//	行頭でない場合
 			cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor);
-		if( cursor.hasSelection() )
+		if( cursor.hasSelection() ) {
+			gvi.m_yankBuffer = cursor.selectedText();
+			gvi.m_linewise = false;
 			cursor.deleteChar();
+		}
+		break;
+	case 'p':
+		if( !gvi.m_yankBuffer.isEmpty() ) {
+			cursor.movePosition(QTextCursor::Right);
+			cursor.insertText(gvi.m_yankBuffer);
+		}
+		break;
+	case 'P':
+		if( !gvi.m_yankBuffer.isEmpty() )
+			cursor.insertText(gvi.m_yankBuffer);
 		break;
 	case 'u':
 		if( isEditor )

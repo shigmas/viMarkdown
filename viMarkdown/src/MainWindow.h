@@ -135,8 +135,10 @@ struct Global {
 };
 struct ViStatus {
     bool	m_viCmdMode = false;
+    bool	m_linewise = false;	//	行単位
     char	m_cdy = ' ';			//	{c|d|y}<move> 部分
     int		m_repeatCount = 0;		//	vi コマンド繰り返し回数
+    QString	m_yankBuffer;
 };
 
 class MainWindow : public QMainWindow
