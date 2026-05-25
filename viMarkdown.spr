@@ -220,8 +220,8 @@ SPR# 状 P Open Close ver     Type  概要
 0217 ● C 05/25            │ToDo│m_linewiseMoved フラグ追加、ヤンクバッファのは m_linewiseYanked にリネーム
 0218 ● C 05/25            │問題│dj, dk：行単位削除されない
 0219 ◎ C 05/26 05/26 03013│ToDo│MainWindow::do_viCmd(...) が長すぎるので、とりあえず挿入モード系コマンド処理を do_vi_insert(...) に分離
-0220 ● C 05/26            │ToDo│
-0221 ● C 05/26            │ToDo│
+0220 ◎ C 05/26 05/26 03013│ToDo│do_vi_operator() も分離
+0221 ◎ C 05/26 05/26 03013│ToDo│m_cdy は m_operator にリネーム？
 0222 ● C 05/26            │ToDo│
 0223 ● C 05/26            │ToDo│
 0224 ● C 05/26            │ToDo│
