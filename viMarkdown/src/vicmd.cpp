@@ -35,16 +35,19 @@ void do_openline(QTextCursor& cursor, bool before) {
 //void do_Word(QTextCursor& cursor, int rcnt) {
 //}
 void do_cdy(QTextCursor& cursor) {
-	if( gvi.m_operator == 'd' ) {	//	d<move>
-		if( cursor.hasSelection() ) {
-			gvi.m_yankBuffer = cursor.selectedText();
-			gvi.m_linewiseYanked = true;
-			cursor.deleteChar();
-		}
-	} else if( gvi.m_operator == 'c' ) {
+	if( gvi.m_operator == 'c' ) {
 		if( cursor.hasSelection() )
 			cursor.deleteChar();
 		gvi.m_viCmdMode = false;
+	} else if( gvi.m_operator == 'd' || gvi.m_operator == 'y' ) {	//	d<move> or y<move>
+		if( cursor.hasSelection() ) {
+			gvi.m_yankBuffer = cursor.selectedText();
+			gvi.m_linewiseYanked = gvi.m_linewiseMoved;
+			if( gvi.m_operator == 'd' )
+				cursor.deleteChar();
+			else
+				cursor.clearSelection();
+		}
 	}
 }
 bool do_fFtT(QTextCursor& cursor, QChar ch, int rcnt) {
