@@ -29,6 +29,8 @@ void do_openline(QTextCursor& cursor, bool before) {
 		cursor.insertText("\n");
 	}
 }
+void do_Word(QTextCursor& cursor, int rcnt) {
+}
 void do_cdy(QTextCursor& cursor) {
 	if( gvi.m_cdy == 'd' ) {	//	d<move>
 		if( cursor.hasSelection() ) {
@@ -42,8 +44,8 @@ void do_cdy(QTextCursor& cursor) {
 		gvi.m_viCmdMode = false;
 	}
 }
-void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
-	if( cmd.isEmpty() ) return;
+void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
+	//if( cmd.isEmpty() ) return;
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	bool isEditor = cursor.document() == docWidget->m_editor->document();
@@ -51,8 +53,8 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	int rcnt = getRepeatCount();
 	auto moveMode = gvi.m_cdy == ' ' ? QTextCursor::MoveAnchor : QTextCursor::KeepAnchor;
 	QTextBlock block = cursor.block();
-	g.m_pendingCommand += cmd[0];
-	switch( cmd[0].unicode() ) {
+	g.m_pendingCommand += cmd;
+	switch( cmd.unicode() ) {
 	case 'G':
 		if( gvi.m_repeatCount == 0 ) {
 			cursor.movePosition(QTextCursor::End);
@@ -203,6 +205,8 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		do_cdy(cursor);
 		break;
 	case 'W':
+		do_Word(cursor, rcnt);
+#if 0
 		for(int i = 0; i < rcnt; ++i) {
 			auto pos = cursor.position();
 			if( isEditor )
@@ -211,6 +215,7 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 				docWidget->m_preview->moveToNextWord(cursor, /*select = */gvi.m_cdy != ' ');
 			if( cursor.position() == pos ) break;
 		}
+#endif
 		do_cdy(cursor);
 		break;
 	case 'b':
@@ -284,7 +289,7 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	case '7':
 	case '8':
 	case '9':
-		gvi.m_repeatCount = gvi.m_repeatCount * 10 + (cmd[0].unicode() - u'0');
+		gvi.m_repeatCount = gvi.m_repeatCount * 10 + (cmd.unicode() - u'0');
 		completed = false;
 		break;
 	default:

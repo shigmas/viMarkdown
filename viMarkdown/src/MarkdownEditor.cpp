@@ -684,7 +684,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	QTextCursor cursor = this->textCursor();
 	if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {		//	改行入力
 		if( gvi.m_viCmdMode ) {
-			emit do_viCmd("\n", cursor);
+			emit do_viCmd(QChar(u'\n'), cursor);
 			setTextCursor(cursor);
 		} else {
 			QTextBlock currentBlock = cursor.block();
@@ -776,7 +776,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 		QString txt = e->text();
 		QTextCursor cursor = textCursor();
 		if( !txt.isEmpty() ) {
-			emit do_viCmd(txt, cursor);
+			emit do_viCmd(txt[0], cursor);
 			setTextCursor(cursor);
 			return;
 		}
