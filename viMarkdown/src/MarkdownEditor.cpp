@@ -705,7 +705,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	} else if (e->key() == Qt::Key_Escape ) {
 		if( g.m_viKeybindings ) {
 			if( g.m_editBlockOpen ) {
-				cursor.endEditBlock();
+				//cursor.endEditBlock();
 				g.m_editBlockOpen = false;
 			}
 			gvi.m_viCmdMode = true;

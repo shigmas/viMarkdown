@@ -74,10 +74,11 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor) {
 		//	undone: 要コーディング
 		break;
 	case 's':
-		cursor.beginEditBlock();
+		cursor.beginEditBlock();	//	１文字削除とその後の文字挿入を１回でundo可能にするため
 		g.m_editBlockOpen = true;
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 		if( cursor.hasSelection() ) cursor.deleteChar();
+		cursor.endEditBlock();
 		gvi.m_viCmdMode = false;
 		break;
 	case 'a':
@@ -104,12 +105,14 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor) {
 		cursor.beginEditBlock();
 		g.m_editBlockOpen = true;
 		do_openline(cursor, true);
+		cursor.endEditBlock();
 		gvi.m_viCmdMode = false;
 		break;
 	case 'o':
 		cursor.beginEditBlock();
 		g.m_editBlockOpen = true;
 		do_openline(cursor, false);
+		cursor.endEditBlock();
 		gvi.m_viCmdMode = false;
 		break;
 	}
@@ -158,6 +161,7 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt) {		//	
 			cursor.movePosition(QTextCursor::StartOfBlock);
 			cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor, rcnt);
 			cursor.deleteChar();
+			cursor.endEditBlock();
 			gvi.m_viCmdMode = false;
 			break;
 		case 'd':
