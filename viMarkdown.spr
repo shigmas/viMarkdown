@@ -211,13 +211,23 @@ SPR# 状 P Open Close ver     Type  概要
 0208 ● C 05/25            │ToDo│t T コマンドサポート
 0209 ● C 05/25            │ToDo│Y コマンドサポート
 0210 ● C 05/25            │ToDo│z. コマンドサポート
-0210 ● C 05/25            │ToDo│z Enter コマンドサポート
-0210 ● C 05/25            │ToDo│z - コマンドサポート
-0210 ● C 05/25            │ToDo│, ; コマンドサポート
-0210 ● C 05/25            │ToDo│]] [[ コマンドサポート（次・前見出しに移動）
-0210 ◎ C 05/25 05/25 03012│ToDo│struct Global から、vi 関連を ViStatus に分ける
-0210 ◎ C 05/25 05/25 03012│ToDo│do_viCmd(QString cmd, ...)：第１引数は QChar に変更
-0210 ● C 05/25            │ToDo│m_linewiseMoved フラグ追加、ヤンクバッファのは m_linewiseYanked にリネーム
-0210 ● C 05/25            │問題│dj, dk：行単位削除されない
-0210 ● C 05/25            │ToDo│
-0210 ● C 05/25            │ToDo│
+0211 ● C 05/25            │ToDo│z Enter コマンドサポート
+0212 ● C 05/25            │ToDo│z - コマンドサポート
+0213 ● C 05/25            │ToDo│, ; コマンドサポート
+0214 ● C 05/25            │ToDo│]] [[ コマンドサポート（次・前見出しに移動）
+0215 ◎ C 05/25 05/25 03012│ToDo│struct Global から、vi 関連を ViStatus に分ける
+0216 ◎ C 05/25 05/25 03012│ToDo│do_viCmd(QString cmd, ...)：第１引数は QChar に変更
+0217 ● C 05/25            │ToDo│m_linewiseMoved フラグ追加、ヤンクバッファのは m_linewiseYanked にリネーム
+0218 ● C 05/25            │問題│dj, dk：行単位削除されない
+0219 ◎ C 05/26 05/26 03013│ToDo│MainWindow::do_viCmd(...) が長すぎるので、とりあえず挿入モード系コマンド処理を do_vi_insert(...) に分離
+0220 ● C 05/26            │ToDo│
+0221 ● C 05/26            │ToDo│
+0222 ● C 05/26            │ToDo│
+0223 ● C 05/26            │ToDo│
+0224 ● C 05/26            │ToDo│
+0225 ● C 05/26            │ToDo│
+0226 ● C 05/26            │ToDo│
+0227 ● C 05/26            │ToDo│
+0228 ● C 05/26            │ToDo│
+0229 ● C 05/26            │ToDo│
+0230 ● C 05/26            │ToDo│

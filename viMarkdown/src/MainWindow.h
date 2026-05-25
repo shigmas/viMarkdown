@@ -138,6 +138,7 @@ struct ViStatus {
     bool	m_linewiseMoved = false;	//	行単位移動した（jkG等）
     bool	m_linewiseYanked = false;	//	行単位にヤンクされた
     char	m_cdy = ' ';			//	{c|d|y}<move> 部分
+    char	m_fFtT = ' ';			//	{fFtT}
     int		m_repeatCount = 0;		//	vi コマンド繰り返し回数
     QString	m_yankBuffer;
 };
@@ -340,6 +341,9 @@ protected:
     bool ASSERT_EQ(const QString &expected, const QString &actual, int ln);
 
     void	do_viCmd(QChar cmd, QTextCursor&);
+    void	do_vi_insert(QChar cmd, QTextCursor&);			//	iIaAoOsS
+    void	do_vi_operator(QChar cmd, QTextCursor&);		//	{c|d|y}<move>
+    void	do_vi_motion(QChar cmd, QTextCursor&);			//	hjklwW 等
 
 private:
     bool	m_processing = false;
