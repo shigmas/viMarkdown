@@ -225,8 +225,8 @@ SPR# 状 P Open Close ver     Type  概要
 0222 ◎ C 05/26 05/26 03013│ToDo│do_vi_delete() も分離
 0223 ◎ C 05/26 05/26 03013│ToDo│do_vi_motion() も分離
 0224 ◎ C 05/26 05/26 03013│問題│gg が効かない
-0225 ● C 05/26 05/26 03013│ToDo│do_viCmd()：繰り返し回数処理部分を switch 文から分離
-0226 ● C 05/26            │ToDo│
+0225 ◎ C 05/26 05/26 03013│ToDo│do_viCmd()：繰り返し回数処理部分を switch 文から分離
+0226 ◎ C 05/26 05/26 03013│ToDo│do_vi_motion()：do_cdy() コールを一箇所にまとめるべき
 0227 ● C 05/26            │ToDo│
 0228 ● C 05/26            │ToDo│
 0229 ● C 05/26            │ToDo│

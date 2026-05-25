@@ -193,16 +193,13 @@ void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidge
 	switch( cmd.unicode() ) {
 	case 'k':
 		cursor.movePosition(QTextCursor::Up, moveMode, rcnt);
-		do_cdy(cursor);
 		break;
 	case 'j':
 		cursor.movePosition(QTextCursor::Down, moveMode, rcnt);
-		do_cdy(cursor);
 		break;
 	case 'h': {
 		rcnt = qMin(rcnt, cursor.position() - block.position());	//	行頭対応
 		cursor.movePosition(QTextCursor::Left, moveMode, rcnt);
-		do_cdy(cursor);
 		break;
 	}
 	case 'l':
@@ -212,7 +209,6 @@ void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidge
 			rcnt = qMin(rcnt, pos - cursor.position());
 			cursor.movePosition(QTextCursor::Right, moveMode, rcnt);
 		}
-		do_cdy(cursor);
 		break;
 	}
 	case 'w':
@@ -224,7 +220,6 @@ void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidge
 				docWidget->m_preview->moveToNextWord(cursor, /*select = */gvi.m_operator != ' ');
 			if( cursor.position() == pos ) break;
 		}
-		do_cdy(cursor);
 		break;
 	case 'W':
 		//do_Word(cursor, rcnt);
@@ -236,7 +231,6 @@ void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidge
 				cursor.movePosition(QTextCursor::Right);
 			if( cursor.position() == doc->characterCount() ) break;
 		}
-		do_cdy(cursor);
 		break;
 	case 'b':
 		for(int i = 0; i < rcnt; ++i) {
@@ -246,7 +240,6 @@ void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidge
 				docWidget->m_preview->moveToPrevWord(cursor, /*select = */gvi.m_operator != ' ');
 			if( cursor.position() == 0 ) break;
 		}
-		do_cdy(cursor);
 		break;
 	case 'B':
 		for(int i = 0; i < rcnt; ++i) {
@@ -256,30 +249,28 @@ void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidge
 				cursor.movePosition(QTextCursor::Left);
 			if( cursor.position() == 0 ) break;
 		}
-		do_cdy(cursor);
 		break;
 	case '$':
 		if( !block.text().isEmpty() ) {
 			cursor.setPosition(block.position() + block.text().size() - 1, moveMode);
 		}
-		do_cdy(cursor);
 		break;
 	case '-':
 		cursor.movePosition(QTextCursor::PreviousBlock, moveMode, rcnt);
 		hat(cursor, moveMode);
-		do_cdy(cursor);
 		break;
 	case '\n':
 	case '+':
 		cursor.movePosition(QTextCursor::NextBlock, moveMode, rcnt);
 		hat(cursor, moveMode);
-		do_cdy(cursor);
 		break;
 	case '^':
 		hat(cursor, moveMode);
-		do_cdy(cursor);
 		break;
+	default:
+		return;
 	}
+	do_cdy(cursor);
 }
 void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 	//if( cmd.isEmpty() ) return;
