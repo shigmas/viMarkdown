@@ -19,10 +19,23 @@ void hat(QTextCursor& cursor, QTextCursor::MoveMode moveMode = QTextCursor::Move
 		cursor.movePosition(QTextCursor::Right, moveMode);	//	空白だけの行で行末まで行っちゃうけど、まあいいか・・・
 	}
 }
+void do_openline(QTextCursor& cursor, bool before) {
+	if( before ) {
+		cursor.movePosition(QTextCursor::StartOfBlock);
+		cursor.insertText("\n");
+		cursor.movePosition(QTextCursor::PreviousBlock);
+	} else {
+		cursor.setPosition(cursor.block().position() + cursor.block().text().size());
+		cursor.insertText("\n");
+	}
+}
 void do_cdy(QTextCursor& cursor) {
-	if( gvi.m_cdy == 'd' ) {
-		if( cursor.hasSelection() )
+	if( gvi.m_cdy == 'd' ) {	//	d<move>
+		if( cursor.hasSelection() ) {
+			gvi.m_yankBuffer = cursor.selectedText();
+			gvi.m_linewise = true;
 			cursor.deleteChar();
+		}
 	} else if( gvi.m_cdy == 'c' ) {
 		if( cursor.hasSelection() )
 			cursor.deleteChar();
@@ -71,9 +84,11 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		}
 		break;
 	case 'd':
-		if( gvi.m_cdy == 'd' ) {
+		if( gvi.m_cdy == 'd' ) {	//	dd
 			cursor.movePosition(QTextCursor::StartOfBlock);
 			cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor, rcnt);
+			gvi.m_yankBuffer = cursor.selectedText();
+			gvi.m_linewise = true;
 			cursor.deleteChar();
 		} else if( gvi.m_cdy == ' ' ) {
 			gvi.m_cdy = 'd';
@@ -110,16 +125,13 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 	case 'O':
 		cursor.beginEditBlock();
 		g.m_editBlockOpen = true;
-		cursor.movePosition(QTextCursor::StartOfBlock);
-		cursor.insertText("\n");
-		cursor.movePosition(QTextCursor::PreviousBlock);
+		do_openline(cursor, true);
 		gvi.m_viCmdMode = false;
 		break;
 	case 'o':
 		cursor.beginEditBlock();
 		g.m_editBlockOpen = true;
-		cursor.setPosition(block.position() + block.text().size());
-		cursor.insertText("\n");
+		do_openline(cursor, false);
 		gvi.m_viCmdMode = false;
 		break;
 	case 'x':
@@ -142,13 +154,22 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 		break;
 	case 'p':
 		if( !gvi.m_yankBuffer.isEmpty() ) {
-			cursor.movePosition(QTextCursor::Right);
+			if( gvi.m_linewise ) {
+				cursor.movePosition(QTextCursor::NextBlock);
+				//do_openline(cursor, false);
+			} else
+				cursor.movePosition(QTextCursor::Right);
 			cursor.insertText(gvi.m_yankBuffer);
 		}
 		break;
 	case 'P':
-		if( !gvi.m_yankBuffer.isEmpty() )
+		if( !gvi.m_yankBuffer.isEmpty() ) {
+			if( gvi.m_linewise ) {
+				cursor.movePosition(QTextCursor::StartOfBlock);
+				//do_openline(cursor, true);
+			}
 			cursor.insertText(gvi.m_yankBuffer);
+		}
 		break;
 	case 'u':
 		if( isEditor )
