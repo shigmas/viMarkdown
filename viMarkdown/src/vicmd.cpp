@@ -153,7 +153,7 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt) {		//	
 		gvi.m_operator = cmd;
 		return false;
 	}
-	if( gvi.m_operator == cmd ) {		//	cc dd yy gg の場合
+	if( gvi.m_operator == cmd ) {		//	cc dd yy gg << >> の場合
 		switch( cmd.unicode() ) {
 		case 'c':
 			cursor.beginEditBlock();
@@ -184,6 +184,12 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt) {		//	
 			break;
 		case 'g':
 			cursor.movePosition(QTextCursor::Start);
+			break;
+		case '>':
+			onAction_Indent();
+			break;
+		case '<':
+			onAction_UnIndent();
 			break;
 		}
 	}
@@ -291,7 +297,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		do_vi_insert(cmd, cursor);
 	} else if( cmd == 'x' || cmd == 'X' || cmd == 'D' ) {
 		do_vi_delete(cmd, cursor,rcnt);
-	} else if( cmd == 'c' || cmd == 'd' || cmd == 'y' || cmd == 'g' ) {
+	} else if( cmd == 'c' || cmd == 'd' || cmd == 'y' || cmd == 'g' || cmd == '<' || cmd == '>' ) {
 		completed = do_vi_operator(cmd, cursor, rcnt);
 	} else if( cmd.unicode() >= '0' && cmd.unicode() <= '9' ) {
 		if( cmd == u'0' && gvi.m_repeatCount == 0 ) {
