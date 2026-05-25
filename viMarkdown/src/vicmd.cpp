@@ -196,6 +196,7 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt) {		//	
 	return true;
 }
 void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidget* docWidget) {		//	hjkl等
+	gvi.m_linewiseMoved = false;
 	bool isEditor = cursor.document() == docWidget->m_editor->document();
 	auto moveMode = gvi.m_operator == ' ' ? QTextCursor::MoveAnchor : QTextCursor::KeepAnchor;
 	QTextDocument *doc = cursor.document();
@@ -203,9 +204,11 @@ void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidge
 	switch( cmd.unicode() ) {
 	case 'k':
 		cursor.movePosition(QTextCursor::Up, moveMode, rcnt);
+		gvi.m_linewiseMoved = true;
 		break;
 	case 'j':
 		cursor.movePosition(QTextCursor::Down, moveMode, rcnt);
+		gvi.m_linewiseMoved = true;
 		break;
 	case 'h': {
 		rcnt = qMin(rcnt, cursor.position() - block.position());	//	行頭対応
@@ -268,11 +271,13 @@ void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidge
 	case '-':
 		cursor.movePosition(QTextCursor::PreviousBlock, moveMode, rcnt);
 		hat(cursor, moveMode);
+		gvi.m_linewiseMoved = true;
 		break;
 	case '\n':
 	case '+':
 		cursor.movePosition(QTextCursor::NextBlock, moveMode, rcnt);
 		hat(cursor, moveMode);
+		gvi.m_linewiseMoved = true;
 		break;
 	case '^':
 		hat(cursor, moveMode);

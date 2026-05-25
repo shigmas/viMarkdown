@@ -229,8 +229,8 @@ SPR# 状 P Open Close ver     Type  概要
 0226 ◎ C 05/26 05/26 03013│ToDo│do_vi_motion()：do_cdy() コールを一箇所にまとめるべき
 0227 ◎ C 05/26 05/26 03013│問題│s<text>Esc：text 入力中に画面が更新されない
 0228 ● C 05/26            │ToDo│s<text>Esc：最初の１文字入力時に joinPreviousEditBlock() をコール
-0229 ● C 05/26            │ToDo│do_vi_motion()：m_linewiseMoved 設定
-0230 ● C 05/26            │ToDo│
+0229 ◎ C 05/26 05/26 03013│ToDo│do_vi_motion()：m_linewiseMoved 設定
+0230 ● C 05/26            │問題│<<, >>：繰り返し回数が効かない
 0231 ● C 05/26            │ToDo│
 0232 ● C 05/26            │ToDo│
 0233 ● C 05/26            │ToDo│
