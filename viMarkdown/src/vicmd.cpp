@@ -83,6 +83,14 @@ void MainWindow::do_viCmd(QString cmd, QTextCursor& cursor) {
 			completed = false;
 		}
 		break;
+	case 'D':
+		cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+		if( cursor.hasSelection() ) {
+			gvi.m_yankBuffer = cursor.selectedText();
+			gvi.m_linewise = false;
+			cursor.deleteChar();
+		}
+		break;
 	case 'd':
 		if( gvi.m_cdy == 'd' ) {	//	dd
 			cursor.movePosition(QTextCursor::StartOfBlock);
