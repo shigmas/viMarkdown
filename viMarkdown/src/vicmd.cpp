@@ -185,11 +185,12 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt) {		//	
 	}
 	return true;
 }
-bool MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt) {		//	hjkl等
+void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidget* docWidget) {		//	hjkl等
+	bool isEditor = cursor.document() == docWidget->m_editor->document();
 	auto moveMode = gvi.m_operator == ' ' ? QTextCursor::MoveAnchor : QTextCursor::KeepAnchor;
 	QTextDocument *doc = cursor.document();
 	QTextBlock block = cursor.block();
-	switch( cmd.unidode() ) {
+	switch( cmd.unicode() ) {
 	case 'k':
 		cursor.movePosition(QTextCursor::Up, moveMode, rcnt);
 		do_cdy(cursor);
@@ -311,7 +312,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 	           cmd == '$' || cmd == '^' || cmd == '-' || cmd == '+' ||
 	           cmd == '\n' || cmd == 'G' )
 	{
-	    do_vi_motion(cmd, cursor, rcnt);
+	    do_vi_motion(cmd, cursor, rcnt, docWidget);
 	} else {
 		auto moveMode = gvi.m_operator == ' ' ? QTextCursor::MoveAnchor : QTextCursor::KeepAnchor;
 		QTextDocument *doc = cursor.document();
