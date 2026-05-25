@@ -158,7 +158,10 @@ void MainWindow::do_vi_delete(QChar cmd, QTextCursor& cursor, int rcnt) {		//	x 
 			cursor.deleteChar();
 		}
 		break;
+	default:
+		return;
 	}
+	gvi.m_editCommand = true;
 }
 bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt) {		//	{c|d|y}<move>, gg
 	if( gvi.m_operator == ' ' ) {
@@ -183,6 +186,7 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt) {		//	
 				gvi.m_yankBuffer = cursor.selectedText();
 				gvi.m_linewiseYanked = true;
 				cursor.deleteChar();
+				gvi.m_editCommand = true;
 			}
 			break;
 		case 'y':
@@ -199,9 +203,11 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt) {		//	
 			break;
 		case '>':
 			onAction_Indent();
+			gvi.m_editCommand = true;
 			break;
 		case '<':
 			onAction_UnIndent();
+			gvi.m_editCommand = true;
 			break;
 		}
 	}
@@ -306,7 +312,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 	bool isEditor = cursor.document() == docWidget->m_editor->document();
 	bool completed = true;
 	int rcnt = getRepeatCount();
-	g.m_pendingCommand += cmd;
+	gvi.m_pendingCommand += cmd;
 	if( gvi.m_fFtT == 'f' || gvi.m_fFtT == 'F' || gvi.m_fFtT == 't' || gvi.m_fFtT == 'T' ) {
 		if( do_fFtT(cursor, cmd, rcnt) )
 			do_cdy(cursor);
@@ -385,6 +391,14 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 			else
 				docWidget->m_preview->redo();
 			break;
+		case '.':
+			if( gvi.m_redoing || gvi.m_lastEditCommand.isEmpty() ) break;
+			gvi.m_redoing = true;
+			for(QChar ch: gvi.m_lastEditCommand) {
+				do_viCmd(ch, cursor);
+			}
+			gvi.m_redoing = false;
+			break;
 		default:	//	不正コマンド
 			//	undone: エラー表示
 			completed = true;
@@ -393,8 +407,11 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 	if( completed ) {	//	コマンド完結
 		gvi.m_repeatCount = 0;
 		gvi.m_operator = ' ';
-		g.m_lastCommand = g.m_pendingCommand;
-		g.m_pendingCommand.clear();
+		if( gvi.m_editCommand )
+			gvi.m_lastEditCommand = gvi.m_pendingCommand;
+		else
+			gvi.m_lastEditCommand.clear();
+		gvi.m_pendingCommand.clear();
 		if( docWidget != nullptr ) {
 			docWidget->m_editor->viewport()->update();
 			docWidget->m_preview->viewport()->update();

@@ -116,8 +116,6 @@ struct Global {
 	bool	m_editBlockOpen = false;
 	int		m_editorFontSize;
 	int		m_previewFontSize;
-	QString	m_lastCommand;			//	最後に実行した vi コマンド
-	QString	m_pendingCommand;		//	入力中の vi コマンド
 	QColor	m_activeLnColor;		//	アクティブ時アンダーライン行カーソル色
 	QColor	m_inactiveLnColor;		//	非アクティブ時アンダーライン行カーソル色
 	QColor	m_headingsColor;
@@ -135,11 +133,15 @@ struct Global {
 };
 struct ViStatus {
     bool	m_viCmdMode = false;
+    bool	m_editCommand = false;
     bool	m_linewiseMoved = false;	//	行単位移動した（jkG等）
     bool	m_linewiseYanked = false;	//	行単位にヤンクされた
+    bool	m_redoing = false;			//	. コマンド処理中
     QChar	m_operator = u' ';			//	{c|d|y...}<move> の先頭部分
     QChar	m_fFtT = ' ';			//	{fFtT}
     int		m_repeatCount = 0;		//	vi コマンド繰り返し回数
+	QString	m_lastEditCommand;			//	最後に実行した vi 編集コマンド
+	QString	m_pendingCommand;		//	入力中の vi コマンド
     QString	m_yankBuffer;
 };
 
