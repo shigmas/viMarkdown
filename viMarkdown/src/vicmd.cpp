@@ -71,13 +71,25 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor) {
 	QTextBlock block = cursor.block();
 	switch( cmd.unicode() ) {
 	case 'S':
-		//	undone: 要コーディング
+		cursor.beginEditBlock();	//	１文字削除とその後の文字挿入を１回でundo可能にするため
+		g.m_editBlockOpen = true;
+		hat(cursor);
+		cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+		if( cursor.hasSelection() ) {
+			gvi.m_yankBuffer = cursor.selectedText();
+			cursor.deleteChar();
+		}
+		cursor.endEditBlock();
+		gvi.m_viCmdMode = false;
 		break;
 	case 's':
 		cursor.beginEditBlock();	//	１文字削除とその後の文字挿入を１回でundo可能にするため
 		g.m_editBlockOpen = true;
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-		if( cursor.hasSelection() ) cursor.deleteChar();
+		if( cursor.hasSelection() ) {
+			gvi.m_yankBuffer = cursor.selectedText();
+			cursor.deleteChar();
+		}
 		cursor.endEditBlock();
 		gvi.m_viCmdMode = false;
 		break;
