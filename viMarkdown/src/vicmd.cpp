@@ -234,6 +234,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 				cursor.movePosition(QTextCursor::Right);
 			if( cursor.position() == doc->characterCount() ) break;
 		}
+		do_cdy(cursor);
 		break;
 #if 0
 		for(int i = 0; i < rcnt; ++i) {
@@ -256,6 +257,17 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 			if( cursor.position() == 0 ) break;
 		}
 		do_cdy(cursor);
+		break;
+	case 'B':
+		for(int i = 0; i < rcnt; ++i) {
+			while( cursor.position() > 0 && isSpaceChar(doc->characterAt(cursor.position()-1)) )
+				cursor.movePosition(QTextCursor::Left);
+			while( cursor.position() > 0 && !isSpaceChar(doc->characterAt(cursor.position()-1)) )
+				cursor.movePosition(QTextCursor::Left);
+			if( cursor.position() == 0 ) break;
+		}
+		do_cdy(cursor);
+		break;
 		break;
 	case 'k':
 		cursor.movePosition(QTextCursor::Up, moveMode, rcnt);
