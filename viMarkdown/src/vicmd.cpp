@@ -34,6 +34,21 @@ void do_openline(QTextCursor& cursor, bool before) {
 }
 //void do_Word(QTextCursor& cursor, int rcnt) {
 //}
+void do_swap_case(QTextCursor& cursor, int rcnt) {
+	QString text;
+	QTextBlock block = cursor.block();
+	const QString buf = block.text();
+	int ix = cursor.position() - block.position();
+	int ix9 = qMin(ix + rcnt, buf.size());
+	if( ix9 == ix ) return;
+	for(int i = ix; i < ix9; ++i) {
+		if( buf[i].isLower() ) text += buf[i].toUpper();
+		else if( buf[i].isUpper() ) text += buf[i].toLower();
+		else text += buf[i];
+	}
+	cursor.setPosition(block.position() + ix9, QTextCursor::KeepAnchor);
+	cursor.insertText(text);
+}
 void do_cdy(QTextCursor& cursor) {
 	if( gvi.m_operator == 'c' ) {
 		if( cursor.hasSelection() )
@@ -375,6 +390,10 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 				cursor.setPosition(block.position());
 				hat(cursor);
 			}
+			break;
+		case '~':
+			do_swap_case(cursor, rcnt);
+			gvi.m_editCommand = true;
 			break;
 		case 'p':
 			if( !gvi.m_yankBuffer.isEmpty() ) {
