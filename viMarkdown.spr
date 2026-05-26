@@ -240,14 +240,14 @@ SPR# 状 P Open Close ver     Type  概要
 0237 ● C 05/26            │ToDo│:<range>g/pat/<cmd>
 0238 ● C 05/26            │ToDo│:<range>s/regexp/after/[g]
 0239 ● C 05/26            │問題│<num>s：num 文字削除されない
-0240 ● C 05/26            │ToDo│
-0241 ● C 05/26            │ToDo│
-0242 ● C 05/26            │ToDo│
-0243 ● C 05/26            │ToDo│
-0244 ● C 05/26            │ToDo│
-0245 ● C 05/26            │ToDo│
-0246 ● C 05/26            │ToDo│
-0247 ● C 05/26            │ToDo│
-0248 ● C 05/26            │ToDo│
-0249 ● C 05/26            │ToDo│
-0250 ● C 05/26            │ToDo│
+0240 ● C 05/26            │ToDo│挿入コマンドで挿入された文字列保存
+0241 ◎ C 05/27 05/27 03014│問題│行末で、Inline > Link を実行すると [ 改行 ](url) となってしまう
+0242 ● C 05/27            │ToDo│
+0243 ● C 05/27            │ToDo│
+0244 ● C 05/27            │ToDo│
+0245 ● C 05/27            │ToDo│
+0246 ● C 05/27            │ToDo│
+0247 ● C 05/27            │ToDo│
+0248 ● C 05/27            │ToDo│
+0249 ● C 05/27            │ToDo│
+0250 ● C 05/27            │ToDo│

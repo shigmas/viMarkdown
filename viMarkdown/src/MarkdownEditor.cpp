@@ -823,11 +823,8 @@ void MarkdownEditor::tagJump() {
 }
 void MarkdownEditor::make_link() {
 	QTextCursor cursor = textCursor();
-	if( !cursor.hasSelection() ) {
-		//int start, end;
-		//getWordStartEnd(cursor, start, end);
-		//cursor.setPosition(start);
-		//cursor.setPosition(end, QTextCursor::KeepAnchor);
+	QTextBlock block = cursor.block();
+	if( !cursor.hasSelection() && cursor.position() != block.position() + block.text().size() ) {
 		selectWordAt(cursor);
 		if( !cursor.hasSelection() ) return;
 	}

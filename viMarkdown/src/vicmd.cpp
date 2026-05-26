@@ -91,6 +91,7 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor) {
 			cursor.deleteChar();
 		}
 		cursor.endEditBlock();
+		gvi.m_joinEditBlock = true;
 		gvi.m_viCmdMode = false;
 		break;
 	case 's':
@@ -130,6 +131,7 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor) {
 		g.m_editBlockOpen = true;
 		do_openline(cursor, true);
 		cursor.endEditBlock();
+		gvi.m_joinEditBlock = true;
 		gvi.m_viCmdMode = false;
 		break;
 	case 'o':
@@ -137,6 +139,7 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor) {
 		g.m_editBlockOpen = true;
 		do_openline(cursor, false);
 		cursor.endEditBlock();
+		gvi.m_joinEditBlock = true;
 		gvi.m_viCmdMode = false;
 		break;
 	}
