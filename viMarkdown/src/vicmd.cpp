@@ -61,12 +61,14 @@ bool do_fFtT(QTextCursor& cursor, QChar ch, int rcnt) {
 			if( ix2 < 0 ) break;	//	未発見
 			ix = ix2;
 		}
+		if( gvi.m_fFtT == 't' ) --ix;
 	} else {		//	F T 逆方向検索
 		for(int i = 0; i != rcnt; ++i) {
 			int ix2 = buf.lastIndexOf(ch, ix-1);
 			if( ix2 < 0 ) break;	//	未発見
 			ix = ix2;
 		}
+		if( gvi.m_fFtT == 'T' ) ++ix;
 	}
 	if( ix != ix0 ) {
 		cursor.setPosition(block.position() + ix);
