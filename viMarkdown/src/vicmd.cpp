@@ -169,6 +169,9 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor) {
 			gvi.m_linewiseYanked = false;
 			cursor.deleteChar();
 		}
+		cursor.endEditBlock();
+		gvi.m_joinEditBlock = true;
+		gvi.m_viCmdMode = false;
 		break;
 	}
 }
@@ -346,6 +349,15 @@ void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidge
 	case '^':
 		hat(cursor, moveMode);
 		break;
+	case 'G':
+		if( gvi.m_repeatCount == 0 ) {
+			cursor.movePosition(QTextCursor::End);
+		} else {
+			block = doc->findBlockByNumber(gvi.m_repeatCount - 1);
+			cursor.setPosition(block.position());
+			hat(cursor);
+		}
+		break;
 	default:
 		return;
 	}
@@ -396,15 +408,6 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 			if( gvi.m_fFtT == ' ' ) {
 				gvi.m_fFtT = cmd.unicode();
 				completed = false;
-			}
-			break;
-		case 'G':
-			if( gvi.m_repeatCount == 0 ) {
-				cursor.movePosition(QTextCursor::End);
-			} else {
-				block = doc->findBlockByNumber(gvi.m_repeatCount - 1);
-				cursor.setPosition(block.position());
-				hat(cursor);
 			}
 			break;
 		case '~':
