@@ -231,9 +231,9 @@ SPR# 状 P Open Close ver     Type  概要
 0228 ● C 05/26            │ToDo│s<text>Esc：最初の１文字入力時に joinPreviousEditBlock() をコール
 0229 ◎ C 05/26 05/26 03013│ToDo│do_vi_motion()：m_linewiseMoved 設定
 0230 ● C 05/26            │問題│<<, >>：繰り返し回数が効かない
-0231 ● C 05/26            │ToDo│編集コマンドだった場合のみ m_lastEditCommand を設定
-0232 ● C 05/26            │ToDo│
-0233 ● C 05/26            │ToDo│
+0231 ◎ C 05/26 05/26 03013│ToDo│編集コマンドだった場合のみ m_lastEditCommand を設定
+0232 ◎ C 05/26 05/26 03013│問題│F文字 を実行すると変な状態になり、コマンドが効かなくなる？
+0233 ● C 05/26            │ToDo│do_fFtT()：document->charactorAt() を用いず、block.text() を参照
 0234 ● C 05/26            │ToDo│
 0235 ● C 05/26            │ToDo│
 0236 ● C 05/26            │ToDo│

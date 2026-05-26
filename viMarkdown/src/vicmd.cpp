@@ -52,26 +52,27 @@ void do_cdy(QTextCursor& cursor) {
 }
 bool do_fFtT(QTextCursor& cursor, QChar ch, int rcnt) {
 	QTextBlock block = cursor.block();
-	int EndBlockPos = block.position() + block.text().size();
-	int pos0 = cursor.position();
-	for(int i = 0; i != rcnt; ++i) {
-		if( gvi.m_fFtT == 'f' ) {
-			for(;;) {
-				if( cursor.position() == EndBlockPos )
-					return cursor.position() != pos0;		//	return 移動したか？
-				cursor.movePosition(QTextCursor::Right);
-				if( cursor.document()->characterAt(cursor.position()) == ch ) break;
-			}
-		} else if( gvi.m_fFtT == 'F' ) {
-			for(;;) {
-				if( cursor.position() == block.position() )
-					return cursor.position() != pos0;		//	return 移動したか？
-				cursor.movePosition(QTextCursor::Left);
-				if( cursor.document()->characterAt(cursor.position()) == ch ) break;
-			}
+	const QString buf = block.text();
+	int ix = cursor.position() - block.position();		//	ブロック内インデックス
+	int ix0 = ix;
+	if( gvi.m_fFtT == 'f' || gvi.m_fFtT == 't' ) {		//	順方向検索
+		for(int i = 0; i != rcnt; ++i) {
+			int ix2 = buf.indexOf(ch, ix+1);
+			if( ix2 < 0 ) break;	//	未発見
+			ix = ix2;
+		}
+	} else {		//	F T 逆方向検索
+		for(int i = 0; i != rcnt; ++i) {
+			int ix2 = buf.lastIndexOf(ch, ix-1);
+			if( ix2 < 0 ) break;	//	未発見
+			ix = ix2;
 		}
 	}
-	return true;
+	if( ix != ix0 ) {
+		cursor.setPosition(block.position() + ix);
+		return true;
+	} else
+		return false;
 }
 void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor) {
 	QTextBlock block = cursor.block();
@@ -413,6 +414,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 	if( completed ) {	//	コマンド完結
 		gvi.m_repeatCount = 0;
 		gvi.m_operator = ' ';
+		gvi.m_fFtT = ' ';
 		if( gvi.m_editCommand )
 			gvi.m_lastEditCommand = gvi.m_pendingCommand;
 		else
