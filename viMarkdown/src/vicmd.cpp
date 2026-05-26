@@ -53,16 +53,19 @@ void do_cdy(QTextCursor& cursor) {
 bool do_fFtT(QTextCursor& cursor, QChar ch, int rcnt) {
 	QTextBlock block = cursor.block();
 	int EndBlockPos = block.position() + block.text().size();
+	int pos0 = cursor.position();
 	for(int i = 0; i != rcnt; ++i) {
 		if( gvi.m_fFtT == 'f' ) {
 			for(;;) {
-				if( cursor.position() == EndBlockPos ) return false;
+				if( cursor.position() == EndBlockPos )
+					return cursor.position() != pos0;		//	return 移動したか？
 				cursor.movePosition(QTextCursor::Right);
 				if( cursor.document()->characterAt(cursor.position()) == ch ) break;
 			}
 		} else if( gvi.m_fFtT == 'F' ) {
 			for(;;) {
-				if( cursor.position() == block.position() ) return false;
+				if( cursor.position() == block.position() )
+					return cursor.position() != pos0;		//	return 移動したか？
 				cursor.movePosition(QTextCursor::Left);
 				if( cursor.document()->characterAt(cursor.position()) == ch ) break;
 			}
