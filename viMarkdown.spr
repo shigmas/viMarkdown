@@ -217,7 +217,7 @@ SPR# 状 P Open Close ver     Type  概要
 0214 ● C 05/25            │ToDo│]] [[ コマンドサポート（次・前見出しに移動）
 0215 ◎ C 05/25 05/25 03012│ToDo│struct Global から、vi 関連を ViStatus に分ける
 0216 ◎ C 05/25 05/25 03012│ToDo│do_viCmd(QString cmd, ...)：第１引数は QChar に変更
-0217 ● C 05/25            │ToDo│m_linewiseMoved フラグ追加、ヤンクバッファのは m_linewiseYanked にリネーム
+0217 ◎ C 05/25 05/26 03013│ToDo│m_linewiseMoved フラグ追加、ヤンクバッファのは m_linewiseYanked にリネーム
 0218 ● C 05/25            │問題│dj, dk：行単位削除されない
 0219 ◎ C 05/26 05/26 03013│ToDo│MainWindow::do_viCmd(...) が長すぎるので、とりあえず挿入モード系コマンド処理を do_vi_insert(...) に分離
 0220 ◎ C 05/26 05/26 03013│ToDo│do_vi_operator() も分離
@@ -233,7 +233,7 @@ SPR# 状 P Open Close ver     Type  概要
 0230 ● C 05/26            │問題│<<, >>：繰り返し回数が効かない
 0231 ◎ C 05/26 05/26 03013│ToDo│編集コマンドだった場合のみ m_lastEditCommand を設定
 0232 ◎ C 05/26 05/26 03013│問題│F文字 を実行すると変な状態になり、コマンドが効かなくなる？
-0233 ● C 05/26            │ToDo│do_fFtT()：document->charactorAt() を用いず、block.text() を参照
+0233 ◎ C 05/26 05/26 03013│ToDo│do_fFtT()：document->charactorAt() を用いず、block.text() を参照
 0234 ● C 05/26            │ToDo│
 0235 ● C 05/26            │ToDo│
 0236 ● C 05/26            │ToDo│
