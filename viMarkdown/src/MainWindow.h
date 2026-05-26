@@ -138,10 +138,12 @@ struct ViStatus {
     bool	m_linewiseYanked = false;	//	行単位にヤンクされた
     bool	m_redoing = false;			//	. コマンド処理中
     QChar	m_operator = u' ';			//	{c|d|y...}<move> の先頭部分
-    QChar	m_fFtT = ' ';			//	{fFtT}
-    int		m_repeatCount = 0;		//	vi コマンド繰り返し回数
+    QChar	m_fFtT = ' ';				//	{fFtT}
+    QChar	m_last_fFtT = ' ';			//	{fFtT}
+    QChar	m_last_fFtT_char = ' ';		//	{fFtT}
+    int		m_repeatCount = 0;			//	vi コマンド繰り返し回数
 	QString	m_lastEditCommand;			//	最後に実行した vi 編集コマンド
-	QString	m_pendingCommand;		//	入力中の vi コマンド
+	QString	m_pendingCommand;			//	入力中の vi コマンド
     QString	m_yankBuffer;
 };
 

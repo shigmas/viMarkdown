@@ -50,27 +50,29 @@ void do_cdy(QTextCursor& cursor) {
 		}
 	}
 }
-bool do_fFtT(QTextCursor& cursor, QChar ch, int rcnt) {
+bool do_fFtT(QTextCursor& cursor, QChar cmd, QChar ch, int rcnt) {
 	QTextBlock block = cursor.block();
 	const QString buf = block.text();
 	int ix = cursor.position() - block.position();		//	ブロック内インデックス
 	int ix0 = ix;
-	if( gvi.m_fFtT == 'f' || gvi.m_fFtT == 't' ) {		//	順方向検索
+	if( cmd== 'f' || cmd== 't' ) {		//	順方向検索
 		for(int i = 0; i != rcnt; ++i) {
 			int ix2 = buf.indexOf(ch, ix+1);
 			if( ix2 < 0 ) break;	//	未発見
 			ix = ix2;
 		}
-		if( gvi.m_fFtT == 't' ) --ix;
+		if( cmd== 't' ) --ix;
 	} else {		//	F T 逆方向検索
 		for(int i = 0; i != rcnt; ++i) {
 			int ix2 = buf.lastIndexOf(ch, ix-1);
 			if( ix2 < 0 ) break;	//	未発見
 			ix = ix2;
 		}
-		if( gvi.m_fFtT == 'T' ) ++ix;
+		if( cmd== 'T' ) ++ix;
 	}
 	if( ix != ix0 ) {
+		gvi.m_last_fFtT = cmd;
+		gvi.m_last_fFtT_char = ch;
 		cursor.setPosition(block.position() + ix);
 		return true;
 	} else
@@ -323,7 +325,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 	int rcnt = getRepeatCount();
 	gvi.m_pendingCommand += cmd;
 	if( gvi.m_fFtT == 'f' || gvi.m_fFtT == 'F' || gvi.m_fFtT == 't' || gvi.m_fFtT == 'T' ) {
-		if( do_fFtT(cursor, cmd, rcnt) )
+		if( do_fFtT(cursor, gvi.m_fFtT, cmd, rcnt) )
 			do_cdy(cursor);
 	} else if( cmd == 'i' || cmd == 'I' || cmd == 'a' || cmd == 'A' || cmd == 'o' || cmd == 'O' || cmd == 's' || cmd == 'S' ) {
 		do_vi_insert(cmd, cursor);
@@ -350,6 +352,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		auto moveMode = gvi.m_operator == ' ' ? QTextCursor::MoveAnchor : QTextCursor::KeepAnchor;
 		QTextDocument *doc = cursor.document();
 		QTextBlock block = cursor.block();
+		QChar c;	//	for , ;
 		switch( cmd.unicode() ) {
 		case 'f':
 		case 'F':
@@ -399,6 +402,32 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 				docWidget->m_editor->redo();
 			else
 				docWidget->m_preview->redo();
+			break;
+		case ';':		//	順方向再検索
+			switch( gvi.m_last_fFtT.unicode() ) {
+			case 'f':
+			case 'F':
+				c = 'f';
+				break;
+			case 't':
+			case 'T':
+				c = 't';
+				break;
+			}
+			do_fFtT(cursor, c, gvi.m_last_fFtT_char, rcnt);
+			break;
+		case ',':		//	逆方向再検索
+			switch( gvi.m_last_fFtT.unicode()) {
+			case 'f':
+			case 'F':
+				c = 'F';
+				break;
+			case 't':
+			case 'T':
+				c = 'T';
+				break;
+			}
+			do_fFtT(cursor, c, gvi.m_last_fFtT_char, rcnt);
 			break;
 		case '.':
 			if( gvi.m_redoing || gvi.m_lastEditCommand.isEmpty() ) break;
