@@ -181,7 +181,7 @@ SPR# 状 P Open Close ver     Type  概要
 0178 ◎ C 05/23 05/26 03013│ToDo│<< コマンドサポート
 0179 ◎ C 05/23 05/24 03012│ToDo│行番号G サポート
 0180 ◎ C 05/23 05/26 03013│ToDo│直前コマンド文字列保存 → . コマンドサポート
-0181 ● C 05/23            │ToDo│行頭非空白文字位置に移動する hat() 関数実装
+0181 ◎ C 05/23 05/26 03013│ToDo│行頭非空白文字位置に移動する hat() 関数実装
 0182 ◎ C 05/24 05/25 03012│ToDo│B コマンドサポート
 0183 ● C 05/24            │ToDo│e コマンドサポート
 0184 ● C 05/24            │ToDo│E コマンドサポート
@@ -228,16 +228,26 @@ SPR# 状 P Open Close ver     Type  概要
 0225 ◎ C 05/26 05/26 03013│ToDo│do_viCmd()：繰り返し回数処理部分を switch 文から分離
 0226 ◎ C 05/26 05/26 03013│ToDo│do_vi_motion()：do_cdy() コールを一箇所にまとめるべき
 0227 ◎ C 05/26 05/26 03013│問題│s<text>Esc：text 入力中に画面が更新されない
-0228 ● C 05/26            │ToDo│s<text>Esc：最初の１文字入力時に joinPreviousEditBlock() をコール
+0228 ◎ C 05/26 05/26 03014│ToDo│s<text>Esc：最初の１文字入力時に joinPreviousEditBlock() をコール
 0229 ◎ C 05/26 05/26 03013│ToDo│do_vi_motion()：m_linewiseMoved 設定
 0230 ● C 05/26            │問題│<<, >>：繰り返し回数が効かない
 0231 ◎ C 05/26 05/26 03013│ToDo│編集コマンドだった場合のみ m_lastEditCommand を設定
 0232 ◎ C 05/26 05/26 03013│問題│F文字 を実行すると変な状態になり、コマンドが効かなくなる？
 0233 ◎ C 05/26 05/26 03013│ToDo│do_fFtT()：document->charactorAt() を用いず、block.text() を参照
 0234 ◎ C 05/26 05/26 03013│ToDo│, ; のための情報保持
-0235 ● C 05/26            │ToDo│
-0236 ● C 05/26            │ToDo│
-0237 ● C 05/26            │ToDo│
-0238 ● C 05/26            │ToDo│
-0239 ● C 05/26            │ToDo│
+0235 ● C 05/26            │ToDo│:q
+0236 ● C 05/26            │ToDo│:w
+0237 ● C 05/26            │ToDo│:<range>g/pat/<cmd>
+0238 ● C 05/26            │ToDo│:<range>s/regexp/after/[g]
+0239 ● C 05/26            │問題│<num>s：num 文字削除されない
 0240 ● C 05/26            │ToDo│
+0241 ● C 05/26            │ToDo│
+0242 ● C 05/26            │ToDo│
+0243 ● C 05/26            │ToDo│
+0244 ● C 05/26            │ToDo│
+0245 ● C 05/26            │ToDo│
+0246 ● C 05/26            │ToDo│
+0247 ● C 05/26            │ToDo│
+0248 ● C 05/26            │ToDo│
+0249 ● C 05/26            │ToDo│
+0250 ● C 05/26            │ToDo│

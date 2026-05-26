@@ -100,6 +100,7 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor) {
 		if( cursor.hasSelection() ) {
 			gvi.m_yankBuffer = cursor.selectedText();
 			cursor.deleteChar();
+			gvi.m_joinEditBlock = true;
 		}
 		cursor.endEditBlock();
 		gvi.m_viCmdMode = false;

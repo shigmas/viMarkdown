@@ -137,6 +137,7 @@ struct ViStatus {
     bool	m_linewiseMoved = false;	//	行単位移動した（jkG等）
     bool	m_linewiseYanked = false;	//	行単位にヤンクされた
     bool	m_redoing = false;			//	. コマンド処理中
+    bool	m_joinEditBlock = false;
     QChar	m_operator = u' ';			//	{c|d|y...}<move> の先頭部分
     QChar	m_fFtT = ' ';				//	{fFtT}
     QChar	m_last_fFtT = ' ';			//	{fFtT}

@@ -772,13 +772,17 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 			m_processing = false;
 		}
 	}
-	if( gvi.m_viCmdMode ) {
-		QString txt = e->text();
-		QTextCursor cursor = textCursor();
-		if( !txt.isEmpty() ) {
+	//QTextCursor cursor = textCursor();
+	QString txt = e->text();
+	if( !txt.isEmpty() ) {
+		if( gvi.m_viCmdMode ) {
 			emit do_viCmd(txt[0], cursor);
 			setTextCursor(cursor);
 			return;
+		}
+		if( gvi.m_joinEditBlock ) {
+			cursor.joinPreviousEditBlock();
+			gvi.m_joinEditBlock = false;
 		}
 	}
 	MarkdownBaseEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
