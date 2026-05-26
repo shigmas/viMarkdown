@@ -106,34 +106,33 @@ void do_vi_change_line(QTextCursor& cursor) {
 	gvi.m_joinEditBlock = true;
 	gvi.m_viCmdMode = false;
 }
-void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor) {
+void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor, int rcnt) {
 	QTextBlock block = cursor.block();
+	int eolpos = block.position() + block.text().size();
 	switch( cmd.unicode() ) {
 	case 'S':		//	行を消して挿入モードへ
 		do_vi_change_line(cursor);
 		break;
 	case 's':
-		cursor.beginEditBlock();	//	１文字削除とその後の文字挿入を１回でundo可能にするため
+		cursor.beginEditBlock();	//	文字削除とその後の文字挿入を１回でundo可能にするため
 		g.m_editBlockOpen = true;
-		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+		rcnt = qMin(rcnt, eolpos - cursor.position());
+		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, rcnt);
 		if( cursor.hasSelection() ) {
 			gvi.m_yankBuffer = cursor.selectedText();
 			cursor.deleteChar();
 			gvi.m_joinEditBlock = true;
 		}
 		cursor.endEditBlock();
-		gvi.m_viCmdMode = false;
 		break;
 	case 'a':
 		if( cursor.position() < block.position() + block.text().size() )	//	行末でない場合
 			cursor.movePosition(QTextCursor::Right);
-		//	下にスルー
+		break;
 	case 'i':
-		gvi.m_viCmdMode = false;
 		break;
 	case 'A':
 		cursor.setPosition(block.position() + block.text().size());
-		gvi.m_viCmdMode = false;
 		break;
 	case 'I':
 		cursor.movePosition(QTextCursor::StartOfBlock);
@@ -142,7 +141,6 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor) {
 			if( ch != u' ' && ch != u'\t' ) break;
 			cursor.movePosition(QTextCursor::Right);
 		}
-		gvi.m_viCmdMode = false;
 		break;
 	case 'O':
 		cursor.beginEditBlock();
@@ -150,7 +148,6 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor) {
 		do_openline(cursor, true);
 		cursor.endEditBlock();
 		gvi.m_joinEditBlock = true;
-		gvi.m_viCmdMode = false;
 		break;
 	case 'o':
 		cursor.beginEditBlock();
@@ -158,7 +155,6 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor) {
 		do_openline(cursor, false);
 		cursor.endEditBlock();
 		gvi.m_joinEditBlock = true;
-		gvi.m_viCmdMode = false;
 		break;
 	case 'C':		//	カーソル位置から行末まで削除して挿入モードへ遷移
 		cursor.beginEditBlock();
@@ -171,9 +167,11 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor) {
 		}
 		cursor.endEditBlock();
 		gvi.m_joinEditBlock = true;
-		gvi.m_viCmdMode = false;
 		break;
+	default:
+		return;
 	}
+	gvi.m_viCmdMode = false;
 }
 void MainWindow::do_vi_delete(QChar cmd, QTextCursor& cursor, int rcnt) {		//	x X D
 	QTextBlock block = cursor.block();
@@ -375,7 +373,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		if( do_fFtT(cursor, gvi.m_fFtT, cmd, rcnt) )
 			do_cdy(cursor);
 	} else if( cmd == 'i' || cmd == 'I' || cmd == 'a' || cmd == 'A' || cmd == 'o' || cmd == 'O' || cmd == 's' || cmd == 'S' || cmd == 'C' ) {
-		do_vi_insert(cmd, cursor);
+		do_vi_insert(cmd, cursor, rcnt);
 	} else if( cmd == 'x' || cmd == 'X' || cmd == 'D' ) {
 		do_vi_delete(cmd, cursor,rcnt);
 	} else if( cmd == 'c' || cmd == 'd' || cmd == 'y' || cmd == 'g' || cmd == '<' || cmd == '>' ) {

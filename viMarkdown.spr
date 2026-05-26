@@ -239,13 +239,13 @@ SPR# 状 P Open Close ver     Type  概要
 0236 ● C 05/26            │ToDo│:w
 0237 ● C 05/26            │ToDo│:<range>g/pat/<cmd>
 0238 ● C 05/26            │ToDo│:<range>s/regexp/after/[g]
-0239 ● C 05/26            │問題│<num>s：num 文字削除されない
+0239 ◎ C 05/26 05/27 03014│問題│<num>s：num 文字削除されない
 0240 ● C 05/26            │ToDo│挿入コマンドで挿入された文字列保存
 0241 ◎ C 05/27 05/27 03014│問題│行末で、Inline > Link を実行すると [ 改行 ](url) となってしまう
 0242 ◎ C 05/27 05/27 03014│ToDo│C コマンドサポート
 0243 ◎ C 05/27 05/27 03014│問題│cc コマンド（Sと同じ動作）が動作不良
 0244 ◎ C 05/27 05/27 03014│ToDo│G 処理は do_vi_motion() に移動？
-0245 ● C 05/27            │ToDo│
+0245 ◎ C 05/27 05/27 03014│ToDo│do_vi_insert()：gvi.m_viCmdMode = false; を一箇所にまとめる
 0246 ● C 05/27            │ToDo│
 0247 ● C 05/27            │ToDo│
 0248 ● C 05/27            │ToDo│
