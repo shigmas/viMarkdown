@@ -28,7 +28,7 @@ void do_r(QChar ch, QTextCursor& cursor, int rcnt) {
     if( rcnt > available ) return;   // 行末を超える場合は無視（viの仕様）
     cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, rcnt);
 	cursor.insertText(QString(rcnt, ch));
-	gvi.m_editCommand = true;
+	gvi.m_isEditCommand = true;
 }
 void do_openline(QTextCursor& cursor, bool before) {
 	if( before ) {
@@ -213,7 +213,7 @@ void MainWindow::do_vi_delete(QChar cmd, QTextCursor& cursor, int rcnt) {		//	x 
 	default:
 		return;
 	}
-	gvi.m_editCommand = true;
+	gvi.m_isEditCommand = true;
 }
 void do_yank_line(QTextCursor& cursor, int rcnt) {
 	cursor.movePosition(QTextCursor::StartOfBlock);
@@ -250,7 +250,7 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt) {		//	
 				gvi.m_yankBuffer = cursor.selectedText();
 				gvi.m_linewiseYanked = true;
 				cursor.deleteChar();
-				gvi.m_editCommand = true;
+				gvi.m_isEditCommand = true;
 			}
 			break;
 		case 'y':
@@ -261,11 +261,11 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt) {		//	
 			break;
 		case '>':
 			onAction_Indent();
-			gvi.m_editCommand = true;
+			gvi.m_isEditCommand = true;
 			break;
 		case '<':
 			onAction_UnIndent();
-			gvi.m_editCommand = true;
+			gvi.m_isEditCommand = true;
 			break;
 		}
 	}
@@ -467,7 +467,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 			break;
 		case '~':
 			do_swap_case(cursor, rcnt);		//	大文字・小文字反転
-			gvi.m_editCommand = true;
+			gvi.m_isEditCommand = true;
 			break;
 		case 'Y':
 			do_yank_line(cursor, rcnt);
@@ -531,6 +531,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 			break;
 		case '.':
 			if( gvi.m_redoing || gvi.m_lastEditCommand.isEmpty() ) break;
+			qDebug() << "'.': gvi.m_lastEditCommand = " << gvi.m_lastEditCommand;
 			gvi.m_redoing = true;
 			for(QChar ch: gvi.m_lastEditCommand) {
 				do_viCmd(ch, cursor);
@@ -546,14 +547,16 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		gvi.m_repeatCount = 0;
 		gvi.m_operator = ' ';
 		gvi.m_fFtT = ' ';
-		if( gvi.m_editCommand )
+		if( gvi.m_isEditCommand )
 			gvi.m_lastEditCommand = gvi.m_pendingCommand;
-		else
-			gvi.m_lastEditCommand.clear();
+		//else
+		//	gvi.m_lastEditCommand.clear();
 		gvi.m_pendingCommand.clear();
+		gvi.m_isEditCommand = false;
 		if( docWidget != nullptr ) {
 			docWidget->m_editor->viewport()->update();
 			docWidget->m_preview->viewport()->update();
 		}
+		qDebug() << "gvi.m_lastEditCommand = " << gvi.m_lastEditCommand;
 	}
 }

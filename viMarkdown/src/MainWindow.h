@@ -133,7 +133,7 @@ struct Global {
 };
 struct ViStatus {
     bool	m_viCmdMode = false;
-    bool	m_editCommand = false;
+    bool	m_isEditCommand = false;
     bool	m_linewiseMoved = false;	//	行単位移動した（jkG等）
     bool	m_linewiseYanked = false;	//	行単位にヤンクされた
     bool	m_redoing = false;			//	. コマンド処理中
