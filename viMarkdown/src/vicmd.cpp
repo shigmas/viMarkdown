@@ -22,6 +22,13 @@ void hat(QTextCursor& cursor, QTextCursor::MoveMode moveMode = QTextCursor::Move
 		cursor.movePosition(QTextCursor::Right, moveMode);	//	空白だけの行で行末まで行っちゃうけど、まあいいか・・・
 	}
 }
+void do_r(QChar ch, QTextCursor& cursor, int rcnt) {
+	//QString text;
+	//QTextBlock block = cursor.block();
+	cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+	cursor.insertText(ch);
+	gvi.m_editCommand = true;
+}
 void do_openline(QTextCursor& cursor, bool before) {
 	if( before ) {
 		cursor.movePosition(QTextCursor::StartOfBlock);
@@ -372,11 +379,13 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 	if( gvi.m_fFtT == 'f' || gvi.m_fFtT == 'F' || gvi.m_fFtT == 't' || gvi.m_fFtT == 'T' ) {
 		if( do_fFtT(cursor, gvi.m_fFtT, cmd, rcnt) )
 			do_cdy(cursor);
+	} else if( gvi.m_operator == 'r' ) {
+		do_r(cmd, cursor, rcnt);
 	} else if( cmd == 'i' || cmd == 'I' || cmd == 'a' || cmd == 'A' || cmd == 'o' || cmd == 'O' || cmd == 's' || cmd == 'S' || cmd == 'C' ) {
 		do_vi_insert(cmd, cursor, rcnt);
 	} else if( cmd == 'x' || cmd == 'X' || cmd == 'D' ) {
 		do_vi_delete(cmd, cursor,rcnt);
-	} else if( cmd == 'c' || cmd == 'd' || cmd == 'y' || cmd == 'g' || cmd == '<' || cmd == '>' ) {
+	} else if( cmd == 'c' || cmd == 'd' || cmd == 'y' || cmd == 'g' || cmd == 'r' || cmd == '<' || cmd == '>' ) {
 		completed = do_vi_operator(cmd, cursor, rcnt);
 	} else if( cmd.unicode() >= '0' && cmd.unicode() <= '9' ) {
 		if( cmd == u'0' && gvi.m_repeatCount == 0 ) {
