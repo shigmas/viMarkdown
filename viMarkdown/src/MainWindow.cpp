@@ -1351,7 +1351,10 @@ void MainWindow::onAction_CheatSheet() {
 ```
 ```SVG
 <svg width="320" height="200">
-  .....
+  <ellipse cx="160" cy="100" rx="100" ry="50" fill="yellow" stroke="green" stroke-width="2"/>
+  <text x="160" y="100" font-family="Arial" font-size="24" text-anchor="middle" dominant-baseline="central" >
+Hello SVG!
+</text>
 </svg>
 ```
 罫線モード: Shift + F5
@@ -1380,7 +1383,10 @@ Header, Header
 ```
 ```SVG
 <svg width="320" height="200">
-  .....
+  <ellipse cx="160" cy="100" rx="100" ry="50" fill="yellow" stroke="green" stroke-width="2"/>
+  <text x="160" y="100" font-family="Arial" font-size="24" text-anchor="middle" dominant-baseline="central" >
+Hello SVG!
+</text>
 </svg>
 ```
 Keisen mode: Shift + F5
