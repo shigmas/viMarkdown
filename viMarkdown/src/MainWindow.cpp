@@ -2512,7 +2512,8 @@ void MainWindow::onAction_About() {
 		"<p><big><b>viMarkdown</b></big> " + VER_STR + "</p>"
 		"<p>The efficient visual Markdown editor"
 		"<br>Copyright (C) 2025, 2026 by N.Tsuda"
-		"<br>Powered by C++, Qt6, and LunaSVG</p>"
+		"<br>Powered by C++, <a href=\"https://www.qt.io/\">Qt6</a>,"
+		"and <a href=\"https://github.com/sammycage/lunasvg\">LunaSVG</a></p>"
 	);
 }
 //---------------------------------------------------------------------
