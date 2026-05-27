@@ -215,6 +215,15 @@ void MainWindow::do_vi_delete(QChar cmd, QTextCursor& cursor, int rcnt) {		//	x 
 	}
 	gvi.m_editCommand = true;
 }
+void do_yank_line(QTextCursor& cursor, int rcnt) {
+	cursor.movePosition(QTextCursor::StartOfBlock);
+	cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor, rcnt);
+	if( cursor.hasSelection() ) {
+		gvi.m_yankBuffer = cursor.selectedText();
+		gvi.m_linewiseYanked = true;
+		cursor.clearSelection();
+	}
+}
 bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt) {		//	{c|d|y}<move>, gg
 	if( gvi.m_operator == ' ' ) {
 		gvi.m_operator = cmd;
@@ -245,13 +254,7 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt) {		//	
 			}
 			break;
 		case 'y':
-			cursor.movePosition(QTextCursor::StartOfBlock);
-			cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor, rcnt);
-			if( cursor.hasSelection() ) {
-				gvi.m_yankBuffer = cursor.selectedText();
-				gvi.m_linewiseYanked = true;
-				cursor.clearSelection();
-			}
+			do_yank_line(cursor, rcnt);
 			break;
 		case 'g':
 			cursor.movePosition(QTextCursor::Start);
@@ -419,8 +422,11 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 			}
 			break;
 		case '~':
-			do_swap_case(cursor, rcnt);
+			do_swap_case(cursor, rcnt);		//	大文字・小文字反転
 			gvi.m_editCommand = true;
+			break;
+		case 'Y':
+			do_yank_line(cursor, rcnt);
 			break;
 		case 'p':
 			if( !gvi.m_yankBuffer.isEmpty() ) {
