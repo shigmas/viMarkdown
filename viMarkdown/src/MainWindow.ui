@@ -185,6 +185,7 @@
     <addaction name="action_Settings"/>
     <addaction name="action_ViKeybindings"/>
     <addaction name="action_Help"/>
+    <addaction name="action_CheatSheet"/>
     <addaction name="menu_Test"/>
     <addaction name="action_AboutViMarkdown"/>
     <addaction name="separator"/>
@@ -1117,6 +1118,11 @@
    </property>
    <property name="toolTip">
     <string>Vi Keybindings</string>
+   </property>
+  </action>
+  <action name="action_CheatSheet">
+   <property name="text">
+    <string>&amp;CheatSheet</string>
    </property>
   </action>
  </widget>

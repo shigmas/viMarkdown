@@ -113,6 +113,7 @@ MainWindow::MainWindow(QWidget *parent)
 	//m_editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE).toInt();
 	restore_win();
 	onAction_NewTab();
+	onAction_CheatSheet();
 }
 MainWindow::~MainWindow()
 {
@@ -579,6 +580,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_Language, &QAction::triggered, this, &MainWindow::onAction_Language);
 	connect(ui->action_Settings, &QAction::triggered, this, &MainWindow::onAction_Settings);
 	connect(ui->action_Help, &QAction::triggered, this, &MainWindow::onAction_Help);
+	connect(ui->action_CheatSheet, &QAction::triggered, this, &MainWindow::onAction_CheatSheet);
 	//connect(ui->action_Test, &QAction::triggered, this, &MainWindow::onAction_Test);
 	connect(ui->action_TestCharFlags, &QAction::triggered, this, &MainWindow::onAction_TestCharFlags);
 	connect(ui->action_TestContextAt, &QAction::triggered, this, &MainWindow::onAction_TestContextAt);
@@ -829,66 +831,10 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	//QTextEdit *mdEditor = new QTextEdit(splitter);
 	mdEditor->setPlaceholderText(g.m_japanese ? R"(
 ここにMarkdownを入力
-
-マークダウン書式：
-# タイトル
-## 大見出し
-### 中見出し
-本文...
-**ボールド** *イタリック* ~~打ち消し線~~
-1. 連番
-- リスト
-- [ ] チェックボックス
-リンク: [テキスト](url) or [テキスト](filename.md#見出し)
-画像: ![テキスト](image.png) or 画像ペースト
-表組み:
-|見出し|見出し|
-|-----:|------|
-|   123|abc   |
-
-```CSV
-見出し, 見出し
-123, abc
-```
-```SVG
-<svg width="320" height="200">
-  .....
-</svg>
-```
-罫線モード: Shift + F5
-　罫線描画: Ctrl + 上下左右キー
-　罫線消去: Ctrl + Shift + 上下左右キー
+マークダウン書式は Output を見てね
 )" : R"(
 Enter your Markdown here
-
-Markdown syntax:
-# Title
-## Heading 1
-### Heading 2
-Body text...
-**Bold** *Italic* ~~Strikethrough~~
-1. Numbered list
-- Bullet list
-- [ ] Checkbox
-Link: [Text](url) or [Text](filename.md#heading)
-Image: ![Text](image.png) or Paste image
-Table:
-|Header|Header|
-|-----:|------|
-|   123|abc   |
-
-```CSV
-Header, Header
-123, abc
-```
-```SVG
-<svg width="320" height="200">
-  .....
-</svg>
-```
-Keisen mode: Shift + F5
-　Draw: Ctrl + Arrow keys
-　Erase: Ctrl + Shift + Arrow keys
+See Output for Markdown formatting...
 )" );
 	MarkdownPreview *markdownPreview = docWidget->m_preview = new MarkdownPreview(this, docWidget, splitter, readOnly);
 	//markdownPreview->setReadOnly(readOnly);
@@ -1380,6 +1326,67 @@ void MainWindow::onAction_AddThisFavorite() {
 	favoriteFilePaths.push_front(docWidget->m_fullPath);
 	while( favoriteFilePaths.size() > N_FAVORITE_FILES ) favoriteFilePaths.pop_back();
 	settings.setValue(KEY_FAVORITE_FILES, favoriteFilePaths);
+}
+void MainWindow::onAction_CheatSheet() {
+	do_output(g.m_japanese ? R"(
+マークダウン書式：
+# タイトル
+## 大見出し
+### 中見出し
+本文...
+**ボールド** *イタリック* ~~打ち消し線~~
+1. 連番
+- リスト
+- [ ] チェックボックス
+リンク: [テキスト](url) or [テキスト](filename.md#見出し)
+画像: ![テキスト](image.png) or 画像ペースト
+表組み:
+|見出し|見出し|
+|-----:|------|
+|   123|abc   |
+
+```CSV
+見出し, 見出し
+123, abc
+```
+```SVG
+<svg width="320" height="200">
+  .....
+</svg>
+```
+罫線モード: Shift + F5
+　罫線描画: Ctrl + 上下左右キー
+　罫線消去: Ctrl + Shift + 上下左右キー
+)" : R"(
+Markdown syntax:
+# Title
+## Heading 1
+### Heading 2
+Body text...
+**Bold** *Italic* ~~Strikethrough~~
+1. Numbered list
+- Bullet list
+- [ ] Checkbox
+Link: [Text](url) or [Text](filename.md#heading)
+Image: ![Text](image.png) or Paste image
+Table:
+|Header|Header|
+|-----:|------|
+|   123|abc   |
+
+```CSV
+Header, Header
+123, abc
+```
+```SVG
+<svg width="320" height="200">
+  .....
+</svg>
+```
+Keisen mode: Shift + F5
+　Draw: Ctrl + Arrow keys
+　Erase: Ctrl + Shift + Arrow keys
+)" );
 }
 void MainWindow::onAction_Help() {
 	qDebug() << "appDir = " << QCoreApplication::applicationDirPath();
