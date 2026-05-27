@@ -271,6 +271,16 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt) {		//	
 	}
 	return true;
 }
+void do_vi_H(QTextCursor& cursor, int rcnt, DocWidget* docWidget) {
+	QPoint topLeft(0, 0);	//	左上点
+	if( cursor.document() == docWidget->m_editor->document() )
+		cursor = docWidget->m_editor->cursorForPosition(topLeft);
+	else
+		cursor = docWidget->m_preview->cursorForPosition(topLeft);
+	if( rcnt > 1 )
+		cursor.movePosition(QTextCursor::NextBlock, QTextCursor::MoveAnchor, rcnt - 1);
+	hat(cursor);
+}
 void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidget* docWidget) {		//	hjkl等
 	gvi.m_linewiseMoved = false;
 	bool isEditor = cursor.document() == docWidget->m_editor->document();
@@ -367,6 +377,9 @@ void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidge
 			hat(cursor);
 		}
 		break;
+	case 'H':
+		do_vi_H(cursor, rcnt, docWidget);
+		break;
 	default:
 		return;
 	}
@@ -403,7 +416,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 	} else if( cmd == 'h' || cmd == 'j' || cmd == 'k' || cmd == 'l' || cmd == ' ' || 
 	           cmd == 'w' || cmd == 'W' || cmd == 'b' || cmd == 'B' || cmd == 'e' || cmd == 'E' ||
 	           cmd == '$' || cmd == '^' || cmd == '-' || cmd == '+' ||
-	           cmd == '\n' || cmd == 'G' )
+	           cmd == '\n' || cmd == 'G' || cmd == 'H')
 	{
 	    do_vi_motion(cmd, cursor, rcnt, docWidget);
 	} else {
