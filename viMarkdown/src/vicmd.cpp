@@ -291,6 +291,21 @@ void do_vi_L(QTextCursor& cursor, int rcnt, DocWidget* docWidget) {
 		cursor.movePosition(QTextCursor::PreviousBlock, QTextCursor::MoveAnchor, rcnt - 1);
 	hat(cursor);
 }
+void do_vi_M(QTextCursor& cursor, DocWidget* docWidget) {
+	int h, l;	//	H, L block number
+	QPoint topLeft(0, 0);	//	左上点
+	QPoint bottomLeft(0, docWidget->m_editor->viewport()->height() - 1);	//	左下点
+	if( cursor.document() == docWidget->m_editor->document() ) {
+		h = docWidget->m_editor->cursorForPosition(topLeft).block().blockNumber();;
+		l = docWidget->m_editor->cursorForPosition(bottomLeft).block().blockNumber();;
+	} else {
+		h = docWidget->m_preview->cursorForPosition(topLeft).block().blockNumber();;
+		l = docWidget->m_preview->cursorForPosition(bottomLeft).block().blockNumber();;
+	}
+	QTextBlock block = cursor.document()->findBlockByNumber((h+l)/2);
+	cursor.setPosition(block.position());
+	hat(cursor);
+}
 void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidget* docWidget) {		//	hjkl等
 	gvi.m_linewiseMoved = false;
 	bool isEditor = cursor.document() == docWidget->m_editor->document();
@@ -393,6 +408,9 @@ void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidge
 	case 'L':
 		do_vi_L(cursor, rcnt, docWidget);
 		break;
+	case 'M':
+		do_vi_M(cursor, docWidget);
+		break;
 	default:
 		return;
 	}
@@ -429,7 +447,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 	} else if( cmd == 'h' || cmd == 'j' || cmd == 'k' || cmd == 'l' || cmd == ' ' || 
 	           cmd == 'w' || cmd == 'W' || cmd == 'b' || cmd == 'B' || cmd == 'e' || cmd == 'E' ||
 	           cmd == '$' || cmd == '^' || cmd == '-' || cmd == '+' ||
-	           cmd == '\n' || cmd == 'G' || cmd == 'H' || cmd == 'L' )
+	           cmd == '\n' || cmd == 'G' || cmd == 'H' || cmd == 'L' || cmd == 'M' )
 	{
 	    do_vi_motion(cmd, cursor, rcnt, docWidget);
 	} else {

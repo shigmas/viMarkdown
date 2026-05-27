@@ -201,7 +201,7 @@ SPR# 状 P Open Close ver     Type  概要
 0198 ● C 05/25            │ToDo│文書先頭の <!-- --> コメント内に、tags: foo, bar 指定を可能にし、grep で tag 指定可能に？
 0199 ● C 05/25            │ToDo│設定ダイアログ：左側に QTreeWidget を配置し、設定ページを QStackedWidget に？
 0200 ◎ C 05/25 05/28 03014│ToDo│H コマンドサポート
-0201 ● C 05/25            │ToDo│M コマンドサポート
+0201 ◎ C 05/25 05/28 03014│ToDo│M コマンドサポート
 0202 ◎ C 05/25 05/28 03014│ToDo│L コマンドサポート
 0203 ● C 05/25            │ToDo│J コマンドサポート
 0204 ● C 05/25            │ToDo│n N：再検索
