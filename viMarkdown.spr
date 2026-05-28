@@ -257,7 +257,7 @@ SPR# 状 P Open Close ver     Type  概要
 0254 ◎ C 05/28 05/28 03015│ToDo│count operator count move の場合、最初の count を m_opCount に保存
 0255 ◎ C 05/28 05/28 03015│ToDo│Other > Cheat Sheet：サブメニュー化し、Markdown, Vi に
 0256 ◎ C 05/28 05/28 03015│ToDo│count {c|d|y} count move 対応
-0257 ● C 05/28            │ToDo│
+0257 ◎ C 05/28 05/28 03015│ToDo│viコマンド自動テストのための構造体定義
 0258 ● C 05/28            │ToDo│
 0259 ● C 05/28            │ToDo│
 0260 ● C 05/28            │ToDo│

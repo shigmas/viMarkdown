@@ -820,3 +820,18 @@ void MainWindow::run_previewTestScript(const QString &script) {
 		docWidget->m_preview->setTextCursor(cursor);
 	}
 }
+//----------------------------------------------------------------------
+// viコマンド自動テスト用のテストケース構造体
+struct ViTestCase {
+    QString m_name;          // テスト名
+    QString m_initialText;   // 初期テキスト（'|' がカーソル位置）
+    QString m_viCommand;     // viコマンド列
+    QString m_expectedText;  // コマンド実行後テキスト（'|' がカーソル位置）
+};
+
+const QList<ViTestCase> viTestCases = {
+	{ "Move cursor right",	"h|ello", "l", "he|llo" },
+	{ "Move cursor left",	"h|ello", "h", "|hello" },
+	//{"", "", "", ""},	//	最後の番人
+};
+
