@@ -454,7 +454,8 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		auto moveMode = gvi.m_operator == ' ' ? QTextCursor::MoveAnchor : QTextCursor::KeepAnchor;
 		QTextDocument *doc = cursor.document();
 		QTextBlock block = cursor.block();
-		QChar c;	//	for , ;
+		QChar c;		//	for , ;
+		QString buf;	//	for .
 		switch( cmd.unicode() ) {
 		case 'f':
 		case 'F':
@@ -533,7 +534,14 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 			if( gvi.m_redoing || gvi.m_lastEditCommand.isEmpty() ) break;
 			qDebug() << "'.': gvi.m_lastEditCommand = " << gvi.m_lastEditCommand;
 			gvi.m_redoing = true;
-			for(QChar ch: gvi.m_lastEditCommand) {
+			buf = gvi.m_lastEditCommand;
+			if( gvi.m_repeatCount != 0 ) {		//	<num>. の場合
+				int i = 0;
+				while( i < buf.size() && buf[i].isDigit() )
+					++i;
+				buf = QString::number(gvi.m_repeatCount) + buf.mid(i);
+			}
+			for(QChar ch: buf) {
 				do_viCmd(ch, cursor);
 			}
 			gvi.m_redoing = false;
@@ -547,7 +555,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		gvi.m_repeatCount = 0;
 		gvi.m_operator = ' ';
 		gvi.m_fFtT = ' ';
-		if( gvi.m_isEditCommand )
+		if( gvi.m_isEditCommand && !gvi.m_redoing )
 			gvi.m_lastEditCommand = gvi.m_pendingCommand;
 		//else
 		//	gvi.m_lastEditCommand.clear();
