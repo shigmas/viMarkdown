@@ -319,7 +319,8 @@ protected:
     void	onAction_Settings();
     void	onAction_ViKeybindings(bool);
     void	onAction_Help();
-    void	onAction_CheatSheet();
+    void	onAction_MarkdownCheatSheet();
+    void	onAction_ViCheatSheet();
     void	onAction_Test();
     void	onAction_TestCharFlags();
     void	onAction_TestContextAt();

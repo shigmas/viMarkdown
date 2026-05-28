@@ -113,7 +113,7 @@ MainWindow::MainWindow(QWidget *parent)
 	//m_editorFontSize = settings.value(KEY_EDITOR_FONT_SIZE).toInt();
 	restore_win();
 	onAction_NewTab();
-	onAction_CheatSheet();
+	onAction_MarkdownCheatSheet();
 }
 MainWindow::~MainWindow()
 {
@@ -580,7 +580,8 @@ void MainWindow::setup_connections() {
 	connect(ui->action_Language, &QAction::triggered, this, &MainWindow::onAction_Language);
 	connect(ui->action_Settings, &QAction::triggered, this, &MainWindow::onAction_Settings);
 	connect(ui->action_Help, &QAction::triggered, this, &MainWindow::onAction_Help);
-	connect(ui->action_CheatSheet, &QAction::triggered, this, &MainWindow::onAction_CheatSheet);
+	connect(ui->action_MarkdownCheatSheet, &QAction::triggered, this, &MainWindow::onAction_MarkdownCheatSheet);
+	connect(ui->action_ViCheatSheet, &QAction::triggered, this, &MainWindow::onAction_ViCheatSheet);
 	//connect(ui->action_Test, &QAction::triggered, this, &MainWindow::onAction_Test);
 	connect(ui->action_TestCharFlags, &QAction::triggered, this, &MainWindow::onAction_TestCharFlags);
 	connect(ui->action_TestContextAt, &QAction::triggered, this, &MainWindow::onAction_TestContextAt);
@@ -1327,7 +1328,7 @@ void MainWindow::onAction_AddThisFavorite() {
 	while( favoriteFilePaths.size() > N_FAVORITE_FILES ) favoriteFilePaths.pop_back();
 	settings.setValue(KEY_FAVORITE_FILES, favoriteFilePaths);
 }
-void MainWindow::onAction_CheatSheet() {
+void MainWindow::onAction_MarkdownCheatSheet() {
 	do_output(g.m_japanese ? R"(
 マークダウン書式：
 # タイトル
@@ -1392,6 +1393,43 @@ Hello SVG!
 Keisen mode: Shift + F5
 　Draw: Ctrl + Arrow keys
 　Erase: Ctrl + Shift + Arrow keys
+)" );
+}
+void MainWindow::onAction_ViCheatSheet() {
+	do_output(R"(viMarkdown — Vi Cheat Sheet
+ 
+MODE
+  i/a/o/O  insert before/after/below/above    I/A  line start/end
+  s/S/cc   delete char/line and insert        Esc  command mode
+ 
+MOTION
+  h/j/k/l  left/down/up/right                0/^/$  line start(col0)/nonblank/end
+  w/W/b/B  next/prev word/WORD               gg/G/{n}G  top/bottom/line n
+  e/E      end of word/WORD                  H/M/L  screen top/mid/bottom
+  f/F{c}   find char forward/backward        ]]/[[ next/prev heading
+  t/T{c}   till char forward/backward        ;/,   repeat f/F/t/T  fwd/rev
+  %        matching bracket
+ 
+EDIT
+  x/X      del char at/before                r{c}  replace char
+  D/dd     del to EOL / del line             C/cc  change to EOL / change line
+  d{m}     del to motion                     c{m}  change to motion
+  yy/Y     yank line                         y{m}  yank to motion
+  p/P      paste after/before                J     join lines
+  >>/<<    indent/unindent                   ~     toggle case
+  u/U      undo/redo                         .     repeat last edit
+ 
+SEARCH
+  /{pat}   search forward                    ?{pat}   search backward
+  *        search word under cursor          n/N      next/prev match                      
+ 
+SCROLL
+  z.  center    zEnter  to top    z-  to bottom
+ 
+EX
+  :w  save    :q  quit    :{r}s/pat/rep/[g]  substitute
+ 
+COUNT  {n}{cmd} repeats n times.  {n}op{m}move multiplies (2d3w = 6 words).
 )" );
 }
 void MainWindow::onAction_Help() {
