@@ -255,8 +255,8 @@ SPR# 状 P Open Close ver     Type  概要
 0252 ◎ C 05/28 05/28 03014│問題│"u" が m_lastEditCommand に設定されてしまう
 0253 ◎ C 05/28 05/28 03015│問題│3dd のあと 2. すると３行削除されてしまう
 0254 ◎ C 05/28 05/28 03015│ToDo│count operator count move の場合、最初の count を m_opCount に保存
-0255 ● C 05/28            │ToDo│
-0256 ● C 05/28            │ToDo│
+0255 ● C 05/28            │ToDo│Other > Cheat Sheet：サブメニュー化し、Markdown, Vi に
+0256 ◎ C 05/28 05/28 03015│ToDo│count {c|d|y} count move 対応
 0257 ● C 05/28            │ToDo│
 0258 ● C 05/28            │ToDo│
 0259 ● C 05/28            │ToDo│

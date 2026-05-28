@@ -228,7 +228,7 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt) {		//	
 	if( gvi.m_operator == ' ' ) {
 		gvi.m_operator = cmd;
 		if( gvi.m_repeatCount != 0 )
-			fvi.m_opCount = gvi.m_repeatCount;
+			gvi.m_opCount = gvi.m_repeatCount;
 		gvi.m_repeatCount = 0;
 		return false;
 	}
@@ -452,7 +452,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 	           cmd == '$' || cmd == '^' || cmd == '-' || cmd == '+' ||
 	           cmd == '\n' || cmd == 'G' || cmd == 'H' || cmd == 'L' || cmd == 'M' )
 	{
-	    do_vi_motion(cmd, cursor, rcnt, docWidget);
+	    do_vi_motion(cmd, cursor, rcnt*gvi.m_opCount, docWidget);
 	} else {
 		auto moveMode = gvi.m_operator == ' ' ? QTextCursor::MoveAnchor : QTextCursor::KeepAnchor;
 		QTextDocument *doc = cursor.document();
