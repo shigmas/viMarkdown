@@ -227,6 +227,9 @@ void do_yank_line(QTextCursor& cursor, int rcnt) {
 bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt) {		//	{c|d|y}<move>, gg
 	if( gvi.m_operator == ' ' ) {
 		gvi.m_operator = cmd;
+		if( gvi.m_repeatCount != 0 )
+			fvi.m_opCount = gvi.m_repeatCount;
+		gvi.m_repeatCount = 0;
 		return false;
 	}
 	if( gvi.m_operator == cmd ) {		//	cc dd yy gg << >> の場合
@@ -552,6 +555,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		}
 	}
 	if( completed ) {	//	コマンド完結
+		gvi.m_opCount = 1;
 		gvi.m_repeatCount = 0;
 		gvi.m_operator = ' ';
 		gvi.m_fFtT = ' ';

@@ -142,6 +142,7 @@ struct ViStatus {
     QChar	m_fFtT = ' ';				//	{fFtT}
     QChar	m_last_fFtT = ' ';			//	{fFtT}
     QChar	m_last_fFtT_char = ' ';		//	{fFtT}
+    int		m_opCount = 1;				//	op 繰り返し回数 for c d y
     int		m_repeatCount = 0;			//	vi コマンド繰り返し回数
 	QString	m_lastEditCommand;			//	最後に実行した vi 編集コマンド
 	QString	m_pendingCommand;			//	入力中の vi コマンド
