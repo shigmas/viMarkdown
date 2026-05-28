@@ -12,7 +12,7 @@ int getRepeatCount() {
 	return gvi.m_repeatCount;
 }
 bool isSpaceChar(QChar ch) {
-	return ch == u' ' || ch == u'\t';
+	return ch == u' ' || ch == u'\t' || ch == u'\n'|| ch.unicode() == 0x2029;	//	0x2029: 改行コード
 }
 void hat(QTextCursor& cursor, QTextCursor::MoveMode moveMode = QTextCursor::MoveAnchor) {
 	cursor.movePosition(QTextCursor::StartOfBlock);
@@ -40,8 +40,6 @@ void do_openline(QTextCursor& cursor, bool before) {
 		cursor.insertText("\n");
 	}
 }
-//void do_Word(QTextCursor& cursor, int rcnt) {
-//}
 void do_swap_case(QTextCursor& cursor, int rcnt) {
 	QString text;
 	QTextBlock block = cursor.block();
@@ -348,18 +346,36 @@ void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidge
 			if( cursor.position() == pos ) break;
 		}
 		break;
-	case 'W':
-		//do_Word(cursor, rcnt);
+	case 'W': {
+		const int maxPos = doc->characterCount() - 1;
 		for(int i = 0; i < rcnt; ++i) {
-			//if( cursor.position() == doc->characterCount() ) break;
-			while( cursor.position() < doc->characterCount() && !isSpaceChar(doc->characterAt(cursor.position())) )
-				cursor.movePosition(QTextCursor::Right);
-			while( cursor.position() < doc->characterCount() && isSpaceChar(doc->characterAt(cursor.position())) )
-				cursor.movePosition(QTextCursor::Right);
-			if( cursor.position() == doc->characterCount() ) break;
+			while( cursor.position() < maxPos && !isSpaceChar(doc->characterAt(cursor.position())) )
+				if( !cursor.movePosition(QTextCursor::Right) ) goto doneW;
+			while( cursor.position() < maxPos && isSpaceChar(doc->characterAt(cursor.position())) )
+				if( !cursor.movePosition(QTextCursor::Right) ) goto doneW;
+			if( cursor.position() >= maxPos ) break;
 		}
+doneW:
 		break;
-	case 'b':
+	}
+	case 'E': {
+		const int maxPos = doc->characterCount() - 1;
+		for(int i = 0; i < rcnt; ++i) {
+			if( !cursor.movePosition(QTextCursor::Right) ) break;	// すでに末尾にいる場合はこれ以上進めないため、
+			// 1. スペース文字をスキップ（次の単語の先頭に達するまで右へ）
+			while( cursor.position() < maxPos && isSpaceChar(doc->characterAt(cursor.position())) )
+				if( !cursor.movePosition(QTextCursor::Right) ) break;
+			// 2. スペース以外の文字をスキップ（単語を通り過ぎるまで右へ）
+			while( cursor.position() < maxPos && !isSpaceChar(doc->characterAt(cursor.position())) )
+				if( !cursor.movePosition(QTextCursor::Right) ) break;
+			// 単語を通り過ぎてスペース（または終端）の上にいるので、
+			// 1文字左に戻ることで「単語の最後の文字の上」にカーソルを合わせます。
+			cursor.movePosition(QTextCursor::Left);
+			if( cursor.position() >= maxPos ) break;
+		}
+	    break;
+	}
+    case 'b':
 		for(int i = 0; i < rcnt; ++i) {
 			if( isEditor )
 				docWidget->m_editor->moveToPrevWord(cursor, /*select = */gvi.m_operator != ' ');
