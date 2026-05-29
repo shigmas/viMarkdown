@@ -527,7 +527,11 @@ void MarkdownPreview::paintEvent(QPaintEvent *e) {
 	QPainter p(viewport());
 	if( !isReadOnly() ) {
 		QRect rect = cursorRect();
-		drawTextCursor(viewport(), p, textCursor(), rect, fontMetrics(), hasFocus());		//	カーソル描画
+		QTextCursor cursor = textCursor();
+		QTextCharFormat fmt = cursor.charFormat();
+		QFont font = fmt.font();
+		QFontMetrics fm(font);
+		drawTextCursor(viewport(), p, textCursor(), rect, fm, hasFocus());		//	カーソル描画
 #if 0
 		if( gvi.m_viCmdMode ) {
 			auto ht = rect.height();
