@@ -351,7 +351,7 @@ protected:
     void	do_viCmd(QChar cmd, QTextCursor&);
     void	do_vi_insert(QChar cmd, QTextCursor&, int rcnt);		//	iIaAoOsS
     void	do_vi_delete(QChar cmd, QTextCursor&, int rcnt);		//	xXD
-    bool	do_vi_operator(QChar cmd, QTextCursor&, int rcnt);		//	{c|d|y|g...}<move>
+    bool	do_vi_operator(QChar cmd, QTextCursor&, int rcnt, DocWidget*);		//	{c|d|y|g...}<move>
     void	do_vi_motion(QChar cmd, QTextCursor&, int rcnt, DocWidget*);		//	hjklwW...
 
 private:

@@ -222,7 +222,7 @@ void do_yank_line(QTextCursor& cursor, int rcnt) {
 		cursor.clearSelection();
 	}
 }
-bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt) {		//	{c|d|y}<move>, gg
+bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWidget* docWidget) {		//	{c|d|y}<move>, gg
 	if( gvi.m_operator == ' ' ) {
 		gvi.m_operator = cmd;
 		if( gvi.m_repeatCount != 0 )
@@ -230,7 +230,7 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt) {		//	
 		gvi.m_repeatCount = 0;
 		return false;
 	}
-	if( gvi.m_operator == cmd ) {		//	cc dd yy gg << >> の場合
+	if( gvi.m_operator == cmd ) {		//	cc dd yy gg zz << >> の場合
 		switch( cmd.unicode() ) {
 		case 'c':	//	cc
 			do_vi_change_line(cursor);
@@ -260,6 +260,12 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt) {		//	
 		case 'g':
 			cursor.movePosition(QTextCursor::Start);
 			break;
+		case 'z':
+			if( cursor.document() == docWidget->m_editor->document() )
+				docWidget->m_editor->centerCursor();
+			//else
+			//	docWidget->m_preview->centerCursor();
+			break;
 		case '>':
 			onAction_Indent();
 			gvi.m_isEditCommand = true;
@@ -267,6 +273,15 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt) {		//	
 		case '<':
 			onAction_UnIndent();
 			gvi.m_isEditCommand = true;
+			break;
+		}
+	} else {
+		switch( gvi.m_operator.unicode() ) {
+		case 'z':
+			switch( cmd.unicode() ) {
+			case '.':
+				break;
+			}
 			break;
 		}
 	}
@@ -551,8 +566,8 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		do_vi_insert(cmd, cursor, rcnt);
 	} else if( cmd == 'x' || cmd == 'X' || cmd == 'D' ) {
 		do_vi_delete(cmd, cursor,rcnt);
-	} else if( cmd == 'c' || cmd == 'd' || cmd == 'y' || cmd == 'g' || cmd == 'r' || cmd == '<' || cmd == '>' ) {
-		completed = do_vi_operator(cmd, cursor, rcnt);
+	} else if( cmd == 'c' || cmd == 'd' || cmd == 'y' || cmd == 'g' || cmd == 'z' || cmd == 'r' || cmd == '<' || cmd == '>' ) {
+		completed = do_vi_operator(cmd, cursor, rcnt, docWidget);
 	} else if( cmd.unicode() >= '0' && cmd.unicode() <= '9' ) {
 		if( cmd == u'0' && gvi.m_repeatCount == 0 ) {
 			auto moveMode = gvi.m_operator == ' ' ? QTextCursor::MoveAnchor : QTextCursor::KeepAnchor;

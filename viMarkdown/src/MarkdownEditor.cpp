@@ -18,6 +18,12 @@
 #include "MainWindow.h"
 #include "DocWidget.h"
 
+#ifdef	_WIN32
+#include <windows.h>
+#include <imm.h>
+#pragma comment(lib, "imm32.lib")
+#endif
+
 extern Global g;
 extern ViStatus gvi;
 
@@ -710,6 +716,14 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 			}
 			gvi.m_viCmdMode = true;
 		}
+#if _WIN32
+		HWND hwnd = (HWND)this->winId();
+		HIMC himc = ImmGetContext(hwnd);
+		if( himc ) {
+			ImmSetOpenStatus(himc, FALSE);
+			ImmReleaseContext(hwnd, himc);
+		}
+#endif
 		//this->setAttribute(Qt::WA_InputMethodEnabled, false);		# 効かない
 		emit esc_pressed();
 		if( m_svgCompleter != nullptr ) {

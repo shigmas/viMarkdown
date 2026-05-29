@@ -1,13 +1,13 @@
-﻿# viMarkdownを開発してたら
-# 図まで簡単に描けるようになった話
+﻿# SVG ブロックを実装してみたら
+# 図が意外と簡単に描けるようになった話
 
 ## 目次
 
 - 自己紹介
   - 自宅研究員（首席）
   - 某国立大学大学院 修士課程修了（工学修士）
-  - K工学研究所（研究員）、L社（Software Engineer）、J社（同左）
-  - 作品：K\-Compiler, ViVi editor, AI poker 等
+  - K工学研究所（研究員）、L社（首席 Software Engineer）、J社（SE）
+  - 作品：K\-Compiler, ViVi editor, AI poker, Sudoku 等
 - 朗報：MacOS でもメニューが実行可能になった
   - メニューとツールバーを合体させていたのが原因
 - SVG ブロックを実装してみた（今日の本題）

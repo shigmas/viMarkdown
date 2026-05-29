@@ -18,6 +18,12 @@
 #include "DocWidget.h"
 #include "lunasvg.h"
 
+#ifdef	_WIN32
+#include <windows.h>
+#include <imm.h>
+#pragma comment(lib, "imm32.lib")
+#endif
+
 using namespace std;
 
 extern Global g;
@@ -246,12 +252,20 @@ void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 			}
 			gvi.m_viCmdMode = true;
 		}
-		gvi.m_viCmdMode = true;
+		//gvi.m_viCmdMode = true;
 		//QTextCursor cursor = textCursor();
 		if( cursor.hasSelection() ) {	//	選択状態ならば
 			cursor.setPosition(cursor.position());		//	選択解除
 			setTextCursor(cursor);
 		}
+#if _WIN32
+		HWND hwnd = (HWND)this->winId();
+		HIMC himc = ImmGetContext(hwnd);
+		if( himc ) {
+			ImmSetOpenStatus(himc, FALSE);
+			ImmReleaseContext(hwnd, himc);
+		}
+#endif
 		return;
 	}
 	if (e->key() == Qt::Key_Tab) {
@@ -937,7 +951,7 @@ int h_font_size[] = {12, 26*4, 22*4, 18, 16, 14, 12};		//	body, h1, h2, h3 ... h
 void MarkdownPreview::do_heading(QTextBlock& srcBlock, QTextCursor& cursor, QString buf) {
 	int i = 1;
 	while( i < buf.size() && buf[i] == '#' ) ++i;
-	int h = std::min(6, i);		//	[1, 6]
+	int h = qMin(6, i);		//	[1, 6]
 	while( i < buf.size() && buf[i] == u' ' ) ++i;
 	BlockData *data = getBlockData(srcBlock);
 	for(int k = 0; k < i; ++k)
