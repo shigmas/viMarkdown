@@ -485,6 +485,55 @@ doneW:
 	}
 	do_cdy(cursor);
 }
+void do_join(QTextCursor& cursor, int rcnt) {
+	QTextDocument *doc = cursor.document();
+	int joins = (rcnt <= 1) ? 1 : (rcnt - 1);
+	cursor.beginEditBlock();
+	int finalCursorPos = -1;
+	for (int i = 0; i < joins; ++i) {
+		cursor.movePosition(QTextCursor::EndOfBlock);
+		QTextBlock nextBlock = cursor.block().next();
+		if (!nextBlock.isValid()) break; // 次の行がない（ドキュメント末尾）場合は結合処理を終了
+		QString currentText = cursor.block().text();
+		QString nextText = nextBlock.text();
+		int trailingSpaces = 0;
+		while (trailingSpaces < currentText.size() && 
+			   (currentText[currentText.size() - 1 - trailingSpaces] == ' ' || 
+				currentText[currentText.size() - 1 - trailingSpaces] == '\t')) {
+			trailingSpaces++;
+		}
+		int leadingSpaces = 0;
+		while (leadingSpaces < nextText.size() && 
+			   (nextText[leadingSpaces] == ' ' || nextText[leadingSpaces] == '\t')) {
+			leadingSpaces++;
+		}
+		if (trailingSpaces > 0) {
+			cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, trailingSpaces);
+			cursor.removeSelectedText();
+		}
+		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, 1 + leadingSpaces);
+		cursor.removeSelectedText();
+		bool needsSpace = true;
+		if (currentText.size() == trailingSpaces || nextText.size() == leadingSpaces) {
+			needsSpace = false;
+		} else if (leadingSpaces < nextText.size() && nextText[leadingSpaces] == ')') {
+			needsSpace = false;
+		}
+		
+		if (needsSpace) {
+			cursor.insertText(" ");
+		}
+		if (i == 0) {
+			finalCursorPos = cursor.position();
+			if (needsSpace && finalCursorPos > 0) {
+				finalCursorPos--; // 挿入したスペースの上にカーソルを合わせるため1文字左へ
+			}
+		}
+	}
+	cursor.endEditBlock();
+	if (finalCursorPos >= 0)
+		cursor.setPosition(finalCursorPos);
+}
 void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 	//if( cmd.isEmpty() ) return;
 	DocWidget *docWidget = getCurDocWidget();
@@ -560,6 +609,9 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 				}
 				cursor.insertText(gvi.m_yankBuffer);
 			}
+			break;
+		case 'J':
+			do_join(cursor, rcnt);
 			break;
 		case 'u':
 			if( isEditor )
