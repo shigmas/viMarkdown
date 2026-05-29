@@ -307,6 +307,47 @@ void do_vi_M(QTextCursor& cursor, DocWidget* docWidget) {
 	cursor.setPosition(block.position());
 	hat(cursor);
 }
+void do_match_paren(QTextCursor& cursor) {
+	QTextDocument *doc = cursor.document();
+	QTextBlock block = cursor.block();
+	int lineEnd = block.position() + block.text().size();
+	const QString paren = "(){}[]";
+	int pix;
+	int pos = cursor.position();
+	for(;;) {
+		if( pos >= lineEnd ) return;
+		if( (pix = paren.indexOf(doc->characterAt(pos))) >= 0 ) {
+			break;
+		}
+		++pos;
+	}
+	int depth = 1;
+	if( pix%2 == 0 ) {		//	openParen[pix] を発見（pix は偶数）
+		const QString pp = paren.mid(pix, 2);
+		while( ++pos < doc->characterCount() ) {
+			int ix = pp.indexOf(doc->characterAt(pos));
+			if( ix == 0 ) ++depth;
+			else if( ix == 1 ) {
+				if( --depth == 0 ) {
+					cursor.setPosition(pos);
+					return;
+				}
+			}
+		}
+	} else {				//	closeParen[pix] を発見（pix は奇数）
+		const QString pp = paren.mid(pix-1, 2);
+		while( --pos >= 0 ) {
+			int ix = pp.indexOf(doc->characterAt(pos));
+			if( ix == 1 ) ++depth;
+			else if( ix == 0 ) {
+				if( --depth == 0 ) {
+					cursor.setPosition(pos);
+					return;
+				}
+			}
+		}
+	}
+}
 void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidget* docWidget) {		//	hjkl等
 	gvi.m_linewiseMoved = false;
 	bool isEditor = cursor.document() == docWidget->m_editor->document();
@@ -412,6 +453,9 @@ doneW:
 	case '^':
 		hat(cursor, moveMode);
 		break;
+	case '%':
+		do_match_paren(cursor);
+		break;
 	case 'G':
 		if( gvi.m_repeatCount == 0 ) {
 			cursor.movePosition(QTextCursor::End);
@@ -429,6 +473,12 @@ doneW:
 		break;
 	case 'M':
 		do_vi_M(cursor, docWidget);
+		break;
+	case 'n':
+		do_find();
+		break;
+	case 'N':
+		do_find(true);
 		break;
 	default:
 		return;
@@ -463,9 +513,9 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 			gvi.m_repeatCount = gvi.m_repeatCount * 10 + (cmd.unicode() - u'0');
 			completed = false;
 		}
-	} else if( cmd == 'h' || cmd == 'j' || cmd == 'k' || cmd == 'l' || cmd == ' ' || 
+	} else if( cmd == 'h' || cmd == 'j' || cmd == 'k' || cmd == 'l' || cmd == ' ' || cmd == '%' || 
 	           cmd == 'w' || cmd == 'W' || cmd == 'b' || cmd == 'B' || cmd == 'e' || cmd == 'E' ||
-	           cmd == '$' || cmd == '^' || cmd == '-' || cmd == '+' ||
+	           cmd == '$' || cmd == '^' || cmd == '-' || cmd == '+' || cmd == 'n' || cmd == 'N' ||
 	           cmd == '\n' || cmd == 'G' || cmd == 'H' || cmd == 'L' || cmd == 'M' )
 	{
 	    do_vi_motion(cmd, cursor, rcnt*gvi.m_opCount, docWidget);
