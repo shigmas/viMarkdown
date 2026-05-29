@@ -230,6 +230,7 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWid
 		gvi.m_repeatCount = 0;
 		return false;
 	}
+	QTextBlock block = cursor.block();
 	if( gvi.m_operator == cmd ) {		//	cc dd yy gg zz << >> の場合
 		switch( cmd.unicode() ) {
 		case 'c':	//	cc
@@ -267,11 +268,33 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWid
 			//	docWidget->m_preview->centerCursor();
 			break;
 		case '>':
-			onAction_Indent();
+			cursor.beginEditBlock();
+			for(int i = 0; i < gvi.m_opCount; ++i) {
+				onAction_Indent();
+				block = block.next();
+				if( !block.isValid() ) break;
+				cursor.setPosition(block.position());
+				if( cursor.document() == docWidget->m_editor->document() )
+					docWidget->m_editor->setTextCursor(cursor);
+				else
+					docWidget->m_preview->setTextCursor(cursor);
+			}
+			cursor.endEditBlock();
 			gvi.m_isEditCommand = true;
 			break;
 		case '<':
-			onAction_UnIndent();
+			cursor.beginEditBlock();
+			for(int i = 0; i < gvi.m_opCount; ++i) {
+				onAction_UnIndent();
+				block = block.next();
+				if( !block.isValid() ) break;
+				cursor.setPosition(block.position());
+				if( cursor.document() == docWidget->m_editor->document() )
+					docWidget->m_editor->setTextCursor(cursor);
+				else
+					docWidget->m_preview->setTextCursor(cursor);
+			}
+			cursor.endEditBlock();
 			gvi.m_isEditCommand = true;
 			break;
 		}
