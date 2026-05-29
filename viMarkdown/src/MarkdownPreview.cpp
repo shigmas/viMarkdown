@@ -358,6 +358,26 @@ void MarkdownPreview::moveToNextWord(QTextCursor& cursor, bool shift) {
 	}
 	cursor.setPosition(pos, shift ? QTextCursor::KeepAnchor : QTextCursor::MoveAnchor);
 }
+void MarkdownPreview::moveToNextWordEnd(QTextCursor& cursor, bool shift) {
+	int pos = cursor.position();
+	QTextDocument *doc = document();
+	const int maxPos = doc->characterCount() - 1;
+	if (pos >= maxPos) return;
+	pos++;
+	while (pos < maxPos && getCharType(doc->characterAt(pos)) == Type_Space) {
+		pos++;
+	}
+	if (pos >= maxPos) {
+		cursor.setPosition(maxPos, shift ? QTextCursor::KeepAnchor : QTextCursor::MoveAnchor);
+		return;
+	}
+	CharType currentType = getCharType(doc->characterAt(pos));
+	while (pos < maxPos && getCharType(doc->characterAt(pos)) == currentType) {
+		pos++;
+	}
+	if (pos > 0) --pos;
+	cursor.setPosition(pos, shift ? QTextCursor::KeepAnchor : QTextCursor::MoveAnchor);
+}
 void MarkdownPreview::moveToPrevWord(QTextCursor& cursor, bool shift) {
 	int pos = cursor.position();
 	QTextDocument *doc = document();

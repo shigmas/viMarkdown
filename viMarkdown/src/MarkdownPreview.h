@@ -48,6 +48,7 @@ public:
 	void	setCursorByContext(const struct PosContext &context, const PosContext &acontext);
     int		findPosition(const struct PosContext&);
 	void	moveToNextWord(QTextCursor& cursor, bool select);
+	void	moveToNextWordEnd(QTextCursor& cursor, bool select);
 	void	moveToPrevWord(QTextCursor& cursor, bool select);
 	void	moveToStartOfWord(QTextCursor& cursor, bool select);
 	void	moveToEndOfWord(QTextCursor& cursor, bool select);

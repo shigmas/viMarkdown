@@ -77,6 +77,7 @@ public:
     void	highlightSearchText(const QString &searchText);
     void	jumpToHeading(const QString &name);		//	見出し（name）行にカーソル設定
 	void	moveToNextWord(QTextCursor& cursor, bool select);
+	void	moveToNextWordEnd(QTextCursor& cursor, bool select);
 	void	moveToPrevWord(QTextCursor& cursor, bool select);
 	void	moveToStartOfWord(QTextCursor& cursor, bool select);
 	void	moveToEndOfWord(QTextCursor& cursor, bool select);

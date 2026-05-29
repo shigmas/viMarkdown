@@ -437,6 +437,16 @@ void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidge
 doneW:
 		break;
 	}
+	case 'e':
+		for(int i = 0; i < rcnt; ++i) {
+			auto pos = cursor.position();
+			if( isEditor )
+				docWidget->m_editor->moveToNextWordEnd(cursor, /*select = */gvi.m_operator != ' ');
+			else
+				docWidget->m_preview->moveToNextWordEnd(cursor, /*select = */gvi.m_operator != ' ');
+			if( cursor.position() == pos ) break;
+		}
+		break;
 	case 'E': {
 		const int maxPos = doc->characterCount() - 1;
 		for(int i = 0; i < rcnt; ++i) {
