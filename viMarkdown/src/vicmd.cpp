@@ -629,16 +629,18 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 			do_join(cursor, rcnt);
 			break;
 		case 'u':
-			if( isEditor )
-				docWidget->m_editor->undo();
-			else
-				docWidget->m_preview->undo();
+			docWidget->m_editor->undo();
+			//if( isEditor )
+			//	docWidget->m_editor->undo();
+			//else
+			//	docWidget->m_preview->undo();
 			break;
 		case 'U':
-			if( isEditor )
-				docWidget->m_editor->redo();
-			else
-				docWidget->m_preview->redo();
+			docWidget->m_editor->redo();
+			//if( isEditor )
+			//	docWidget->m_editor->redo();
+			//else
+			//	docWidget->m_preview->redo();
 			break;
 		case ';':		//	順方向再検索
 			switch( gvi.m_last_fFtT.unicode() ) {
