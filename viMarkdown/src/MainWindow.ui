@@ -342,6 +342,11 @@
      </property>
      <item>
       <widget class="OutputView" name="plainTextEdit">
+       <property name="font">
+        <font>
+         <family>ＭＳ ゴシック</family>
+        </font>
+       </property>
        <property name="readOnly">
         <bool>true</bool>
        </property>

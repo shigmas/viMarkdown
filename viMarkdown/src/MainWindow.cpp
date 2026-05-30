@@ -1399,29 +1399,29 @@ void MainWindow::onAction_ViCheatSheet() {
 	do_output(R"(viMarkdown — Vi Cheat Sheet
  
 MODE
-  i/a/o/O  insert before/after/below/above    I/A  line start/end
-  s/S/cc   delete char/line and insert        Esc  command mode
+  i/a/o/O  insert before/after/below/above   I/A  line start/end
+  s/S/cc   delete char/line and insert       Esc  command mode
  
 MOTION
-  h/j/k/l  left/down/up/right                0/^/$  line start(col0)/nonblank/end
+  h/j/k/l  left/down/up/right                0/^/$   line start(col0)/nonblank/end
   w/W/b/B  next/prev word/WORD               gg/G/{n}G  top/bottom/line n
-  e/E      end of word/WORD                  H/M/L  screen top/mid/bottom
-  f/F{c}   find char forward/backward        ]]/[[ next/prev heading
-  t/T{c}   till char forward/backward        ;/,   repeat f/F/t/T  fwd/rev
+  e/E      end of word/WORD                  H/M/L   screen top/mid/bottom
+  f/F{c}   find char forward/backward        ]]/[[   next/prev heading
+  t/T{c}   till char forward/backward        ;/,     repeat f/F/t/T  fwd/rev
   %        matching bracket
  
 EDIT
-  x/X      del char at/before                r{c}  replace char
-  D/dd     del to EOL / del line             C/cc  change to EOL / change line
-  d{m}     del to motion                     c{m}  change to motion
-  yy/Y     yank line                         y{m}  yank to motion
-  p/P      paste after/before                J     join lines
-  >>/<<    indent/unindent                   ~     toggle case
-  u/U      undo/redo                         .     repeat last edit
+  x/X      del char at/before                r{c}/R  replace char / mode
+  D/dd     del to EOL / del line             C/cc    change to EOL / change line
+  d{m}     del to motion                     c{m}    change to motion
+  yy/Y     yank line                         y{m}    yank to motion
+  p/P      paste after/before                J       join lines
+  >>/<<    indent/unindent                   ~       toggle case
+  u/U      undo/redo                         .       repeat last edit
  
 SEARCH
-  /{pat}   search forward                    ?{pat}   search backward
-  *        search word under cursor          n/N      next/prev match                      
+  /{pat}   search forward                    ?{pat}  search backward
+  *        search word under cursor          n/N     next/prev match                      
  
 SCROLL
   z.  center    zEnter  to top    z-  to bottom
