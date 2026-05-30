@@ -214,7 +214,7 @@ SPR# 状 P Open Close ver     Type  概要
 0211 ● C 05/25            │ToDo│z Enter コマンドサポート
 0212 ● C 05/25            │ToDo│z - コマンドサポート
 0213 ◎ C 05/25 05/26 03013│ToDo│; , コマンドサポート
-0214 ● C 05/25            │ToDo│]] [[ コマンドサポート（次・前見出しに移動）
+0214 ◎ C 05/25 05/30 03016│ToDo│]] [[ コマンドサポート（次・前見出しに移動）
 0215 ◎ C 05/25 05/25 03012│ToDo│struct Global から、vi 関連を ViStatus に分ける
 0216 ◎ C 05/25 05/25 03012│ToDo│do_viCmd(QString cmd, ...)：第１引数は QChar に変更
 0217 ◎ C 05/25 05/26 03013│ToDo│m_linewiseMoved フラグ追加、ヤンクバッファのは m_linewiseYanked にリネーム

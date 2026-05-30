@@ -239,15 +239,6 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWid
 		switch( cmd.unicode() ) {
 		case 'c':	//	cc
 			do_vi_change_line(cursor);
-#if 0
-			cursor.beginEditBlock();
-			g.m_editBlockOpen = true;
-			cursor.movePosition(QTextCursor::StartOfBlock);
-			cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor, rcnt);
-			cursor.deleteChar();
-			cursor.endEditBlock();
-			gvi.m_viCmdMode = false;
-#endif
 			break;
 		case 'd':
 			cursor.movePosition(QTextCursor::StartOfBlock);
@@ -259,19 +250,45 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWid
 				gvi.m_isEditCommand = true;
 			}
 			break;
-		case 'y':
+		case 'y':	//	yy
 			do_yank_line(cursor, rcnt);
 			break;
-		case 'g':
+		case 'g':	//	gg
 			cursor.movePosition(QTextCursor::Start);
 			break;
-		case 'z':
+		case ']': {	//	]]
+			QTextBlock block = cursor.block().next();
+			while (block.isValid()) {
+				if (block.userState() == US_HEADING) {
+					if (--rcnt == 0) {
+						cursor.setPosition(block.position());
+						break;
+					}
+				}
+				block = block.next();
+			}
+			break;
+		}
+		case '[': {	//	[[
+			QTextBlock block = cursor.block().previous();
+			while (block.isValid()) {
+				if (block.userState() == US_HEADING) {
+					if (--rcnt == 0) {
+						cursor.setPosition(block.position());
+						break;
+					}
+				}
+				block = block.previous();
+			}
+			break;
+		}
+		case 'z':	//	zz
 			if( cursor.document() == docWidget->m_editor->document() )
 				docWidget->m_editor->centerCursor();
 			//else
 			//	docWidget->m_preview->centerCursor();
 			break;
-		case '>':
+		case '>':	//	>>
 			cursor.beginEditBlock();
 			for(int i = 0; i < gvi.m_opCount; ++i) {
 				onAction_Indent();
@@ -286,7 +303,7 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWid
 			cursor.endEditBlock();
 			gvi.m_isEditCommand = true;
 			break;
-		case '<':
+		case '<':	//	<<
 			cursor.beginEditBlock();
 			for(int i = 0; i < gvi.m_opCount; ++i) {
 				onAction_UnIndent();
@@ -603,7 +620,9 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		do_vi_insert(cmd, cursor, rcnt);
 	} else if( cmd == 'x' || cmd == 'X' || cmd == 'D' ) {
 		do_vi_delete(cmd, cursor,rcnt);
-	} else if( cmd == 'c' || cmd == 'd' || cmd == 'y' || cmd == 'g' || cmd == 'z' || cmd == 'r' || cmd == '<' || cmd == '>' ) {
+	} else if( cmd == 'c' || cmd == 'd' || cmd == 'y' || cmd == 'g' || cmd == 'z' || cmd == 'r' ||
+		cmd == '<' || cmd == '>' || cmd == '[' || cmd == ']' )
+	{
 		completed = do_vi_operator(cmd, cursor, rcnt, docWidget);
 	} else if( cmd.unicode() >= '0' && cmd.unicode() <= '9' ) {
 		if( cmd == u'0' && gvi.m_repeatCount == 0 ) {
