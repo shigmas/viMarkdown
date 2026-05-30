@@ -86,6 +86,12 @@ MainWindow::MainWindow(QWidget *parent)
 	ui->action_OutlineBar->setChecked(true);	//	暫定的
 	setWindowTitle(QString("viMarkdown ") + VER_STR); 
 	m_watcher = new QFileSystemWatcher(this);			//	外部アプリによる文書変更監視オブジェクト
+	//	/?: 用ラインエディット
+	m_cmdLine = new QLineEdit(this);
+    m_cmdLine->setFrame(false); // 外枠の線を消してステータスバーに溶け込ませる
+    m_cmdLine->setStyleSheet("background: transparent;"); // 背景を透過（ライト/ダークテーマ追従）
+    m_cmdLine->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    statusBar()->addWidget(m_cmdLine);
 	(m_lcLabel = new QLabel("0:0", this))->setMinimumWidth(50);
 	ui->statusBar->addPermanentWidget(m_lcLabel);		//	ステータスバーに QLabel 設置
 	//(m_encLabel = new QLabel("", this))->setMinimumWidth(100);
@@ -579,6 +585,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_Exit, &QAction::triggered, this, &MainWindow::onAction_Exit);
 	connect(ui->action_Language, &QAction::triggered, this, &MainWindow::onAction_Language);
 	connect(ui->action_Settings, &QAction::triggered, this, &MainWindow::onAction_Settings);
+	connect(ui->action_ColorSettings, &QAction::triggered, this, &MainWindow::onAction_ColorSettings);
 	connect(ui->action_Help, &QAction::triggered, this, &MainWindow::onAction_Help);
 	connect(ui->action_MarkdownCheatSheet, &QAction::triggered, this, &MainWindow::onAction_MarkdownCheatSheet);
 	connect(ui->action_ViCheatSheet, &QAction::triggered, this, &MainWindow::onAction_ViCheatSheet);
@@ -1456,15 +1463,18 @@ void MainWindow::onAction_Language() {
 	}
 }
 void MainWindow::onAction_Settings() {
+	do_settings(0);
+}
+void MainWindow::onAction_ColorSettings() {
+	do_settings(1);
+}
+void MainWindow::do_settings(int page) {
 	Global g0 = g;
-	SettingsDialog dlg(this);
+	SettingsDialog dlg(this, page);
 	connect(&dlg, &SettingsDialog::settingsChanged, this, &MainWindow::onSettingsChanged);
 	if (dlg.exec() == QDialog::Accepted) {
-	    //qDebug() << "QDialog::Accepted";
-	    //updateEditorFontSize(g.m_editorFontSize);
 	    save_settings();
 	} else {
-		//load_settings();		//	g を元に戻す
 		g = g0;
 	    updateEditorFontSize(g.m_editorFontSize);
 	}

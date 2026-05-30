@@ -190,6 +190,7 @@
     </widget>
     <addaction name="action_Language"/>
     <addaction name="action_Settings"/>
+    <addaction name="action_ColorSettings"/>
     <addaction name="action_ViKeybindings"/>
     <addaction name="action_Help"/>
     <addaction name="menu_CheatSheet"/>
@@ -1140,6 +1141,14 @@
   <action name="action_ViCheatSheet">
    <property name="text">
     <string>&amp;Vi</string>
+   </property>
+  </action>
+  <action name="action_ColorSettings">
+   <property name="text">
+    <string>ColorSettings...</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F8</string>
    </property>
   </action>
  </widget>

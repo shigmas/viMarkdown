@@ -256,6 +256,7 @@ protected:
     void	run_previewTestScript(const QString&);
     void	do_output(const QString&);
     void	toggleCursor();
+    void	do_settings(int page=0);
 
     void	onAction_New();
     void	onAction_NewTab();
@@ -319,6 +320,7 @@ protected:
     void	onAction_AddThisFavorite();
     void	onAction_Language();
     void	onAction_Settings();
+    void	onAction_ColorSettings();
     void	onAction_ViKeybindings(bool);
     void	onAction_Help();
     void	onAction_MarkdownCheatSheet();
@@ -380,6 +382,7 @@ private:
     QStringList	m_searchHist;			//	検索履歴、先頭が最新検索文字列
     QStringList	m_grepDirHist;			//	grep対象ディレクトリ履歴、先頭が最新
     QStringList	m_replaceHist;			//	置換履歴、先頭が最新置換文字列
+    class QLineEdit		*m_cmdLine;		// ステータスバー左端のコマンドライン
     class QLabel		*m_lcLabel;		//	行カラムラベル
     class QLabel		*m_encLabel;	//	文字エンコーディングラベル
     class QComboBox				*m_encodingCombo = nullptr;

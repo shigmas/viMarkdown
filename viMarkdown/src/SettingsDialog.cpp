@@ -5,7 +5,7 @@
 
 extern Global g;
 
-SettingsDialog::SettingsDialog(QWidget *parent)
+SettingsDialog::SettingsDialog(QWidget *parent, int page)
 	: QDialog(parent)
 	, ui(new Ui::SettingsDialogClass())
 {
@@ -13,8 +13,8 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 	if (this->layout()) {
         this->layout()->setSizeConstraint(QLayout::SetFixedSize);
     }
-	ui->treeWidget->setCurrentItem(ui->treeWidget->topLevelItem(0));
-	ui->stackedWidget->setCurrentWidget(ui->page_6); // General
+	//ui->treeWidget->setCurrentItem(ui->treeWidget->topLevelItem(page));
+	//ui->stackedWidget->setCurrentWidget(ui->page_6); // General
 	QSettings settings;
 	ui->editorFontSize->setValue(g.m_editorFontSize);
 	ui->previewFontSize->setValue(g.m_previewFontSize);
@@ -38,6 +38,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 	connect(ui->codeBlockPB, &QPushButton::clicked, this, &SettingsDialog::onCodeBlockColorButtonClicked);
 	connect(ui->keisenBlockPB, &QPushButton::clicked, this, &SettingsDialog::onKeisenBlockColorButtonClicked);
 	connect(ui->treeWidget, &QTreeWidget::currentItemChanged, this, &SettingsDialog::onTreeItemChanged);
+	setPage(page);
 }
 
 SettingsDialog::~SettingsDialog()
@@ -49,12 +50,12 @@ void SettingsDialog::onTreeItemChanged(QTreeWidgetItem *current, QTreeWidgetItem
 
     // 選択されたアイテムが「上から何番目の項目か」を取得（0: General, 1: Color）
     int index = ui->treeWidget->indexOfTopLevelItem(current);
-
-    // インデックスに応じて表示するウィジェットを直接指定
-    // （これならXML内のページの順序が変わっても影響を受けないため、非常に安全です）
-    if (index == 0) {
+    setPage(index);
+}
+void SettingsDialog::setPage(int page) {
+    if (page == 0) {
         ui->stackedWidget->setCurrentWidget(ui->page_6); // General
-    } else if (index == 1) {
+    } else if (page == 1) {
         ui->stackedWidget->setCurrentWidget(ui->page_5); // Color
     }
 }

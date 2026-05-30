@@ -12,7 +12,7 @@ class SettingsDialog : public QDialog
 	Q_OBJECT
 
 public:
-	SettingsDialog(QWidget *parent = nullptr);
+	SettingsDialog(QWidget *parent = nullptr, int=0);	//	初期ページ
 	~SettingsDialog();
 
 protected:
@@ -34,9 +34,10 @@ protected:
 	void onQuoteColorButtonClicked();
 	void onCodeBlockColorButtonClicked();
 	void onKeisenBlockColorButtonClicked();
+	void onTreeItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
 	void	updateColorButtons();
 	void	pickColor(QColor &targetColor, const QString &title);
-	void onTreeItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
+	void	setPage(int);
 
 signals:
 	void	settingsChanged();
