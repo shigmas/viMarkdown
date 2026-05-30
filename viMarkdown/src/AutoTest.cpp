@@ -822,16 +822,18 @@ void MainWindow::run_previewTestScript(const QString &script) {
 }
 //----------------------------------------------------------------------
 // viコマンド自動テスト用のテストケース構造体
+//struct ViTestStep {
+//    QString m_viCommand;     // viコマンド列
+//    QString m_expectedText;  // コマンド実行後テキスト（'|' がカーソル位置）
+//};
 struct ViTestCase {
-    QString m_name;          // テスト名
-    QString m_initialText;   // 初期テキスト（'|' がカーソル位置）
-    QString m_viCommand;     // viコマンド列
-    QString m_expectedText;  // コマンド実行後テキスト（'|' がカーソル位置）
+    QString m_name;			// テスト名
+    QString m_initialText;	// 初期テキスト（'|' がカーソル位置）
+    QStringList m_steps;	//	{viコマンド列, コマンド実行後テキスト（'|' がカーソル位置）}...
 };
 
 const QList<ViTestCase> viTestCases = {
-	{ "Move cursor right",	"h|ello", "l", "he|llo" },
-	{ "Move cursor left",	"h|ello", "h", "|hello" },
-	//{"", "", "", ""},	//	最後の番人
+	{ "Move cursor right",	"h|ello", {"l", "he|llo"} },
+	{ "Move cursor left",	"h|ello", {"h", "|hello"} },
 };
 
