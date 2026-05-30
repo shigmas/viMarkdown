@@ -681,6 +681,7 @@ void SvgCompleter::keyPressEvent(QKeyEvent *e) {
 			if( m_cmpl_lst[ix].startsWith("<" + txt) ) {
 				m_curix = ix;
 				highlight_cur_line();
+				viewport()->update();
 				return;
 			}
 		}
@@ -735,6 +736,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 				g.m_editBlockOpen = false;
 			}
 			gvi.m_viCmdMode = true;
+			gvi.m_recInsertedText = false;
 		}
 #if _WIN32
 		HWND hwnd = (HWND)this->winId();
@@ -812,12 +814,22 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 		if( gvi.m_viCmdMode ) {
 			emit do_viCmd(txt[0], cursor);
 			setTextCursor(cursor);
+			viewport()->update();
 			return;
 		}
 		if( gvi.m_joinEditBlock ) {
 			cursor.joinPreviousEditBlock();
-			gvi.m_joinEditBlock = false;
+			cursor.insertText(txt);
+			cursor.endEditBlock();
+			setTextCursor(cursor);
+			//gvi.m_joinEditBlock = false;
+			viewport()->update();
+			if( gvi.m_recInsertedText )
+				gvi.m_insertedText += txt;
+			return;
 		}
+		if (gvi.m_recInsertedText)
+			gvi.m_insertedText += txt;
 	}
 	MarkdownBaseEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
 }

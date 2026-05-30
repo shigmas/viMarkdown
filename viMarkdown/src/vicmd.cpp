@@ -116,21 +116,6 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor, int rcnt) {
 	QTextBlock block = cursor.block();
 	int eolpos = block.position() + block.text().size();
 	switch( cmd.unicode() ) {
-	case 'S':		//	行を消して挿入モードへ
-		do_vi_change_line(cursor);
-		break;
-	case 's':
-		cursor.beginEditBlock();	//	文字削除とその後の文字挿入を１回でundo可能にするため
-		g.m_editBlockOpen = true;
-		rcnt = qMin(rcnt, eolpos - cursor.position());
-		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, rcnt);
-		if( cursor.hasSelection() ) {
-			gvi.m_yankBuffer = cursor.selectedText();
-			cursor.deleteChar();
-			gvi.m_joinEditBlock = true;
-		}
-		cursor.endEditBlock();
-		break;
 	case 'a':
 		if( cursor.position() < block.position() + block.text().size() )	//	行末でない場合
 			cursor.movePosition(QTextCursor::Right);
@@ -148,10 +133,28 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor, int rcnt) {
 			cursor.movePosition(QTextCursor::Right);
 		}
 		break;
+	case 'S':		//	行を消して挿入モードへ
+		do_vi_change_line(cursor);
+		break;
+	case 's':
+		cursor.beginEditBlock();	//	文字削除とその後の文字挿入を１回でundo可能にするため
+		g.m_editBlockOpen = true;
+		rcnt = qMin(rcnt, eolpos - cursor.position());
+		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, rcnt);
+		if( cursor.hasSelection() ) {
+			gvi.m_yankBuffer = cursor.selectedText();
+			cursor.deleteChar();
+			gvi.m_joinEditBlock = true;
+		}
+		cursor.endEditBlock();
+		break;
 	case 'O':
 		cursor.beginEditBlock();
 		g.m_editBlockOpen = true;
-		do_openline(cursor, true);
+		//do_openline(cursor, true);
+		cursor.movePosition(QTextCursor::StartOfBlock);
+		cursor.insertText("\n");
+		cursor.movePosition(QTextCursor::PreviousBlock);
 		cursor.endEditBlock();
 		gvi.m_joinEditBlock = true;
 		break;
@@ -177,6 +180,7 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor, int rcnt) {
 	default:
 		return;
 	}
+	gvi.m_isEditCommand = true;
 	gvi.m_viCmdMode = false;
 }
 void MainWindow::do_vi_delete(QChar cmd, QTextCursor& cursor, int rcnt) {		//	x X D
@@ -712,6 +716,8 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 					++i;
 				buf = QString::number(gvi.m_repeatCount) + buf.mid(i);
 			}
+			//buf += gvi.m_insertedText;
+			qDebug() << "redo buf = " << buf;
 			for(QChar ch: buf) {
 				do_viCmd(ch, cursor);
 			}
@@ -723,6 +729,10 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		}
 	}
 	if( completed ) {	//	コマンド完結
+		if( gvi.m_redoing && !gvi.m_viCmdMode && !gvi.m_insertedText.isEmpty() ) {
+			cursor.insertText(gvi.m_insertedText);
+			gvi.m_viCmdMode = true;
+		}
 		gvi.m_opCount = 1;
 		gvi.m_repeatCount = 0;
 		gvi.m_operator = ' ';
@@ -731,6 +741,11 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 			gvi.m_lastEditCommand = gvi.m_pendingCommand;
 		//else
 		//	gvi.m_lastEditCommand.clear();
+		if( !gvi.m_viCmdMode ) {
+			gvi.m_recInsertedText = true;
+			gvi.m_insertedText.clear();
+		} else
+			gvi.m_recInsertedText = false;
 		gvi.m_pendingCommand.clear();
 		gvi.m_isEditCommand = false;
 		if( docWidget != nullptr ) {
