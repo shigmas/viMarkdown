@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>SettingsDialogClass</class>
  <widget class="QDialog" name="SettingsDialogClass">
@@ -6,16 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>662</width>
+    <width>764</width>
     <height>460</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>SettingsDialog</string>
   </property>
-  <!-- 1. ダイアログ全体の縦型メインレイアウト -->
   <layout class="QVBoxLayout" name="mainVerticalLayout">
-   <!-- 上半分：ツリーメニューとStackedWidgetを横に並べる -->
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
@@ -28,7 +26,7 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>125</width>
+         <width>258</width>
          <height>258</height>
         </size>
        </property>
@@ -48,7 +46,7 @@
        </column>
        <item>
         <property name="text">
-         <string>Overall</string>
+         <string>General</string>
         </property>
        </item>
        <item>
@@ -69,7 +67,6 @@
        <property name="currentIndex">
         <number>0</number>
        </property>
-       <!-- page_5: 色設定ページ（レイアウトを直貼りにし、絶対座標を完全排除） -->
        <widget class="QWidget" name="page_5">
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
@@ -426,7 +423,6 @@
          </item>
         </layout>
        </widget>
-       <!-- page_6: 全般設定ページ（縦型レイアウト＋バネを入れてチェックボックスを左上に固定） -->
        <widget class="QWidget" name="page_6">
         <layout class="QVBoxLayout" name="page_6_verticalLayout">
          <item>
@@ -455,7 +451,6 @@
      </item>
     </layout>
    </item>
-   <!-- 2. 下半分：OK / キャンセルボタンエリア（stackedWidgetの外側なので常時表示される） -->
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>

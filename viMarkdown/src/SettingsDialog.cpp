@@ -13,6 +13,8 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 	if (this->layout()) {
         this->layout()->setSizeConstraint(QLayout::SetFixedSize);
     }
+	ui->treeWidget->setCurrentItem(ui->treeWidget->topLevelItem(0));
+	ui->stackedWidget->setCurrentWidget(ui->page_6); // General
 	QSettings settings;
 	ui->editorFontSize->setValue(g.m_editorFontSize);
 	ui->previewFontSize->setValue(g.m_previewFontSize);
@@ -35,14 +37,28 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 	connect(ui->quotePB, &QPushButton::clicked, this, &SettingsDialog::onQuoteColorButtonClicked);
 	connect(ui->codeBlockPB, &QPushButton::clicked, this, &SettingsDialog::onCodeBlockColorButtonClicked);
 	connect(ui->keisenBlockPB, &QPushButton::clicked, this, &SettingsDialog::onKeisenBlockColorButtonClicked);
+	connect(ui->treeWidget, &QTreeWidget::currentItemChanged, this, &SettingsDialog::onTreeItemChanged);
 }
 
 SettingsDialog::~SettingsDialog()
 {
 	delete ui;
 }
-static void setColorButtonStyle(QPushButton* button, const QColor& color)
-{
+void SettingsDialog::onTreeItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous) {
+    if (!current) return;
+
+    // 選択されたアイテムが「上から何番目の項目か」を取得（0: General, 1: Color）
+    int index = ui->treeWidget->indexOfTopLevelItem(current);
+
+    // インデックスに応じて表示するウィジェットを直接指定
+    // （これならXML内のページの順序が変わっても影響を受けないため、非常に安全です）
+    if (index == 0) {
+        ui->stackedWidget->setCurrentWidget(ui->page_6); // General
+    } else if (index == 1) {
+        ui->stackedWidget->setCurrentWidget(ui->page_5); // Color
+    }
+}
+static void setColorButtonStyle(QPushButton* button, const QColor& color) {
     button->setStyleSheet(QString(
         "background-color: %1;"		// 背景色
         "border: 1px solid gray;"	// 枠線

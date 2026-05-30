@@ -36,6 +36,7 @@ protected:
 	void onKeisenBlockColorButtonClicked();
 	void	updateColorButtons();
 	void	pickColor(QColor &targetColor, const QString &title);
+	void onTreeItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
 
 signals:
 	void	settingsChanged();
