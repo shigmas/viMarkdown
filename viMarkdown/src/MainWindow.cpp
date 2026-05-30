@@ -91,6 +91,9 @@ MainWindow::MainWindow(QWidget *parent)
     m_cmdLine->setFrame(false); // 外枠の線を消してステータスバーに溶け込ませる
     m_cmdLine->setStyleSheet("background: transparent;"); // 背景を透過（ライト/ダークテーマ追従）
     m_cmdLine->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    QFont cmdFont = m_cmdLine->font();
+	cmdFont.setPointSize(12);
+	m_cmdLine->setFont(cmdFont);
     statusBar()->addWidget(m_cmdLine);
 	(m_lcLabel = new QLabel("0:0", this))->setMinimumWidth(50);
 	ui->statusBar->addPermanentWidget(m_lcLabel);		//	ステータスバーに QLabel 設置
