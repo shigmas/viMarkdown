@@ -95,6 +95,7 @@ MainWindow::MainWindow(QWidget *parent)
 	cmdFont.setPointSize(12);
 	m_cmdLine->setFont(cmdFont);
     statusBar()->addWidget(m_cmdLine);
+    m_cmdLine->hide();
 	(m_lcLabel = new QLabel("0:0", this))->setMinimumWidth(50);
 	ui->statusBar->addPermanentWidget(m_lcLabel);		//	ステータスバーに QLabel 設置
 	//(m_encLabel = new QLabel("", this))->setMinimumWidth(100);

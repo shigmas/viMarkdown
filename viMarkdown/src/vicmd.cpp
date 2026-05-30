@@ -1,4 +1,5 @@
 ﻿#include <QTextBlock>
+#include <QLineEdit>
 #include "MainWindow.h"
 #include "DocWidget.h"
 #include "MarkdownEditor.h"
@@ -611,7 +612,12 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 	bool completed = true;
 	int rcnt = getRepeatCount();
 	gvi.m_pendingCommand += cmd;
-	if( gvi.m_fFtT == 'f' || gvi.m_fFtT == 'F' || gvi.m_fFtT == 't' || gvi.m_fFtT == 'T' ) {
+	if( gvi.m_pendingCommand == ":" ) {
+		m_cmdLine->show();
+		m_cmdLine->setText(gvi.m_pendingCommand);
+		gvi.m_cmdlineMode = true;
+		return;
+	} else if( gvi.m_fFtT == 'f' || gvi.m_fFtT == 'F' || gvi.m_fFtT == 't' || gvi.m_fFtT == 'T' ) {
 		if( do_fFtT(cursor, gvi.m_fFtT, cmd, rcnt) )
 			do_cdy(cursor);
 	} else if( gvi.m_operator == 'r' ) {
