@@ -176,6 +176,7 @@ public:
 protected:
     void	load_settings();
     void	save_settings();
+    void	setup_statusBar();
     void	setup_connections();
     void	setup_tabMenu();
     void	setup_encodingCombo();
@@ -353,6 +354,8 @@ protected:
     bool ASSERT_EQ(const QChar expected, const QChar actual, int ln);
     bool ASSERT_EQ(const QString &expected, const QString &actual, int ln);
 
+    void	on_cmdLine_enter();
+    void	on_cmdLine_escape();
     void	do_viCmd(QChar cmd, QTextCursor&);
     void	do_vi_insert(QChar cmd, QTextCursor&, int rcnt);		//	iIaAoOsS
     void	do_vi_delete(QChar cmd, QTextCursor&, int rcnt);		//	xXD

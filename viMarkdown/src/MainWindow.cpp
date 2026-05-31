@@ -86,21 +86,7 @@ MainWindow::MainWindow(QWidget *parent)
 	ui->action_OutlineBar->setChecked(true);	//	暫定的
 	setWindowTitle(QString("viMarkdown ") + VER_STR); 
 	m_watcher = new QFileSystemWatcher(this);			//	外部アプリによる文書変更監視オブジェクト
-	//	/?: 用ラインエディット
-	m_cmdLine = new QLineEdit(this);
-    m_cmdLine->setFrame(false); // 外枠の線を消してステータスバーに溶け込ませる
-    m_cmdLine->setStyleSheet("background: transparent;"); // 背景を透過（ライト/ダークテーマ追従）
-    m_cmdLine->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    QFont cmdFont = m_cmdLine->font();
-	cmdFont.setPointSize(12);
-	m_cmdLine->setFont(cmdFont);
-    statusBar()->addWidget(m_cmdLine);
-    m_cmdLine->hide();
-	(m_lcLabel = new QLabel("0:0", this))->setMinimumWidth(50);
-	ui->statusBar->addPermanentWidget(m_lcLabel);		//	ステータスバーに QLabel 設置
-	//(m_encLabel = new QLabel("", this))->setMinimumWidth(100);
-	//ui->statusBar->addPermanentWidget(m_encLabel);		//	ステータスバーに QLabel 設置
-	setup_encodingCombo();
+	setup_statusBar();
 	setAcceptDrops(true);		//	ファイルドロップ可
 	setup_tabMenu();
 	setup_connections();
@@ -128,6 +114,25 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
 	delete ui;
+}
+void MainWindow::setup_statusBar() {
+	//	/?: 用ラインエディット
+	m_cmdLine = new QLineEdit(this);
+    m_cmdLine->setFrame(false); // 外枠の線を消してステータスバーに溶け込ませる
+    m_cmdLine->setStyleSheet("background: transparent;"); // 背景を透過（ライト/ダークテーマ追従）
+    m_cmdLine->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    QFont cmdFont = m_cmdLine->font();
+	cmdFont.setPointSize(12);
+	m_cmdLine->setFont(cmdFont);
+    statusBar()->addWidget(m_cmdLine);
+    connect(m_cmdLine, &QLineEdit::returnPressed, this, &MainWindow::on_cmdLine_enter);
+    connect(m_cmdLine, &QLineEdit::inputRejected, this, &MainWindow::on_cmdLine_escape);
+    m_cmdLine->hide();
+	(m_lcLabel = new QLabel("0:0", this))->setMinimumWidth(50);
+	ui->statusBar->addPermanentWidget(m_lcLabel);		//	ステータスバーに QLabel 設置
+	//(m_encLabel = new QLabel("", this))->setMinimumWidth(100);
+	//ui->statusBar->addPermanentWidget(m_encLabel);		//	ステータスバーに QLabel 設置
+	setup_encodingCombo();
 }
 void MainWindow::invertActionIcons(QMenu *menu) {
 	if (!menu) return;

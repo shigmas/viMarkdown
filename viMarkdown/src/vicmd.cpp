@@ -613,9 +613,10 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 	int rcnt = getRepeatCount();
 	gvi.m_pendingCommand += cmd;
 	if( gvi.m_pendingCommand == ":" ) {
-		m_cmdLine->show();
-		m_cmdLine->setText(gvi.m_pendingCommand);
 		gvi.m_cmdlineMode = true;
+		m_cmdLine->setText(gvi.m_pendingCommand);
+		m_cmdLine->show();
+		m_cmdLine->setFocus();
 		return;
 	} else if( gvi.m_fFtT == 'f' || gvi.m_fFtT == 'F' || gvi.m_fFtT == 't' || gvi.m_fFtT == 'T' ) {
 		if( do_fFtT(cursor, gvi.m_fFtT, cmd, rcnt) )
@@ -779,4 +780,14 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		}
 		qDebug() << "gvi.m_lastEditCommand = " << gvi.m_lastEditCommand;
 	}
+}
+void MainWindow::on_cmdLine_enter() {
+	qDebug() << "MainWindow::on_cmdLine_enter()";
+	m_cmdLine->hide();
+	QString txt = m_cmdLine->text();
+	qDebug() << "cmdline text = " << txt;
+}
+void MainWindow::on_cmdLine_escape() {
+	qDebug() << "MainWindow::on_cmdLine_escape()";
+	m_cmdLine->hide();
 }
