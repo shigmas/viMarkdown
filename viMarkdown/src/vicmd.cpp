@@ -608,12 +608,14 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 	//if( cmd.isEmpty() ) return;
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	bool isEditor = cursor.document() == docWidget->m_editor->document();
+	//bool isEditor = cursor.document() == docWidget->m_editor->document();
 	bool completed = true;
 	int rcnt = getRepeatCount();
 	gvi.m_pendingCommand += cmd;
-	if( gvi.m_pendingCommand == ":" ) {
+	if( gvi.m_pendingCommand == ":" || gvi.m_pendingCommand == "/"  || gvi.m_pendingCommand == "?" ) {
 		gvi.m_cmdlineMode = true;
+		gvi.m_prevFocusWidget = cursor.document() == docWidget->m_editor->document() ?
+									(QWidget*)docWidget->m_editor : (QWidget*)docWidget->m_preview;
 		m_cmdLine->setText(gvi.m_pendingCommand);
 		m_cmdLine->show();
 		m_cmdLine->setFocus();
@@ -693,17 +695,9 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 			break;
 		case 'u':
 			docWidget->m_editor->undo();
-			//if( isEditor )
-			//	docWidget->m_editor->undo();
-			//else
-			//	docWidget->m_preview->undo();
 			break;
 		case 'U':
 			docWidget->m_editor->redo();
-			//if( isEditor )
-			//	docWidget->m_editor->redo();
-			//else
-			//	docWidget->m_preview->redo();
 			break;
 		case ';':		//	順方向再検索
 			switch( gvi.m_last_fFtT.unicode() ) {
@@ -786,8 +780,15 @@ void MainWindow::on_cmdLine_enter() {
 	m_cmdLine->hide();
 	QString txt = m_cmdLine->text();
 	qDebug() << "cmdline text = " << txt;
+	close_cmdLine();
 }
 void MainWindow::on_cmdLine_escape() {
 	qDebug() << "MainWindow::on_cmdLine_escape()";
+	close_cmdLine();
+}
+void MainWindow::close_cmdLine() {
 	m_cmdLine->hide();
+	gvi.m_cmdlineMode = false;
+	gvi.m_pendingCommand.clear();
+	gvi.m_prevFocusWidget->setFocus();
 }

@@ -150,6 +150,7 @@ struct ViStatus {
 	QString	m_pendingCommand;			//	入力中の vi コマンド
 	QString	m_insertedText;				//	i 等で挿入された文字列
     QString	m_yankBuffer;
+    QWidget	*m_prevFocusWidget = nullptr;	//	:/? 押下時点でフォーカスを持っていた Widget
 };
 
 class MainWindow : public QMainWindow
@@ -356,6 +357,7 @@ protected:
 
     void	on_cmdLine_enter();
     void	on_cmdLine_escape();
+    void	close_cmdLine();
     void	do_viCmd(QChar cmd, QTextCursor&);
     void	do_vi_insert(QChar cmd, QTextCursor&, int rcnt);		//	iIaAoOsS
     void	do_vi_delete(QChar cmd, QTextCursor&, int rcnt);		//	xXD
