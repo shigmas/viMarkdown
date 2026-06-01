@@ -1795,10 +1795,12 @@ void MainWindow::onAction_ExportAsPDF() {
 }
 void MainWindow::onAction_Close() {
 	qDebug() << "MainWindow::onAction_Close()";
-
+	do_close();
+}
+void MainWindow::do_close(bool forced) {
 	DocWidget *docWidget = getCurDocWidget();
 	if (docWidget == nullptr) return;
-	if( docWidget->isModified() ) {
+	if( !forced && docWidget->isModified() ) {
 		QMessageBox::StandardButton reply = QMessageBox::question(this,
 								  "Confirm save",				 // タイトル
 								  "The document has been modified.\nDo you want to save your changes?", // 本文

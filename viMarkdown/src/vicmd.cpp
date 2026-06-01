@@ -878,28 +878,26 @@ void MainWindow::on_cmdLine_enter() {
 	}
 	if( gvi.m_rangeStart > gvi.m_rangeEnd )
 		std::swap(gvi.m_rangeStart, gvi.m_rangeEnd);
-	switch( text[ix].unicode() ) {
-	case 'q':
-		onAction_Close();
-		break;
-	case 'w':
+	QString cmd;
+	while( ix < text.size() && text[ix].isLetter() ) cmd += text[ix++];
+	QChar nch = ix < text.size() ? text[ix] : u'\0';
+	if( cmd == "q" || cmd == "quit" ) {
+		do_close(nch == u'!');
+	} else if( cmd == "w" ) {
 		onAction_Save();
-		break;
-	case 'p':
+	} else if( cmd == "p" ) {
 		for(int ln = gvi.m_rangeStart; ln <= gvi.m_rangeEnd; ++ln) {
 			QTextBlock block = doc->findBlockByNumber(ln - 1);
 			if( !block.isValid() ) break;
 			do_output(block.text() + "\n");
 		}
-		break;
-	case 'P':
+	} else if( cmd == "P" ) {
 		do_output("\n\"" + docWidget->m_fullPath + "\"\n");
 		for(int ln = gvi.m_rangeStart; ln <= gvi.m_rangeEnd; ++ln) {
 			QTextBlock block = doc->findBlockByNumber(ln - 1);
 			if( !block.isValid() ) break;
 			do_output(QString("%1:").arg(ln, 4) + block.text() + "\n");
 		}
-		break;
 	}
 }
 void MainWindow::on_cmdLine_escape() {

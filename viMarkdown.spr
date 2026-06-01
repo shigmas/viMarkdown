@@ -235,8 +235,8 @@ SPR# 状 P Open Close ver     Type  概要
 0232 ◎ C 05/26 05/26 03013│問題│F文字 を実行すると変な状態になり、コマンドが効かなくなる？
 0233 ◎ C 05/26 05/26 03013│ToDo│do_fFtT()：document->charactorAt() を用いず、block.text() を参照
 0234 ◎ C 05/26 05/26 03013│ToDo│, ; のための情報保持
-0235 ◎ C 05/26 06/02 03016│ToDo│:q
-0236 ◎ C 05/26 06/02 03016│ToDo│:w
+0235 ◎ C 05/26 06/02 03017│ToDo│:q
+0236 ◎ C 05/26 06/02 03017│ToDo│:w
 0237 ● C 05/26            │ToDo│:<range>g/pat/<cmd>
 0238 ● C 05/26            │ToDo│:<range>s/regexp/after/[g]
 0239 ◎ C 05/26 05/27 03014│問題│<num>s：num 文字削除されない
@@ -288,6 +288,16 @@ SPR# 状 P Open Close ver     Type  概要
 0285 ◎ C 06/02 06/02 03017│問題│テキスト選択状態 c テキスト Esc が1回で undo/redo されない
 0286 ● C 06/02            │問題│<num>p, <num>P：繰り返し回数が効かない
 0287 ● C 06/02            │ToDo│:<range>d
-0288 ● C 06/02            │ToDo│
-0289 ● C 06/02            │ToDo│
+0288 ◎ C 06/02 06/02 03017│問題│:qhogehoge が :q と解釈されてしまう
+0289 ● C 06/02            │ToDo│:<range>nu[mber]
+0290 ● C 06/02            │ToDo│:<range>n[ext]
+0290 ◎ C 06/02 06/02 03017│ToDo│:q[uit]! 対応
+0290 ● C 06/02            │ToDo│
+0290 ● C 06/02            │ToDo│
+0290 ● C 06/02            │ToDo│
+0290 ● C 06/02            │ToDo│
+0290 ● C 06/02            │ToDo│
+0290 ● C 06/02            │ToDo│
+0290 ● C 06/02            │ToDo│
+0290 ● C 06/02            │ToDo│
 0290 ● C 06/02            │ToDo│
