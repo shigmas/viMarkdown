@@ -231,6 +231,14 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWid
 	if( gvi.m_operator == ' ' ) {
 		if( cursor.hasSelection() ) {
 			switch( cmd.unicode() ) {
+			case 'c':
+				gvi.m_yankBuffer = cursor.selectedText();
+				cursor.beginEditBlock();
+				cursor.deleteChar();
+				cursor.endEditBlock();
+				gvi.m_joinEditBlock = true;
+				gvi.m_viCmdMode = false;
+				return true;
 			case 'd':
 				gvi.m_yankBuffer = cursor.selectedText();
 				cursor.deleteChar();
