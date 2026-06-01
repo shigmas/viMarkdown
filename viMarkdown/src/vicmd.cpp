@@ -865,6 +865,14 @@ void MainWindow::on_cmdLine_enter() {
 			do_output(block.text() + "\n");
 		}
 		break;
+	case 'P':
+		do_output("\n\"" + docWidget->m_fullPath + "\"\n");
+		for(int ln = gvi.m_rangeStart; ln <= gvi.m_rangeEnd; ++ln) {
+			QTextBlock block = doc->findBlockByNumber(ln - 1);
+			if( !block.isValid() ) break;
+			do_output(QString("%1:").arg(ln, 4) + block.text() + "\n");
+		}
+		break;
 	}
 }
 void MainWindow::on_cmdLine_escape() {
