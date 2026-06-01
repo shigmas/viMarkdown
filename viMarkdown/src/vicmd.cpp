@@ -229,6 +229,18 @@ void do_yank_line(QTextCursor& cursor, int rcnt) {
 }
 bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWidget* docWidget) {		//	{c|d|y}<move>, gg
 	if( gvi.m_operator == ' ' ) {
+		if( cursor.hasSelection() ) {
+			switch( cmd.unicode() ) {
+			case 'd':
+				gvi.m_yankBuffer = cursor.selectedText();
+				cursor.deleteChar();
+				return true;
+			case 'y':
+				gvi.m_yankBuffer = cursor.selectedText();
+				cursor.setPosition(cursor.selectionStart());
+				return true;
+			}
+		}
 		gvi.m_operator = cmd;
 		if( gvi.m_repeatCount != 0 )
 			gvi.m_opCount = gvi.m_repeatCount;
