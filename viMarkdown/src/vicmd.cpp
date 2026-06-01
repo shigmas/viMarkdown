@@ -775,12 +775,68 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		qDebug() << "gvi.m_lastEditCommand = " << gvi.m_lastEditCommand;
 	}
 }
+int parseLineSpec(const QString &text, int &i, int currentLine, int totalLines) {
+	if (i >= text.size()) return -1;
+    int line = -1;
+    QChar c = text.at(i);
+    if (c.isDigit()) {
+        int start = i;
+        while (i < text.size() && text.at(i).isDigit()) {
+            i++;
+        }
+        line = text.mid(start, i - start).toInt();
+    } else if (c == '.') {
+        line = currentLine;
+        i++;
+    } else if (c == '$') {
+        line = totalLines;
+        i++;
+    } else {
+        // 行指定の記号ではない（"w" や "q" などのコマンド文字に達した）
+        return -1;
+    }
+    // 2. オプションのオフセット（例: "+3" や "-5"）の解析
+    if (i < text.size()) {
+        QChar sign = text.at(i);
+        if (sign == '+' || sign == '-') {
+            i++;
+            int offset = 0;
+            int start = i;
+            while (i < text.size() && text.at(i).isDigit()) {
+                i++;
+            }
+            if (i > start) {
+                offset = text.mid(start, i - start).toInt();
+            } else {
+                offset = 1; // ".+" や "$-" のように数字が省略された場合は 1 とする
+            }
+            
+            if (sign == '+') {
+                line += offset;
+            } else {
+                line -= offset;
+            }
+        }
+    }
+    // ドキュメントの実際の範囲内にクランプ（丸め込み）
+    if (line < 1) line = 1;
+    if (line > totalLines) line = totalLines;
+
+    return line;
+}
 void MainWindow::on_cmdLine_enter() {
 	qDebug() << "MainWindow::on_cmdLine_enter()";
 	m_cmdLine->hide();
-	QString txt = m_cmdLine->text();
-	qDebug() << "cmdline text = " << txt;
+	QString text = m_cmdLine->text();
+	qDebug() << "cmdline text = " << text;
 	close_cmdLine();
+    DocWidget *docWidget = getCurDocWidget();
+    if( docWidget == nullptr ) return;
+	QTextCursor cursor = gvi.m_prevFocusWidget == (QWidget*)docWidget->m_editor ?
+							docWidget->m_editor->textCursor() : docWidget->m_preview->textCursor();
+	int ix = 1;		//	skip ':'
+	int line = parseLineSpec(text, ix, cursor.block().blockNumber()+1, cursor.document()->blockCount());
+	qDebug() << "line = " << line;
 }
 void MainWindow::on_cmdLine_escape() {
 	qDebug() << "MainWindow::on_cmdLine_escape()";
