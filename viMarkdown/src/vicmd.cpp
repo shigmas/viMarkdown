@@ -836,15 +836,16 @@ void MainWindow::on_cmdLine_enter() {
 							docWidget->m_editor->textCursor() : docWidget->m_preview->textCursor();
 	QTextDocument *doc = cursor.document();
 	int ix = 1;		//	skip ':'
+	gvi.m_rangeStart = 1;
 	for(;;) {
 		gvi.m_rangeEnd = parseLineSpec(text, ix, cursor.block().blockNumber()+1, doc->blockCount());
 		qDebug() << "line = " << gvi.m_rangeEnd;
 		if( gvi.m_rangeEnd < 0 ) return;
 		if( ix >= text.size() || text[ix] != ',' ) break;
 		++ix;
-		gvi.m_rangeEnd = gvi.m_rangeStart;
+		gvi.m_rangeStart = gvi.m_rangeEnd;
 	}
-	if( ix == text.size() ) {
+	if( ix >= text.size() ) {
 		QTextBlock block = doc->findBlockByNumber(gvi.m_rangeEnd - 1);
 		cursor.setPosition(block.position());
 		hat(cursor);
@@ -852,6 +853,18 @@ void MainWindow::on_cmdLine_enter() {
 			docWidget->m_editor->setTextCursor(cursor);
 		else
 			docWidget->m_preview->setTextCursor(cursor);
+		return;
+	}
+	if( gvi.m_rangeStart > gvi.m_rangeEnd )
+		std::swap(gvi.m_rangeStart, gvi.m_rangeEnd);
+	switch( text[ix].unicode() ) {
+	case 'p':
+		for(int ln = gvi.m_rangeStart; ln <= gvi.m_rangeEnd; ++ln) {
+			QTextBlock block = doc->findBlockByNumber(ln - 1);
+			if( !block.isValid() ) break;
+			do_output(block.text() + "\n");
+		}
+		break;
 	}
 }
 void MainWindow::on_cmdLine_escape() {
