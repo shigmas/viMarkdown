@@ -834,9 +834,25 @@ void MainWindow::on_cmdLine_enter() {
     if( docWidget == nullptr ) return;
 	QTextCursor cursor = gvi.m_prevFocusWidget == (QWidget*)docWidget->m_editor ?
 							docWidget->m_editor->textCursor() : docWidget->m_preview->textCursor();
+	QTextDocument *doc = cursor.document();
 	int ix = 1;		//	skip ':'
-	int line = parseLineSpec(text, ix, cursor.block().blockNumber()+1, cursor.document()->blockCount());
-	qDebug() << "line = " << line;
+	for(;;) {
+		gvi.m_rangeEnd = parseLineSpec(text, ix, cursor.block().blockNumber()+1, doc->blockCount());
+		qDebug() << "line = " << gvi.m_rangeEnd;
+		if( gvi.m_rangeEnd < 0 ) return;
+		if( ix >= text.size() || text[ix] != ',' ) break;
+		++ix;
+		gvi.m_rangeEnd = gvi.m_rangeStart;
+	}
+	if( ix == text.size() ) {
+		QTextBlock block = doc->findBlockByNumber(gvi.m_rangeEnd - 1);
+		cursor.setPosition(block.position());
+		hat(cursor);
+		if( gvi.m_prevFocusWidget == (QWidget*)docWidget->m_editor )
+			docWidget->m_editor->setTextCursor(cursor);
+		else
+			docWidget->m_preview->setTextCursor(cursor);
+	}
 }
 void MainWindow::on_cmdLine_escape() {
 	qDebug() << "MainWindow::on_cmdLine_escape()";
