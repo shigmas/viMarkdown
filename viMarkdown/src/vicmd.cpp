@@ -860,6 +860,7 @@ void MainWindow::on_cmdLine_enter() {
 	for(;;) {
 		gvi.m_rangeEnd = parseLineSpec(text, ix, cursor.block().blockNumber()+1, doc->blockCount());
 		qDebug() << "line = " << gvi.m_rangeEnd;
+		if( ix == 1 ) break;	//	行番号無し
 		if( gvi.m_rangeEnd < 0 ) return;
 		if( ix >= text.size() || text[ix] != ',' ) break;
 		++ix;
@@ -878,6 +879,12 @@ void MainWindow::on_cmdLine_enter() {
 	if( gvi.m_rangeStart > gvi.m_rangeEnd )
 		std::swap(gvi.m_rangeStart, gvi.m_rangeEnd);
 	switch( text[ix].unicode() ) {
+	case 'q':
+		onAction_Close();
+		break;
+	case 'w':
+		onAction_Save();
+		break;
 	case 'p':
 		for(int ln = gvi.m_rangeStart; ln <= gvi.m_rangeEnd; ++ln) {
 			QTextBlock block = doc->findBlockByNumber(ln - 1);

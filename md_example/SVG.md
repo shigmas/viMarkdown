@@ -11,7 +11,7 @@
         fill="black" 
         text-anchor="middle" 
         dominant-baseline="middle">
-viMarkdown
+vimarkdown
   </text>
 </svg>
 ```
