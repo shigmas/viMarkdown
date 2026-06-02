@@ -256,15 +256,34 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWid
 		gvi.m_repeatCount = 0;
 		return false;
 	}
+	QTextDocument *doc = cursor.document();
 	QTextBlock block = cursor.block();
 	if( gvi.m_operator == cmd ) {		//	cc dd yy gg zz << >> の場合
 		switch( cmd.unicode() ) {
 		case 'c':	//	cc
 			do_vi_change_line(cursor);
 			break;
-		case 'd':
+		case 'd':	//	dd
+#if 1
+	cursor.movePosition(QTextCursor::StartOfBlock);
+    if (cursor.blockNumber() + rcnt >= doc->blockCount()) {
+        // 最終行を含む削除：行頭から EndOfBlock まで選択
+        // ただし前の行の改行ごと削除するため、1つ前の行末から選択
+        if (cursor.blockNumber() > 0) {
+            cursor.movePosition(QTextCursor::PreviousBlock);
+            cursor.movePosition(QTextCursor::EndOfBlock);
+            cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
+        } else {
+            // ドキュメント全体が対象
+            cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
+        }
+    } else {
+        cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor, rcnt);
+    }
+#else
 			cursor.movePosition(QTextCursor::StartOfBlock);
 			cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor, rcnt);
+#endif
 			if( cursor.hasSelection() ) {
 				gvi.m_yankBuffer = cursor.selectedText();
 				gvi.m_linewiseYanked = true;
