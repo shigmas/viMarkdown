@@ -49,7 +49,7 @@ It is designed for developers and writers who love efficiency.
 | Ver. | Features / Overview | Schedule |
 | :--- | :--- | :--- |
 | 0.2 | Basic editor features, Basic Markdown, Ruled-line (Keisen) blocks, CSV blocks | Scheduled for release by the end of April 2026.|
-| 0.4 | Vi key bindings, Japanese localization for menus and UI, regex search, grep, rectangular selection, SVG blocks, Graph View?, usability and performance improvements, migration to CMake (Qt Creator / Mac / Linux? support) | Dev version starting around May 2026, Alpha version around Aug 2026, Stable release (Win/Mac?) planned for Dec 2026. |
+| 0.4 | Vi key bindings, Japanese localization for menus and UI, regex search, grep, diff?, rectangular selection, SVG blocks, Graph View?, usability and performance improvements, migration to CMake (Qt Creator / Mac / Linux? support) | Dev version starting around May 2026, Alpha version around Aug 2026, Stable release (Win/Mac?) planned for Dec 2026. |
 | 0.6 | Math formulas, Mind maps, Page view, Presentation mode? | TBD |
 | 0.8 | Mermaid diagrams?, Direct editing in the previewer? | TBD |
 

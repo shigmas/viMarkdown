@@ -833,6 +833,8 @@ int parseLineSpec(const QString &text, int &i, int currentLine, int totalLines) 
     } else if (c == '$') {
         line = totalLines;
         i++;
+    } else if( c == '+' || c == '-' ) {
+        line = currentLine;
     } else {
         // 行指定の記号ではない（"w" や "q" などのコマンド文字に達した）
         return -1;

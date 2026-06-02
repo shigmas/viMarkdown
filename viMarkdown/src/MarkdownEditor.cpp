@@ -37,6 +37,29 @@ bool isTableHyphenLine(const QString& lnStr) {
 	std::vector<char> tableAlign;
 	return isTableHyphenLine(lnStr, tableAlign);
 }
+#ifdef	_WIN32
+void setImePosition(QWidget *widget, QPoint pos)
+{
+    HWND hwnd = (HWND)widget->winId();
+    HIMC himc = ImmGetContext(hwnd);
+    if (!himc) return;
+
+    // ── 変換候補ウィンドウの位置 ──────────────────
+    CANDIDATEFORM cf = {};
+    cf.dwIndex      = 0;
+    cf.dwStyle      = CFS_CANDIDATEPOS;
+    cf.ptCurrentPos = { pos.x(), pos.y() };
+    ImmSetCandidateWindow(himc, &cf);
+
+    // ── 変換中文字列（コンポジション）の位置 ────────
+    COMPOSITIONFORM compForm = {};
+    compForm.dwStyle      = CFS_POINT;
+    compForm.ptCurrentPos = { pos.x(), pos.y() };
+    ImmSetCompositionWindow(himc, &compForm);
+
+    ImmReleaseContext(hwnd, himc);
+}
+#endif
 
 #if 0
 enum CharType {
@@ -2136,6 +2159,12 @@ void MarkdownEditor::onCursorPosChanged() {
 		check_svg_completer();
 	//	Undone: プレビューの対応段落（見出し行＋本文）を画面内に
 	syncPreviewCursorFromEditor();
+#ifdef _WIN32
+	QRect r = cursorRect();
+    // ビューポート座標 → ウィジェット座標
+    QPoint pos = viewport()->mapTo(this, r.bottomLeft());
+    setImePosition(this, pos);
+#endif
 }
 int MarkdownEditor::getVisualLineNumber(const QTextCursor &cursor) const {
 	int visualLineNum = 0;
