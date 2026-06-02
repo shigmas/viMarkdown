@@ -1,6 +1,9 @@
-﻿#include <QTextBlock>
+﻿#include <QTextDocument>
+#include <QTextCursor>
+#include <QTextBlock>
 #include <QLineEdit>
 #include <QStatusBar>
+#include <QRegularExpression>
 #include "MainWindow.h"
 #include "DocWidget.h"
 #include "MarkdownEditor.h"
@@ -817,7 +820,31 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		qDebug() << "gvi.m_lastEditCommand = " << gvi.m_lastEditCommand;
 	}
 }
-int parseLineSpec(const QString &text, int &i, int currentLine, int totalLines) {
+int do_search_line(const QString &text, int &i, int currentLine, const QTextDocument *doc) {
+	QChar c = text[i++];
+	QString pat;
+	while( i < text.size() && text[i] != c ) {
+		if( text[i] == '\\' ) pat += text[i++];
+		pat += text[i++];
+	}
+	if( i == text.size() || pat.isEmpty() )		//	undone: // ?? の場合は再検索対応
+		return -1;
+	++i;
+	QTextBlock block = doc->findBlockByNumber(currentLine - 1);
+	QRegularExpression re(pat);
+	if( c == '/' ) {	//	順方向検索
+		if( !(block = block.next()).isValid() ) return -1;
+		QTextCursor cur = doc->find(re, block.position());
+		if( cur.isNull() ) return -1;	//	not found
+		return cur.block().blockNumber() + 1;
+	} else {	//	逆方向検索
+		//if( !(block = block.next()).isValid() ) return -1;
+		QTextCursor cur = doc->find(re, block.position(), QTextDocument::FindBackward);
+		if( cur.isNull() ) return -1;	//	not found
+		return cur.block().blockNumber() + 1;
+	}
+}
+int parseLineSpec(const QString &text, int &i, int currentLine, int totalLines, const QTextDocument *doc) {
 	if (i >= text.size()) return -1;
     int line = -1;
     QChar c = text.at(i);
@@ -833,6 +860,8 @@ int parseLineSpec(const QString &text, int &i, int currentLine, int totalLines) 
     } else if (c == '$') {
         line = totalLines;
         i++;
+    } else if( c == '/' || c == '?' ) {
+    	line = do_search_line(text, i, currentLine, doc);
     } else if( c == '+' || c == '-' ) {
         line = currentLine;
     } else {
@@ -903,7 +932,7 @@ void MainWindow::on_cmdLine_enter() {
 	int ix = 1;		//	skip ':'
 	gvi.m_rangeStart = 1;
 	for(;;) {
-		gvi.m_rangeEnd = parseLineSpec(text, ix, cursor.block().blockNumber()+1, totalLines);
+		gvi.m_rangeEnd = parseLineSpec(text, ix, cursor.block().blockNumber()+1, totalLines, doc);
 		qDebug() << "line = " << gvi.m_rangeEnd;
 		if( ix == 1 ) break;	//	行番号無し
 		if( gvi.m_rangeEnd < 0 ) return;
