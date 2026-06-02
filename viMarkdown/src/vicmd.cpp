@@ -550,6 +550,8 @@ doneW:
 	case 'G':
 		if( gvi.m_repeatCount == 0 ) {
 			cursor.movePosition(QTextCursor::End);
+			if( cursor.block().text().isEmpty() )
+				cursor.movePosition(QTextCursor::PreviousBlock);
 		} else {
 			block = doc->findBlockByNumber(gvi.m_repeatCount - 1);
 			cursor.setPosition(block.position());
