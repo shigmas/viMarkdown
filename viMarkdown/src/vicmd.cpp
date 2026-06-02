@@ -1,5 +1,6 @@
 ﻿#include <QTextBlock>
 #include <QLineEdit>
+#include <QStatusBar>
 #include "MainWindow.h"
 #include "DocWidget.h"
 #include "MarkdownEditor.h"
@@ -844,6 +845,25 @@ int parseLineSpec(const QString &text, int &i, int currentLine, int totalLines) 
 
     return line;
 }
+//	cmd が pat にマッチするか？
+//	pat は ( を含み、( 直前までマッチすればおｋ
+//	( 以降は何文字マッチしてもおｋ、だが不一致は false を返す
+//	pat: "q(uit" の場合、"q", "qu", "qui", "quit" でマッチ、"qx" は不一致
+//	pat: "quit" の場合、"quit" のみがマッチ
+bool is_match(const QString &cmd, const QString &pat) {
+	int i = 0, k = 0;
+	bool paren = false;		//	'(' フラグ
+	while( i < cmd.size() && k < pat.size() ) {
+		if( pat[k] == '(' ) {
+			paren = true;
+			++k;
+			continue;
+		}
+		if( cmd[i++] != pat[k++] ) return false;	//	不一致
+	}
+	if( i != cmd.size() ) return false;	//	cmd の最後までマッチしていない
+	return k == pat.size() || (k < pat.size() && pat[k] == '(') || paren;	//	次が '(' または既に発見
+}
 void MainWindow::on_cmdLine_enter() {
 	qDebug() << "MainWindow::on_cmdLine_enter()";
 	m_cmdLine->hide();
@@ -855,10 +875,12 @@ void MainWindow::on_cmdLine_enter() {
 	QTextCursor cursor = gvi.m_prevFocusWidget == (QWidget*)docWidget->m_editor ?
 							docWidget->m_editor->textCursor() : docWidget->m_preview->textCursor();
 	QTextDocument *doc = cursor.document();
+	int totalLines = doc->blockCount();
+	if( doc->lastBlock().text().isEmpty() && totalLines > 1 ) --totalLines;
 	int ix = 1;		//	skip ':'
 	gvi.m_rangeStart = 1;
 	for(;;) {
-		gvi.m_rangeEnd = parseLineSpec(text, ix, cursor.block().blockNumber()+1, doc->blockCount());
+		gvi.m_rangeEnd = parseLineSpec(text, ix, cursor.block().blockNumber()+1, totalLines);
 		qDebug() << "line = " << gvi.m_rangeEnd;
 		if( ix == 1 ) break;	//	行番号無し
 		if( gvi.m_rangeEnd < 0 ) return;
@@ -881,9 +903,9 @@ void MainWindow::on_cmdLine_enter() {
 	QString cmd;
 	while( ix < text.size() && text[ix].isLetter() ) cmd += text[ix++];
 	QChar nch = ix < text.size() ? text[ix] : u'\0';
-	if( cmd == "q" || cmd == "quit" ) {
+	if( is_match(cmd, "q(uit") ) {
 		do_close(nch == u'!');
-	} else if( cmd == "w" ) {
+	} else if( is_match(cmd, "w(rite") ) {
 		onAction_Save();
 	} else if( cmd == "p" ) {
 		for(int ln = gvi.m_rangeStart; ln <= gvi.m_rangeEnd; ++ln) {
@@ -898,6 +920,8 @@ void MainWindow::on_cmdLine_enter() {
 			if( !block.isValid() ) break;
 			do_output(QString("%1:").arg(ln, 4) + block.text() + "\n");
 		}
+	} else {
+		statusBar()->showMessage(tr("illegal command."), 5000);
 	}
 }
 void MainWindow::on_cmdLine_escape() {
