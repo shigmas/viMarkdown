@@ -723,7 +723,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 					//do_openline(cursor, false);
 				} else
 					cursor.movePosition(QTextCursor::Right);
-				cursor.insertText(gvi.m_yankBuffer);
+				cursor.insertText(gvi.m_yankBuffer.repeated(rcnt));
 			}
 			break;
 		case 'P':
@@ -732,7 +732,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 					cursor.movePosition(QTextCursor::StartOfBlock);
 					//do_openline(cursor, true);
 				}
-				cursor.insertText(gvi.m_yankBuffer);
+				cursor.insertText(gvi.m_yankBuffer.repeated(rcnt));
 			}
 			break;
 		case 'J':
