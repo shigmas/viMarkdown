@@ -666,6 +666,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		m_cmdLine->setFocus();
 		if( gvi.m_pendingCommand == ":" ) {
 			gvi.m_exhist.push_front(":");
+			while( gvi.m_exhist.size() > 64 ) gvi.m_exhist.pop_back();
 			gvi.m_exhist_ix = 0;
 		}
 		return;
@@ -1038,7 +1039,7 @@ void MainWindow::on_cmdLine_enter() {
 		++ix;
 		gvi.m_rangeStart = gvi.m_rangeEnd;
 	}
-	if( ix >= text.size() ) {
+	if( ix >= text.size() ) {	//	:{range} Enter の場合
 		QTextBlock block = doc->findBlockByNumber(gvi.m_rangeEnd - 1);
 		cursor.setPosition(block.position());
 		hat(cursor);
@@ -1046,7 +1047,9 @@ void MainWindow::on_cmdLine_enter() {
 			docWidget->m_editor->setTextCursor(cursor);
 		else
 			docWidget->m_preview->setTextCursor(cursor);
-		return;
+		gvi.m_exhist[0] = text;
+		gvi.m_exhist_ix = 0;
+			return;
 	}
 	if( gvi.m_rangeStart > gvi.m_rangeEnd )
 		std::swap(gvi.m_rangeStart, gvi.m_rangeEnd);
