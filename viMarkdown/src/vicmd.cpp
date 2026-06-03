@@ -664,6 +664,10 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		m_cmdLine->setText(gvi.m_pendingCommand);
 		m_cmdLine->show();
 		m_cmdLine->setFocus();
+		if( gvi.m_pendingCommand == ":" ) {
+			gvi.m_exhist.push_front(":");
+			gvi.m_exhist_ix = 0;
+		}
 		return;
 	} else if( gvi.m_fFtT == 'f' || gvi.m_fFtT == 'F' || gvi.m_fFtT == 't' || gvi.m_fFtT == 'T' ) {
 		if( do_fFtT(cursor, gvi.m_fFtT, cmd, rcnt) )
@@ -1098,10 +1102,25 @@ void MainWindow::on_cmdLine_enter() {
 	} else {
 		statusBar()->showMessage(tr("illegal command."), 5000);
 	}
+	gvi.m_exhist[0] = text;
+	gvi.m_exhist_ix = 0;
 }
 void MainWindow::on_cmdLine_escape() {
 	qDebug() << "MainWindow::on_cmdLine_escape()";
 	close_cmdLine();
+}
+void MainWindow::on_cmdLine_up() {
+	qDebug() << "MainWindow::on_cmdLine_up()";
+	if( gvi.m_exhist_ix + 1 < gvi.m_exhist.size() ) {
+		if( gvi.m_exhist_ix == 0 ) gvi.m_exhist[0] = m_cmdLine->text();
+		m_cmdLine->setText(gvi.m_exhist[++gvi.m_exhist_ix]);
+	}
+}
+void MainWindow::on_cmdLine_down() {
+	qDebug() << "MainWindow::on_cmdLine_down()";
+	if( gvi.m_exhist_ix > 0 ) {
+		m_cmdLine->setText(gvi.m_exhist[--gvi.m_exhist_ix]);
+	}
 }
 void MainWindow::close_cmdLine() {
 	m_cmdLine->hide();

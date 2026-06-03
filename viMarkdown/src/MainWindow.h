@@ -148,11 +148,13 @@ struct ViStatus {
     int		m_repeatCount = 0;			//	vi コマンド繰り返し回数
     int		m_rangeStart = 1;
     int		m_rangeEnd = 1;
+    int		m_exhist_ix = -1;			//	現コマンド履歴インデックス
 	QString	m_lastEditCommand;			//	最後に実行した vi 編集コマンド
 	QString	m_pendingCommand;			//	入力中の vi コマンド
 	QString	m_insertedText;				//	i 等で挿入された文字列
     QString	m_yankBuffer;
     QString	m_regexp;					//	最新検索文字列
+    QStringList	m_exhist;				//	ex コマンド履歴、先頭が最新コマンド
     QWidget	*m_prevFocusWidget = nullptr;	//	:/? 押下時点でフォーカスを持っていた Widget
 };
 
@@ -361,6 +363,8 @@ protected:
 
     void	on_cmdLine_enter();
     void	on_cmdLine_escape();
+    void	on_cmdLine_up();		//	↑
+    void	on_cmdLine_down();		//	↓
     void	close_cmdLine();
     void	do_viCmd(QChar cmd, QTextCursor&);
     void	do_vi_insert(QChar cmd, QTextCursor&, int rcnt);		//	iIaAoOsS

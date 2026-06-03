@@ -126,12 +126,15 @@ void MainWindow::setup_statusBar() {
 	m_cmdLine->setFont(cmdFont);
     statusBar()->addWidget(m_cmdLine);
     connect(m_cmdLine, &QLineEdit::returnPressed, this, &MainWindow::on_cmdLine_enter);
-    //connect(m_cmdLine, &QLineEdit::inputRejected, this, &MainWindow::on_cmdLine_escape);
     QShortcut *escShortcut = new QShortcut(QKeySequence(Qt::Key_Escape), m_cmdLine);
-	// 2. ショートカットの有効範囲を「親ウィジェット（m_cmdLine）にフォーカスがある時のみ」に限定する
 	escShortcut->setContext(Qt::WidgetShortcut);
-	// 3. 発火時のスロットを接続（ここで入力をキャンセルする自作関数を呼ぶ）
 	connect(escShortcut, &QShortcut::activated, this, &MainWindow::on_cmdLine_escape);
+    QShortcut *upShortcut = new QShortcut(QKeySequence(Qt::Key_Up), m_cmdLine);
+	upShortcut->setContext(Qt::WidgetShortcut);
+	connect(upShortcut, &QShortcut::activated, this, &MainWindow::on_cmdLine_up);
+    QShortcut *downShortcut = new QShortcut(QKeySequence(Qt::Key_Down), m_cmdLine);
+	downShortcut->setContext(Qt::WidgetShortcut);
+	connect(downShortcut, &QShortcut::activated, this, &MainWindow::on_cmdLine_down);
     m_cmdLine->hide();
 	(m_lcLabel = new QLabel("0:0", this))->setMinimumWidth(50);
 	ui->statusBar->addPermanentWidget(m_lcLabel);		//	ステータスバーに QLabel 設置
