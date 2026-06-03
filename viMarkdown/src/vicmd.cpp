@@ -1030,14 +1030,20 @@ void MainWindow::on_cmdLine_enter() {
 	if( doc->lastBlock().text().isEmpty() && totalLines > 1 ) --totalLines;
 	int ix = 1;		//	skip ':'
 	gvi.m_rangeStart = 1;
-	for(;;) {
-		gvi.m_rangeEnd = parseLineSpec(text, ix, cursor.block().blockNumber()+1, totalLines, doc);
-		qDebug() << "line = " << gvi.m_rangeEnd;
-		if( ix == 1 ) break;	//	行番号無し
-		if( gvi.m_rangeEnd < 0 ) return;
-		if( ix >= text.size() || text[ix] != ',' ) break;
-		++ix;
-		gvi.m_rangeStart = gvi.m_rangeEnd;
+	if( ix < text.size() && text[ix] == '%' ) {
+	    ++ix;
+	    gvi.m_rangeStart = 1;
+	    gvi.m_rangeEnd   = totalLines;
+	} else {
+		for(;;) {
+			gvi.m_rangeEnd = parseLineSpec(text, ix, cursor.block().blockNumber()+1, totalLines, doc);
+			qDebug() << "line = " << gvi.m_rangeEnd;
+			if( ix == 1 ) break;	//	行番号無し
+			if( gvi.m_rangeEnd < 0 ) return;
+			if( ix >= text.size() || text[ix] != ',' ) break;
+			++ix;
+			gvi.m_rangeStart = gvi.m_rangeEnd;
+		}
 	}
 	if( ix >= text.size() ) {	//	:{range} Enter の場合
 		QTextBlock block = doc->findBlockByNumber(gvi.m_rangeEnd - 1);
