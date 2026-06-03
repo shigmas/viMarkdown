@@ -152,6 +152,7 @@ struct ViStatus {
 	QString	m_pendingCommand;			//	入力中の vi コマンド
 	QString	m_insertedText;				//	i 等で挿入された文字列
     QString	m_yankBuffer;
+    QString	m_regexp;					//	最新検索文字列
     QWidget	*m_prevFocusWidget = nullptr;	//	:/? 押下時点でフォーカスを持っていた Widget
 };
 
@@ -366,6 +367,7 @@ protected:
     void	do_vi_delete(QChar cmd, QTextCursor&, int rcnt);		//	xXD
     bool	do_vi_operator(QChar cmd, QTextCursor&, int rcnt, DocWidget*);		//	{c|d|y|g...}<move>
     void	do_vi_motion(QChar cmd, QTextCursor&, int rcnt, DocWidget*);		//	hjklwW...
+    void	do_subst(const QString &, int);
 
 private:
     bool	m_processing = false;

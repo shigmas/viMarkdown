@@ -1418,6 +1418,7 @@ Keisen mode: Shift + F5
 }
 void MainWindow::onAction_ViCheatSheet() {
 	do_output(R"(viMarkdown — Vi Cheat Sheet
+tail *: not yet implemented
  
 MODE
   i/a/o/O  insert before/after/below/above   I/A  line start/end
@@ -1432,7 +1433,7 @@ MOTION
   %        matching bracket
  
 EDIT
-  x/X      del char at/before                r{c}/R  replace char / mode
+  x/X      del char at/before                r{c}/R  replace char / mode *
   D/dd     del to EOL / del line             C/cc    change to EOL / change line
   d{m}     del to motion                     c{m}    change to motion
   yy/Y     yank line                         y{m}    yank to motion
@@ -1441,14 +1442,24 @@ EDIT
   u/U      undo/redo                         .       repeat last edit
  
 SEARCH
-  /{pat}   search forward                    ?{pat}  search backward
-  *        search word under cursor          n/N     next/prev match                      
+  /{pat}   search forward *                  ?{pat}  search backward *
+  *        search word under cursor *        n/N     next/prev match *
  
 SCROLL
-  z.  center    zEnter  to top    z-  to bottom
+  z.  center *  zEnter  to top *  z-  to bottom *
  
 EX
-  :w  save    :q  quit    :{r}s/pat/rep/[g]  substitute
+  :w[rite]  save                          :q[uit]/!   quit / force quit
+  :{n}      jump to line n                :{r}d[elete] delete range
+  :{r}p     print lines                   :{r}P       print with line nums
+  :{r}s/pat/rep/[g]  substitute *         :{r}g/pat/cmd  global execution *
+  :{r}nu[mber]       number lines *       :{r}n[ext]     next file *
+  :w filename        save as *            Up/Down     command history *
+ 
+  Range {r} modifiers:
+    {num}   line num         .  current line     $  last line
+    /pat/   match fwd        ?pat? match bwd     +n/-n  relative offset
+    ;       range separator *
  
 COUNT  {n}{cmd} repeats n times.  {n}op{m}move multiplies (2d3w = 6 words).
 )" );

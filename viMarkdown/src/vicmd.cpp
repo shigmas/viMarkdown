@@ -916,6 +916,100 @@ bool is_match(const QString &cmd, const QString &pat) {
 	if( i != cmd.size() ) return false;	//	cmd の最後までマッチしていない
 	return k == pat.size() || (k < pat.size() && pat[k] == '(') || paren;	//	次が '(' または既に発見
 }
+bool parse_subst(const QString &text, int &ix, QString &pat, QString &after, bool &global) {
+	if (ix >= text.size()) {
+		return false;
+	}
+	QChar delim = text[ix++]; // 開始デリミタを決定（通常は '/'）
+
+	// 1. パターン（pat）の抽出とエスケープ解除
+	pat.clear();
+	while (ix < text.size() && text[ix] != delim) {
+		if (text[ix] == '\\') {
+			ix++;
+			if (ix >= text.size()) {
+				pat += '\\';
+				break;
+			}
+			if (text[ix] == delim) {
+				pat += text[ix++]; // デリミタのエスケープを解除してパターンに追加
+			} else {
+				pat += '\\';
+				pat += text[ix++];
+			}
+		} else {
+			pat += text[ix++];
+		}
+	}
+
+	if (ix < text.size() && text[ix] == delim) {
+		ix++; // 閉じデリミタをスキップ
+	} else {
+		return false; // デリミタが一致しない不正な構文
+	}
+
+	// --- 空パターンの場合は前回値を参照。新規パターンなら保存する処理を追加 ---
+	if (pat.isEmpty()) {
+		if (gvi.m_regexp.isEmpty()) {
+			return false; // 前回パターンが存在しない場合はエラー（パース失敗）
+		}
+		pat = gvi.m_regexp; // 前回保存したパターンを再利用
+	} else {
+		gvi.m_regexp = pat; // 新しく指定されたパターンを保存
+	}
+
+	// 2. 置換後文字列（after）の抽出とエスケープ解除
+	after.clear();
+	while (ix < text.size() && text[ix] != delim) {
+		if (text[ix] == '\\') {
+			ix++;
+			if (ix >= text.size()) {
+				after += '\\';
+				break;
+			}
+			if (text[ix] == delim || text[ix] == '\\') {
+				after += text[ix++]; // デリミタやバックスラッシュのエスケープを解除
+			} else {
+				after += '\\';
+				after += text[ix++];
+			}
+		} else {
+			after += text[ix++];
+		}
+	}
+
+	if (ix < text.size() && text[ix] == delim) {
+		ix++; // 閉じデリミタをスキップ
+	}
+
+	// 3. フラグ（g）の解析
+	global = false;
+	while (ix < text.size()) {
+		QChar flag = text[ix];
+		if (flag == 'g') {
+			global = true;
+		} else {
+			break;
+		}
+		ix++;
+	}
+
+	return true;
+}
+void MainWindow::do_subst(const QString &text, int ix) {
+	QString pat;
+	QString after;
+	bool global = false;
+
+	// パースの実行
+	if (!parse_subst(text, ix, pat, after, global)) {
+		statusBar()->showMessage(tr("Invalid substitute syntax."), 5000);
+		return;
+	}
+	qDebug() << "pat = " << pat;
+	qDebug() << "after = " << after;
+	qDebug() << "global = " << global;
+}
 void MainWindow::on_cmdLine_enter() {
 	qDebug() << "MainWindow::on_cmdLine_enter()";
 	m_cmdLine->hide();
@@ -999,6 +1093,8 @@ void MainWindow::on_cmdLine_enter() {
 			if( !block.isValid() ) break;
 			do_output(QString("%1:").arg(ln, 4) + block.text() + "\n");
 		}
+	} else if( is_match(cmd, "s(ubstitute") ) {
+		do_subst(text, ix);
 	} else {
 		statusBar()->showMessage(tr("illegal command."), 5000);
 	}
