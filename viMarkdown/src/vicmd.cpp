@@ -959,6 +959,33 @@ void MainWindow::on_cmdLine_enter() {
 		do_close(nch == u'!');
 	} else if( is_match(cmd, "w(rite") ) {
 		onAction_Save();
+	} else if( is_match(cmd, "d(elete") ) {
+		QTextBlock startBlock = doc->findBlockByNumber(gvi.m_rangeStart - 1);
+		QTextBlock endBlock = doc->findBlockByNumber(gvi.m_rangeEnd - 1);
+		if( startBlock.isValid() && endBlock.isValid() ) {
+			QTextCursor cursor(doc);
+			cursor.beginEditBlock(); // Undo/Redo を1回にまとめる
+			
+			int startPos = startBlock.position();
+			int endPos;
+			
+			if( endBlock.next().isValid() ) {
+				// 次の行が存在する場合は、次の行の開始位置まで選択（対象行の末尾改行も削除に含める）
+				endPos = endBlock.next().position();
+			} else {
+				// 最終行を削除する場合
+				endPos = doc->characterCount() - 1;
+				// 前の行が存在する場合は、前の行の末尾改行から削除対象に含める（不要な空行残りを防止）
+				if( startBlock.previous().isValid() ) {
+					startPos = startBlock.previous().position() + startBlock.previous().length() - 1;
+				}
+			}
+			
+			cursor.setPosition(startPos);
+			cursor.setPosition(endPos, QTextCursor::KeepAnchor);
+			cursor.removeSelectedText();
+			cursor.endEditBlock();
+		}
 	} else if( cmd == "p" ) {
 		for(int ln = gvi.m_rangeStart; ln <= gvi.m_rangeEnd; ++ln) {
 			QTextBlock block = doc->findBlockByNumber(ln - 1);
