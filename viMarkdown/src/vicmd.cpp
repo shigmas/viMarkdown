@@ -245,10 +245,9 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 	case 'z':
 		switch( cmd.unicode() ) {
 		case 'a':		//	za
-			if (block.isValid()) {
-		        block.setVisible(false); // ブロックを非表示に設定
-		        doc->markContentsDirty(block.position(), block.length());
-		    }
+			if (!block.isValid()) break;
+		    block.setVisible(false); // ブロックを非表示に設定
+		    doc->markContentsDirty(block.position(), block.length());
 			break;
 		case 'c':		//	zc
 			if (block.isValid()) {
@@ -262,6 +261,7 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 		        block.setVisible(true); // ブロックを表示
 		        doc->markContentsDirty(block.position(), block.length());
 			}
+			break;
 		}
 		break;
 	}
@@ -1147,13 +1147,13 @@ void MainWindow::on_cmdLine_enter() {
 			cursor.removeSelectedText();
 			cursor.endEditBlock();
 		}
-	} else if( cmd == "p" ) {
+	} else if( is_match(cmd, "p(rint") ) {
 		for(int ln = gvi.m_rangeStart; ln <= gvi.m_rangeEnd; ++ln) {
 			QTextBlock block = doc->findBlockByNumber(ln - 1);
 			if( !block.isValid() ) break;
 			do_output(block.text() + "\n");
 		}
-	} else if( cmd == "P" ) {
+	} else if( is_match(cmd, "P(RINT") ) {
 		do_output("\n\"" + docWidget->m_fullPath + "\"\n");
 		for(int ln = gvi.m_rangeStart; ln <= gvi.m_rangeEnd; ++ln) {
 			QTextBlock block = doc->findBlockByNumber(ln - 1);
