@@ -237,8 +237,8 @@ SPR# 状 P Open Close ver     Type  概要
 0234 ◎ C 05/26 05/26 03013│ToDo│, ; のための情報保持
 0235 ◎ C 05/26 06/02 03017│ToDo│:q[uit]
 0236 ◎ C 05/26 06/02 03017│ToDo│:w[rite]
-0237 ● C 05/26            │ToDo│:<range>g/pat/<cmd>
-0238 ● C 05/26            │ToDo│:<range>s/regexp/after/[g]
+0237 ● B 05/26            │ToDo│:<range>g/pat/<cmd>
+0238 ● B 05/26            │ToDo│:<range>s/regexp/after/[g]
 0239 ◎ C 05/26 05/27 03014│問題│<num>s：num 文字削除されない
 0240 ◎ C 05/26 05/30 03015│ToDo│挿入コマンドで挿入された文字列保存
 0241 ◎ C 05/27 05/27 03014│問題│行末で、Inline > Link を実行すると [ 改行 ](url) となってしまう
@@ -323,9 +323,9 @@ SPR# 状 P Open Close ver     Type  概要
 0320 ● C 06/04            │ToDo│見出し行に ▼（展開中）or ▶（折りたたみ中）表示
 0321 ◎ C 06/05 06/05 03018│ToDo│:{range}print, PRINT がエラーになってしまう
 0322 ◎ C 06/05 06/05 03018│問題│{n}d{m}w が動作不良
-0323 ● C 06/05            │ToDo│
-0324 ● C 06/05            │ToDo│
-0325 ● C 06/05            │ToDo│
+0323 ● C 06/05            │問題│i text Esc のあとの <num>. の繰り返し回数が効かない
+0324 ● C 06/05            │問題│<num>i text Esc：text が <num>個挿入されない
+0325 ◎ C 06/05 06/05 03018│ToDo│オープンダイアログ > フィルタ：*.md だけでなく *.txt, *.* も追加
 0326 ● C 06/05            │ToDo│
 0327 ● C 06/05            │ToDo│
 0328 ● C 06/05            │ToDo│
