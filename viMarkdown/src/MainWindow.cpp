@@ -1566,7 +1566,7 @@ void MainWindow::onAction_Open() {
 		this,
 		"open File",			// ダイアログのタイトル
 		QDir::currentPath(),		// 初期ディレクトリ
-		"markdown file (*.md);;text file(*.txt);;all(*.*)"	// フィルター
+		"markdown file (*.md *.markdown);;text file(*.txt);;all(*.*)"	// フィルター
 	);
 
 	if (!fullPath.isEmpty()) {
