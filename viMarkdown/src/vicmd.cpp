@@ -232,11 +232,29 @@ void do_yank_line(QTextCursor& cursor, int rcnt) {
 	}
 }
 void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidget* docWidget) {		//	{g z r [ ]} cmd
+	QTextBlock block = cursor.block();
+	QTextDocument *doc = cursor.document();
 	switch( gvi.m_prefix.unicode() ) {
 	case 'g':
 		switch( cmd.unicode() ) {
 		case 'g':		//	gg
 			cursor.movePosition(QTextCursor::Start);
+			break;
+		}
+		break;
+	case 'z':
+		switch( cmd.unicode() ) {
+		case 'a':		//	za
+			if (block.isValid()) {
+		        block.setVisible(false); // ブロックを非表示に設定
+		        doc->markContentsDirty(block.position(), block.length());
+		    }
+			break;
+		case 'c':		//	za
+			if (block.isValid()) {
+		        block.setVisible(false); // ブロックを非表示に設定
+		        doc->markContentsDirty(block.position(), block.length());
+		    }
 			break;
 		}
 		break;
@@ -308,9 +326,9 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWid
 		case 'y':	//	yy
 			do_yank_line(cursor, rcnt);
 			break;
-		case 'g':	//	gg
-			cursor.movePosition(QTextCursor::Start);
-			break;
+		//case 'g':	//	gg
+		//	cursor.movePosition(QTextCursor::Start);
+		//	break;
 		case ']': {	//	]]
 			QTextBlock block = cursor.block().next();
 			while (block.isValid()) {
@@ -380,9 +398,9 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWid
 			switch( cmd.unicode() ) {
 			case '.':
 				break;
-			case 'a':		//	toggle fold
+			case 'a':		//	za: toggle fold
 				if (block.isValid()) {
-			        block.setVisible(true); // ブロックを表示に設定
+			        block.setVisible(false); // ブロックを表示に設定
 			        doc->markContentsDirty(block.position(), block.length());
 			    }
 				break;
