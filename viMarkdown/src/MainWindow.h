@@ -140,7 +140,8 @@ struct ViStatus {
     bool	m_redoing = false;			//	. コマンド処理中
     bool	m_joinEditBlock = false;
     bool	m_recInsertedText = false;	//	挿入文字列保存
-    QChar	m_operator = u' ';			//	{c|d|y...}<move> の先頭部分
+    QChar	m_operator = u' ';			//	{c|d|y|<|>}<move> の先頭部分
+    QChar	m_prefix = u' ';			//	{z|g|r|]|[}<char> の先頭部分
     QChar	m_fFtT = ' ';				//	{fFtT}
     QChar	m_last_fFtT = ' ';			//	{fFtT}
     QChar	m_last_fFtT_char = ' ';		//	{fFtT}
@@ -369,7 +370,8 @@ protected:
     void	do_viCmd(QChar cmd, QTextCursor&);
     void	do_vi_insert(QChar cmd, QTextCursor&, int rcnt);		//	iIaAoOsS
     void	do_vi_delete(QChar cmd, QTextCursor&, int rcnt);		//	xXD
-    bool	do_vi_operator(QChar cmd, QTextCursor&, int rcnt, DocWidget*);		//	{c|d|y|g...}<move>
+    void	do_prefix_cmd(QChar cmd, QTextCursor&, int rcnt, DocWidget*);		//	{g z [ ] r}<cmd>
+    bool	do_vi_operator(QChar cmd, QTextCursor&, int rcnt, DocWidget*);		//	{c|d|y|<|>}<move>
     void	do_vi_motion(QChar cmd, QTextCursor&, int rcnt, DocWidget*);		//	hjklwW...
     void	do_subst(const QString &, int);
 
