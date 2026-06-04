@@ -250,12 +250,18 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 		        doc->markContentsDirty(block.position(), block.length());
 		    }
 			break;
-		case 'c':		//	za
+		case 'c':		//	zc
 			if (block.isValid()) {
 		        block.setVisible(false); // ブロックを非表示に設定
 		        doc->markContentsDirty(block.position(), block.length());
 		    }
 			break;
+		case 'o':		//	zo
+			if (block.isValid() && block.next().isValid() && !block.next().isVisible() ) {
+		        block = block.next();
+		        block.setVisible(true); // ブロックを表示
+		        doc->markContentsDirty(block.position(), block.length());
+			}
 		}
 		break;
 	}
