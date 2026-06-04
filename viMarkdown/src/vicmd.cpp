@@ -1153,7 +1153,7 @@ void MainWindow::on_cmdLine_enter() {
 			if( !block.isValid() ) break;
 			do_output(block.text() + "\n");
 		}
-	} else if( is_match(cmd, "P(RINT") ) {
+	} else if( is_match(cmd, "P(RINT") || is_match(cmd, "nu(mber") ) {
 		do_output("\n\"" + docWidget->m_fullPath + "\"\n");
 		for(int ln = gvi.m_rangeStart; ln <= gvi.m_rangeEnd; ++ln) {
 			QTextBlock block = doc->findBlockByNumber(ln - 1);

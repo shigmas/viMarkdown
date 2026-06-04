@@ -289,7 +289,7 @@ SPR# 状 P Open Close ver     Type  概要
 0286 ◎ C 06/02 06/03 03018│問題│<num>p, <num>P：繰り返し回数が効かない
 0287 ◎ C 06/02 06/03 03018│ToDo│:<range>d[elete
 0288 ◎ C 06/02 06/02 03017│問題│:qhogehoge が :q と解釈されてしまう
-0289 ● C 06/02            │ToDo│:<range>nu[mber]
+0289 ◎ C 06/02 06/05 03018│ToDo│:<range>nu[mber]
 0290 ● C 06/02            │ToDo│:<range>n[ext]
 0291 ◎ C 06/02 06/02 03017│ToDo│:q[uit]! 対応
 0292 ◎ C 06/02 06/02 03017│ToDo│:不正なコマンド の場合は、その旨のエラーメッセージ表示
