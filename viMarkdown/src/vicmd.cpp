@@ -696,10 +696,12 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		do_prefix_cmd(cmd, cursor, rcnt, docWidget);		//	{g z r [ ]} cmd
 	} else if( cmd == 'g' || cmd == 'z' || cmd == 'r' || cmd == '[' || cmd == ']' ) {
 		gvi.m_prefix = cmd;
+		completed = false;
 	} else if( gvi.m_operator != ' ' && gvi.m_operator == cmd ) {		//	cc dd yy << >>
 		completed = do_vi_operator(cmd, cursor, rcnt, docWidget);		//	op cmd
 	} else if( cmd == 'c' || cmd == 'd' || cmd == 'y' || cmd == '<' || cmd == '>' ) {
 		gvi.m_operator = cmd;
+		completed = false;
 	} else if( cmd == 'i' || cmd == 'I' || cmd == 'a' || cmd == 'A' || cmd == 'o' || cmd == 'O' || cmd == 's' || cmd == 'S' || cmd == 'C' ) {
 		do_vi_insert(cmd, cursor, rcnt);
 	} else if( cmd == 'x' || cmd == 'X' || cmd == 'D' ) {
