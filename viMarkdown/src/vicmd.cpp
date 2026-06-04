@@ -264,6 +264,40 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 			break;
 		}
 		break;
+	case '[':
+		switch( cmd.unicode() ) {
+		case '[': {	//	[[
+			QTextBlock block = cursor.block().previous();
+			while (block.isValid()) {
+				if (block.userState() == US_HEADING) {
+					if (--rcnt == 0) {
+						cursor.setPosition(block.position());
+						break;
+					}
+				}
+				block = block.previous();
+			}
+			break;
+		}
+		}
+		break;
+	case ']':
+		switch( cmd.unicode() ) {
+		case ']': {	//	]]
+			QTextBlock block = cursor.block().next();
+			while (block.isValid()) {
+				if (block.userState() == US_HEADING) {
+					if (--rcnt == 0) {
+						cursor.setPosition(block.position());
+						break;
+					}
+				}
+				block = block.next();
+			}
+			break;
+		}
+		}
+		break;
 	}
 }
 bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWidget* docWidget) {		//	{c d y < >}<move>
@@ -335,6 +369,7 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWid
 		//case 'g':	//	gg
 		//	cursor.movePosition(QTextCursor::Start);
 		//	break;
+#if 0
 		case ']': {	//	]]
 			QTextBlock block = cursor.block().next();
 			while (block.isValid()) {
@@ -367,6 +402,7 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWid
 			//else
 			//	docWidget->m_preview->centerCursor();
 			break;
+#endif
 		case '>':	//	>>
 			cursor.beginEditBlock();
 			for(int i = 0; i < gvi.m_opCount; ++i) {
