@@ -231,6 +231,30 @@ void do_yank_line(QTextCursor& cursor, int rcnt) {
 		cursor.clearSelection();
 	}
 }
+int heading_level(QString text) {
+	text = text.trimmed();
+	int i = 0;
+	while( i < text.size() && text[i] == '#' ) ++i;
+	return i;
+}
+bool is_folded(QTextBlock block);
+bool is_foldable(QTextBlock block);
+void MainWindow::do_fold(QTextBlock block, QTextDocument *doc) {	//	block は見出し行
+	int lvl = heading_level(block.text());
+	while( (block = block.next()).isValid() ) {
+		if( block.userState() == US_HEADING && heading_level(block.text()) <= lvl )
+			break;
+        block.setVisible(false); // ブロックを非表示に設定
+        doc->markContentsDirty(block.position(), block.length());
+	}
+}
+void MainWindow::do_unfold(QTextBlock block, QTextDocument *doc) {	//	block は見出し行
+	if( !is_folded(block) ) return;
+	while( (block = block.next()).isValid() && !block.isVisible() ) {
+        block.setVisible(true); // ブロックを表示
+        doc->markContentsDirty(block.position(), block.length());
+	}
+}
 void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidget* docWidget) {		//	{g z r [ ]} cmd
 	QTextBlock block = cursor.block();
 	QTextDocument *doc = cursor.document();
@@ -246,21 +270,16 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 		switch( cmd.unicode() ) {
 		case 'a':		//	za
 			if (!block.isValid()) break;
-		    block.setVisible(false); // ブロックを非表示に設定
-		    doc->markContentsDirty(block.position(), block.length());
+			if( is_folded(block) )
+				do_unfold(block, doc);
+			else if( is_foldable(block) )
+				do_fold(block, doc);
 			break;
 		case 'c':		//	zc
-			if (block.isValid()) {
-		        block.setVisible(false); // ブロックを非表示に設定
-		        doc->markContentsDirty(block.position(), block.length());
-		    }
+			do_fold(block, doc);
 			break;
 		case 'o':		//	zo
-			if (block.isValid() && block.next().isValid() && !block.next().isVisible() ) {
-		        block = block.next();
-		        block.setVisible(true); // ブロックを表示
-		        doc->markContentsDirty(block.position(), block.length());
-			}
+			do_unfold(block, doc);
 			break;
 		}
 		break;

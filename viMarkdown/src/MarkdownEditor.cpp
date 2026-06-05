@@ -2287,6 +2287,7 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
 	for (QTextBlock b = firstVisibleBlock(); b.isValid(); b = b.next()) {
 		QRectF r = blockBoundingRect(b).translated(contentOffset());
 		if (r.top() > viewport()->height()) break; // 画面外なら終了
+		if( !b.isVisible() ) continue;
 		// --- 改行マーク（←）の描画 ---
 		QTextCursor cursor(b);
 		cursor.movePosition(QTextCursor::EndOfBlock);
@@ -2355,6 +2356,12 @@ void MarkdownEditor::updateLnArea(const QRect &rect, int dy) {
 	else
 		m_lnAreaWidget->update(0, rect.y(), m_lnAreaWidget->width(), rect.height());
 }
+bool is_folded(QTextBlock block) {
+	return block.next().isValid() && !block.next().isVisible();		//	次行が折り畳まれている
+}
+bool is_foldable(QTextBlock block) {
+	return block.userState() == US_HEADING;
+}
 void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
 	QPainter painter(m_lnAreaWidget);
 	// 現在表示されている最初のブロックを取得
@@ -2365,17 +2372,49 @@ void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
 	int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
 	int bottom = top + (int) blockBoundingRect(block).height();
 	int charWidth = fontMetrics().horizontalAdvance('9');
+	int lineHeight = fontMetrics().height();
 
 	// 画面内に見える範囲のブロックをループして描画
 	QColor textColor = this->palette().color(QPalette::Text);
+	auto drawArrow = [&](int x, int y, int w, int h, bool rightward) {
+	    // 矢印の中心座標
+	    int cx = x + w / 2;
+	    int cy = y + h / 2;
+	    int half = qMin(w, h) / 2 - 2; // 矢印の大きさ
+
+	    auto foldColor = Qt::black;
+	    painter.setPen(QPen(foldColor, 1.5));
+
+	    if (rightward) {
+	        // ▶ 向き（折り畳み済み）: 上下が cx 側に寄る
+	        // 左上 → 右中 → 左下
+	        painter.drawLine(cx - half, cy - half,  cx + half, cy);
+	        painter.drawLine(cx + half, cy,          cx - half, cy + half);
+	    } else {
+	        // ▼ 向き（展開中）: 上が両端、下が中央
+	        // 左上 → 下中 → 右上
+	        painter.drawLine(cx - half, cy - half,  cx,        cy + half);
+	        painter.drawLine(cx,        cy + half,  cx + half, cy - half);
+	    }
+	};
 	while (block.isValid() && top <= event->rect().bottom()) {
 		if (block.isVisible() && bottom >= event->rect().top()) {
 			QString number = QString::number(blockNumber + 1);
 			painter.setPen(textColor); // 文字色
 			
 			// 右詰めで描画するために幅を調整（右側に2ピクセルの余白）
-			painter.drawText(0, top, m_lnAreaWidget->width() - charWidth*2, fontMetrics().height(),
+			painter.drawText(0, top, m_lnAreaWidget->width() - charWidth*2, lineHeight,
 							 Qt::AlignRight, number);
+			int ax = m_lnAreaWidget->width() - (charWidth + charWidth / 2);
+			if( is_folded(block) ) {
+				drawArrow(ax, top, charWidth, lineHeight, true);  // ＞
+				//painter.drawText(m_lnAreaWidget->width() - (charWidth+charWidth/2), top,
+                //                 charWidth, lineHeight, Qt::AlignLeft, ">");
+			} else if( is_foldable(block) ) {
+				drawArrow(ax, top, charWidth, lineHeight, false); // ▽
+				//painter.drawText(m_lnAreaWidget->width() - (charWidth+charWidth/2), top,
+                //                 charWidth, lineHeight, Qt::AlignLeft, "v");
+			}
 		}
 
 		block = block.next();
