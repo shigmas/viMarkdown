@@ -757,6 +757,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 	int rcnt = getRepeatCount();
 	gvi.m_pendingCommand += cmd;
 	if( gvi.m_pendingCommand == ":" || gvi.m_pendingCommand == "/"  || gvi.m_pendingCommand == "?" ) {
+		statusBar()->clearMessage();
 		gvi.m_cmdlineMode = true;
 		gvi.m_prevFocusWidget = cursor.document() == docWidget->m_editor->document() ?
 									(QWidget*)docWidget->m_editor : (QWidget*)docWidget->m_preview;
