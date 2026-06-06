@@ -1448,9 +1448,10 @@ SEARCH
   /{pat}   search forward *                  ?{pat}  search backward *
   *        search word under cursor *        n/N     next/prev match *
  
-SCROLL
-  z.  center *  zEnter  to top *  z-  to bottom *
- 
+SCROLL / FOLD
+  z.  center *         zEnter  to top *      z-  to bottom *
+  za  toggle fold      zc  close fold        zo  open fold
+
 EX
   :w[rite]  save                          :q[uit]/!   quit / force quit
   :{n}      jump to line n                :{r}d[elete] delete range

@@ -367,8 +367,8 @@ protected:
     void	on_cmdLine_up();		//	↑
     void	on_cmdLine_down();		//	↓
     void	close_cmdLine();
-    void	do_fold(QTextBlock block, QTextDocument*);
-    void	do_unfold(QTextBlock block, QTextDocument*);
+    //void	do_fold(QTextBlock block, QTextDocument*);
+    //void	do_unfold(QTextBlock block, QTextDocument*);
     void	do_viCmd(QChar cmd, QTextCursor&);
     void	do_vi_insert(QChar cmd, QTextCursor&, int rcnt);		//	iIaAoOsS
     void	do_vi_delete(QChar cmd, QTextCursor&, int rcnt);		//	xXD

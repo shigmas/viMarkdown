@@ -33,6 +33,14 @@ extern ViStatus gvi;
 //extern bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign);
 extern QString splitName(QString& anchor);
 extern QString anchorToFullPath(const QString &anchor);
+bool is_folded(QTextBlock block) {
+	return block.next().isValid() && !block.next().isVisible();		//	次行が折り畳まれている
+}
+bool is_foldable(QTextBlock block) {
+	return block.userState() == US_HEADING;
+}
+void	do_fold(QTextBlock block, QTextDocument*);
+void	do_unfold(QTextBlock block, QTextDocument*);
 bool isTableHyphenLine(const QString& lnStr) {
 	std::vector<char> tableAlign;
 	return isTableHyphenLine(lnStr, tableAlign);
@@ -2213,6 +2221,13 @@ void drawCRLF(QPainter &p, QRect r) {
 	p.drawLine(x_start, y_q, x_start + headSize, y_q - headSize);
 	p.drawLine(x_start, y_q, x_start + headSize, y_q + headSize);
 }
+void drawFolded(QPainter &p, QRect r) {
+	//r.setX(r.x() + r.width() + r.width()/4);
+	//r.setX(r.right());
+	//r.setWidth(r.width()*4);
+	p.setPen(Qt::blue);
+	p.drawText(r, Qt::AlignLeft, "[…]");
+}
 void drawEOF(QPainter &p, QRect r) {
 	int x = r.left() + 2;
 	int y_mid = r.center().y() + 2;
@@ -2296,6 +2311,10 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
 		if( b != document()->lastBlock() ) {
 			//drawLeftArrow(p, cr);		 
 			drawCRLF(p, cr);		 
+			if( is_folded(b) ) {
+				int nx = cr.right() + zWidth;
+				drawFolded(p, QRect(nx, cr.y(), zWidth*2, cr.height()));
+			}
 		} else
 			drawEOF(p, cr);
 		QString s = b.text();
@@ -2356,12 +2375,6 @@ void MarkdownEditor::updateLnArea(const QRect &rect, int dy) {
 	else
 		m_lnAreaWidget->update(0, rect.y(), m_lnAreaWidget->width(), rect.height());
 }
-bool is_folded(QTextBlock block) {
-	return block.next().isValid() && !block.next().isVisible();		//	次行が折り畳まれている
-}
-bool is_foldable(QTextBlock block) {
-	return block.userState() == US_HEADING;
-}
 void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
 	QPainter painter(m_lnAreaWidget);
 	// 現在表示されている最初のブロックを取得
@@ -2405,7 +2418,7 @@ void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
 			// 右詰めで描画するために幅を調整（右側に2ピクセルの余白）
 			painter.drawText(0, top, m_lnAreaWidget->width() - charWidth*2, lineHeight,
 							 Qt::AlignRight, number);
-			int ax = m_lnAreaWidget->width() - (charWidth + charWidth / 2);
+			int ax = m_lnAreaWidget->width() - (charWidth + charWidth / 2) + 2;
 			if( is_folded(block) ) {
 				drawArrow(ax, top, charWidth, lineHeight, true);  // ＞
 				//painter.drawText(m_lnAreaWidget->width() - (charWidth+charWidth/2), top,
@@ -2439,15 +2452,25 @@ void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
 void MarkdownEditor::lnAreaMousePressEvent(QMouseEvent *event) {
 	auto pos = event->position();
 	QTextCursor cursor = cursorForPosition(QPoint(0, (int)pos.y()));
-	cursor.movePosition(QTextCursor::StartOfBlock);			 // 行頭へ移動
-	m_anchorStartPosition = cursor.position();
-	cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor); // 次行先頭まで選択
-	m_selStart = cursor.selectionStart();
-	m_selEnd = cursor.selectionEnd();
-	m_curBlockNum = m_anchorBlockNum = cursor.blockNumber();
-	setTextCursor(cursor);
-	m_isCursorAboveAnchor = false;
-	m_lnAreaPressed = true;
+	if( pos.x() < m_lnAreaWidget->width() - 24 ) {
+		cursor.movePosition(QTextCursor::StartOfBlock);			 // 行頭へ移動
+		m_anchorStartPosition = cursor.position();
+		cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor); // 次行先頭まで選択
+		m_selStart = cursor.selectionStart();
+		m_selEnd = cursor.selectionEnd();
+		m_curBlockNum = m_anchorBlockNum = cursor.blockNumber();
+		setTextCursor(cursor);
+		m_isCursorAboveAnchor = false;
+		m_lnAreaPressed = true;
+	} else {
+		QTextBlock block = cursor.block();
+		if( block.isValid() ) {
+			if( is_folded(block) )
+				do_unfold(block, document());
+			else if( is_foldable(block) )
+				do_fold(block, document());
+		}
+	}
 }
 void MarkdownEditor::lnAreaMouseMoveEvent(QMouseEvent *event) {
 	if( !m_lnAreaPressed ) return;
