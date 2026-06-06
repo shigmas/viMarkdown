@@ -1150,12 +1150,14 @@ void MainWindow::on_cmdLine_enter() {
 	    gvi.m_rangeStart = 1;
 	    gvi.m_rangeEnd   = totalLines;
 	} else {
+		int currentLine = cursor.block().blockNumber() + 1;
 		for(;;) {
-			gvi.m_rangeEnd = parseLineSpec(text, ix, cursor.block().blockNumber()+1, totalLines, doc);
+			gvi.m_rangeEnd = parseLineSpec(text, ix, currentLine, totalLines, doc);
 			qDebug() << "line = " << gvi.m_rangeEnd;
 			if( ix == 1 ) break;	//	行番号無し
 			if( gvi.m_rangeEnd < 0 ) return;
-			if( ix >= text.size() || text[ix] != ',' ) break;
+			if( ix >= text.size() || text[ix] != ',' && text[ix] != ';' ) break;
+			if( text[ix] == ';' ) currentLine = gvi.m_rangeEnd;
 			++ix;
 			gvi.m_rangeStart = gvi.m_rangeEnd;
 		}
