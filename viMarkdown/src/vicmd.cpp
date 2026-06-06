@@ -274,12 +274,15 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 				do_unfold(block, doc);
 			else if( is_foldable(block) )
 				do_fold(block, doc);
+			onMDTextChanged();
 			break;
 		case 'c':		//	zc
 			do_fold(block, doc);
+			onMDTextChanged();
 			break;
 		case 'o':		//	zo
 			do_unfold(block, doc);
+			onMDTextChanged();
 			break;
 		}
 		break;
