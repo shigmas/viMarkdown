@@ -90,7 +90,7 @@
 - 最新版（ver 0.3.x）ダウンロード：[Release](https://github.com/vivisuke/viMarkdown/releases)
 - 安定版（ver 0.2.x）ダウンロード：[Release](https://github.com/vivisuke/viMarkdown/releases/v0.2.004)
 
-## ビルド方法
+## ■ ビルド方法
 ### Visual Studio on Windows (推奨)
 
 本プロジェクトは、主に Windows 11 環境にて Visual Studio 2026 と Qt VS Tools を使用して開発およびテストを行っています。

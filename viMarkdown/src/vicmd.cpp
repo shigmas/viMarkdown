@@ -262,7 +262,13 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 	case 'g':
 		switch( cmd.unicode() ) {
 		case 'g':		//	gg
-			cursor.movePosition(QTextCursor::Start);
+			if( gvi.m_repeatCount == 0 ) {
+				cursor.movePosition(QTextCursor::Start);
+			} else {
+				block = doc->findBlockByNumber(gvi.m_repeatCount - 1);
+				cursor.setPosition(block.position());
+				hat(cursor);
+			}
 			break;
 		}
 		break;
@@ -558,11 +564,15 @@ void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidge
 	QTextBlock block = cursor.block();
 	switch( cmd.unicode() ) {
 	case 'k':
-		cursor.movePosition(QTextCursor::Up, moveMode, rcnt);
+		do {
+			if( !cursor.movePosition(QTextCursor::Up, moveMode, rcnt) ) break;
+		} while( cursor.block().isValid() && !cursor.block().isVisible() );
 		gvi.m_linewiseMoved = true;
 		break;
 	case 'j':
-		cursor.movePosition(QTextCursor::Down, moveMode, rcnt);
+		do {
+			if( !cursor.movePosition(QTextCursor::Down, moveMode, rcnt) ) break;
+		} while( cursor.block().isValid() && !cursor.block().isVisible() );
 		gvi.m_linewiseMoved = true;
 		break;
 	case 'h': {
