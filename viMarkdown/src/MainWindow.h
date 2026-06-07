@@ -375,7 +375,8 @@ protected:
     void	do_prefix_cmd(QChar cmd, QTextCursor&, int rcnt, DocWidget*);		//	{g z [ ] r}<cmd>
     bool	do_vi_operator(QChar cmd, QTextCursor&, int rcnt, DocWidget*);		//	{c|d|y|<|>}<move>
     void	do_vi_motion(QChar cmd, QTextCursor&, int rcnt, DocWidget*);		//	hjklwW...
-    void	do_subst(const QString &, int);
+    void	do_vi_search(const QString&, QTextCursor&, int rcnt, DocWidget*);
+    void	do_subst(const QString &, int, QTextDocument*);
 
 private:
     bool	m_processing = false;

@@ -1116,7 +1116,7 @@ bool parse_subst(const QString &text, int &ix, QString &pat, QString &after, boo
 
 	return true;
 }
-void MainWindow::do_subst(const QString &text, int ix) {
+void MainWindow::do_subst(const QString &text, int ix, QTextDocument* doc) {
 	QString pat;
 	QString after;
 	bool global = false;
@@ -1126,9 +1126,63 @@ void MainWindow::do_subst(const QString &text, int ix) {
 		statusBar()->showMessage(tr("Invalid substitute syntax."), 5000);
 		return;
 	}
+	qDebug() << "range = " << gvi.m_rangeStart << ", " << gvi.m_rangeEnd;
 	qDebug() << "pat = " << pat;
 	qDebug() << "after = " << after;
 	qDebug() << "global = " << global;
+	QRegularExpression rx(pat);
+	if (!rx.isValid()) {
+		statusBar()->showMessage(tr("Invalid regular expression."), 5000);
+		return;
+	}
+	QString qtAfter = after;
+	qtAfter.replace(QRegularExpression(R"((?<!\\)&)"), R"(\0)");
+	qtAfter.replace(R"(\&)", "&"); // エスケープされた \& は単なる & に戻す
+	QTextCursor cursor(doc);
+	cursor.beginEditBlock();
+	int replacedCount = 0;
+	for (int line = gvi.m_rangeStart; line <= gvi.m_rangeEnd; ++line) {
+		QTextBlock block = doc->findBlockByNumber(line - 1);	// ex行番号は1始まり
+		if (!block.isValid())
+			continue;
+		QString lineText = block.text();
+		QString newLineText = lineText;
+		if (global) {
+			if (lineText.contains(rx)) {
+				newLineText.replace(rx, qtAfter);
+			}
+		} else {
+			// 行内の「最初」のマッチのみ置換
+			QRegularExpressionMatch match = rx.match(lineText);
+			if (match.hasMatch()) {
+				QString expandedAfter = qtAfter;
+				// \0, $0, $& をマッチした全体テキストに置換
+				expandedAfter.replace(QRegularExpression(R"((?:\\0|\$0|\$&))"), match.captured(0));
+				// 各キャプチャグループ（\1〜\9, $1〜$9）を展開
+				for (int i = 1; i <= match.lastCapturedIndex(); ++i) {
+					expandedAfter.replace(QString("\\%1").arg(i), match.captured(i));
+					expandedAfter.replace(QString("$%1").arg(i), match.captured(i));
+				}
+				// 最初のマッチ部分のみを置換
+				newLineText.replace(match.capturedStart(0), match.capturedLength(0), expandedAfter);
+			}
+		}
+		if (newLineText != lineText) {
+			QTextCursor lineCursor(block);
+			lineCursor.movePosition(QTextCursor::StartOfBlock);
+			lineCursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+			lineCursor.insertText(newLineText);
+			replacedCount++;
+		}
+	}
+	cursor.endEditBlock();
+	if (replacedCount == 0) {
+        statusBar()->showMessage(tr("No match found."), 5000);
+    } else {
+        statusBar()->showMessage(tr("%1 line(s) substituted.").arg(replacedCount), 5000);
+    }
+}
+void MainWindow::do_vi_search(const QString& text, QTextCursor& cursor, int rcnt, DocWidget* docWidget) {
 }
 void MainWindow::on_cmdLine_enter() {
 	qDebug() << "MainWindow::on_cmdLine_enter()";
@@ -1141,6 +1195,11 @@ void MainWindow::on_cmdLine_enter() {
 	QTextCursor cursor = gvi.m_prevFocusWidget == (QWidget*)docWidget->m_editor ?
 							docWidget->m_editor->textCursor() : docWidget->m_preview->textCursor();
 	QTextDocument *doc = cursor.document();
+	if( text[0] == '/' || text[0] == '?' ) {
+		do_vi_search(text, cursor, gvi.m_repeatCount, docWidget);
+		return;
+	}
+	assert( text[0] == ':' );
 	int totalLines = doc->blockCount();
 	if( doc->lastBlock().text().isEmpty() && totalLines > 1 ) --totalLines;
 	int ix = 1;		//	skip ':'
@@ -1224,7 +1283,7 @@ void MainWindow::on_cmdLine_enter() {
 			do_output(QString("%1:").arg(ln, 4) + block.text() + "\n");
 		}
 	} else if( is_match(cmd, "s(ubstitute") ) {
-		do_subst(text, ix);
+		do_subst(text, ix, doc);
 	} else {
 		statusBar()->showMessage(tr("illegal command."), 5000);
 	}
