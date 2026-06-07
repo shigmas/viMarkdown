@@ -36,6 +36,13 @@ extern QString anchorToFullPath(const QString &anchor);
 bool is_folded(QTextBlock block) {
 	return block.next().isValid() && !block.next().isVisible();		//	次行が折り畳まれている
 }
+int count_folded(QTextBlock block) {		//	block 以降、何行が折り畳まれているか？
+	int count = 0;
+	while( (block = block.next()).isValid() && !block.isVisible() ) {
+		++count;
+	}
+	return count;
+}
 bool is_foldable(QTextBlock block) {
 	return block.userState() == US_HEADING;
 }
@@ -2221,12 +2228,12 @@ void drawCRLF(QPainter &p, QRect r) {
 	p.drawLine(x_start, y_q, x_start + headSize, y_q - headSize);
 	p.drawLine(x_start, y_q, x_start + headSize, y_q + headSize);
 }
-void drawFolded(QPainter &p, QRect r) {
+void drawFolded(QPainter &p, QRect r, int n) {
 	//r.setX(r.x() + r.width() + r.width()/4);
 	//r.setX(r.right());
 	//r.setWidth(r.width()*4);
 	p.setPen(Qt::blue);
-	p.drawText(r, Qt::AlignLeft, "[…]");
+	p.drawText(r, Qt::AlignLeft, QString("[+%1 lines]").arg(n));
 }
 void drawEOF(QPainter &p, QRect r) {
 	int x = r.left() + 2;
@@ -2313,7 +2320,7 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
 			drawCRLF(p, cr);		 
 			if( is_folded(b) ) {
 				int nx = cr.right() + zWidth;
-				drawFolded(p, QRect(nx, cr.y(), zWidth*2, cr.height()));
+				drawFolded(p, QRect(nx, cr.y(), zWidth*10, cr.height()), count_folded(b));
 			}
 		} else
 			drawEOF(p, cr);
