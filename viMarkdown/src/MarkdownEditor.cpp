@@ -773,6 +773,10 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 				//cursor.endEditBlock();
 				g.m_editBlockOpen = false;
 			}
+			if( !gvi.m_insertedText.isEmpty() && cursor.position() > cursor.block().position()) {
+				cursor.movePosition(QTextCursor::Left);
+				this->setTextCursor(cursor);
+			}
 			gvi.m_viCmdMode = true;
 			gvi.m_recInsertedText = false;
 		}
