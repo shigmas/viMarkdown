@@ -1098,12 +1098,12 @@ bool parse_subst(const QString &text, int &ix, QString &pat, QString &after, boo
 
 	// --- 空パターンの場合は前回値を参照。新規パターンなら保存する処理を追加 ---
 	if (pat.isEmpty()) {
-		if (gvi.m_regexp.isEmpty()) {
+		if (gvi.m_lastSearchedPat.isEmpty()) {
 			return false; // 前回パターンが存在しない場合はエラー（パース失敗）
 		}
-		pat = gvi.m_regexp; // 前回保存したパターンを再利用
+		pat = gvi.m_lastSearchedPat; // 前回保存したパターンを再利用
 	} else {
-		gvi.m_regexp = pat; // 新しく指定されたパターンを保存
+		gvi.m_lastSearchedPat = pat; // 新しく指定されたパターンを保存
 	}
 
 	// 2. 置換後文字列（after）の抽出とエスケープ解除
@@ -1211,6 +1211,82 @@ void MainWindow::do_subst(const QString &text, int ix, QTextDocument* doc) {
     }
 }
 void MainWindow::do_vi_search(const QString& text, QTextCursor& cursor, int rcnt, DocWidget* docWidget) {
+	QTextDocument *doc = cursor.document();
+    QTextCursor currentCursor = cursor;
+    
+    // 1. 検索方向の判定
+    QChar direction = text[0]; // '/' または '?'
+    bool isForward = (direction == '/');
+
+    // 2. 検索パターンの抽出
+    // コマンドラインの2文字目以降をパターンとする
+    QString pat = text.mid(1); 
+    
+    if (pat.isEmpty()) {
+        // パターンが空の場合は、前回使用した検索パターンを再利用する（Vimの挙動）
+        pat = gvi.m_lastSearchedPat;
+    } else {
+        // 新しいパターンを履歴に保存
+        gvi.m_lastSearchedPat = pat;
+    }
+
+    if (pat.isEmpty()) {
+        statusBar()->showMessage(tr("No previous search pattern"), 5000);
+        return;
+    }
+
+    // 3. 正規表現オブジェクトの作成 (SmartcaseやIgnorecase相当として大文字小文字を区別しない設定)
+    QRegularExpression rx(pat, QRegularExpression::CaseInsensitiveOption);
+    if (!rx.isValid()) {
+        statusBar()->showMessage(tr("Invalid search pattern: %1").arg(rx.errorString()), 5000);
+        return;
+    }
+
+    // 4. 検索フラグの設定
+    QTextDocument::FindFlags flags;
+    if (!isForward) {
+        flags |= QTextDocument::FindBackward;
+    }
+
+    // 5. リピート回数（rcnt）を考慮した検索ループとラップスキャン（折り返し検索）
+    int loopCount = qMax(1, rcnt);
+    QTextCursor matchCursor;
+
+    for (int i = 0; i < loopCount; ++i) {
+        // 現在のカーソル位置から検索を試みる
+        matchCursor = doc->find(rx, currentCursor, flags);
+
+        // 見つからなかった場合はファイルの端から折り返して再検索（Wrapscan）
+        if (matchCursor.isNull()) {
+            QTextCursor wrapCursor(doc);
+            if (isForward) {
+                wrapCursor.movePosition(QTextCursor::Start); // 先頭に戻る
+            } else {
+                wrapCursor.movePosition(QTextCursor::End);   // 末尾に戻る
+            }
+            matchCursor = doc->find(rx, wrapCursor, flags);
+        }
+
+        // それでも見つからない場合はドキュメント内に存在しない
+        if (matchCursor.isNull()) {
+            statusBar()->showMessage(tr("Pattern not found: %1").arg(pat), 5000);
+            return;
+        }
+
+        // 次のループ（rcntが2以上の場合）のために検索開始点を更新
+        currentCursor = matchCursor;
+    }
+
+    // 6. 折りたたまれている領域の中にマッチした場合は自動展開する処理
+    QTextBlock matchedBlock = matchCursor.block();
+    //##unfoldParentHeadings(matchedBlock, docWidget);
+
+    // 7. エディタにカーソルを設定し、画面をスクロールしてフォーカスを戻す
+    docWidget->m_editor->setTextCursor(matchCursor);
+    docWidget->m_editor->ensureCursorVisible();
+    docWidget->m_editor->setFocus();
+    
+    statusBar()->showMessage(tr("Searched: %1").arg(pat), 3000);
 }
 void MainWindow::on_cmdLine_enter() {
 	qDebug() << "MainWindow::on_cmdLine_enter()";

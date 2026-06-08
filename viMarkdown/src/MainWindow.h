@@ -154,7 +154,7 @@ struct ViStatus {
 	QString	m_pendingCommand;			//	入力中の vi コマンド
 	QString	m_insertedText;				//	i 等で挿入された文字列
     QString	m_yankBuffer;
-    QString	m_regexp;					//	最新検索文字列
+    QString	m_lastSearchedPat;			//	最新検索文字列
     QStringList	m_exhist;				//	ex コマンド履歴、先頭が最新コマンド
     QWidget	*m_prevFocusWidget = nullptr;	//	:/? 押下時点でフォーカスを持っていた Widget
 };
