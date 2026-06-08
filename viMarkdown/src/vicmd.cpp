@@ -297,6 +297,16 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 					do_fold(block, doc);
 				block = block.next();
 			}
+			onMDTextChanged();
+			break;
+		case 'R':		//	zR	すべて展開
+			block = doc->begin();
+			while( block.isValid() ) {
+				if( block.userState() == US_HEADING )
+					do_unfold(block, doc);
+				block = block.next();
+			}
+			onMDTextChanged();
 			break;
 		}
 		break;
