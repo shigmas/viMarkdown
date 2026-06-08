@@ -2404,22 +2404,31 @@ void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
 	    // 矢印の中心座標
 	    int cx = x + w / 2;
 	    int cy = y + h / 2;
-	    int half = qMin(w, h) / 2 - 2; // 矢印の大きさ
+	    int half = qMin(w, h) / 2 /*- 2*/; // 矢印の大きさ
 
 	    auto foldColor = Qt::black;
-	    painter.setPen(QPen(foldColor, 1.5));
-
+	    //painter.setPen(QPen(foldColor, 1.5));
+	    painter.setPen(Qt::NoPen);
+	    painter.setBrush(foldColor);
+	    QPolygon poly;
 	    if (rightward) {
 	        // ▶ 向き（折り畳み済み）: 上下が cx 側に寄る
 	        // 左上 → 右中 → 左下
-	        painter.drawLine(cx - half, cy - half,  cx + half, cy);
-	        painter.drawLine(cx + half, cy,          cx - half, cy + half);
+	        //painter.drawLine(cx - half, cy - half,  cx + half, cy);
+	        //painter.drawLine(cx + half, cy,          cx - half, cy + half);
+	        poly << QPoint(cx - half, cy - half)
+	             << QPoint(cx + half, cy)
+	             << QPoint(cx - half, cy + half);
 	    } else {
 	        // ▼ 向き（展開中）: 上が両端、下が中央
 	        // 左上 → 下中 → 右上
-	        painter.drawLine(cx - half, cy - half,  cx,        cy + half);
-	        painter.drawLine(cx,        cy + half,  cx + half, cy - half);
+	        //painter.drawLine(cx - half, cy - half,  cx,        cy + half);
+	        //painter.drawLine(cx,        cy + half,  cx + half, cy - half);
+	        poly << QPoint(cx - half, cy - half)
+	             << QPoint(cx + half, cy - half)
+	             << QPoint(cx,        cy + half);
 	    }
+	    painter.drawPolygon(poly);
 	};
 	while (block.isValid() && top <= event->rect().bottom()) {
 		if (block.isVisible() && bottom >= event->rect().top()) {
