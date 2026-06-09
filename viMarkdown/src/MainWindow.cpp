@@ -1450,25 +1450,26 @@ EDIT
   u/U      undo/redo                         .       repeat last edit
  
 SEARCH
-  /{pat}   search forward *                  ?{pat}  search backward *
-  *        search word under cursor *        n/N     next/prev match *
+  /{pat}   search forward                    ?{pat}  search backward  
+  *        search word under cursor          n/N     next/prev match  
  
 SCROLL / FOLD
   z.  center *         zEnter  to top *      z-  to bottom *
   za  toggle fold      zc  close fold        zo  open fold
+  zM  close all folds  zR  open all folds
 
 EX
   :w[rite]  save                          :q[uit]/!   quit / force quit
   :{n}      jump to line n                :{r}d[elete] delete range
   :{r}p     print lines                   :{r}P       print with line nums
-  :{r}s/pat/rep/[g]  substitute *         :{r}g/pat/cmd  global execution *
+  :{r}s/pat/rep/[g]  substitute           :{r}g/pat/cmd  global execution *
   :{r}nu[mber]       number lines         :{r}n[ext]     next file *
   :w filename        save as *            Up/Down     command history  
  
   Range {r} modifiers:
     {num}   line num         .  current line     $  last line
     /pat/   match fwd        ?pat? match bwd     +n/-n  relative offset
-    ;       range separator *
+    ;       range separator  
  
 COUNT  {n}{cmd} repeats n times.  {n}op{m}move multiplies (2d3w = 6 words).
 )" );
