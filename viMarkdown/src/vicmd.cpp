@@ -909,6 +909,9 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		case 'U':
 			docWidget->m_editor->redo();
 			break;
+		case '*':		//	カーソル位置単語検索
+			onAction_FindWord();
+			break;
 		case ';':		//	順方向再検索
 			switch( gvi.m_last_fFtT.unicode() ) {
 			case 'f':
