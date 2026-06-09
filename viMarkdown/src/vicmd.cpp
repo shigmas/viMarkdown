@@ -738,6 +738,9 @@ doneW:
 		onAction_FindWord();
 		break;
 	case 'n':
+		cursor.movePosition(QTextCursor::Right);
+		if( isEditor)
+			docWidget->m_editor->setTextCursor(cursor);
 		do_find();
 		if( g.m_matchedPosition >= 0 )
 			cursor.setPosition(g.m_matchedPosition);

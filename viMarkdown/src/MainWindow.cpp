@@ -539,7 +539,7 @@ void MainWindow::do_search(const QString srcText, bool backward) {
 		if (!found) {
 			qDebug() << "not found";
 		} else
-			g.m_matchedPosition = mdEditor->textCursor().position();
+			g.m_matchedPosition = mdEditor->textCursor().anchor();
 	}
 	g.m_lastSearchedPat = srcText;
 	mdEditor->highlightSearchText(srcText);
