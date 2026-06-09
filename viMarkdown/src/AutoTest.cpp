@@ -764,7 +764,7 @@ void MainWindow::onAction_DumpBlockUserStates() {
 		//qDebug() << block.blockNumber() << ": " << blockType(block) << ", " << block.text();
 		//txt += QString::number((int)block.blockNumber()) + ": '" + blockType(block);
 		//txt += QString("%1: %2 '%3'\n").arg(block.blockNumber()+1).arg(blockType(block)).arg(block.text());
-		txt += QString("%1: 0x%2 '%3'\n").arg(block.blockNumber()+1).arg((unsigned int)block.userState(), 4, 16).arg(block.text());
+		txt += QString("%1: 0x%2 '%3'\n").arg(block.blockNumber()+1).arg((unsigned int)block.userState(), 4, 16, QChar('0')).arg(block.text());
 		block = block.next();
 	}
 	txt += "```\n";
@@ -774,7 +774,7 @@ void MainWindow::onAction_DumpBlockUserStates() {
 		//qDebug() << block.blockNumber() << ": " << blockType(block) << ", " << block.text();
 		//txt += QString::number((int)block.blockNumber()) + ": '" + blockType(block);
 		//txt += QString("%1: %2 '%3'\n").arg(block.blockNumber()+1).arg(blockType(block)).arg(block.text());
-		txt += QString("%1: 0x%2 '%3'\n").arg(block.blockNumber()+1).arg((unsigned int)block.userState(), 4, 16).arg(block.text());
+		txt += QString("%1: 0x%2 '%3'\n").arg(block.blockNumber()+1).arg((unsigned int)block.userState(), 4, 16, QChar('0')).arg(block.text());
 		block = block.next();
 	}
 	txt += "```\n";
