@@ -13,12 +13,12 @@
     - リアルタイムプレビュー
     - プレビュー内編集
     - vi コマンド
+    - etc...
 - SVGブロックを実装してみた（今日の本題）
   - <svg ...> だけをパースし、サイズ取得
-  - QImage 生成、QtSVG で描画、表示
-  - QtSvg は機能不足だったため、LunaSVG に変更
+  - QImage 生成、LunaSVG で描画、表示
 ```SVG
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="500" height="500">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
   <defs>
     <!-- ドロップシャドウ効果 -->
     <filter id="shadow" x="-10%" y="-10%" width="125%" height="125%">

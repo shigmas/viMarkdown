@@ -1234,7 +1234,6 @@ void MarkdownPreview::do_SVG(QTextBlock& srcBlock, QTextCursor& cursor) {
 	}
 	QImage image(width, height, QImage::Format_ARGB32);
 	image.fill(Qt::white);
-#if 1
     auto document = lunasvg::Document::loadFromData(buf.toUtf8());
     if (!document) {
         // ロード失敗（SVGの構文エラーなど）
@@ -1248,22 +1247,21 @@ void MarkdownPreview::do_SVG(QTextBlock& srcBlock, QTextCursor& cursor) {
         image.bytesPerLine()
     );
     document->render(bitmap);
+#if 1
+    QTextBlockFormat imgBlockFormat = cursor.blockFormat();
+    imgBlockFormat.setAlignment(Qt::AlignCenter);
+    cursor.setBlockFormat(imgBlockFormat);
+    setBlockType(cursor.block(), US_SVG_BLOCK);
+    cursor.insertImage(image);
+    cursor.insertBlock();
+    QTextBlockFormat nextBlockFormat = cursor.blockFormat();
+    nextBlockFormat.setAlignment(Qt::AlignLeft); // または元の配置にリセット
+    cursor.setBlockFormat(nextBlockFormat);
 #else
-	QPainter painter(&image);
-	if( !buf.trimmed().isEmpty() ) {
-		QSvgRenderer renderer(buf.toUtf8());
-		if (!renderer.isValid()) {
-		    QString mess = "SVGの読み込みに失敗しました:\n" + buf;
-		    qDebug() << mess;
-		    emit do_output(mess);
-		}
-		renderer.render(&painter);
-	}
-	painter.end();
-#endif
 	setBlockType(cursor.block(), US_SVG_BLOCK);
 	cursor.insertImage(image);
 	cursor.insertBlock();
+#endif
 }
 void MarkdownPreview::do_code(QTextBlock srcBlock, QTextCursor& cursor) {
 #if 0
