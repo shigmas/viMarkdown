@@ -347,7 +347,7 @@ SPR# 状 P Open Close ver     Type  概要
 0344 ◎ C 06/08 06/08 03019│ToDo│j k で折り畳まれた行に移動しようとすると、移動不可になる。→ 次の表示行に移動すべき
 0345 ◎ C 06/08 06/08 03019│ToDo│<num>gg 対応
 0346 ◎ C 06/09 06/09 03020│ToDo│折り畳み・展開ボタンを ▼、▶ に変更
-0347 ● C 06/09            │ToDo│
+0347 ◎ C 06/09 06/09 03020│ToDo│行種別は QTextBlock::userState の下位８ビットとし、blockType(), setBlockType() 関数を実装
 0348 ● C 06/09            │ToDo│
 0349 ● C 06/09            │ToDo│
 0350 ● C 06/09            │ToDo│

@@ -50,9 +50,9 @@ enum CharType {
 	Type_HalfAlphaNum,
 	Type_FullSymbol
 };
-//	行フラグ
+//	ブロックフラグ
 enum {
-	US_DEFAULT = -1,	//	本文など
+	US_DEFAULT = 0xff,	//	本文など
 	//US_BODY = 0,		//	本文など
 	US_HEADING = 0,		//	タイトル・見出し
 	US_LIST,			//	リスト
@@ -70,6 +70,8 @@ enum {
 	US_CELL,			//	マークダウンテーブル内セル
 	US_CELL_DQ,			//	"" で囲まれたテーブル内セル
 };
+using uchar = unsigned char;
+const int BLOCK_FLAG_BITS = 0xff;		//	userState の下位8bitがブロックタイプ
 
 const QChar STX(0x0002);		//	行頭仮想文字
 const QChar ETX(0x0003);		//	行末仮想文字

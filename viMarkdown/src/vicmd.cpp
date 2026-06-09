@@ -12,6 +12,9 @@
 extern Global g;
 extern ViStatus gvi;
 
+uchar blockType(const QTextBlock &block);
+void setBlockType(QTextBlock block, uchar type);
+
 int getRepeatCount() {
 	if( gvi.m_repeatCount == 0 ) return 1;
 	return gvi.m_repeatCount;
@@ -242,7 +245,7 @@ bool is_foldable(QTextBlock block);
 void do_fold(QTextBlock block, QTextDocument *doc) {	//	block は見出し行
 	int lvl = heading_level(block.text());
 	while( (block = block.next()).isValid() ) {
-		if( block.userState() == US_HEADING && heading_level(block.text()) <= lvl )
+		if( blockType(block) == US_HEADING && heading_level(block.text()) <= lvl )
 			break;
         block.setVisible(false); // ブロックを非表示に設定
         doc->markContentsDirty(block.position(), block.length());
@@ -293,7 +296,7 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 		case 'M':		//	zM	すべて折り畳み
 			block = doc->begin();
 			while( block.isValid() ) {
-				if( block.userState() == US_HEADING && block.isVisible() )
+				if( blockType(block) == US_HEADING && block.isVisible() )
 					do_fold(block, doc);
 				block = block.next();
 			}
@@ -302,7 +305,7 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 		case 'R':		//	zR	すべて展開
 			block = doc->begin();
 			while( block.isValid() ) {
-				if( block.userState() == US_HEADING )
+				if( blockType(block) == US_HEADING )
 					do_unfold(block, doc);
 				block = block.next();
 			}
@@ -315,7 +318,7 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 		case '[': {	//	[[
 			QTextBlock block = cursor.block().previous();
 			while (block.isValid()) {
-				if (block.userState() == US_HEADING) {
+				if (blockType(block) == US_HEADING) {
 					if (--rcnt == 0) {
 						cursor.setPosition(block.position());
 						break;
@@ -332,7 +335,7 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 		case ']': {	//	]]
 			QTextBlock block = cursor.block().next();
 			while (block.isValid()) {
-				if (block.userState() == US_HEADING) {
+				if (blockType(block) == US_HEADING) {
 					if (--rcnt == 0) {
 						cursor.setPosition(block.position());
 						break;
@@ -419,7 +422,7 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWid
 		case ']': {	//	]]
 			QTextBlock block = cursor.block().next();
 			while (block.isValid()) {
-				if (block.userState() == US_HEADING) {
+				if (blockType(block) == US_HEADING) {
 					if (--rcnt == 0) {
 						cursor.setPosition(block.position());
 						break;
@@ -432,7 +435,7 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWid
 		case '[': {	//	[[
 			QTextBlock block = cursor.block().previous();
 			while (block.isValid()) {
-				if (block.userState() == US_HEADING) {
+				if (blockType(block) == US_HEADING) {
 					if (--rcnt == 0) {
 						cursor.setPosition(block.position());
 						break;

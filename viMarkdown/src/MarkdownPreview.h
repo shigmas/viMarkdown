@@ -17,15 +17,6 @@ class DocWidget;
 
 */
 
-#if 0
-enum {
-	US_DEFAULT = -1,	//	本文など
-	//US_BODY = 0,		//	本文など
-	US_HEADING,			//	タイトル・見出し
-	US_CHECKBOX,		//	チェックボックス
-};
-#endif
-
 class MarkdownPreview : public QTextEdit
 {
 	Q_OBJECT 

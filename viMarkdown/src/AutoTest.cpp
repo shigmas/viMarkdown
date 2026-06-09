@@ -35,6 +35,9 @@
 
 using namespace std;
 
+uchar blockType(const QTextBlock &block);
+void setBlockType(QTextBlock block, uchar type);
+
 QChar g_flag_char[] = {
 	u'v',	//	PCF_VISIBLE = 0,	// プレビューに表示される
 	u'-',	//	PCF_COMMENTED,		//	コメントアウトされた文字
@@ -369,7 +372,7 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 	while( block1.isValid() && block2.isValid() ) {
 		QCoreApplication::processEvents();		//	溜まっているイベント処理
 #if 0
-		while( block2.userState() == US_TABLE ) {		//	テーブル前後ダミーブロックはスキップ
+		while( blockType(block2) == US_TABLE ) {		//	テーブル前後ダミーブロックはスキップ
 			block2 = block2.next();
 		}
 		if (!block2.isValid()) break;
@@ -388,25 +391,25 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 			block1 = block1.next();
 			continue;
 		}
-		//if( block1.userState() == US_TABLE && block2.userState() != US_TABLE )		//	block2 には何故かダミー？がある
+		//if( blockType(block1) == US_TABLE && blockType(block2) != US_TABLE )		//	block2 には何故かダミー？がある
 		//	block2 = block2.next();
 		ASSERT(block2.isValid(), block1.blockNumber());
-		while( (block1.userState() == US_CODE_BLOCK || block1.userState() == US_CODE_BLOCK_END) &&
+		while( (blockType(block1) == US_CODE_BLOCK || blockType(block1) == US_CODE_BLOCK_END) &&
 			block1.text().startsWith("```") )
 		{
 			block1 = block1.next();
 		}
-		if( block1.userState() == US_KEISEN_BEGIN || block1.userState() == US_KEISEN_BLOCK ) {
-			while( block1.userState() == US_KEISEN_BEGIN || block1.userState() == US_KEISEN_BLOCK )
+		if( blockType(block1) == US_KEISEN_BEGIN || blockType(block1) == US_KEISEN_BLOCK ) {
+			while( blockType(block1) == US_KEISEN_BEGIN || blockType(block1) == US_KEISEN_BLOCK )
 				block1 = block1.next();
 			block2 = block2.next();
 			continue;
 		}
-		while( /*block1.userState() == US_KEISEN_BLOCK &&*/ block1.text().startsWith("```") ) {
+		while( /*blockType(block1) == US_KEISEN_BLOCK &&*/ block1.text().startsWith("```") ) {
 			block1 = block1.next();
 		}
 #if 0
-		if( block1.userState() == US_TABLE) {
+		if( blockType(block1) == US_TABLE) {
 			if( !inTable ) {
 				block2 = block2.next();		//	GFMテーブル最初はテーブル全体のためのブロックなのでスキップ
 			}
@@ -418,7 +421,7 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 			inTable = false;
 		}
 #endif
-		while( block2.userState() == US_TABLE ) {		//	テーブル前後ダミーブロックはスキップ
+		while( blockType(block2) == US_TABLE ) {		//	テーブル前後ダミーブロックはスキップ
 			block2 = block2.next();
 		}
 		qDebug() << "block1: " << block1.blockNumber() << ", block2: " << block2.blockNumber();
@@ -426,7 +429,7 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 		QString buf1 = block1.text();
 		QString buf2 = block2.text();
 		int offset = 0;
-		if( listStrings.isEmpty() && block2.userState() == US_LIST ) {
+		if( listStrings.isEmpty() && blockType(block2) == US_LIST ) {
 			listStrings = buf2.split(QChar(LINE_SEPARATOR));
 			//if( listStrings.size() > 1 )	//	継続行がある場合
 			//	offset = strlen("- ");
@@ -737,7 +740,7 @@ void MainWindow::onAction_DumpCharFlags() {
 	QTextBlock block = docWidget->m_editor->document()->firstBlock();
 	QString txt = "\n# Dump charFlags[]\n\n```\n";
 	while( block.isValid() ) {
-		//qDebug() << block.blockNumber() << ": " << block.userState() << ", " << block.text();
+		//qDebug() << block.blockNumber() << ": " << blockType(block) << ", " << block.text();
 		//printCharFlags(block);
 		txt += QString::number((int)block.blockNumber()) + ": '" + block.text() + "' ";
 		const BlockData* data = getBlockData(block);
@@ -758,18 +761,18 @@ void MainWindow::onAction_DumpBlockUserStates() {
 	QString txt = "\n## userStates of Editor Blocks\n\n```\n";
 	QTextBlock block = docWidget->m_editor->document()->firstBlock();
 	while( block.isValid() ) {
-		//qDebug() << block.blockNumber() << ": " << block.userState() << ", " << block.text();
-		//txt += QString::number((int)block.blockNumber()) + ": '" + block.userState();
-		txt += QString("%1: %2 '%3'\n").arg(block.blockNumber()+1).arg(block.userState()).arg(block.text());
+		//qDebug() << block.blockNumber() << ": " << blockType(block) << ", " << block.text();
+		//txt += QString::number((int)block.blockNumber()) + ": '" + blockType(block);
+		txt += QString("%1: %2 '%3'\n").arg(block.blockNumber()+1).arg(blockType(block)).arg(block.text());
 		block = block.next();
 	}
 	txt += "```\n";
 	txt += "\n## userStates of Preview Blocks\n\n```\n";
 	block = docWidget->m_preview->document()->firstBlock();
 	while( block.isValid() ) {
-		//qDebug() << block.blockNumber() << ": " << block.userState() << ", " << block.text();
-		//txt += QString::number((int)block.blockNumber()) + ": '" + block.userState();
-		txt += QString("%1: %2 '%3'\n").arg(block.blockNumber()+1).arg(block.userState()).arg(block.text());
+		//qDebug() << block.blockNumber() << ": " << blockType(block) << ", " << block.text();
+		//txt += QString::number((int)block.blockNumber()) + ": '" + blockType(block);
+		txt += QString("%1: %2 '%3'\n").arg(block.blockNumber()+1).arg(blockType(block)).arg(block.text());
 		block = block.next();
 	}
 	txt += "```\n";
