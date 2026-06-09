@@ -72,6 +72,7 @@ enum {
 };
 using uchar = unsigned char;
 const int BLOCK_FLAG_BITS = 0xff;		//	userState の下位8bitがブロックタイプ
+const int BLOCK_FOLDED = 0x100;			//	見出し行の子テキストが折り畳まれているか？
 
 const QChar STX(0x0002);		//	行頭仮想文字
 const QChar ETX(0x0003);		//	行末仮想文字

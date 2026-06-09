@@ -33,12 +33,26 @@ extern ViStatus gvi;
 //extern bool isTableHyphenLine(const QString& lnStr, std::vector<char> &tableAlign);
 extern QString splitName(QString& anchor);
 extern QString anchorToFullPath(const QString &anchor);
+
 uchar blockType(const QTextBlock &block) {
 	return block.userState() & BLOCK_FLAG_BITS;
 }
 void setBlockType(QTextBlock block, uchar type) {
 	auto us = block.userState();
 	block.setUserState((us&~BLOCK_FLAG_BITS) | type);
+}
+void setBlockFolded(QTextBlock block, bool folded) {
+	auto us = block.userState();
+	if (us == -1) us = 0; // -1 の安全対策
+	if( folded )
+		block.setUserState(us | BLOCK_FOLDED);
+	else
+		block.setUserState(us & ~BLOCK_FOLDED);
+}
+bool blockFolded(const QTextBlock &block) {
+	auto us = block.userState();
+	if (us == -1) us = 0; // -1 の安全対策
+	return (us & BLOCK_FOLDED) != 0;
 }
 bool is_folded(QTextBlock block) {
 	return block.next().isValid() && !block.next().isVisible();		//	次行が折り畳まれている
