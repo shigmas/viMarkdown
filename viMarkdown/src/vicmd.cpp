@@ -14,6 +14,8 @@ extern ViStatus gvi;
 
 uchar blockType(const QTextBlock &block);
 void setBlockType(QTextBlock block, uchar type);
+bool blockFolded(const QTextBlock &block);
+void setBlockFolded(QTextBlock block, bool folded);
 
 int getRepeatCount() {
 	if( gvi.m_repeatCount == 0 ) return 1;
@@ -244,6 +246,7 @@ bool is_folded(QTextBlock block);
 bool is_foldable(QTextBlock block);
 void do_fold(QTextBlock block, QTextDocument *doc) {	//	block は見出し行
 	int lvl = heading_level(block.text());
+	setBlockFolded(block, true);
 	while( (block = block.next()).isValid() ) {
 		if( blockType(block) == US_HEADING && heading_level(block.text()) <= lvl )
 			break;
@@ -253,6 +256,7 @@ void do_fold(QTextBlock block, QTextDocument *doc) {	//	block は見出し行
 }
 void do_unfold(QTextBlock block, QTextDocument *doc) {	//	block は見出し行
 	if( !is_folded(block) ) return;
+	setBlockFolded(block, false);
 	while( (block = block.next()).isValid() && !block.isVisible() ) {
         block.setVisible(true); // ブロックを表示
         doc->markContentsDirty(block.position(), block.length());

@@ -348,6 +348,16 @@ SPR# 状 P Open Close ver     Type  概要
 0345 ◎ C 06/08 06/08 03019│ToDo│<num>gg 対応
 0346 ◎ C 06/09 06/09 03020│ToDo│折り畳み・展開ボタンを ▼、▶ に変更
 0347 ◎ C 06/09 06/09 03020│ToDo│行種別は QTextBlock::userState の下位８ビットとし、blockType(), setBlockType() 関数を実装
-0348 ● C 06/09            │ToDo│見出しを折り畳んだ場合は、block.userState() の FOLDED フラグをONにする
+0348 ◎ C 06/09 06/09 03020│ToDo│見出しを折り畳んだ場合は、block.userState() の FOLDED フラグをONにする
 0349 ◎ C 06/09 06/09 03020│ToDo│blockFolded(), setBlockFolded() 実装
-0350 ● C 06/09            │ToDo│
+0350 ◎ C 06/09 06/09 03020│ToDo│Test > dump userState：16進数でダンプ
+0351 ◎ C 06/09 06/09 03020│問題│見出し行の userState が 0xffffff00 になっている。0x00000000 になっているべき
+0352 ● C 06/09            │ToDo│
+0353 ● C 06/09            │ToDo│
+0354 ● C 06/09            │ToDo│
+0355 ● C 06/09            │ToDo│
+0356 ● C 06/09            │ToDo│
+0357 ● C 06/09            │ToDo│
+0358 ● C 06/09            │ToDo│
+0359 ● C 06/09            │ToDo│
+0360 ● C 06/09            │ToDo│
