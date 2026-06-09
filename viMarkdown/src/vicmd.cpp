@@ -246,7 +246,7 @@ bool is_folded(QTextBlock block);
 bool is_foldable(QTextBlock block);
 void do_fold(QTextBlock block, QTextDocument *doc) {	//	block は見出し行
 	int lvl = heading_level(block.text());
-	setBlockFolded(block, true);
+	setBlockFolded(block, true);	//	折り畳み状態フラグON
 	while( (block = block.next()).isValid() ) {
 		if( blockType(block) == US_HEADING && heading_level(block.text()) <= lvl )
 			break;
@@ -256,10 +256,21 @@ void do_fold(QTextBlock block, QTextDocument *doc) {	//	block は見出し行
 }
 void do_unfold(QTextBlock block, QTextDocument *doc) {	//	block は見出し行
 	if( !is_folded(block) ) return;
-	setBlockFolded(block, false);
+	setBlockFolded(block, false);	//	折り畳み状態フラグOFF
 	while( (block = block.next()).isValid() && !block.isVisible() ) {
         block.setVisible(true); // ブロックを表示
         doc->markContentsDirty(block.position(), block.length());
+        if( blockType(block) == US_HEADING && blockFolded(block) ) {
+            int child_lvl = heading_level(block.text());
+            // 子見出しと同等以上のレベルの見出しが現れるまで、ポインタだけを進めてスキップ
+            while( block.next().isValid() ) {
+                QTextBlock nextBlock = block.next();
+                if( blockType(nextBlock) == US_HEADING && heading_level(nextBlock.text()) <= child_lvl ) {
+                    break;
+                }
+                block = nextBlock; // 表示を切り替えず、ただポインタを進める
+            }
+        }
 	}
 }
 void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidget* docWidget) {		//	{g z r [ ]} cmd
