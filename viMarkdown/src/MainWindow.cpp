@@ -539,7 +539,7 @@ void MainWindow::do_search(const QString srcText, bool backward) {
 			qDebug() << "not found";
 		}
 	}
-	m_srcText = srcText;
+	g.m_lastSearchedPat = srcText;
 	mdEditor->highlightSearchText(srcText);
 	mdEditor->setFocus();
 	m_searchHist.push_front(srcText);
@@ -586,15 +586,15 @@ void MainWindow::onAction_FindWord() {
 		mdEditor->moveToEndOfWord(cursor, /*selection:*/true);		
 		mdEditor->setTextCursor(cursor);
 	}
-	m_searchCB->setCurrentText(cursor.selectedText());
+	m_searchCB->setCurrentText(g.m_lastSearchedPat = cursor.selectedText());
 	do_find();
 }
 void MainWindow::onAction_ClearSearchHighlights() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	MarkdownEditor *mdEditor = docWidget->m_editor;
-	m_srcText.clear();
-	mdEditor->highlightSearchText(m_srcText);
+	g.m_lastSearchedPat.clear();
+	mdEditor->highlightSearchText(g.m_lastSearchedPat);
 }
 void MainWindow::setup_connections() {
 	connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainWindow::onCurrentTabChanged);
@@ -1092,7 +1092,7 @@ void MainWindow::updateEditorFontSize(int sz) {
 		//docWidget->m_editor->setBoldColor(g.m_boldColor);
 		docWidget->m_editor->updateInlineColors();
 		docWidget->m_editor->rehighlight();				//	再ハイライト
-		docWidget->m_editor->highlightSearchText(m_srcText);				//	再ハイライト
+		docWidget->m_editor->highlightSearchText(g.m_lastSearchedPat);				//	再ハイライト
 		docWidget->m_editor->viewport()->update();		//	再表示
 	}
 }

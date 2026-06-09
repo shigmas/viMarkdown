@@ -2133,7 +2133,7 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 		}
 	}
 	//rehighlight();
-	highlightSearchText(m_mainWindow->srcText());
+	highlightSearchText(g.m_lastSearchedPat);
 	//syncEditorCursorFromPreview();
 	m_processing = false;
 }

@@ -119,6 +119,7 @@ struct Global {
 	bool	m_editBlockOpen = false;
 	int		m_editorFontSize;
 	int		m_previewFontSize;
+    QString	m_lastSearchedPat;			//	最新検索文字列
 	QColor	m_activeLnColor;		//	アクティブ時アンダーライン行カーソル色
 	QColor	m_inactiveLnColor;		//	非アクティブ時アンダーライン行カーソル色
 	QColor	m_headingsColor;
@@ -157,7 +158,6 @@ struct ViStatus {
 	QString	m_pendingCommand;			//	入力中の vi コマンド
 	QString	m_insertedText;				//	i 等で挿入された文字列
     QString	m_yankBuffer;
-    QString	m_lastSearchedPat;			//	最新検索文字列
     QStringList	m_exhist;				//	ex コマンド履歴、先頭が最新コマンド
     QWidget	*m_prevFocusWidget = nullptr;	//	:/? 押下時点でフォーカスを持っていた Widget
 };
@@ -173,7 +173,7 @@ public:
     bool	isKeisenMode() const { return m_keisenMode; }
     bool	isThickKeisenMode() const { return m_thickKeisen; }
     //int		editorFontSize() const { return m_editorFontSize; }		//	暫定的
-    const QString	srcText() const { return m_srcText; }
+    //const QString	srcText() const { return m_srcText; }
     void	setCursorCyncing(bool b = true) const { m_isCursorSyncing = b; }
     bool	isCursorCyncing() const { return m_isCursorSyncing; }
     bool	isEdittingInPreview() const { return m_edittingInPreview; }
@@ -401,7 +401,7 @@ private:
     QString		m_curTitle;				//	現文書タイトル
     QString		m_altFullPath;			//	直前文書フルパス
     QString		m_altTitle;				//	直前文書タイトル
-    QString		m_srcText;				//	検索文字列
+    //QString		m_srcText;				//	検索文字列
     QStringList	m_searchHist;			//	検索履歴、先頭が最新検索文字列
     QStringList	m_grepDirHist;			//	grep対象ディレクトリ履歴、先頭が最新
     QStringList	m_replaceHist;			//	置換履歴、先頭が最新置換文字列
