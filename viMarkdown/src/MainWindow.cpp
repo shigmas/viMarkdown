@@ -516,6 +516,7 @@ void MainWindow::do_search(const QString srcText, bool backward) {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	MarkdownEditor *mdEditor = docWidget->m_editor;
+	g.m_matchedPosition = -1;
 	if( !srcText.isEmpty() ) {
 		QTextDocument::FindFlags flags;
 		if( backward )
@@ -537,7 +538,8 @@ void MainWindow::do_search(const QString srcText, bool backward) {
 	    }
 		if (!found) {
 			qDebug() << "not found";
-		}
+		} else
+			g.m_matchedPosition = mdEditor->textCursor().position();
 	}
 	g.m_lastSearchedPat = srcText;
 	mdEditor->highlightSearchText(srcText);

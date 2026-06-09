@@ -739,9 +739,13 @@ doneW:
 		break;
 	case 'n':
 		do_find();
+		if( g.m_matchedPosition >= 0 )
+			cursor.setPosition(g.m_matchedPosition);
 		break;
 	case 'N':
 		do_find(true);
+		if( g.m_matchedPosition >= 0 )
+			cursor.setPosition(g.m_matchedPosition);
 		break;
 	default:
 		return;

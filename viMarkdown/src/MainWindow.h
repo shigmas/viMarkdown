@@ -119,7 +119,9 @@ struct Global {
 	bool	m_editBlockOpen = false;
 	int		m_editorFontSize;
 	int		m_previewFontSize;
-    QString	m_lastSearchedPat;			//	最新検索文字列
+	int		m_matchedPosition;		//	マッチ位置
+    QString	m_lastSearchedPat;		//	最新検索文字列
+    //QTextCursor	m_matchedCursor;	//	一致位置カーソル
 	QColor	m_activeLnColor;		//	アクティブ時アンダーライン行カーソル色
 	QColor	m_inactiveLnColor;		//	非アクティブ時アンダーライン行カーソル色
 	QColor	m_headingsColor;
