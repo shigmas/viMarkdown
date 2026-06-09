@@ -549,9 +549,9 @@ void MainWindow::do_search(const QString srcText, bool backward) {
     m_searchCB->setCurrentText(srcText);
 }
 void MainWindow::do_find(bool backward) {
-	const QString srcText = m_searchCB->currentText();
-	if( srcText.isEmpty() ) return;
-	do_search(srcText, backward);
+	//const QString srcText = m_lastSearchedPat;
+	if( g.m_lastSearchedPat.isEmpty() ) return;
+	do_search(g.m_lastSearchedPat, backward);
 }
 #if 0
 void MainWindow::onSearchCBActivated() {

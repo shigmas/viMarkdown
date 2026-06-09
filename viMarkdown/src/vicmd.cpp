@@ -734,6 +734,9 @@ doneW:
 	case 'M':
 		do_vi_M(cursor, docWidget);
 		break;
+	case '*':		//	カーソル位置単語検索
+		onAction_FindWord();
+		break;
 	case 'n':
 		do_find();
 		break;
@@ -854,7 +857,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		}
 	} else if( cmd == 'h' || cmd == 'j' || cmd == 'k' || cmd == 'l' || cmd == ' ' || cmd == '%' || 
 	           cmd == 'w' || cmd == 'W' || cmd == 'b' || cmd == 'B' || cmd == 'e' || cmd == 'E' ||
-	           cmd == '$' || cmd == '^' || cmd == '-' || cmd == '+' || cmd == 'n' || cmd == 'N' ||
+	           cmd == '$' || cmd == '^' || cmd == '-' || cmd == '+' || cmd == 'n' || cmd == 'N' || cmd == '*' ||
 	           cmd == '\n' || cmd == 'G' || cmd == 'H' || cmd == 'L' || cmd == 'M' )
 	{
 	    do_vi_motion(cmd, cursor, rcnt*gvi.m_opCount, docWidget);
@@ -908,9 +911,6 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 			break;
 		case 'U':
 			docWidget->m_editor->redo();
-			break;
-		case '*':		//	カーソル位置単語検索
-			onAction_FindWord();
 			break;
 		case ';':		//	順方向再検索
 			switch( gvi.m_last_fFtT.unicode() ) {
