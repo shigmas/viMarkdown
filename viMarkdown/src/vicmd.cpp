@@ -5,6 +5,7 @@
 #include <QStatusBar>
 #include <QRegularExpression>
 #include "MainWindow.h"
+#include "ui_MainWindow.h"
 #include "DocWidget.h"
 #include "MarkdownEditor.h"
 #include "MarkdownPreview.h"
@@ -1304,9 +1305,11 @@ void MainWindow::do_vi_search(const QString& text, QTextCursor& cursor, int rcnt
     QTextBlock matchedBlock = matchCursor.block();
     //##unfoldParentHeadings(matchedBlock, docWidget);
     // 7. エディタにカーソルを設定し、画面をスクロールしてフォーカスを戻す
+    matchCursor.setPosition(matchCursor.anchor());		//	非選択、マッチ先頭に
     docWidget->m_editor->setTextCursor(matchCursor);
     docWidget->m_editor->ensureCursorVisible();
     docWidget->m_editor->setFocus();
+	ui->action_RegExp->setChecked(g.m_regexp = true);
     docWidget->m_editor->highlightSearchText(pat);
     statusBar()->showMessage(tr("Searched: %1").arg(pat), 3000);
 }
