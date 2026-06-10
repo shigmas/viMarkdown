@@ -602,6 +602,8 @@ void MarkdownEditor::moveToEndOfWord(QTextCursor& cursor, bool shift) {
 	}
 	cursor.setPosition(pos, shift ? QTextCursor::KeepAnchor : QTextCursor::MoveAnchor);
 }
+//QString MarkdownEditor::autoTextIndent(QTextBlock block) {
+//}
 void MarkdownEditor::insertEnter() {
 	//static QRegularExpression re(R"(^\d[\.\)] )");
 	static QRegularExpression re(R"(^\d\. )");

@@ -171,7 +171,12 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor, int rcnt) {
 	case 'o':
 		cursor.beginEditBlock();
 		g.m_editBlockOpen = true;
+#if 1
 		do_openline(cursor, false);
+#else
+		//cursor.movePosition(QTextCursor::EndOfBlock);
+		//insertEnter();
+#endif
 		cursor.endEditBlock();
 		gvi.m_joinEditBlock = true;
 		break;
@@ -1302,6 +1307,7 @@ void MainWindow::do_vi_search(const QString& text, QTextCursor& cursor, int rcnt
     docWidget->m_editor->setTextCursor(matchCursor);
     docWidget->m_editor->ensureCursorVisible();
     docWidget->m_editor->setFocus();
+    docWidget->m_editor->highlightSearchText(pat);
     statusBar()->showMessage(tr("Searched: %1").arg(pat), 3000);
 }
 void MainWindow::on_cmdLine_enter() {
