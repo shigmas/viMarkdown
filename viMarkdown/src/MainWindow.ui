@@ -180,6 +180,7 @@
      <addaction name="action_DumpCharFlags"/>
      <addaction name="action_DumpBlockUserStates"/>
      <addaction name="action_RunPTS"/>
+     <addaction name="action_TestViCommands"/>
     </widget>
     <widget class="QMenu" name="menu_CheatSheet">
      <property name="title">
@@ -1149,6 +1150,17 @@
    </property>
    <property name="shortcut">
     <string>Shift+F8</string>
+   </property>
+  </action>
+  <action name="action_TestViCommands">
+   <property name="text">
+    <string>&amp;Vi commands</string>
+   </property>
+   <property name="toolTip">
+    <string>Test vi commands</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+V</string>
    </property>
   </action>
  </widget>

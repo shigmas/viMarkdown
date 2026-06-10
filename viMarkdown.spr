@@ -258,7 +258,7 @@ SPR# 状 P Open Close ver     Type  概要
 0255 ◎ C 05/28 05/28 03015│ToDo│Other > Cheat Sheet：サブメニュー化し、Markdown, Vi に
 0256 ◎ C 05/28 05/28 03015│ToDo│count {c|d|y} count move 対応
 0257 ◎ C 05/28 05/28 03015│ToDo│viコマンド自動テストのための構造体定義
-0258 ● C 05/28            │ToDo│Other > Test > Vi command 追加
+0258 ◎ B 05/28 06/11 03021│ToDo│Other > Test > Vi commands Ctrl + Alt + V メニュー追加
 0259 ◎ C 05/29 05/29 03015│問題│W：改行を空白類とみなしていない
 0260 ◎ C 05/29 05/30 03015│問題│o O：文字が挿入できない
 0261 ◎ C 05/30 05/30 03015│問題│プレビューにフォーカスがあるとき、u で undo できない

@@ -616,6 +616,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_TestContextAt, &QAction::triggered, this, &MainWindow::onAction_TestContextAt);
 	connect(ui->action_TestLineCrsp, &QAction::triggered, this, &MainWindow::onAction_TestLineCrsp);
 	connect(ui->action_TestEtoPCurSync, &QAction::triggered, this, &MainWindow::onAction_TestEtoPCurSync);
+	connect(ui->action_TestViCommands, &QAction::triggered, this, &MainWindow::onAction_TestViCommands);
 	connect(ui->action_TestAll, &QAction::triggered, this, &MainWindow::onAction_TestAll);
 	connect(ui->action_RunPTS, &QAction::triggered, this, &MainWindow::onAction_RunPTS);
 	connect(ui->action_DumpCharFlags, &QAction::triggered, this, &MainWindow::onAction_DumpCharFlags);

@@ -841,4 +841,6 @@ const QList<ViTestCase> viTestCases = {
 	{ "Move cursor right",	"h|ello", {"l", "he|llo"} },
 	{ "Move cursor left",	"h|ello", {"h", "|hello"} },
 };
-
+void MainWindow::onAction_TestViCommands() {
+	qDebug() << "MainWindow::onAction_TestViCommands()";
+}
