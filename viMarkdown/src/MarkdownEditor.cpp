@@ -2376,30 +2376,54 @@ void MarkdownEditor::highlightSearchText(const QString &searchText) {
 		setExtraSelections(extraSelections);
 		return;
 	}
-
 	// 検索時の書式設定
 	QTextCharFormat format;
 	format.setBackground(Qt::yellow);		// 背景を設定色に
 	//format.setBackground(g.m_matchColor);		// 背景を設定色に
 	format.setForeground(Qt::black);		// 文字を黒に（必要に応じて）
-
 	// ドキュメント全体から検索
 	QTextDocument *doc = document();
 	QTextCursor cursor(doc);
+	if (g.m_regexp) {
+        // --- 1. 正規表現検索の処理 ---
+        QRegularExpression::PatternOptions options = QRegularExpression::NoPatternOption;
+        if (g.m_ignoreCase) {
+            options |= QRegularExpression::CaseInsensitiveOption; // 大文字小文字同一視
+        }
 
-	while (!cursor.isNull() && !cursor.atEnd()) {
-		// 次のヒットを検索
-		// 引数に FindFlags (大文字小文字区別など) を指定可能
+        QRegularExpression rx(searchText, options);
+        // 入力中の不完全な正規表現でクラッシュするのを防ぐバリデーション
+        if (!rx.isValid()) {
+            setExtraSelections(extraSelections);
+            return;
+        }
+        while (!cursor.isNull() && !cursor.atEnd()) {
+            cursor = doc->find(rx, cursor); // 正規表現で検索
+            if (!cursor.isNull()) {
+                QTextEdit::ExtraSelection selection;
+                selection.format = format;
+                selection.cursor = cursor;
+                extraSelections.append(selection);
+                // ★重要：無限ループ防止対策
+                // 「.*」や「^」などの空文字（長さ0）にマッチする正規表現が入力された場合、
+                // カーソル位置が進まずに無限ループ（フリーズ）になるのを防ぐため、強制的に1文字進めます。
+                if (cursor.anchor() == cursor.position()) {
+                    cursor.movePosition(QTextCursor::NextCharacter);
+                }
+            }
+        }
+	} else {
 		QTextDocument::FindFlags flags;
 		if( !g.m_ignoreCase )
 			flags |= QTextDocument::FindCaseSensitively;
-		cursor = doc->find(searchText, cursor, flags);
-
-		if (!cursor.isNull()) {
-			QTextEdit::ExtraSelection selection;
-			selection.format = format;
-			selection.cursor = cursor;
-			extraSelections.append(selection);
+		while (!cursor.isNull() && !cursor.atEnd()) {
+			cursor = doc->find(searchText, cursor, flags);
+			if (!cursor.isNull()) {
+				QTextEdit::ExtraSelection selection;
+				selection.format = format;
+				selection.cursor = cursor;
+				extraSelections.append(selection);
+			}
 		}
 	}
 	setExtraSelections(extraSelections);	// エディタに適用
