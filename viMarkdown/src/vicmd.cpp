@@ -744,17 +744,19 @@ doneW:
 		onAction_FindWord();
 		break;
 	case 'n':
-		cursor.movePosition(QTextCursor::Right);
-		if( isEditor)
-			docWidget->m_editor->setTextCursor(cursor);
-		do_find();
-		if( g.m_matchedPosition >= 0 )
-			cursor.setPosition(g.m_matchedPosition);
-		break;
 	case 'N':
-		do_find(true);
-		if( g.m_matchedPosition >= 0 )
-			cursor.setPosition(g.m_matchedPosition);
+		if( g.m_searchForward && cmd == 'n' || !g.m_searchForward && cmd == 'N' ) {
+			cursor.movePosition(QTextCursor::Right);
+			if( isEditor)
+				docWidget->m_editor->setTextCursor(cursor);
+			do_find();
+			if( g.m_matchedPosition >= 0 )
+				cursor.setPosition(g.m_matchedPosition);
+		} else {
+			do_find(true);
+			if( g.m_matchedPosition >= 0 )
+				cursor.setPosition(g.m_matchedPosition);
+		}
 		break;
 	default:
 		return;
@@ -1250,7 +1252,7 @@ void MainWindow::do_vi_search(const QString& text, QTextCursor& cursor, int rcnt
     
     // 1. 検索方向の判定
     QChar direction = text[0]; // '/' または '?'
-    bool isForward = (direction == '/');
+    g.m_searchForward = (direction == '/');
 
     // 2. 検索パターンの抽出
     // コマンドラインの2文字目以降をパターンとする
@@ -1274,7 +1276,7 @@ void MainWindow::do_vi_search(const QString& text, QTextCursor& cursor, int rcnt
     }
     // 4. 検索フラグの設定
     QTextDocument::FindFlags flags;
-    if (!isForward) {
+    if (!g.m_searchForward) {
         flags |= QTextDocument::FindBackward;
     }
     // 5. リピート回数（rcnt）を考慮した検索ループとラップスキャン（折り返し検索）
@@ -1286,7 +1288,7 @@ void MainWindow::do_vi_search(const QString& text, QTextCursor& cursor, int rcnt
         // 見つからなかった場合はファイルの端から折り返して再検索（Wrapscan）
         if (matchCursor.isNull()) {
             QTextCursor wrapCursor(doc);
-            if (isForward) {
+            if (g.m_searchForward) {
                 wrapCursor.movePosition(QTextCursor::Start); // 先頭に戻る
             } else {
                 wrapCursor.movePosition(QTextCursor::End);   // 末尾に戻る
