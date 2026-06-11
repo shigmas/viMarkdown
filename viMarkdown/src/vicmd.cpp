@@ -615,6 +615,9 @@ void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidge
 		do {
 			if( !cursor.movePosition(QTextCursor::Down, moveMode, rcnt) ) break;
 		} while( cursor.block().isValid() && !cursor.block().isVisible() );
+		block = cursor.block();
+		if( block.isValid() && !block.text().isEmpty() && cursor.position() == block.position() + block.text().size() )
+			cursor.movePosition(QTextCursor::Left);
 		gvi.m_linewiseMoved = true;
 		break;
 	case 'h': {
