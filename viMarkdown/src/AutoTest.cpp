@@ -827,10 +827,6 @@ void MainWindow::run_previewTestScript(const QString &script) {
 }
 //----------------------------------------------------------------------
 // viコマンド自動テスト用のテストケース構造体
-//struct ViTestStep {
-//    QString m_viCommand;     // viコマンド列
-//    QString m_expectedText;  // コマンド実行後テキスト（'|' がカーソル位置）
-//};
 struct ViTestCase {
     QString m_name;			// テスト名
     QString m_initialText;	// 初期テキスト（'|' がカーソル位置）
@@ -838,9 +834,42 @@ struct ViTestCase {
 };
 
 const QList<ViTestCase> viTestCases = {
-	{ "Move cursor right",	"h|ello", {"l", "he|llo"} },
-	{ "Move cursor left",	"h|ello", {"h", "|hello"} },
+	{ "Move cursor right",	"h@ello", {"l", "he@llo", "l", "hel@lo", "l", "hell@o", } },
+	{ "Move cursor left",	"h@ello", {"h", "@hello", "h", "@hello", } },
 };
+QString removeCursor(const QString &src, int &pos) {
+	QString dst;
+	int p = 0;
+	for(auto ch: src) {
+		if( ch == u'@' )
+			pos = p;
+		else
+			dst += ch;
+	}
+	return dst;
+}
 void MainWindow::onAction_TestViCommands() {
 	qDebug() << "MainWindow::onAction_TestViCommands()";
+	addTab(QString("QA-%1").arg(++m_QA_tab_number));
+	DocWidget *docWidget = getCurDocWidget();;
+	if( docWidget == nullptr ) return;
+	MarkdownEditor *editor = docWidget->m_editor;
+	int total_tested = 0;
+	int total_failed = 0;
+	do_output("\n");
+	do_output("Test vi commands...\n\n");
+	int pos;
+	for(int i = 0; i < viTestCases.size(); ++i) {
+		do_output(viTestCases[i].m_name + ": ");
+		QTextCursor cursor = editor->textCursor();
+		cursor.movePosition(QTextCursor::Start);
+		cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
+		cursor.insertText(removeCursor(viTestCases[i].m_initialText, pos));
+		editor->setTextCursor(cursor);
+		const QStringList &steps = viTestCases[i].m_steps;
+		for(int k = 0; k < steps.size(); ++k) {
+			do_output(".");
+		}
+		do_output("\n");
+	}
 }
