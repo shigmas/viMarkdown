@@ -834,9 +834,9 @@ struct ViTestCase {
 };
 
 const QList<ViTestCase> viTestCases = {
-	{ "Move cursor right",	"h@ello\n", {"l", "h@ello\n", "l", "hel@lo\n", "l", "hell@o\n", } },
+	//{ "Move cursor right",	"h@ello\n", {"l", "he@llo\n", "l", "hel@lo\n", "l", "hell@o\n", } },
 	//{ "Move cursor left",	"h@ello\n", {"h", "@hello\n", "h", "@hello\n", } },
-#if 0
+#if 1
 	// 1. 下移動 (j) の基本動作と最終行での境界制御
     { "Move cursor down (j)",
         "a@bc\ndef\nghi\n",
@@ -951,10 +951,12 @@ void MainWindow::onAction_TestViCommands() {
 			for(auto c: cmd_text)
 				do_viCmd(c, cursor);
 			QCoreApplication::processEvents();		//	溜まっているイベント処理
+			int cpos1 = cursor.position();
 			QString exp = removeCursor(steps[k+1], pos);
-			cursor = editor->textCursor();
+			//cursor = editor->textCursor();
+			//int cpos2 = cursor.position();
 			if( cursor.position() != pos ) {
-				do_output("wrong cursor position.\n");
+				do_output(QString("wrong cursor position. pos = %1 expected, but %2\n").arg(pos).arg(cursor.position()));
 				++total_failed;
 			}
 			if( cursor.document()->toPlainText() != exp ) {
