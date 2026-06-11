@@ -371,7 +371,7 @@ SPR# 状 P Open Close ver     Type  概要
 0368 ◎ C 06/11 06/11 03021│ToDo│Test > vi commands：カーソル位置、編集後テキスト比較
 0369 ◎ C 06/11 06/11 03021│ToDo│Test > vi commands：失敗数/テスト数表示
 0370 ◎ C 06/11 06/11 03021│ToDo│Test > vi commands：文書テキスト不一致の場合に、期待・実際テキスト表示
-0371 ● C 06/11            │ToDo│
+0371 ◎ C 06/11 06/11 03021│問題│Test > vi commands：カーソル位置が不正でもテストに失敗しない
 0372 ● C 06/11            │ToDo│
 0373 ● C 06/11            │ToDo│
 0374 ● C 06/11            │ToDo│
