@@ -834,8 +834,8 @@ struct ViTestCase {
 };
 
 const QList<ViTestCase> viTestCases = {
-	{ "Move cursor right",	"h@ello", {"l", "he@llo", "l", "hel@lo", "l", "hell@o", } },
-	{ "Move cursor left",	"h@ello", {"h", "@hello", "h", "@hello", } },
+	{ "Move cursor right",	"h@ello\n", {"l", "he@llo\n", "l", "hel@lo\n", "l", "hell@o\n", } },
+	{ "Move cursor left",	"h@ello\n", {"h", "@hello\n", "h", "@hello\n", } },
 };
 QString removeCursor(const QString &src, int &pos) {
 	QString dst;
@@ -865,10 +865,24 @@ void MainWindow::onAction_TestViCommands() {
 		cursor.movePosition(QTextCursor::Start);
 		cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
 		cursor.insertText(removeCursor(viTestCases[i].m_initialText, pos));
+		cursor.setPosition(pos);
 		editor->setTextCursor(cursor);
 		const QStringList &steps = viTestCases[i].m_steps;
-		for(int k = 0; k < steps.size(); ++k) {
+		for(int k = 0; k < steps.size(); k+=2) {
+			++total_tested;
 			do_output(".");
+			const QString cmd_text = steps[k];
+			for(auto c: cmd_text)
+				do_viCmd(c, cursor);
+			QString exp = removeCursor(steps[k+1], pos);
+			if( cursor.position() != pos ) {
+				do_output("wrong cursor position.\n");
+				++total_failed;
+			}
+			if( cursor.document()->toPlainText() != exp ) {
+				do_output("wrong document text.\n");
+				++total_failed;
+			}
 		}
 		do_output("\n");
 	}
