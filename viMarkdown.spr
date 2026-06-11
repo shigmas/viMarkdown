@@ -370,4 +370,14 @@ SPR# 状 P Open Close ver     Type  概要
 0367 ◎ C 06/11 06/11 03021│ToDo│QString removeCursor(const QString &src, int &pos) 実装
 0368 ◎ C 06/11 06/11 03021│ToDo│Test > vi commands：カーソル位置、編集後テキスト比較
 0369 ◎ C 06/11 06/11 03021│ToDo│Test > vi commands：失敗数/テスト数表示
-0370 ● C 06/11            │ToDo│
+0370 ◎ C 06/11 06/11 03021│ToDo│Test > vi commands：文書テキスト不一致の場合に、期待・実際テキスト表示
+0371 ● C 06/11            │ToDo│
+0372 ● C 06/11            │ToDo│
+0373 ● C 06/11            │ToDo│
+0374 ● C 06/11            │ToDo│
+0375 ● C 06/11            │ToDo│
+0376 ● C 06/11            │ToDo│
+0377 ● C 06/11            │ToDo│
+0378 ● C 06/11            │ToDo│
+0379 ● C 06/11            │ToDo│
+0380 ● C 06/11            │ToDo│

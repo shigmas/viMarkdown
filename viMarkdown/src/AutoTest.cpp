@@ -836,6 +836,78 @@ struct ViTestCase {
 const QList<ViTestCase> viTestCases = {
 	{ "Move cursor right",	"h@ello\n", {"l", "he@llo\n", "l", "hel@lo\n", "l", "hell@o\n", } },
 	{ "Move cursor left",	"h@ello\n", {"h", "@hello\n", "h", "@hello\n", } },
+	// 1. 下移動 (j) の基本動作と最終行での境界制御
+    { "Move cursor down (j)",
+        "a@bc\ndef\nghi\n",
+        {
+            "j", "abc\nd@ef\nghi\n", // 2行目の同じ列に移動
+            "j", "abc\ndef\ng@hi\n", // 3行目の同じ列に移動
+            "j", "abc\ndef\ng@hi\n"  // 最終行のため下移動しない
+        }
+    },
+    // 2. 上移動 (k) の基本動作と先頭行での境界制御
+    { "Move cursor up (k)",
+        "abc\ndef\ng@hi\n",
+        {
+            "k", "abc\nd@ef\nghi\n", // 2行目の同じ列に移動
+            "k", "a@bc\ndef\nghi\n", // 1行目の同じ列に移動
+            "k", "a@bc\ndef\nghi\n"  // 先頭行のため上移動しない
+        }
+    },
+    // 3. 短い行を通過する際の「列位置の記憶（カラムメモリ）」の検証
+    // ※ 1行目の4文字目（index 3）からスタートし、短い2行目を通過して、3行目で元の4文字目に復帰するかをテストします。
+    { "Move vertically through short lines (Column Memory)",
+        "lin@e1\nab\nline3\n",
+        {
+            "j", "line1\na@b\nline3\n",  // 2行目が短いため、一時的に2行目の末尾（index 1）に移動
+            "j", "line1\nab\nlin@e3\n",  // 3行目に降りると、元の列位置（index 3）に復帰する
+            "k", "line1\na@b\nline3\n",  // 再び2行目の末尾に制限される
+            "k", "lin@e1\nab\nline3\n"   // 1行目に戻ると、元の列位置（index 3）に完全復帰する
+        }
+    },
+    // 4. h と l が行境界（改行）を越えて回り込まないかの検証
+    { "h and l boundaries (No wrapping)",
+        "abc\n@def\nghi\n",
+        {
+            "h", "abc\n@def\nghi\n", // 行頭のため、h を押しても前の行の末尾に回り込まない
+            "l", "abc\nd@ef\nghi\n",
+            "l", "abc\nde@f\nghi\n", // 'f' はこの行の実質的な末尾（改行 \n の直前）
+            "l", "abc\nde@f\nghi\n"  // 行末のため、l を押しても次の行の先頭に回り込まない
+        }
+    },
+    // 5. カウント付き右移動 (nl) と行末でのクランプ処理
+    { "Move right with count (nl)",
+        "h@ello world\n", // 'e' (index 1) からスタート
+        {
+            "3l", "hell@o world\n", // 3文字右へ -> 'o' (index 4)
+            "5l", "hello wor@ld\n", // 5文字右へ -> 'l' (index 9)
+            "5l", "hello worl@d\n"  // 5文字右へ -> 行末の 'd' (index 10) でクランプされて止まる
+        }
+    },
+    // 6. カウント付き左移動 (nh) と行頭でのクランプ処理
+    { "Move left with count (nh)",
+        "hello wor@ld\n", // 'l' (index 9) からスタート
+        {
+            "4h", "hello@ world\n", // 4文字左へ -> 半角スペース (index 5)
+            "10h", "@hello world\n"  // 10文字左へ -> 行頭の 'h' (index 0) でクランプされて止まる
+        }
+    },
+    // 7. カウント付き下移動 (nj) と最終行でのクランプ処理
+    { "Move down with count (nj)",
+        "a@bc\ndef\nghi\njkl\n", // 1行目の 'b' (line 0, index 1) からスタート
+        {
+            "2j", "abc\ndef\ng@hi\njkl\n", // 2行下へ -> 3行目の 'h' (line 2, index 1)
+            "5j", "abc\ndef\nghi\nj@kl\n"  // 5行下へ -> 最終行の 'k' (line 3, index 1) でクランプされて止まる
+        }
+    },
+    // 8. カウント付き上移動 (nk) と先頭行でのクランプ処理
+    { "Move up with count (nk)",
+        "abc\ndef\nghi\nj@kl\n", // 4行目の 'k' (line 3, index 1) からスタート
+        {
+            "2k", "abc\nd@ef\nghi\njkl\n", // 2行上へ -> 2行目の 'e' (line 1, index 1)
+            "5k", "a@bc\ndef\nghi\njkl\n"  // 5行上へ -> 先頭行の 'b' (line 0, index 1) でクランプされて止まる
+        }
+    },
 };
 QString removeCursor(const QString &src, int &pos) {
 	QString dst;
@@ -874,6 +946,7 @@ void MainWindow::onAction_TestViCommands() {
 			const QString cmd_text = steps[k];
 			for(auto c: cmd_text)
 				do_viCmd(c, cursor);
+			QCoreApplication::processEvents();		//	溜まっているイベント処理
 			QString exp = removeCursor(steps[k+1], pos);
 			cursor = editor->textCursor();
 			if( cursor.position() != pos ) {
@@ -882,6 +955,8 @@ void MainWindow::onAction_TestViCommands() {
 			}
 			if( cursor.document()->toPlainText() != exp ) {
 				do_output("wrong document text.\n");
+				do_output("vi command: '" + cmd_text + "'\n");
+				do_output("expected: '" + exp + "', but: '" + cursor.document()->toPlainText() + "'\n");
 				++total_failed;
 			}
 		}
