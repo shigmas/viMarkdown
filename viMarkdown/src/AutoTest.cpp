@@ -875,6 +875,7 @@ void MainWindow::onAction_TestViCommands() {
 			for(auto c: cmd_text)
 				do_viCmd(c, cursor);
 			QString exp = removeCursor(steps[k+1], pos);
+			cursor = editor->textCursor();
 			if( cursor.position() != pos ) {
 				do_output("wrong cursor position.\n");
 				++total_failed;
@@ -886,4 +887,8 @@ void MainWindow::onAction_TestViCommands() {
 		}
 		do_output("\n");
 	}
+	QString mess = QString("\nTotal: %1 failed / %2 tested. (Success:%3%)")
+					.arg(total_failed).arg(total_tested).arg(100.0 - total_failed*100.0/total_tested, 0, 'f', 1);
+	statusBar()->showMessage(mess);
+	do_output(mess);
 }

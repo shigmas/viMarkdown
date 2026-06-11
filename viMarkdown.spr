@@ -369,5 +369,5 @@ SPR# 状 P Open Close ver     Type  概要
 0366 ◎ C 06/11 06/11 03021│問題│検索マッチ強調：正規表現モードに対応していない
 0367 ◎ C 06/11 06/11 03021│ToDo│QString removeCursor(const QString &src, int &pos) 実装
 0368 ◎ C 06/11 06/11 03021│ToDo│Test > vi commands：カーソル位置、編集後テキスト比較
-0369 ● C 06/11            │ToDo│
+0369 ◎ C 06/11 06/11 03021│ToDo│Test > vi commands：失敗数/テスト数表示
 0370 ● C 06/11            │ToDo│
