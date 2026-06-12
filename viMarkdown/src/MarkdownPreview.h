@@ -13,7 +13,7 @@ class DocWidget;
 /*
 	マークダウンプレビューを表示するためのクラス
 
-	QTextBlock.userState : int型：行種別情報（US_XXX）
+	QTextBlock.userState : int型：行種別情報（BT_XXX）
 
 */
 

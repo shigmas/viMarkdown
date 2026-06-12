@@ -52,23 +52,23 @@ enum CharType {
 };
 //	ブロックフラグ
 enum {
-	US_DEFAULT = 0xff,	//	本文など
-	//US_BODY = 0,		//	本文など
-	US_HEADING = 0,		//	タイトル・見出し
-	US_LIST,			//	リスト
-	US_CHECKBOX,		//	チェックボックス
-	US_NUMLIST,			//	連番
-	US_IN_COMMENT,		//	行頭がコメントブロック（<!-- -->）の中
-	US_CODE_BLOCK,		//	コードブロック内（最初の``` 行も含む）
-	US_CODE_BLOCK_END,	//	コードブロック最後の```
-	US_CSV_BLOCK,		//	CSVブロック内 ```CSV ～ ```
-	US_KEISEN_BEGIN,	//	罫線ブロック開始 ```keisen
-	US_KEISEN_BLOCK,	//	罫線ブロック内 ```keisenの次行 ～ ```
-	US_SVG_BEGIN,		//	SVGブロック開始 ```SVG
-	US_SVG_BLOCK,		//	SVGブロック内 ```SVGの次行 ～ ```
-	US_TABLE,			//	マークダウンテーブル前後ダミーブロック？
-	US_CELL,			//	マークダウンテーブル内セル
-	US_CELL_DQ,			//	"" で囲まれたテーブル内セル
+	BT_DEFAULT = 0xff,	//	本文など
+	//BT_BODY = 0,		//	本文など
+	BT_HEADING = 0,		//	タイトル・見出し
+	BT_LIST,			//	リスト
+	BT_CHECKBOX,		//	チェックボックス
+	BT_NUMLIST,			//	連番
+	BT_IN_COMMENT,		//	行頭がコメントブロック（<!-- -->）の中
+	BT_CODE_BLOCK,		//	コードブロック内（最初の``` 行も含む）
+	BT_CODE_BLOCK_END,	//	コードブロック最後の```
+	BT_CSV_BLOCK,		//	CSVブロック内 ```CSV ～ ```
+	BT_KEISEN_BEGIN,	//	罫線ブロック開始 ```keisen
+	BT_KEISEN_BLOCK,	//	罫線ブロック内 ```keisenの次行 ～ ```
+	BT_SVG_BEGIN,		//	SVGブロック開始 ```SVG
+	BT_SVG_BLOCK,		//	SVGブロック内 ```SVGの次行 ～ ```
+	BT_TABLE,			//	マークダウンテーブル前後ダミーブロック？
+	BT_CELL,			//	マークダウンテーブル内セル
+	BT_CELL_DQ,			//	"" で囲まれたテーブル内セル
 };
 using uchar = unsigned char;
 const int BLOCK_FLAG_BITS = 0xff;		//	userState の下位8bitがブロックタイプ

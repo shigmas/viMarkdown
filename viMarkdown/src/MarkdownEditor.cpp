@@ -67,7 +67,7 @@ int count_folded(QTextBlock block) {		//	block 以降、何行が折り畳まれ
 	return count;
 }
 bool is_foldable(QTextBlock block) {
-	//return blockType(block) == US_HEADING;
+	//return blockType(block) == BT_HEADING;
 	int lvl = heading_level(block);
 	if( lvl == 0 ) return false;	//	非見出し行
 	if( !(block = block.next()).isValid() ) return false;
@@ -1113,40 +1113,40 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			continue;
 		}
 		if( ch == QChar(U_KEISEN_BLOCK) ) {
-			if( blockType(block) == US_KEISEN_BEGIN ) {
+			if( blockType(block) == BT_KEISEN_BEGIN ) {
 				if( --nth == 0 ) break;
-				while( blockType(block) == US_KEISEN_BEGIN || blockType(block) == US_KEISEN_BLOCK )
+				while( blockType(block) == BT_KEISEN_BEGIN || blockType(block) == BT_KEISEN_BLOCK )
 					block = block.next();
 			} else
 				block = block.next();
 			continue;
 		}
 		if( ch == EOB ) {	//	罫線ブロック末尾
-			if( blockType(block) == US_KEISEN_BEGIN ) {
+			if( blockType(block) == BT_KEISEN_BEGIN ) {
 				if( --nth == 0 ) {
 					while( block.next().isValid() && !block.next().text().startsWith("```") )
 						block = block.next();
 					ix = block.text().size();
 					break;
 				}
-				while( blockType(block) == US_KEISEN_BEGIN || blockType(block) == US_KEISEN_BLOCK )
+				while( blockType(block) == BT_KEISEN_BEGIN || blockType(block) == BT_KEISEN_BLOCK )
 					block = block.next();
 			} else
 				block = block.next();
 			continue;
 		}
-		if( blockType(block) == US_KEISEN_BLOCK ) {
+		if( blockType(block) == BT_KEISEN_BLOCK ) {
 			//	最初の罫線ブロック以外の場合
 			block = block.next();
 			continue;
 		}
-		if( blockType(block) == US_TABLE && isTableHyphenLine(block.text()) ) {
+		if( blockType(block) == BT_TABLE && isTableHyphenLine(block.text()) ) {
 			//	GFM 表のハイフン行はスキップ
 			block = block.next();
 			continue;
 		}
 #if 0
-		if( blockType(block) == US_CODE_BLOCK ) {
+		if( blockType(block) == BT_CODE_BLOCK ) {
 			block = block.next();
 			continue;
 		}
@@ -1170,7 +1170,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 		offset = block.text().size() - buf.size();
 		if( ch == STX ) {		//	行頭の場合
 			ix = 0;
-			if( blockType(block) == US_KEISEN_BEGIN ) {
+			if( blockType(block) == BT_KEISEN_BEGIN ) {
 				if( --nth == 0 ) {
 					block = block.next();	//	罫線開始行の次行
 					break;
@@ -1191,25 +1191,25 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 			}
 			block = block.next();
 		} else if( ch == ETX ) {		//	行末の場合
-			if( blockType(block) == US_KEISEN_BEGIN ) {
+			if( blockType(block) == BT_KEISEN_BEGIN ) {
 				if( --nth == 0 ) {
-					while( block.next().isValid() && blockType(block.next()) == US_CODE_BLOCK )
+					while( block.next().isValid() && blockType(block.next()) == BT_CODE_BLOCK )
 						block = block.next();
 					ix = block.text().size();
 					break;
 				}
-			} else if( blockType(block) != US_KEISEN_BLOCK &&
+			} else if( blockType(block) != BT_KEISEN_BLOCK &&
 				!block.text().startsWith("```") &&
 				!(isLineEmpty && isPrevLineEmpty) )
 				//!(block.text().isEmpty() && isPrevEmptyBlock(block)) )
 				//!(block.text().isEmpty() && block.previous().isValid() && block.previous().text().isEmpty()) )	//	連続空行ではない
 			{
-				while( blockType(block) == US_KEISEN_BLOCK /*&& block.next().isValid() && !block.next().text().startsWith("```")*/) {
+				while( blockType(block) == BT_KEISEN_BLOCK /*&& block.next().isValid() && !block.next().text().startsWith("```")*/) {
 					block = block.next();
 				}
 				ix = buf.size();
 				if( --nth == 0 ) {
-					if( blockType(block) == US_TABLE && block.text().endsWith("|") ) --ix;
+					if( blockType(block) == BT_TABLE && block.text().endsWith("|") ) --ix;
 					break;
 				}
 			}
@@ -1230,7 +1230,7 @@ int MarkdownEditor::findPosition(const PosContext &context) {
 	}
 	if( block.isValid() ) {
 		int pos = block.position() + ix + offset + context.m_offset;
-		if( blockType(block) == US_CSV_BLOCK ) {
+		if( blockType(block) == BT_CSV_BLOCK ) {
 			pos = qMin(pos, block.position() + block.text().size());
 			int ix = pos - block.position();
 			const BlockData* data = getBlockData(block);
@@ -2178,14 +2178,14 @@ void MarkdownEditor::check_svg_completer() {	//	SVGブロック補完
 	QTextCursor cursor = this->textCursor();
 	if( cursor.hasSelection() ) return;			//	選択状態の場合は表示しない
 	QTextBlock block = cursor.block();
-	if( blockType(block) == US_SVG_BLOCK && m_lastCurBlockText.trimmed().isEmpty() ) {
+	if( blockType(block) == BT_SVG_BLOCK && m_lastCurBlockText.trimmed().isEmpty() ) {
 		qDebug() << "to show completion widget.";
 //		m_completerText = R"(<svg width="320" height="200">
 //  
 //</svg>
 //```
 //)";
-		m_svgCompleter = new SvgCompleter(this, blockType(block.previous()) == US_SVG_BEGIN);
+		m_svgCompleter = new SvgCompleter(this, blockType(block.previous()) == BT_SVG_BEGIN);
 		connect(m_svgCompleter, &SvgCompleter::enter_pressed, this, &MarkdownEditor::svg_enter_pressed);
 		connect(m_svgCompleter, &SvgCompleter::esc_pressed, this, &MarkdownEditor::svg_esc_pressed);
 		m_svgCompleter->setWindowFlags(Qt::Popup); 
@@ -2597,7 +2597,7 @@ void MarkdownEditor::dropEvent(QDropEvent *e) {
 bool MarkdownEditor::isInComment(int pos) const {		//	指定位置がコメント内か？
 	auto* doc = document();
 	QTextBlock block = doc->findBlock(pos);
-	bool inComment = blockType(block) == US_IN_COMMENT;	//	ブロック先頭コメント状態
+	bool inComment = blockType(block) == BT_IN_COMMENT;	//	ブロック先頭コメント状態
 	const QString buf = block.text();
 	int ip = pos - block.position();
 	for(int ix = 0; ix < ip; ) {
@@ -2664,7 +2664,7 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			ix = 0;
 		}
 	}
-	if( blockType(block) == US_CSV_BLOCK ) {
+	if( blockType(block) == BT_CSV_BLOCK ) {
 		if( block.text().compare(QString("```CSV"), Qt::CaseInsensitive) == 0 && block.next().isValid() ) {
 			block = block.next();
 			pos = block.position();
@@ -2672,26 +2672,26 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			block = block.previous();
 			pos = block.position() + block.text().size();
 		}
-	} else if( blockType(block) == US_CODE_BLOCK && block.text().startsWith("```") ) {
+	} else if( blockType(block) == BT_CODE_BLOCK && block.text().startsWith("```") ) {
 		if( block.next().isValid() ) {
 			block = block.next();
 			pos = block.position();
 		}
-	} else if( blockType(block) == US_CODE_BLOCK_END ) {
+	} else if( blockType(block) == BT_CODE_BLOCK_END ) {
 		block = block.previous();
 		pos = block.position() + block.text().size();
 	}
 	assert( block.isValid() );
-	if( blockType(block) == US_KEISEN_BEGIN ) {	//	罫線ブロック開始
+	if( blockType(block) == BT_KEISEN_BEGIN ) {	//	罫線ブロック開始
 		if( block.next().isValid() ) {
 			block = block.next();
 		}
-	} else if( blockType(block) != US_KEISEN_BLOCK ) {
-		if( blockType(block) == US_TABLE && isTableHyphenLine(block.text()) && block.next().isValid() ) {
+	} else if( blockType(block) != BT_KEISEN_BLOCK ) {
+		if( blockType(block) == BT_TABLE && isTableHyphenLine(block.text()) && block.next().isValid() ) {
 			block = block.next();
 			pos = block.position();
 		}
-		if( blockType(block) == US_TABLE && doc->characterAt(pos) == u'|' ) {
+		if( blockType(block) == BT_TABLE && doc->characterAt(pos) == u'|' ) {
 			if( pos == block.position() )
 				++pos;
 			else {
@@ -2711,13 +2711,13 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 	const BlockData* data = getBlockData(block);
 	QChar ch;	//	アンカー文字
 	if( isVisibleEmpty(data) ) {
-		if( blockType(block) == US_LIST && ix == strlen("- ") )
+		if( blockType(block) == BT_LIST && ix == strlen("- ") )
 			ch = STX;
 		else
 			ch = ix == 0 ? STX : ETX;
-	} else if( blockType(block) == US_KEISEN_BEGIN ) {
+	} else if( blockType(block) == BT_KEISEN_BEGIN ) {
 		ch = STX;
-	} else if( blockType(block) == US_KEISEN_BLOCK ) {
+	} else if( blockType(block) == BT_KEISEN_BLOCK ) {
 		ch = ETX;
 	} else {
 		bool found = false;
@@ -2725,7 +2725,7 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 			//	undone: CSV内で ',' を見つけた場合は、行頭方向にアンカー文字を探す
 			found = true;
 			while( ix < data->m_charFlags.size() && data->m_charFlags[ix] != PCF_VISIBLE ) {
-				if( blockType(block) == US_CSV_BLOCK && buf[ix] == u',' ) {
+				if( blockType(block) == BT_CSV_BLOCK && buf[ix] == u',' ) {
 					found = false;
 					break;
 				}
@@ -2781,7 +2781,7 @@ PosContext MarkdownEditor::contextAt(int pos) {	//	pos 位置から PosContext �
 	}
 	//	Undone: "  +\n" の場合も改行扱い
 	pc.m_anchorChar = ch;
-	while( blockType(block) == US_IN_COMMENT || !block.text().startsWith(u'#') ) {		//	直前の見出し行を探す
+	while( blockType(block) == BT_IN_COMMENT || !block.text().startsWith(u'#') ) {		//	直前の見出し行を探す
 		if( !block.previous().isValid() )
 			break;
 		block = block.previous();
@@ -2800,12 +2800,12 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const
 		auto t = block.text();
 		const BlockData *data = getBlockData(block);
 		//printCharFlags(block);
-		if( blockType(block) == US_KEISEN_BEGIN || blockType(block) == US_SVG_BEGIN ) {
+		if( blockType(block) == BT_KEISEN_BEGIN || blockType(block) == BT_SVG_BEGIN ) {
 			if( ch == STX || ch == ETX )
 				++count;
 			do {
 				block = block.next();
-			} while( block.isValid() && (blockType(block) == US_KEISEN_BLOCK || blockType(block) == US_SVG_BLOCK) );
+			} while( block.isValid() && (blockType(block) == BT_KEISEN_BLOCK || blockType(block) == BT_SVG_BLOCK) );
 			if (block.position() > pos) {
 				if (ch == ETX) --count;
 				break;
@@ -2820,7 +2820,7 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const
 			//if( block.next().position() == pos ) break;
 			const QString t = block.text();
 			if( !block.text().startsWith("```") &&		//	``` 行は無視
-				!(blockType(block) == US_LIST && block.text().size() == 2) &&		//	"- " だけのリスト行は無視
+				!(blockType(block) == BT_LIST && block.text().size() == 2) &&		//	"- " だけのリスト行は無視
 				!(block.text().isEmpty() && block.previous().isValid() && block.previous().text().isEmpty()) )		//	連続空行でない場合
 			{
 				++count;
@@ -2828,7 +2828,7 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const
 			if( block.position() >= pos ) break;
 		} else if( ch == ETX ) {		//	行末の場合
 			if( !block.next().isValid() ) break;		//	最終行の場合
-			//if( blockType(block) == US_KEISEN_BLOCK ) {
+			//if( blockType(block) == BT_KEISEN_BLOCK ) {
 			//	if( block.position() + block.text().size() >= pos ) break;
 			//} else
 			if( !block.text().startsWith("```") ) {		//	``` 行は無視
@@ -2846,8 +2846,8 @@ int MarkdownEditor::countCharUntil(QTextBlock block, int pos, QChar ch) const
 #endif
 			}
 		} else {
-			bool inComment = blockType(block) == US_IN_COMMENT;
-			bool inCSVBlock = blockType(block) == US_CSV_BLOCK;
+			bool inComment = blockType(block) == BT_IN_COMMENT;
+			bool inCSVBlock = blockType(block) == BT_CSV_BLOCK;
 			bool finished = false;		//	pos まで探索した
 			const QString buf = block.text();
 			int ix = 0;

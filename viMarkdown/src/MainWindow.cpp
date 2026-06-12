@@ -1006,7 +1006,7 @@ void MainWindow::onPreviewCurPosChanged() {		//	MarkdownPreview でカーソル�
 	m_processing = true;
 	QTextCursor cursor = docWidget->m_preview->textCursor();		//	ビューワカーソル
 	QTextBlock b0 = cursor.block();
-	while( blockType(b0) != US_HEADING ) {		//	見出し行まで移動
+	while( blockType(b0) != BT_HEADING ) {		//	見出し行まで移動
 		b0 = b0.previous();
 		if( !b0.isValid() ) {
 			b0 = cursor.document()->firstBlock();
@@ -1023,7 +1023,7 @@ void MainWindow::onPreviewCurPosChanged() {		//	MarkdownPreview でカーソル�
 		pat = block.text().right(3);
 	}
 	int nth = 1;
-	while( block.isValid() && blockType(block) != US_HEADING ) block = block.previous();
+	while( block.isValid() && blockType(block) != BT_HEADING ) block = block.previous();
 	if( !block.isValid() ) block = docWidget->m_editor->document()->begin();		//	最初のブロック
 	if( !tail ) {
 		QTextCursor cur = cursor;

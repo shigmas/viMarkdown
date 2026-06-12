@@ -247,7 +247,7 @@ int heading_level(QTextBlock block) {
 	int i = 0;
 	while( i < text.size() && text[i] == u'#' ) ++i;
 	if( i != 0 ) return i;
-	if( blockType(block) == US_LIST ) {
+	if( blockType(block) == BT_LIST ) {
 		text = block.text();
 		while( i < text.size() && text[i] == u' ' ) ++i;
 		i += 10;
@@ -260,7 +260,7 @@ void do_fold(QTextBlock block, QTextDocument *doc) {	//	block は見出し行
 	int lvl = heading_level(block);
 	setBlockFolded(block, true);	//	折り畳み状態フラグON
 	while( (block = block.next()).isValid() ) {
-		//if( blockType(block) == US_HEADING && heading_level(block) <= lvl )
+		//if( blockType(block) == BT_HEADING && heading_level(block) <= lvl )
 		//	break;
 		int l2 = heading_level(block);
 		if( l2 != 0 && l2 <= lvl )
@@ -275,12 +275,12 @@ void do_unfold(QTextBlock block, QTextDocument *doc) {	//	block は見出し行
 	while( (block = block.next()).isValid() && !block.isVisible() ) {
         block.setVisible(true); // ブロックを表示
         doc->markContentsDirty(block.position(), block.length());
-        if( blockType(block) == US_HEADING && blockFolded(block) ) {
+        if( blockType(block) == BT_HEADING && blockFolded(block) ) {
             int child_lvl = heading_level(block);
             // 子見出しと同等以上のレベルの見出しが現れるまで、ポインタだけを進めてスキップ
             while( block.next().isValid() ) {
                 QTextBlock nextBlock = block.next();
-                if( blockType(nextBlock) == US_HEADING && heading_level(nextBlock) <= child_lvl ) {
+                if( blockType(nextBlock) == BT_HEADING && heading_level(nextBlock) <= child_lvl ) {
                     break;
                 }
                 block = nextBlock; // 表示を切り替えず、ただポインタを進める
@@ -326,7 +326,7 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 		case 'M':		//	zM	すべて折り畳み
 			block = doc->begin();
 			while( block.isValid() ) {
-				if( blockType(block) == US_HEADING && block.isVisible() )
+				if( blockType(block) == BT_HEADING && block.isVisible() )
 					do_fold(block, doc);
 				block = block.next();
 			}
@@ -335,7 +335,7 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 		case 'R':		//	zR	すべて展開
 			block = doc->begin();
 			while( block.isValid() ) {
-				if( blockType(block) == US_HEADING )
+				if( blockType(block) == BT_HEADING )
 					do_unfold(block, doc);
 				block = block.next();
 			}
@@ -348,7 +348,7 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 		case '[': {	//	[[
 			QTextBlock block = cursor.block().previous();
 			while (block.isValid()) {
-				if (blockType(block) == US_HEADING) {
+				if (blockType(block) == BT_HEADING) {
 					if (--rcnt == 0) {
 						cursor.setPosition(block.position());
 						break;
@@ -365,7 +365,7 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 		case ']': {	//	]]
 			QTextBlock block = cursor.block().next();
 			while (block.isValid()) {
-				if (blockType(block) == US_HEADING) {
+				if (blockType(block) == BT_HEADING) {
 					if (--rcnt == 0) {
 						cursor.setPosition(block.position());
 						break;
@@ -452,7 +452,7 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWid
 		case ']': {	//	]]
 			QTextBlock block = cursor.block().next();
 			while (block.isValid()) {
-				if (blockType(block) == US_HEADING) {
+				if (blockType(block) == BT_HEADING) {
 					if (--rcnt == 0) {
 						cursor.setPosition(block.position());
 						break;
@@ -465,7 +465,7 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWid
 		case '[': {	//	[[
 			QTextBlock block = cursor.block().previous();
 			while (block.isValid()) {
-				if (blockType(block) == US_HEADING) {
+				if (blockType(block) == BT_HEADING) {
 					if (--rcnt == 0) {
 						cursor.setPosition(block.position());
 						break;
