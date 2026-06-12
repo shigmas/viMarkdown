@@ -242,19 +242,28 @@ void do_yank_line(QTextCursor& cursor, int rcnt) {
 		cursor.clearSelection();
 	}
 }
-int heading_level(QString text) {
-	text = text.trimmed();
+int heading_level(QTextBlock block) {
+	QString text = block.text().trimmed();
 	int i = 0;
-	while( i < text.size() && text[i] == '#' ) ++i;
+	while( i < text.size() && text[i] == u'#' ) ++i;
+	if( i != 0 ) return i;
+	if( blockType(block) == US_LIST ) {
+		text = block.text();
+		while( i < text.size() && text[i] == u' ' ) ++i;
+		i += 10;
+	}
 	return i;
 }
 bool is_folded(QTextBlock block);
 bool is_foldable(QTextBlock block);
 void do_fold(QTextBlock block, QTextDocument *doc) {	//	block は見出し行
-	int lvl = heading_level(block.text());
+	int lvl = heading_level(block);
 	setBlockFolded(block, true);	//	折り畳み状態フラグON
 	while( (block = block.next()).isValid() ) {
-		if( blockType(block) == US_HEADING && heading_level(block.text()) <= lvl )
+		//if( blockType(block) == US_HEADING && heading_level(block) <= lvl )
+		//	break;
+		int l2 = heading_level(block);
+		if( l2 != 0 && l2 <= lvl )
 			break;
         block.setVisible(false); // ブロックを非表示に設定
         doc->markContentsDirty(block.position(), block.length());
@@ -267,11 +276,11 @@ void do_unfold(QTextBlock block, QTextDocument *doc) {	//	block は見出し行
         block.setVisible(true); // ブロックを表示
         doc->markContentsDirty(block.position(), block.length());
         if( blockType(block) == US_HEADING && blockFolded(block) ) {
-            int child_lvl = heading_level(block.text());
+            int child_lvl = heading_level(block);
             // 子見出しと同等以上のレベルの見出しが現れるまで、ポインタだけを進めてスキップ
             while( block.next().isValid() ) {
                 QTextBlock nextBlock = block.next();
-                if( blockType(nextBlock) == US_HEADING && heading_level(nextBlock.text()) <= child_lvl ) {
+                if( blockType(nextBlock) == US_HEADING && heading_level(nextBlock) <= child_lvl ) {
                     break;
                 }
                 block = nextBlock; // 表示を切り替えず、ただポインタを進める

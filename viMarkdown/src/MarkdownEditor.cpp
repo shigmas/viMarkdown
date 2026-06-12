@@ -55,7 +55,7 @@ void setBlockFolded(QTextBlock block, bool folded) {
 	else
 		block.setUserState(us & ~BLOCK_FOLDED);
 }
-int heading_level(QString text);
+int heading_level(QTextBlock block);
 bool is_folded(QTextBlock block) {
 	return block.next().isValid() && !block.next().isVisible();		//	次行が折り畳まれている
 }
@@ -68,10 +68,10 @@ int count_folded(QTextBlock block) {		//	block 以降、何行が折り畳まれ
 }
 bool is_foldable(QTextBlock block) {
 	//return blockType(block) == US_HEADING;
-	int lvl = heading_level(block.text());
+	int lvl = heading_level(block);
 	if( lvl == 0 ) return false;	//	非見出し行
 	if( !(block = block.next()).isValid() ) return false;
-	int lvl2 = heading_level(block.text());
+	int lvl2 = heading_level(block);
 	return lvl2 == 0 || lvl2 > lvl;
 }
 void	do_fold(QTextBlock block, QTextDocument*);
@@ -892,7 +892,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	}
 	//QTextCursor cursor = textCursor();
 	QString txt = e->text();
-	if( !txt.isEmpty() ) {
+	if( !txt.isEmpty() && (e->modifiers() & Qt::ControlModifier) == 0 ) {
 		if( gvi.m_viCmdMode ) {
 			emit do_viCmd(txt[0], cursor);
 			setTextCursor(cursor);
@@ -2468,9 +2468,9 @@ void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
 	    // 矢印の中心座標
 	    int cx = x + w / 2;
 	    int cy = y + h / 2;
-	    int half = qMin(w, h) / 2 /*- 2*/; // 矢印の大きさ
+	    int half = qMin(w, h) / 2 - 1; // 矢印の大きさ
 
-	    auto foldColor = Qt::black;
+	    auto foldColor = QColor("#808080");
 	    //painter.setPen(QPen(foldColor, 1.5));
 	    painter.setPen(Qt::NoPen);
 	    painter.setBrush(foldColor);
