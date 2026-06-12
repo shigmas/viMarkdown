@@ -834,8 +834,14 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	} else if (e->key() == Qt::Key_Delete && (e->modifiers() & Qt::ControlModifier) != 0) {
 		deleteWord();
 		return;
-	} else if (e->key() == Qt::Key_Backspace && (e->modifiers() & Qt::ControlModifier) != 0) {
-		backSpaceWord();
+	} else if (e->key() == Qt::Key_Backspace ) {
+		if( (e->modifiers() & Qt::ControlModifier) != 0) {		//	Ctrl +
+			backSpaceWord();
+		} else {
+			//backSpace();
+			cursor.deletePreviousChar();
+			setTextCursor(cursor);
+		}
 		return;
 	} else if (e->key() == Qt::Key_Space && (e->modifiers() & Qt::ControlModifier) != 0) {
 		check_svg_completer();
