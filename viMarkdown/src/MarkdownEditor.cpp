@@ -55,6 +55,7 @@ void setBlockFolded(QTextBlock block, bool folded) {
 	else
 		block.setUserState(us & ~BLOCK_FOLDED);
 }
+int heading_level(QString text);
 bool is_folded(QTextBlock block) {
 	return block.next().isValid() && !block.next().isVisible();		//	次行が折り畳まれている
 }
@@ -66,7 +67,12 @@ int count_folded(QTextBlock block) {		//	block 以降、何行が折り畳まれ
 	return count;
 }
 bool is_foldable(QTextBlock block) {
-	return blockType(block) == US_HEADING;
+	//return blockType(block) == US_HEADING;
+	int lvl = heading_level(block.text());
+	if( lvl == 0 ) return false;	//	非見出し行
+	if( !(block = block.next()).isValid() ) return false;
+	int lvl2 = heading_level(block.text());
+	return lvl2 == 0 || lvl2 > lvl;
 }
 void	do_fold(QTextBlock block, QTextDocument*);
 void	do_unfold(QTextBlock block, QTextDocument*);
