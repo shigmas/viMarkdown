@@ -1214,14 +1214,34 @@ void MarkdownPreview::do_SVG(QTextBlock& srcBlock, QTextCursor& cursor) {
 #endif
 		buf += t + "\n";
 	}
+	double wd = 1.0, ht = 1.0;
 	QXmlStreamReader reader(buf);
 	while (!reader.atEnd()) {
 		QXmlStreamReader::TokenType token = reader.readNext();
 		if (token == QXmlStreamReader::StartElement && reader.name() == "svg") {
-			if (reader.attributes().hasAttribute("width"))
-				width = reader.attributes().value("width").toInt();
-			if (reader.attributes().hasAttribute("height"))
-				height = reader.attributes().value("height").toInt();
+			if (reader.attributes().hasAttribute("width")) {
+				auto txt = reader.attributes().value("width");
+				if( !txt.isEmpty() && txt[txt.size() - 1] == u'%' )
+					wd = txt.left(txt.size() - 1).toInt() / 100.0;
+				else
+					width = txt.toInt();
+			}
+			if (reader.attributes().hasAttribute("height")) {
+				//height = reader.attributes().value("height").toInt();
+				auto txt = reader.attributes().value("height");
+				if( !txt.isEmpty() && txt[txt.size() - 1] == u'%' )
+					ht = txt.left(txt.size() - 1).toInt() / 100.0;
+				else
+					height = txt.toInt();
+			}
+			if (reader.attributes().hasAttribute("viewBox")) {
+				auto viewBox = reader.attributes().value("viewBox");
+				auto list = viewBox.split(QRegularExpression("[\\s,]+"), Qt::SkipEmptyParts);
+				width = list.value(2).toDouble();
+				height = list.value(3).toDouble();
+			}
+			width *= wd;
+			height *= ht;
 			break;
 		}
 	}

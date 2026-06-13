@@ -662,6 +662,7 @@ const QStringList svg_tag_lst = {
 	R"(<svg width="" height="">\n  |\n</svg>\n```\n)",
 	R"(<svg width="320" height="200">\n  |\n</svg>\n```\n)",
 	R"(<svg width="640" height="400">\n  |\n</svg>\n```\n)",
+	R"(<svg width="100%" height="100%" viewBox="0 0 320 200">\n  |\n</svg>\n```\n)",
 };
 const QStringList svg_elements_lst = {
 	R"(<line x1="" y1="" x2="" y2="" stroke="" stroke-width=""/>\n)",
