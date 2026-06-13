@@ -2,6 +2,9 @@
 
 #include <QWidget>
 #include <QKeyEvent>
+#include <QGraphicsView>
+#include <QGraphicsScene>
+#include <QTextEdit>
 
 class SlideShow  : public QWidget
 {
@@ -30,7 +33,12 @@ protected:
 	    }
     }
 private:
+    void setupScene();
     void nextSlide();
     void prevSlide();
+
+	QGraphicsView  *m_view;
+    QGraphicsScene *m_scene;
+    QTextEdit      *m_textEdit;
 };
 

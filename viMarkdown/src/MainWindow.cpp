@@ -2656,5 +2656,6 @@ SlideShow::SlideShow(QWidget *parent)
 void MainWindow::onAction_SlideShow() {
 	qDebug() << "MainWindow::onAction_SlideShow()";
 	SlideShow *ss = new SlideShow(this);
+	ss->setAttribute(Qt::WA_DeleteOnClose);		//	close時にメモリクリア
 	ss->startPresentation();
 }

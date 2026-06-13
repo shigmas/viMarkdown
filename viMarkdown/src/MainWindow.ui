@@ -1175,7 +1175,7 @@
     <string>&amp;SlideShow</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+F5</string>
+    <string>F5</string>
    </property>
   </action>
  </widget>
