@@ -875,6 +875,11 @@ See Output for Markdown formatting...
 										"Preview: Simple editing is supported here.\n");
 	//markdownPreview->setStyleSheet("font-size: 12pt;");
 	//##markdownPreview->setStyleSheet("font-size: 12pt; line-height: 2.0;");
+	QFont prvFont = markdownPreview->font();
+	prvFont.setPointSize(g.m_previewFontSize);
+	markdownPreview->setFont(prvFont);
+	if (markdownPreview->document())
+	    markdownPreview->document()->setDefaultFont(prvFont);
 	connect(markdownPreview, &MarkdownPreview::checkboxLineClicked, this, &MainWindow::onMarkdownPreviewLineClicked);
 	connect(markdownPreview, &MarkdownPreview::anchorClicked, this, &MainWindow::do_open);
 	connect(markdownPreview, &MarkdownPreview::textInserted, this, &MainWindow::onTextInsertedAtPreview);
