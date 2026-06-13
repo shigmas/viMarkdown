@@ -94,13 +94,7 @@
     <addaction name="action_FocusOutline"/>
     <addaction name="action_OutputBar"/>
     <addaction name="action_ClearOutput"/>
-    <addaction name="action_NextTab"/>
-    <addaction name="action_PrevTab"/>
-    <addaction name="action_ToggleFocus"/>
-    <addaction name="action_SwitchToAltFile"/>
-    <addaction name="action_NaviBack"/>
-    <addaction name="action_NaviForward"/>
-    <addaction name="action_TagJump"/>
+    <addaction name="action_SlideShow"/>
    </widget>
    <widget class="QMenu" name="menu_Edit">
     <property name="title">
@@ -223,10 +217,23 @@
     <addaction name="action_OpenPrev"/>
     <addaction name="action_OpenNext"/>
    </widget>
+   <widget class="QMenu" name="menu_Navi">
+    <property name="title">
+     <string>&amp;Navi</string>
+    </property>
+    <addaction name="action_NextTab"/>
+    <addaction name="action_PrevTab"/>
+    <addaction name="action_ToggleFocus"/>
+    <addaction name="action_SwitchToAltFile"/>
+    <addaction name="action_NaviBack"/>
+    <addaction name="action_NaviForward"/>
+    <addaction name="action_TagJump"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
    <addaction name="menu_Search"/>
    <addaction name="menu_View"/>
+   <addaction name="menu_Navi"/>
    <addaction name="menu_Tool"/>
    <addaction name="menu_Help"/>
   </widget>
@@ -1161,6 +1168,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+V</string>
+   </property>
+  </action>
+  <action name="action_SlideShow">
+   <property name="text">
+    <string>&amp;SlideShow</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F5</string>
    </property>
   </action>
  </widget>
