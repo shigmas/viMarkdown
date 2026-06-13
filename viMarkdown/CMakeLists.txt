@@ -21,3 +21,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools Pri
 add_subdirectory(3rdparty/lunasvg)
 add_subdirectory(src)
 
+if(WIN32)
+    target_link_libraries(viMarkdown PRIVATE imm32)
+endif()
+
