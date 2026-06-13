@@ -32,9 +32,6 @@
     <QtMoc Include="MainWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClCompile Include="MainWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -133,6 +130,9 @@
     <ClCompile Include="vicmd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SlideShow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DocWidget.h">
@@ -227,6 +227,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="OutputView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="MainWindow.cpp">
+      <Filter>Source Files</Filter>
+    </QtMoc>
+    <QtMoc Include="SlideShow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

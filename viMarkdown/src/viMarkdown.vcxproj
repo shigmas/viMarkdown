@@ -141,13 +141,19 @@
     <ClCompile Include="OutputView.cpp" />
     <ClCompile Include="ReplaceDialog.cpp" />
     <ClCompile Include="SettingsDialog.cpp" />
+    <ClCompile Include="SlideShow.cpp" />
     <ClCompile Include="vicmd.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="GrepDialog.ui" />
     <QtUic Include="LangDialog.ui" />
     <QtUic Include="MainWindow.ui" />
     <QtMoc Include="MainWindow.h" />
-    <ClCompile Include="MainWindow.cpp" />
+    <QtMoc Include="MainWindow.cpp">
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).moc</QtMocFileName>
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|x64'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName>
+    </QtMoc>
     <ClCompile Include="main.cpp" />
     <QtUic Include="ReplaceDialog.ui" />
     <QtUic Include="SettingsDialog.ui" />
@@ -181,6 +187,7 @@
     <QtMoc Include="SettingsDialog.h" />
     <QtMoc Include="GrepDialog.h" />
     <QtMoc Include="OutputView.h" />
+    <QtMoc Include="SlideShow.h" />
     <ClInclude Include="ver.h" />
   </ItemGroup>
   <ItemGroup>

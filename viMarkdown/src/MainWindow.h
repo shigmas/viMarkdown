@@ -327,6 +327,7 @@ protected:
     void	onAction_FocusOutline();
     void	onAction_OutputBar(bool);
     void	onAction_ClearOutput();
+    void	onAction_SlideShow();
     void	onAction_NextTab();
     void	onAction_PrevTab();
     void	onAction_ToggleFocus();

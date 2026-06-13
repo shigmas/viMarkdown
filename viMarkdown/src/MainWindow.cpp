@@ -37,6 +37,7 @@
 #include "ReplaceDialog.h"
 #include "GrepDialog.h"
 #include "OutputView.h"
+#include "SlideShow.h"
 
 #ifdef Q_OS_WIN
 //#ifdef _WIN32
@@ -676,6 +677,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_OutputBar, &QAction::toggled, this, &MainWindow::onAction_OutputBar);
 	connect(ui->action_ViKeybindings, &QAction::toggled, this, &MainWindow::onAction_ViKeybindings);
 	connect(ui->action_ClearOutput, &QAction::triggered, this, &MainWindow::onAction_ClearOutput);
+	connect(ui->action_SlideShow, &QAction::triggered, this, &MainWindow::onAction_SlideShow);
 	connect(ui->action_NextTab, &QAction::triggered, this, &MainWindow::onAction_NextTab);
 	connect(ui->action_PrevTab, &QAction::triggered, this, &MainWindow::onAction_PrevTab);
 	connect(ui->action_ToggleFocus, &QAction::triggered, this, &MainWindow::onAction_ToggleFocus);
@@ -2608,3 +2610,51 @@ void MainWindow::onAction_About() {
 	);
 }
 //---------------------------------------------------------------------
+#if 0
+class SlideShow : public QWidget {
+    Q_OBJECT
+
+public:
+    explicit SlideShow(QWidget *parent = nullptr);
+    ~SlideShow() {};
+
+    void startPresentation() {    // スライドショー（フルスクリーン）を開始
+	    showFullScreen();
+	    raise();            // 最前面に移動
+	    activateWindow();   // ウィンドウをアクティブ化してキー入力を受け付ける状態にする
+	}
+protected:
+    // キーボード入力をフックする
+    void keyPressEvent(QKeyEvent *event) override {
+	    switch (event->key()) {
+        case Qt::Key_Escape:    // Esc または 'q' でスライドショーを終了（閉じる）
+        case Qt::Key_Q:
+            close();
+            break;
+        default:
+            QWidget::keyPressEvent(event);
+            break;
+	    }
+    }
+private:
+    void nextSlide();
+    void prevSlide();
+};
+SlideShow::SlideShow(QWidget *parent)
+    : QWidget(parent)
+{
+    // 枠なしのウィンドウに設定し、タスクバーやメニューバーを完全に隠すフラグを設定
+    setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    
+    // スライドショーの背景色を黒、文字を白にする（スタイルシートはお好みで）
+    setStyleSheet("background-color: black; color: white;");
+    
+    // フォーカスをこのWidgetに強制し、キーイベントを受け取れるようにする
+    setFocusPolicy(Qt::StrongFocus);
+}
+#endif
+void MainWindow::onAction_SlideShow() {
+	qDebug() << "MainWindow::onAction_SlideShow()";
+	SlideShow *ss = new SlideShow(this);
+	ss->startPresentation();
+}
