@@ -2561,6 +2561,24 @@ void MarkdownEditor::lnAreaMousePressEvent(QMouseEvent *event) {
 void MarkdownEditor::lnAreaMouseMoveEvent(QMouseEvent *event) {
 	if( !m_lnAreaPressed ) return;
 	auto pos = event->position();
+	int y = (int)pos.y();
+	// === 1. 画面上下外に出た場合の自動スクロール処理 ===
+	QScrollBar *vBar = verticalScrollBar();
+	if (vBar && vBar->minimum() != vBar->maximum()) {
+		int viewHeight = viewport()->height();
+		if (y < 0) {
+			// 上方向にスクロール（外れ具合 y に応じて速度を変化させる）
+			int dy = qMin(-1, y / 10); 
+			vBar->setValue(vBar->value() + dy);
+			y = 0; // 最上部の行を指すようにクランプ
+		} else if (y > viewHeight) {
+			// 下方向にスクロール（外れ具合に応じて速度を変化させる）
+			int dy = qMax(1, (y - viewHeight) / 10);
+			vBar->setValue(vBar->value() + dy);
+			y = viewHeight; // 最下部の行を指すようにクランプ
+		}
+	}
+
 	QTextCursor cursor = cursorForPosition(QPoint(0, (int)pos.y()));
 	int cbn = cursor.blockNumber();
 	if( cbn == m_curBlockNum ) return;
