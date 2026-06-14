@@ -433,6 +433,8 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWid
         }
     } else {
         cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor, rcnt);
+        while( !cursor.block().isVisible() )
+	        cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor);
     }
 #else
 			cursor.movePosition(QTextCursor::StartOfBlock);
