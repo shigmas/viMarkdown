@@ -257,9 +257,10 @@ int heading_level(QTextBlock block) {
 }
 bool is_folded(QTextBlock block);
 bool is_foldable(QTextBlock block);
-void do_fold(QTextBlock block, QTextDocument *doc) {	//	block は見出し行
+void do_fold(QTextBlock block /*, QTextDocument *doc*/) {	//	block は見出し行
 	int lvl = heading_level(block);
 	setBlockFolded(block, true);	//	折り畳み状態フラグON
+	QTextDocument *doc = (QTextDocument*)block.document();
 	while( (block = block.next()).isValid() ) {
 		//if( blockType(block) == BT_HEADING && heading_level(block) <= lvl )
 		//	break;
@@ -270,9 +271,10 @@ void do_fold(QTextBlock block, QTextDocument *doc) {	//	block は見出し行
         doc->markContentsDirty(block.position(), block.length());
 	}
 }
-void do_unfold(QTextBlock block, QTextDocument *doc) {	//	block は見出し行
+void do_unfold(QTextBlock block /*, QTextDocument *doc*/) {	//	block は見出し行
 	if( !is_folded(block) ) return;
 	setBlockFolded(block, false);	//	折り畳み状態フラグOFF
+	QTextDocument *doc = (QTextDocument*)block.document();
 	while( (block = block.next()).isValid() && !block.isVisible() ) {
         block.setVisible(true); // ブロックを表示
         doc->markContentsDirty(block.position(), block.length());
@@ -311,24 +313,24 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 		case 'a':		//	za
 			if (!block.isValid()) break;
 			if( is_folded(block) )
-				do_unfold(block, doc);
+				do_unfold(block);
 			else if( is_foldable(block) )
-				do_fold(block, doc);
+				do_fold(block);
 			onMDTextChanged();
 			break;
 		case 'c':		//	zc
-			do_fold(block, doc);
+			do_fold(block);
 			onMDTextChanged();
 			break;
 		case 'o':		//	zo
-			do_unfold(block, doc);
+			do_unfold(block);
 			onMDTextChanged();
 			break;
 		case 'M':		//	zM	すべて折り畳み
 			block = doc->begin();
 			while( block.isValid() ) {
 				if( blockType(block) == BT_HEADING && block.isVisible() )
-					do_fold(block, doc);
+					do_fold(block);
 				block = block.next();
 			}
 			onMDTextChanged();
@@ -337,7 +339,7 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 			block = doc->begin();
 			while( block.isValid() ) {
 				if( blockType(block) == BT_HEADING )
-					do_unfold(block, doc);
+					do_unfold(block);
 				block = block.next();
 			}
 			onMDTextChanged();
@@ -631,11 +633,15 @@ void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidge
 			cursor.movePosition(QTextCursor::Left);
 		gvi.m_linewiseMoved = true;
 		break;
-	case 'h': {
-		rcnt = qMin(rcnt, cursor.position() - block.position());	//	行頭対応
-		cursor.movePosition(QTextCursor::Left, moveMode, rcnt);
+	case 'h':
+		if( cursor.position() == block.position() ) {
+			if( is_folded(block) )
+				do_unfold(block);
+		} else {
+			rcnt = qMin(rcnt, cursor.position() - block.position());	//	行頭対応
+			cursor.movePosition(QTextCursor::Left, moveMode, rcnt);
+		}
 		break;
-	}
 	case 'l':
 	case ' ': {
 		int pos = block.position() + block.text().size() - 1;

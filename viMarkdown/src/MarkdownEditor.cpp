@@ -74,8 +74,8 @@ bool is_foldable(QTextBlock block) {
 	int lvl2 = heading_level(block);
 	return lvl2 == 0 || lvl2 > lvl;
 }
-void	do_fold(QTextBlock block, QTextDocument*);
-void	do_unfold(QTextBlock block, QTextDocument*);
+void	do_fold(QTextBlock block /*, QTextDocument* */);
+void	do_unfold(QTextBlock block /*, QTextDocument* */);
 bool isTableHyphenLine(const QString& lnStr) {
 	std::vector<char> tableAlign;
 	return isTableHyphenLine(lnStr, tableAlign);
@@ -2552,9 +2552,9 @@ void MarkdownEditor::lnAreaMousePressEvent(QMouseEvent *event) {
 		QTextBlock block = cursor.block();
 		if( block.isValid() ) {
 			if( is_folded(block) )
-				do_unfold(block, document());
+				do_unfold(block);
 			else if( is_foldable(block) )
-				do_fold(block, document());
+				do_fold(block);
 		}
 	}
 }
