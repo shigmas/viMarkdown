@@ -25,6 +25,7 @@ QT_END_NAMESPACE
 #define	KEY_ITALIC_COLOR			u"italicColor"
 #define	KEY_STRIKETHROUGH_COLOR		u"strikethroughColor"
 #define	KEY_MATCH_COLOR				u"matchColor"
+#define	KEY_TABLE_TEXT_COLOR		u"TableTextColor"
 #define	KEY_CSV_HEADER_COLOR		u"CSVHeadingsColor"
 #define	KEY_CSV_ZEBRA_COLOR1		u"CSVZebraColor1"
 #define	KEY_CSV_ZEBRA_COLOR2		u"CSVZebraColor2"
@@ -131,6 +132,7 @@ struct Global {
 	QColor	m_italicColor;
 	QColor	m_strikethroughColor;
 	QColor	m_matchColor;			//	検索マッチ背景色
+	QColor	m_tableTextColor;		//	表テキスト色
 	QColor	m_CSVHeaderColor;
 	QColor	m_CSVZebraColor1;		//	本体奇数行
 	QColor	m_CSVZebraColor2;		//	本体偶数行
