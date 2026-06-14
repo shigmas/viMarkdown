@@ -231,6 +231,7 @@ void MainWindow::do_vi_delete(QChar cmd, QTextCursor& cursor, int rcnt) {		//	x 
 	default:
 		return;
 	}
+	gvi.m_v_mode = u' ';
 	gvi.m_isEditCommand = true;
 }
 void do_yank_line(QTextCursor& cursor, int rcnt) {
@@ -610,7 +611,8 @@ void do_match_paren(QTextCursor& cursor) {
 void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidget* docWidget) {		//	hjkl等
 	gvi.m_linewiseMoved = false;
 	bool isEditor = cursor.document() == docWidget->m_editor->document();
-	auto moveMode = gvi.m_operator == ' ' ? QTextCursor::MoveAnchor : QTextCursor::KeepAnchor;
+	auto moveMode = gvi.m_operator == ' ' && gvi.m_v_mode == ' ' ?
+						QTextCursor::MoveAnchor : QTextCursor::KeepAnchor;
 	QTextDocument *doc = cursor.document();
 	QTextBlock block = cursor.block();
 	switch( cmd.unicode() ) {
@@ -982,6 +984,9 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 				do_viCmd(ch, cursor);
 			}
 			gvi.m_redoing = false;
+			break;
+		case 'v':
+			gvi.m_v_mode = u'v';
 			break;
 		default:	//	不正コマンド
 			//	undone: エラー表示

@@ -10,9 +10,6 @@ It is designed for developers and writers who love efficiency.
 <!--<img width="700" alt="image" src="./screen.png" />-->
 ![image](screen.png)
 
-
-## Key Features
-
 ## Key Features
 - **Real-time Editor-Preview Synchronization**
   The cursor position and edits are synchronized in real time. This allows for intuitive editing while fully preserving the structural integrity of your Markdown.
