@@ -2612,49 +2612,6 @@ void MainWindow::onAction_About() {
 	);
 }
 //---------------------------------------------------------------------
-#if 0
-class SlideShow : public QWidget {
-    Q_OBJECT
-
-public:
-    explicit SlideShow(QWidget *parent = nullptr);
-    ~SlideShow() {};
-
-    void startPresentation() {    // スライドショー（フルスクリーン）を開始
-	    showFullScreen();
-	    raise();            // 最前面に移動
-	    activateWindow();   // ウィンドウをアクティブ化してキー入力を受け付ける状態にする
-	}
-protected:
-    // キーボード入力をフックする
-    void keyPressEvent(QKeyEvent *event) override {
-	    switch (event->key()) {
-        case Qt::Key_Escape:    // Esc または 'q' でスライドショーを終了（閉じる）
-        case Qt::Key_Q:
-            close();
-            break;
-        default:
-            QWidget::keyPressEvent(event);
-            break;
-	    }
-    }
-private:
-    void nextSlide();
-    void prevSlide();
-};
-SlideShow::SlideShow(QWidget *parent)
-    : QWidget(parent)
-{
-    // 枠なしのウィンドウに設定し、タスクバーやメニューバーを完全に隠すフラグを設定
-    setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
-    
-    // スライドショーの背景色を黒、文字を白にする（スタイルシートはお好みで）
-    setStyleSheet("background-color: black; color: white;");
-    
-    // フォーカスをこのWidgetに強制し、キーイベントを受け取れるようにする
-    setFocusPolicy(Qt::StrongFocus);
-}
-#endif
 void MainWindow::onAction_SlideShow() {
 	qDebug() << "MainWindow::onAction_SlideShow()";
 	SlideShow *ss = new SlideShow(this);
