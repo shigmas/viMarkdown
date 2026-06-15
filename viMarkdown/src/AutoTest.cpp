@@ -964,6 +964,20 @@ const QList<ViTestCase> viTestCases = {
             "w", "日本語 abc カタカナ 123。ひらが@な"  // 次の単語がないため、末尾の文字 'な' で停止
         }
     },
+    { "Delete character under cursor (x) - Basic",
+        "a@bc\n",
+        {
+            "x", "a@c\n", // 'b' を削除、カーソルは右隣の文字 'c' へ移動
+            "x", "@a\n"   // 'c' を削除。行末の文字だったため、カーソルは左の 'a' に後退（\nには乗らない）
+        }
+    },
+    { "Delete multiple characters (num x) - With count",
+        "@abcdef\n",
+        {
+            "3x", "@def\n", // 3文字（a, b, c）を削除、カーソルは 'd' へ
+            "5x", "@\n"     // 残り3文字に対して5文字削除を指定。行を越えて削除せず、空行（@\n）に
+        }
+    },
 #endif
 };
 QString removeCursor(const QString &src, int &pos) {
