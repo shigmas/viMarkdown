@@ -918,29 +918,50 @@ const QList<ViTestCase> viTestCases = {
         }
     },
     { "Move forward word (w) - Across lines and empty lines",
-        "@abc\n  def\n\nghi\n",
+        "@abc\n  def\n\nghi",
         {
-            "w", "abc\n  @def\n\nghi\n", // 改行し、先頭のインデントをスキップして "def" の先頭へ
-            "w", "abc\n  def\n\n@ghi\n", // 空行を飛び越えて "ghi" の先頭へ
-            "w", "abc\n  def\n\ngh@i\n"  // ファイル末尾の文字 'i' で停止
+            "w", "abc\n  @def\n\nghi", // 改行し、先頭のインデントをスキップして "def" の先頭へ
+            "w", "abc\n  def\n\n@ghi", // 空行を飛び越えて "ghi" の先頭へ
+            "w", "abc\n  def\n\ngh@i"  // ファイル末尾の文字 'i' で停止
         }
     },
     { "Move forward word (w) - Punctuation boundaries",
-        "@abc.def!ghi\n",
+        "@abc.def!ghi",
         {
-            "w", "abc@.def!ghi\n", // 記号 "." の先頭で停止
-            "w", "abc.@def!ghi\n", // 次の英数字単語 "def" の先頭へ
-            "w", "abc.def@!ghi\n", // 記号 "!" の先頭で停止
-            "w", "abc.def!@ghi\n", // 次の英数字単語 "ghi" の先頭へ
-            "w", "abc.def!gh@i\n"  // ファイル末尾の文字 'i' で停止
+            "w", "abc@.def!ghi", // 記号 "." の先頭で停止
+            "w", "abc.@def!ghi", // 次の英数字単語 "def" の先頭へ
+            "w", "abc.def@!ghi", // 記号 "!" の先頭で停止
+            "w", "abc.def!@ghi", // 次の英数字単語 "ghi" の先頭へ
+            "w", "abc.def!gh@i"  // ファイル末尾の文字 'i' で停止
         }
     },
     { "Move forward multiple words (num w) - Basic counts",
-        "@abc def ghi jkl mno\n",
+        "@abc def ghi jkl mno",
         {
-            "2w", "abc def @ghi jkl mno\n", // 2単語分移動して "ghi" の先頭へ
-            "2w", "abc def ghi jkl @mno\n", // さらに2単語分移動して "mno" の先頭へ
-            "3w", "abc def ghi jkl mn@o\n"  // 3単語分移動（足りないためファイル末尾の文字 'o' で停止）
+            "2w", "abc def @ghi jkl mno", // 2単語分移動して "ghi" の先頭へ
+            "2w", "abc def ghi jkl @mno", // さらに2単語分移動して "mno" の先頭へ
+            "3w", "abc def ghi jkl mn@o"  // 3単語分移動（足りないためファイル末尾の文字 'o' で停止）
+        }
+    },
+    { "Move forward word (w) - Japanese word classes",
+        "@日本語ひらがなカタカナ。漢字",
+        {
+            "w", "日本語@ひらがなカタカナ。漢字", // 漢字「日本語」を飛び越え、ひらがな「ひ」の先頭へ
+            "w", "日本語ひらがな@カタカナ。漢字", // ひらがな「ひらがな」を飛び越え、カタカナ「カ」の先頭へ
+            "w", "日本語ひらがなカタカナ@。漢字", // カタカナ「カタカナ」を飛び越え、記号「。」の先頭へ
+            "w", "日本語ひらがなカタカナ。@漢字", // 記号「。」を飛び越え、次の漢字「漢」の先頭へ
+            "w", "日本語ひらがなカタカナ。漢@字"  // 次の単語がないため、ファイル末尾の文字 '字' で停止
+        }
+    },
+    { "Move forward word (w) - Japanese mixed with alphanumeric and spaces",
+        "@日本語 abc カタカナ 123。ひらがな",
+        {
+            "w", "日本語 @abc カタカナ 123。ひらがな", // スペースをスキップし、半角英字 "abc" の先頭へ
+            "w", "日本語 abc @カタカナ 123。ひらがな", // スペースをスキップし、カタカナ "カタカナ" の先頭へ
+            "w", "日本語 abc カタカナ @123。ひらがな", // スペースをスキップし、半角数字 "123" の先頭へ
+            "w", "日本語 abc カタカナ 123@。ひらがな", // スペース無しでの文字種変更を検知し、記号 "。" の先頭へ
+            "w", "日本語 abc カタカナ 123。@ひらがな", // スペース無しでの文字種変更を検知し、ひらがな "ひらがな" の先頭へ
+            "w", "日本語 abc カタカナ 123。ひらが@な"  // 次の単語がないため、末尾の文字 'な' で停止
         }
     },
 #endif

@@ -679,10 +679,16 @@ void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidge
 			if( isEditor ) {
 				docWidget->m_editor->moveToNextWord(cursor, /*select = */gvi.m_operator != ' ');
 				QTextBlock block = cursor.block();
-				if( !block.text().isEmpty() && cursor.position() == block.position() + block.text().size() ) {	//	非空行行末にいる場合
-					//docWidget->m_editor->moveToNextWord(cursor, /*select = */gvi.m_operator != ' ');
-					cursor.movePosition(QTextCursor::NextBlock);
-					hat(cursor, moveMode);
+				//qDebug() << "cursor.position()" << cursor.position();
+				//qDebug() << "doc->characterCount()" << doc->characterCount();
+				if( !block.text().isEmpty() && cursor.position() == block.position() + block.text().size() ) {
+					//	非空行行末にいる場合
+					if( cursor.position() >= doc->characterCount() - 1 ) {	//	EOF にいる場合
+						cursor.movePosition(QTextCursor::Left, moveMode);
+					} else {
+						cursor.movePosition(QTextCursor::NextBlock, moveMode);
+						hat(cursor, moveMode);
+					}
 				}
 			} else
 				docWidget->m_preview->moveToNextWord(cursor, /*select = */gvi.m_operator != ' ');
