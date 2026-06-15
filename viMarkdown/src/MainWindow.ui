@@ -1097,6 +1097,9 @@
    <property name="text">
     <string>&amp;ClearOutput</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
   </action>
   <action name="action_Grep">
    <property name="text">
