@@ -310,6 +310,13 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 		break;
 	case 'z':
 		switch( cmd.unicode() ) {
+		case '\n':
+		case '\r':
+		case 't': {		// zt: カーソル行を画面最上行にする（カーソル位置はそのまま）
+			int blockNum = cursor.blockNumber();
+			docWidget->m_editor->verticalScrollBar()->setValue(blockNum);
+			break;
+		}
 		case 'a':		//	za
 			if (!block.isValid()) break;
 			if( is_folded(block) )
@@ -519,10 +526,20 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWid
 			break;
 		}
 	} else {
+#if 0
 		switch( gvi.m_operator.unicode() ) {
 		case 'z':
 			switch( cmd.unicode() ) {
-			case '.':
+			case 't': {		// zt: カーソル行を画面最上行にする（カーソル位置はそのまま）
+				int blockNum = cursor.blockNumber();
+				docWidget->m_editor->verticalScrollBar()->setValue(blockNum);
+				break;
+			}
+			case '\n':		//	zEnter カーソル行が画面最上行になるようにスクロール
+				break;
+			case '.':		//	z. カーソル行が画面中央になるようにスクロール
+				break;
+			case '-':		//	z- カーソル行が画面最下行になるようにスクロール
 				break;
 			case 'a':		//	za: toggle fold
 				if (block.isValid()) {
@@ -533,6 +550,7 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWid
 			}
 			break;
 		}
+#endif
 	}
 	return true;
 }

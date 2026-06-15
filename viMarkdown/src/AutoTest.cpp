@@ -909,6 +909,40 @@ const QList<ViTestCase> viTestCases = {
             "5k", "a@bc\ndef\nghi\njkl\n"  // 5行上へ -> 先頭行の 'b' (line 0, index 1) でクランプされて止まる
         }
     },
+    { "Move forward word (w) - Basic spacing",
+        "@abc def ghi\n",
+        {
+            "w", "abc @def ghi\n", // 次の単語 "def" の先頭へ移動
+            "w", "abc def @ghi\n", // 次の単語 "ghi" の先頭へ移動
+            "w", "abc def gh@i\n"  // これ以上単語がないため、ファイル末尾の文字 'i' で停止
+        }
+    },
+    { "Move forward word (w) - Across lines and empty lines",
+        "@abc\n  def\n\nghi\n",
+        {
+            "w", "abc\n  @def\n\nghi\n", // 改行し、先頭のインデントをスキップして "def" の先頭へ
+            "w", "abc\n  def\n\n@ghi\n", // 空行を飛び越えて "ghi" の先頭へ
+            "w", "abc\n  def\n\ngh@i\n"  // ファイル末尾の文字 'i' で停止
+        }
+    },
+    { "Move forward word (w) - Punctuation boundaries",
+        "@abc.def!ghi\n",
+        {
+            "w", "abc@.def!ghi\n", // 記号 "." の先頭で停止
+            "w", "abc.@def!ghi\n", // 次の英数字単語 "def" の先頭へ
+            "w", "abc.def@!ghi\n", // 記号 "!" の先頭で停止
+            "w", "abc.def!@ghi\n", // 次の英数字単語 "ghi" の先頭へ
+            "w", "abc.def!gh@i\n"  // ファイル末尾の文字 'i' で停止
+        }
+    },
+    { "Move forward multiple words (num w) - Basic counts",
+        "@abc def ghi jkl mno\n",
+        {
+            "2w", "abc def @ghi jkl mno\n", // 2単語分移動して "ghi" の先頭へ
+            "2w", "abc def ghi jkl @mno\n", // さらに2単語分移動して "mno" の先頭へ
+            "3w", "abc def ghi jkl mn@o\n"  // 3単語分移動（足りないためファイル末尾の文字 'o' で停止）
+        }
+    },
 #endif
 };
 QString removeCursor(const QString &src, int &pos) {
