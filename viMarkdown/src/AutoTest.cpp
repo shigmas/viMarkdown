@@ -910,11 +910,11 @@ const QList<ViTestCase> viTestCases = {
         }
     },
     { "Move forward word (w) - Basic spacing",
-        "@abc def ghi\n",
+        "@abc def ghi",
         {
-            "w", "abc @def ghi\n", // 次の単語 "def" の先頭へ移動
-            "w", "abc def @ghi\n", // 次の単語 "ghi" の先頭へ移動
-            "w", "abc def gh@i\n"  // これ以上単語がないため、ファイル末尾の文字 'i' で停止
+            "w", "abc @def ghi", // 次の単語 "def" の先頭へ移動
+            "w", "abc def @ghi", // 次の単語 "ghi" の先頭へ移動
+            "w", "abc def gh@i"  // これ以上単語がないため、ファイル末尾の文字 'i' で停止
         }
     },
     { "Move forward word (w) - Across lines and empty lines",
@@ -990,13 +990,19 @@ void MainWindow::onAction_TestViCommands() {
 			//cursor = editor->textCursor();
 			//int cpos2 = cursor.position();
 			if( cursor.position() != pos ) {
-				do_output(QString("wrong cursor position. pos = %1 expected, but %2\n").arg(pos).arg(cursor.position()));
+				//do_output(QString("wrong cursor position. pos = %1 expected, but %2\n").arg(pos).arg(cursor.position()));
+				QString exp = steps[k+1];
+				exp.replace('\n', "\\n");
+				QString act = cursor.document()->toPlainText();
+				act.insert(cursor.position(), u'@');
+				act.replace('\n', "\\n");
+				do_output(QString("\n[FAILED] wrong cursor position.\nExpected: '%1'\nActual:   '%2'\n").arg(exp).arg(act));
 				++total_failed;
 			}
 			if( cursor.document()->toPlainText() != exp ) {
-				do_output("wrong document text.\n");
+				do_output("\nwrong document text.\n");
 				do_output("vi command: '" + cmd_text + "'\n");
-				do_output("expected: '" + exp + "', but: '" + cursor.document()->toPlainText() + "'\n");
+				do_output("expected:\n'" + exp + "', but:\n'" + cursor.document()->toPlainText() + "'\n");
 				++total_failed;
 			}
 		}

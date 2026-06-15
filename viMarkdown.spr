@@ -408,6 +408,16 @@ SPR# 状 P Open Close ver     Type  概要
 0405 ● C 06/15            │ToDo│CSV ブロック：^ < でセル連結？
 0406 ◎ C 06/15 06/15 03023│ToDo│Test > vi：w テスト追加
 0407 ● C 06/15            │ToDo│Test > vi：b e W B E テスト追加
-0408 ● C 06/15            │ToDo│
-0409 ● C 06/15            │ToDo│
-0410 ● C 06/15            │ToDo│
+0408 ● C 06/15            │問題│hoge 改行 位置にカーソルあるとき、w で次の行に移動しない
+0409 ◎ C 06/15 06/16 03023│問題│Test > vi：カーソル位置不一致の場合は 'ab@c' expected, but 'abc@' のように表示した方がよい
+0410 ● C 06/15            │ToDo│Clear Output にショートカットキー Ctrl + L を割り振る
+0411 ● C 06/15            │ToDo│
+0412 ● C 06/15            │ToDo│
+0413 ● C 06/15            │ToDo│
+0414 ● C 06/15            │ToDo│
+0415 ● C 06/15            │ToDo│
+0416 ● C 06/15            │ToDo│
+0417 ● C 06/15            │ToDo│
+0418 ● C 06/15            │ToDo│
+0419 ● C 06/15            │ToDo│
+0420 ● C 06/15            │ToDo│
