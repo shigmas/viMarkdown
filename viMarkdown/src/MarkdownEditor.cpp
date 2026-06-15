@@ -894,26 +894,48 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	}
 	//QTextCursor cursor = textCursor();
 	QString txt = e->text();
-	if( !txt.isEmpty() && (e->modifiers() & Qt::ControlModifier) == 0 ) {
-		if( gvi.m_viCmdMode ) {
-			emit do_viCmd(txt[0], cursor);
-			setTextCursor(cursor);
-			viewport()->update();
-			return;
-		}
-		if( gvi.m_joinEditBlock ) {
-			cursor.joinPreviousEditBlock();
-			cursor.insertText(txt);
-			cursor.endEditBlock();
-			setTextCursor(cursor);
-			//gvi.m_joinEditBlock = false;
-			viewport()->update();
-			if( gvi.m_recInsertedText )
+	if( !txt.isEmpty() ) {
+		if( (e->modifiers() & Qt::ControlModifier) == 0 ) {
+			if( gvi.m_viCmdMode ) {
+				emit do_viCmd(txt[0], cursor);
+				setTextCursor(cursor);
+				viewport()->update();
+				return;
+			}
+			if( gvi.m_joinEditBlock ) {
+				cursor.joinPreviousEditBlock();
+				cursor.insertText(txt);
+				cursor.endEditBlock();
+				setTextCursor(cursor);
+				//gvi.m_joinEditBlock = false;
+				viewport()->update();
+				if( gvi.m_recInsertedText )
+					gvi.m_insertedText += txt;
+				return;
+			}
+			if (gvi.m_recInsertedText)
 				gvi.m_insertedText += txt;
-			return;
+		} else {	//	Ctrl +
+			QScrollBar *vBar = verticalScrollBar();
+			int page = vBar->pageStep();
+		    int halfPage = page / 2;
+			switch(txt[0].unicode()) {
+			case 0x06:	//	^F:
+				//if (vBar && vBar->minimum() != vBar->maximum()) {
+					vBar->setValue(vBar->value() + page);
+				//}
+				break;
+			case 0x02:	//	^B:
+				vBar->setValue(vBar->value() - page);
+				break;
+			case 0x04:	//	^D
+				vBar->setValue(vBar->value() + halfPage);
+				break;
+			case 0x15:	//	^U
+				vBar->setValue(vBar->value() - halfPage);
+				break;
+			}
 		}
-		if (gvi.m_recInsertedText)
-			gvi.m_insertedText += txt;
 	}
 	MarkdownBaseEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
 }
