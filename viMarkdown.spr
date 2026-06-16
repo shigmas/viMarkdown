@@ -426,18 +426,18 @@ SPR# 状 P Open Close ver     Type  概要
 0423 ◎ C 06/15 06/16 03023│ToDo│Test > vi：編集結果テキスト比較が失敗した場合も、Expected: Actual: 形式で表示
 0424 ● C 06/15            │問題│vi ノーマルモードでも ^F が検索コマンドになってしまう
 0425 ● C 06/15            │問題│^D ^B ^U：スクロールするだけで、カーソル移動しない
-0426 ● C 06/15            │ToDo│QTextBlock に BLOCK_G_FLAD を設定・参照可能にする
+0426 ◎ C 06/15 06/17 03024│ToDo│QTextBlock に BLOCK_GFLAD を設定・参照可能にする
 0427 ◎ C 06/15 06/16 03024│問題│setBlockFolded() の第１引数は QTextBlock &block にしておく方がよい？
 0428 ◎ C 06/15 06/16 03024│ToDo│すべての行の BLOCK_G_FLAD をクリアする関数追加
-0429 ● C 06/15            │ToDo│ex コマンドを処理する vi_excmd(const QString&) 実装
-0430 ● C 06/15            │ToDo│
-0431 ● C 06/15            │ToDo│
-0432 ● C 06/15            │ToDo│
-0433 ● C 06/15            │ToDo│
-0434 ● C 06/15            │ToDo│
-0435 ● C 06/15            │ToDo│
-0436 ● C 06/15            │ToDo│
-0437 ● C 06/15            │ToDo│
-0438 ● C 06/15            │ToDo│
-0439 ● C 06/15            │ToDo│
-0440 ● C 06/15            │ToDo│
+0429 ◎ C 06/15 06/17 03024│ToDo│ex コマンドを処理する vi_excmd(const QString&, ...) 実装
+0430 ● C 06/17            │問題│:g/pat/cmd が :%g/pat/cmd として処理されない
+0431 ● C 06/17            │ToDo│
+0432 ● C 06/17            │ToDo│
+0433 ● C 06/17            │ToDo│
+0434 ● C 06/17            │ToDo│
+0435 ● C 06/17            │ToDo│
+0436 ● C 06/17            │ToDo│
+0437 ● C 06/17            │ToDo│
+0438 ● C 06/17            │ToDo│
+0439 ● C 06/17            │ToDo│
+0440 ● C 06/17            │ToDo│
