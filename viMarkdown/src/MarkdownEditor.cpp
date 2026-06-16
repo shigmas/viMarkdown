@@ -915,27 +915,35 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 			}
 			if (gvi.m_recInsertedText)
 				gvi.m_insertedText += txt;
-		} else {	//	Ctrl +
-			QScrollBar *vBar = verticalScrollBar();
-			int page = vBar->pageStep();
-		    int halfPage = page / 2;
-			switch(txt[0].unicode()) {
-			case 0x06:	//	^F:
-				//if (vBar && vBar->minimum() != vBar->maximum()) {
-					vBar->setValue(vBar->value() + page);
-				//}
-				break;
-			case 0x02:	//	^B:
-				vBar->setValue(vBar->value() - page);
-				break;
-			case 0x04:	//	^D
-				vBar->setValue(vBar->value() + halfPage);
-				break;
-			case 0x15:	//	^U
-				vBar->setValue(vBar->value() - halfPage);
-				break;
-			}
 		}
+	}
+	if( (e->modifiers() & Qt::ControlModifier) != 0 ) {	//	Ctrl +
+		QScrollBar *vBar = verticalScrollBar();
+		int page = vBar->pageStep();
+	    int halfPage = page / 2;
+	    qDebug() << "txt = " << txt;
+	    qDebug() << "key = " << e->key();
+		switch(e->key()) {
+		case Qt::Key_F:	//	^F:
+			//if (vBar && vBar->minimum() != vBar->maximum()) {
+			//}
+			vBar->setValue(vBar->value() + page);
+			break;
+		case Qt::Key_B:	//	^B:
+			vBar->setValue(vBar->value() - page);
+			break;
+		case Qt::Key_D:	//	^D
+			vBar->setValue(vBar->value() + halfPage);
+			break;
+		case Qt::Key_U:	//	^U
+			vBar->setValue(vBar->value() - halfPage);
+			break;
+		default:
+			MarkdownBaseEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
+			return;
+		}
+		e->accept(); // 「このキーはウィジェット側で通常処理する」とQtに宣言
+		return; // イベント処理をここで終了
 	}
 	MarkdownBaseEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
 }

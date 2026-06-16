@@ -978,6 +978,13 @@ const QList<ViTestCase> viTestCases = {
             "5x", "┃\n"     // 残り3文字に対して5文字削除を指定。行を越えて削除せず、空行（┃\n）に
         }
     },
+    { "Anchor test",
+        "┃abcdef\n",
+        {
+            "vl", "┣a┃b┫def\n",	// a, b 選択、カーソルは b 位置
+            "x", "┃cdef\n"     		// 被選択 a, b が削除される
+        }
+    },
 #endif
 };
 QString removeCursor(const QString &src, int &pos) {
@@ -1035,10 +1042,10 @@ void MainWindow::onAction_TestViCommands() {
 				do_output(QString("\n[FAILED #%1] wrong cursor position.\nExpected: '%2'\nActual:   '%3'\n").arg(total_failed).arg(exp).arg(act));
 			}
 			if( cursor.document()->toPlainText() != exp ) {
-				do_output("\nwrong document text.\n");
+				++total_failed;
+				do_output(QString("\n[FAILED #%1] nwrong document text.\n").arg(total_failed));
 				do_output("vi command: '" + cmd_text + "'\n");
 				do_output("expected:\n'" + exp + "', but:\n'" + cursor.document()->toPlainText() + "'\n");
-				++total_failed;
 			}
 		}
 		do_output("\n");
