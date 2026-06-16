@@ -237,7 +237,7 @@ SPR# 状 P Open Close ver     Type  概要
 0234 ◎ C 05/26 05/26 03013│ToDo│, ; のための情報保持
 0235 ◎ C 05/26 06/02 03017│ToDo│:q[uit]
 0236 ◎ C 05/26 06/02 03017│ToDo│:w[rite]
-0237 ● B 05/26            │ToDo│:<range>g/pat/<cmd>
+0237 ◎ B 05/26 06/17 03024│ToDo│:<range>g/pat/<cmd>
 0238 ◎ B 05/26 06/07 03019│ToDo│:<range>s/regexp/after/[g]
 0239 ◎ C 05/26 05/27 03014│問題│<num>s：num 文字削除されない
 0240 ◎ C 05/26 05/30 03015│ToDo│挿入コマンドで挿入された文字列保存
@@ -424,10 +424,20 @@ SPR# 状 P Open Close ver     Type  概要
 0421 ● C 06/15            │問題│a┃bc のとき、v を実行すると、b が選択されない
 0422 ◎ C 06/15 06/16 03023│ToDo│Test > vi：編集結果テキスト比較が失敗した場合も [FAILED #数字] 表示
 0423 ◎ C 06/15 06/16 03023│ToDo│Test > vi：編集結果テキスト比較が失敗した場合も、Expected: Actual: 形式で表示
-0424 ● C 06/15            │ToDo│
-0425 ● C 06/15            │ToDo│
-0426 ● C 06/15            │ToDo│
-0427 ● C 06/15            │ToDo│
-0428 ● C 06/15            │ToDo│
-0429 ● C 06/15            │ToDo│
+0424 ● C 06/15            │問題│vi ノーマルモードでも ^F が検索コマンドになってしまう
+0425 ● C 06/15            │問題│^D ^B ^U：スクロールするだけで、カーソル移動しない
+0426 ● C 06/15            │ToDo│QTextBlock に BLOCK_G_FLAD を設定・参照可能にする
+0427 ◎ C 06/15 06/16 03024│問題│setBlockFolded() の第１引数は QTextBlock &block にしておく方がよい？
+0428 ◎ C 06/15 06/16 03024│ToDo│すべての行の BLOCK_G_FLAD をクリアする関数追加
+0429 ● C 06/15            │ToDo│ex コマンドを処理する vi_excmd(const QString&) 実装
 0430 ● C 06/15            │ToDo│
+0431 ● C 06/15            │ToDo│
+0432 ● C 06/15            │ToDo│
+0433 ● C 06/15            │ToDo│
+0434 ● C 06/15            │ToDo│
+0435 ● C 06/15            │ToDo│
+0436 ● C 06/15            │ToDo│
+0437 ● C 06/15            │ToDo│
+0438 ● C 06/15            │ToDo│
+0439 ● C 06/15            │ToDo│
+0440 ● C 06/15            │ToDo│

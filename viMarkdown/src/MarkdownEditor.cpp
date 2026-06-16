@@ -47,7 +47,7 @@ bool blockFolded(const QTextBlock &block) {
 	if (us == -1) us = 0; // -1 の安全対策
 	return (us & BLOCK_FOLDED) != 0;
 }
-void setBlockFolded(QTextBlock block, bool folded) {
+void setBlockFolded(QTextBlock &block, bool folded) {
 	auto us = block.userState();
 	if (us == -1) us = 0; // -1 の安全対策
 	if( folded )
@@ -849,6 +849,8 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 			setTextCursor(cursor);
 		}
 		return;
+	} else if (e->key() == Qt::Key_F ) {
+		qDebug() << "e->key() == Qt::Key_F";
 	} else if (e->key() == Qt::Key_Space && (e->modifiers() & Qt::ControlModifier) != 0) {
 		check_svg_completer();
 		return;
@@ -894,6 +896,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	}
 	//QTextCursor cursor = textCursor();
 	QString txt = e->text();
+	qDebug() << "e->text() = " << e->text();
 	if( !txt.isEmpty() ) {
 		if( (e->modifiers() & Qt::ControlModifier) == 0 ) {
 			if( gvi.m_viCmdMode ) {
@@ -915,8 +918,36 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 			}
 			if (gvi.m_recInsertedText)
 				gvi.m_insertedText += txt;
+		} else {	//	Ctrl +
+			QScrollBar *vBar = verticalScrollBar();
+			int page = vBar->pageStep();
+		    int halfPage = page / 2;
+		    qDebug() << "txt = " << txt;
+		    qDebug() << "key = " << e->key();
+			switch(txt[0].unicode()) {
+			case 0x06:	//	^F:
+				//if (vBar && vBar->minimum() != vBar->maximum()) {
+				//}
+				vBar->setValue(vBar->value() + page);
+				break;
+			case 0x02:	//	^B:
+				vBar->setValue(vBar->value() - page);
+				break;
+			case 0x04:	//	^D
+				vBar->setValue(vBar->value() + halfPage);
+				break;
+			case 0x15:	//	^U
+				vBar->setValue(vBar->value() - halfPage);
+				break;
+			default:
+				MarkdownBaseEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
+				return;
+			}
+			e->accept(); // 「このキーはウィジェット側で通常処理する」とQtに宣言
+			return; // イベント処理をここで終了
 		}
 	}
+#if 0
 	if( (e->modifiers() & Qt::ControlModifier) != 0 ) {	//	Ctrl +
 		QScrollBar *vBar = verticalScrollBar();
 		int page = vBar->pageStep();
@@ -945,6 +976,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 		e->accept(); // 「このキーはウィジェット側で通常処理する」とQtに宣言
 		return; // イベント処理をここで終了
 	}
+#endif
 	MarkdownBaseEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
 }
 int indexOfNotEsc(const QString &text, QChar ch, int ix) {

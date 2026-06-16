@@ -73,7 +73,8 @@ enum {
 };
 using uchar = unsigned char;
 const int BLOCK_FLAG_BITS = 0xff;		//	userState の下位8bitがブロックタイプ
-const int BLOCK_FOLDED = 0x100;			//	見出し行の子テキストが折り畳まれているか？
+const int BLOCK_FOLDED = 0x0100;		//	見出し行の子テキストが折り畳まれているか？
+const int BLOCK_GFLAG = 0x1000;			//	:{range}g/pat/ フラグ
 
 const QChar STX(0x0002);		//	行頭仮想文字
 const QChar ETX(0x0003);		//	行末仮想文字
@@ -381,6 +382,7 @@ protected:
     //void	do_fold(QTextBlock block, QTextDocument*);
     //void	do_unfold(QTextBlock block, QTextDocument*);
     void	do_viCmd(QChar cmd, QTextCursor&);
+    void	do_exCmd(const QString&, int, /*QString cmd, QChar,*/ QTextCursor&, QTextDocument*, DocWidget*);
     void	do_vi_insert(QChar cmd, QTextCursor&, int rcnt);		//	iIaAoOsS
     void	do_vi_delete(QChar cmd, QTextCursor&, int rcnt);		//	xXD
     void	do_prefix_cmd(QChar cmd, QTextCursor&, int rcnt, DocWidget*);		//	{g z [ ] r}<cmd>
@@ -388,6 +390,7 @@ protected:
     void	do_vi_motion(QChar cmd, QTextCursor&, int rcnt, DocWidget*);		//	hjklwW...
     void	do_vi_search(const QString&, QTextCursor&, int rcnt, DocWidget*);
     void	do_subst(const QString &, int, QTextDocument*);
+    void	do_global(const QString &, int, QTextCursor&, QTextDocument*, DocWidget*);
 
 private:
     bool	m_processing = false;

@@ -16,8 +16,25 @@ extern ViStatus gvi;
 uchar blockType(const QTextBlock &block);
 void setBlockType(QTextBlock block, uchar type);
 bool blockFolded(const QTextBlock &block);
-void setBlockFolded(QTextBlock block, bool folded);
-
+void setBlockFolded(QTextBlock &block, bool folded);
+void resetBlockGFlag(QTextDocument* doc) {
+	QTextBlock block = doc->firstBlock();
+	while( block.isValid() ) {
+		int us = block.userState();
+		if( us == -1 ) 
+			block.setUserState(0);
+		else
+			block.setUserState(us & ~BLOCK_GFLAG);
+		block = block.next();
+	}
+}
+void setBlockGFlag(QTextBlock &block) {
+	int us = block.userState();
+	block.setUserState(us | BLOCK_GFLAG);
+}
+bool blockGFlag(const QTextBlock &block) {
+	return (block.userState() & BLOCK_GFLAG) != 0;
+}
 int getRepeatCount() {
 	if( gvi.m_repeatCount == 0 ) return 1;
 	return gvi.m_repeatCount;
@@ -1237,6 +1254,74 @@ bool parse_subst(const QString &text, int &ix, QString &pat, QString &after, boo
 
 	return true;
 }
+void MainWindow::do_global(const QString &text, int ix, QTextCursor& cursor, QTextDocument* doc, DocWidget* docWidget) {
+	while (ix < text.length() && text.at(ix).isSpace()) ++ix;
+	if (ix >= text.length())	// エラー：セパレータが存在しない
+		return;
+	QChar sep = text.at(ix);
+	if (sep.isLetterOrNumber() || sep.isSpace() || sep == '\\' || sep == '"' || sep == '|')
+		return;		// エラー：不正なセパレータ文字
+	QString pat;
+	int i = ix + 1;
+	bool found_end = false;
+	for (; i < text.length(); ++i) {	// 4. パターン（pat）の抽出
+		QChar c = text.at(i);
+		// エスケープ処理（セパレータ自体がエスケープされている場合の考慮）
+		if (c == '\\' && i + 1 < text.length()) {
+			QChar next = text.at(i + 1);
+			if (next == sep) {
+				pat.append(c);     // '\' を追加
+				pat.append(next);  // セパレータ文字を追加（これで2つ目のセパレータ判定をスルーします）
+				i++;               // 次の文字（セパレータ）を処理済みにする
+			} else {
+				pat.append(c);
+			}
+		} else if (c == sep) {
+			found_end = true;
+			break; // 2つ目のセパレータが見つかったのでループを抜ける
+		} else {
+			pat.append(c);
+		}
+	}
+	if (!found_end)
+		return;		// エラー：セパレータが閉じられていません
+	if( pat.isEmpty() ) pat = g.m_lastSearchedPat;
+	if( pat.isEmpty() ) return;
+	QString cmd = text.mid(i + 1).trimmed();
+	qDebug() << "pat = " << pat;
+	qDebug() << "cmd = " << cmd;
+	resetBlockGFlag(doc);
+	QRegularExpression::PatternOptions options = QRegularExpression::NoPatternOption;
+    if (g.m_ignoreCase) { // 大文字小文字同一視オプションの反映
+        options |= QRegularExpression::CaseInsensitiveOption;
+    }
+    QRegularExpression re(pat, options);
+    if (!re.isValid()) {
+        qDebug() << "Invalid regexp:" << re.errorString();
+        return; // パターンが不正な場合は中断
+    }
+    int startIdx = qMax(0, gvi.m_rangeStart - 1);
+    int endIdx = qMin(doc->blockCount() - 1, gvi.m_rangeEnd - 1);
+    // 範囲の開始位置から直接 QTextBlock を取得（先頭からの無駄なループを回避）
+    QTextBlock block = doc->findBlockByNumber(startIdx);
+    while (block.isValid() && block.blockNumber() <= endIdx) {
+        // 行のテキストが正規表現にマッチするか確認
+        if (block.text().contains(re)) {
+            setBlockGFlag(block); // GFlag設定関数
+        }
+        block = block.next();
+    }
+    //	コマンド実行
+    block = doc->findBlockByNumber(startIdx);
+    while (block.isValid() && block.blockNumber() <= endIdx) {
+        if( blockGFlag(block) ) {
+        	gvi.m_rangeStart = gvi.m_rangeEnd = block.blockNumber() + 1;
+        	int ix = 0;
+        	do_exCmd(cmd, ix, cursor, doc, docWidget);
+        }
+        block = block.next();
+    }
+}
 void MainWindow::do_subst(const QString &text, int ix, QTextDocument* doc) {
 	QString pat;
 	QString after;
@@ -1426,9 +1511,21 @@ void MainWindow::on_cmdLine_enter() {
 	}
 	if( gvi.m_rangeStart > gvi.m_rangeEnd )
 		std::swap(gvi.m_rangeStart, gvi.m_rangeEnd);
+	do_exCmd(text, ix, cursor, doc, docWidget);
+	//QString cmd;
+	//while( ix < text.size() && text[ix].isLetter() ) cmd += text[ix++];
+	//QChar nch = ix < text.size() ? text[ix] : u'\0';
+	//do_exCmd(cmd, cursor, doc, docWidget);
+}
+void MainWindow::do_exCmd(const QString &text, int ix, /*QString cmd, QChar nch,*/ QTextCursor &cursor, QTextDocument*doc, DocWidget* docWidget) {
 	QString cmd;
 	while( ix < text.size() && text[ix].isLetter() ) cmd += text[ix++];
 	QChar nch = ix < text.size() ? text[ix] : u'\0';
+	//QChar nch;
+	//if( cmd.endsWith(u'!') ) {
+	//	nch = u'!';
+	//	cmd = cmd.left(cmd.size() - 1);
+	//}
 	if( is_match(cmd, "q(uit") ) {
 		do_close(nch == u'!');
 	} else if( is_match(cmd, "w(rite") ) {
@@ -1475,6 +1572,8 @@ void MainWindow::on_cmdLine_enter() {
 		}
 	} else if( is_match(cmd, "s(ubstitute") ) {
 		do_subst(text, ix, doc);
+	} else if( is_match(cmd, "g(lobal") ) {
+		do_global(text, ix, cursor, doc, docWidget);
 	} else {
 		statusBar()->showMessage(tr("illegal command."), 5000);
 	}
