@@ -159,6 +159,7 @@ struct ViStatus {
     int		m_opCount = 1;				//	op 繰り返し回数 for c d y
     int		m_repeatCount = 0;			//	vi コマンド繰り返し回数
     int		m_rangeStart = 1;
+    int		m_nRange = 0;				//	指定された行番号数
     int		m_rangeEnd = 1;
     int		m_exhist_ix = -1;			//	現コマンド履歴インデックス
 	QString	m_lastEditCommand;			//	最後に実行した vi 編集コマンド

@@ -1302,6 +1302,10 @@ void MainWindow::do_global(const QString &text, int ix, QTextCursor& cursor, QTe
     }
     int startIdx = qMax(0, gvi.m_rangeStart - 1);
     int endIdx = qMin(doc->blockCount() - 1, gvi.m_rangeEnd - 1);
+    if( gvi.m_nRange == 0 ) {		//	{range}が無かった場合
+    	startIdx = 0;
+    	endIdx = doc->blockCount() - 1;
+    }
     // 範囲の開始位置から直接 QTextBlock を取得（先頭からの無駄なループを回避）
     QTextBlock block = doc->findBlockByNumber(startIdx);
     while (block.isValid() && block.blockNumber() <= endIdx) {
@@ -1476,9 +1480,11 @@ void MainWindow::on_cmdLine_enter() {
 	int totalLines = doc->blockCount();
 	if( doc->lastBlock().text().isEmpty() && totalLines > 1 ) --totalLines;
 	int ix = 1;		//	skip ':'
+	gvi.m_nRange = 0;
 	gvi.m_rangeStart = 1;
 	if( ix < text.size() && text[ix] == '%' ) {
 	    ++ix;
+	    gvi.m_nRange = 2;
 	    gvi.m_rangeStart = 1;
 	    gvi.m_rangeEnd   = totalLines;
 	} else {
@@ -1490,6 +1496,7 @@ void MainWindow::on_cmdLine_enter() {
 				gvi.m_rangeStart = gvi.m_rangeEnd = currentLine;
 				break;	//	行番号無し
 			}
+			++gvi.m_nRange;
 			if( gvi.m_rangeEnd < 0 ) return;
 			if( ix >= text.size() || text[ix] != ',' && text[ix] != ';' ) break;
 			if( text[ix] == ';' ) currentLine = gvi.m_rangeEnd;

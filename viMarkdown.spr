@@ -430,8 +430,8 @@ SPR# 状 P Open Close ver     Type  概要
 0427 ◎ C 06/15 06/16 03024│問題│setBlockFolded() の第１引数は QTextBlock &block にしておく方がよい？
 0428 ◎ C 06/15 06/16 03024│ToDo│すべての行の BLOCK_G_FLAD をクリアする関数追加
 0429 ◎ C 06/15 06/17 03024│ToDo│ex コマンドを処理する vi_excmd(const QString&, ...) 実装
-0430 ● C 06/17            │問題│:g/pat/cmd が :%g/pat/cmd として処理されない
-0431 ● C 06/17            │ToDo│
+0430 ◎ C 06/17 06/17 03024│問題│:g/pat/cmd が :%g/pat/cmd として処理されない
+0431 ● C 06/17            │問題│:{range}g/pat/cmd：cmd に g は指定不可に
 0432 ● C 06/17            │ToDo│
 0433 ● C 06/17            │ToDo│
 0434 ● C 06/17            │ToDo│
