@@ -423,7 +423,7 @@ SPR# 状 P Open Close ver     Type  概要
 0420 ● C 06/15            │ToDo│Test > vi：アンカーを┣, ┫ で表す
 0421 ● C 06/15            │問題│a┃bc のとき、v を実行すると、b が選択されない
 0422 ◎ C 06/15 06/16 03023│ToDo│Test > vi：編集結果テキスト比較が失敗した場合も [FAILED #数字] 表示
-0423 ● C 06/15            │ToDo│
+0423 ◎ C 06/15 06/16 03023│ToDo│Test > vi：編集結果テキスト比較が失敗した場合も、Expected: Actual: 形式で表示
 0424 ● C 06/15            │ToDo│
 0425 ● C 06/15            │ToDo│
 0426 ● C 06/15            │ToDo│

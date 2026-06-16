@@ -1042,10 +1042,16 @@ void MainWindow::onAction_TestViCommands() {
 				do_output(QString("\n[FAILED #%1] wrong cursor position.\nExpected: '%2'\nActual:   '%3'\n").arg(total_failed).arg(exp).arg(act));
 			}
 			if( cursor.document()->toPlainText() != exp ) {
+				QString exp = steps[k+1];
+				exp.replace('\n', "\\n");
+				QString act = cursor.document()->toPlainText();
+				act.insert(cursor.position(), u'┃');
+				act.replace('\n', "\\n");
 				++total_failed;
 				do_output(QString("\n[FAILED #%1] nwrong document text.\n").arg(total_failed));
-				do_output("vi command: '" + cmd_text + "'\n");
-				do_output("expected:\n'" + exp + "', but:\n'" + cursor.document()->toPlainText() + "'\n");
+				do_output("Commands: '" + cmd_text + "'\n");
+				do_output(QString("Expected: '%1'\nActual:   '%2'\n").arg(exp).arg(act));
+				//do_output("expected:\n'" + exp + "', but:\n'" + cursor.document()->toPlainText() + "'\n");
 			}
 		}
 		do_output("\n");
