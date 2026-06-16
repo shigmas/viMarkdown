@@ -1518,6 +1518,7 @@ void MainWindow::on_cmdLine_enter() {
 	}
 	if( gvi.m_rangeStart > gvi.m_rangeEnd )
 		std::swap(gvi.m_rangeStart, gvi.m_rangeEnd);
+	gvi.m_inGlobal = false;
 	do_exCmd(text, ix, cursor, doc, docWidget);
 	//QString cmd;
 	//while( ix < text.size() && text[ix].isLetter() ) cmd += text[ix++];
@@ -1580,7 +1581,13 @@ void MainWindow::do_exCmd(const QString &text, int ix, /*QString cmd, QChar nch,
 	} else if( is_match(cmd, "s(ubstitute") ) {
 		do_subst(text, ix, doc);
 	} else if( is_match(cmd, "g(lobal") ) {
+		if( gvi.m_inGlobal ) {
+			statusBar()->showMessage(tr("Cannot do :global recursive."), 5000);
+			return;
+		}
+		gvi.m_inGlobal = true;
 		do_global(text, ix, cursor, doc, docWidget);
+		gvi.m_inGlobal = false;
 	} else {
 		statusBar()->showMessage(tr("illegal command."), 5000);
 	}
