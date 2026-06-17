@@ -741,22 +741,27 @@ void MainWindow::onAction_DumpCharFlags() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	QTextBlock block = docWidget->m_editor->document()->firstBlock();
-	QString txt = "\n# Dump charFlags[]\n\n```\n";
+	//QString txt = "\n# Dump charFlags[]\n\n```\n";
+	do_output("\n# Dump charFlags[]\n\n");
 	while( block.isValid() ) {
 		//qDebug() << block.blockNumber() << ": " << blockType(block) << ", " << block.text();
 		//printCharFlags(block);
-		txt += QString::number((int)block.blockNumber()) + ": '" + block.text() + "' ";
+		//txt += QString::number((int)block.blockNumber()) + ": '" + block.text() + "' ";
+		do_output(QString::number((int)block.blockNumber()) + ": '" + block.text() + "' ");
 		const BlockData* data = getBlockData(block);
-		for(int i = 0; i < data->m_charFlags.size(); ++i)
-			txt += QString::number((int)data->m_charFlags[i]) + u' ';
-		txt += "\n";
+		for(int i = 0; i < data->m_charFlags.size(); ++i) {
+			//txt += QString::number((int)data->m_charFlags[i]) + u' ';
+			do_output(QString::number((int)data->m_charFlags[i]) + u' ');
+		}
+		//txt += "\n";
+		do_output("\n");
 		block = block.next();
 	}
-	txt += "```\n";
-	QTextCursor cursor = docWidget->m_editor->textCursor();
-	cursor.movePosition(QTextCursor::End);
-	cursor.insertText(txt);
-	docWidget->m_editor->setTextCursor(cursor);
+	//txt += "```\n";
+	//QTextCursor cursor = docWidget->m_editor->textCursor();
+	//cursor.movePosition(QTextCursor::End);
+	//cursor.insertText(txt);
+	//docWidget->m_editor->setTextCursor(cursor);
 }
 void MainWindow::onAction_DumpBlockUserStates() {
 	DocWidget *docWidget = getCurDocWidget();
