@@ -1152,6 +1152,7 @@ void MainWindow::onAction_TestViCommands() {
 				}
 			}
 			QCoreApplication::processEvents();		//	溜まっているイベント処理
+			cursor = editor->textCursor();
 			int cpos1 = cursor.position();
 			QString exp = removeCursor(steps[k+1], pos);
 			//cursor = editor->textCursor();
@@ -1164,7 +1165,9 @@ void MainWindow::onAction_TestViCommands() {
 				act.insert(cursor.position(), u'┃');
 				act.replace('\n', "\\n");
 				++total_failed;
-				do_output(QString("\n[FAILED #%1] wrong cursor position.\nExpected: '%2'\nActual:   '%3'\n").arg(total_failed).arg(exp).arg(act));
+				do_output(QString("\n[FAILED #%1] wrong cursor position.\n").arg(total_failed));
+				do_output("Commands: '" + cmd_text + "'\n");
+				do_output(QString("Expected: '%1'\nActual:   '%2'\n").arg(exp).arg(act));
 			}
 			if( cursor.document()->toPlainText() != exp ) {
 				QString exp = steps[k+1];

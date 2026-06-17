@@ -437,7 +437,7 @@ SPR# 状 P Open Close ver     Type  概要
 0434 ● C 06/17            │ToDo│Test > vi：:{range}d テスト追加
 0435 ◎ C 06/17 06/17 03024│ToDo│MainWindow::onAction_TestViCommands()：ex コマンドテスト対応
 0436 ◎ C 06/17 06/17 03024│ToDo│Test > vi :{range} テスト追加
-0437 ● C 06/17            │ToDo│
+0437 ◎ C 06/17 06/17 03024│問題│:数字 テストで失敗する
 0438 ● C 06/17            │ToDo│
 0439 ● C 06/17            │ToDo│
 0440 ● C 06/17            │ToDo│
