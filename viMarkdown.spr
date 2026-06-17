@@ -434,8 +434,8 @@ SPR# 状 P Open Close ver     Type  概要
 0431 ◎ C 06/17 06/17 03024│問題│:{range}g/pat/cmd：cmd に g は指定不可に
 0432 ● C 06/17            │問題│:g/pat/d ：最初のマッチ行しか削除されない
 0433 ◎ C 06/17 06/17 03024│ToDo│Test > vi：X テスト追加
-0434 ● C 06/17            │ToDo│
-0435 ● C 06/17            │ToDo│
+0434 ● C 06/17            │ToDo│Test > vi：:{range}d テスト追加
+0435 ◎ C 06/17 06/17 03024│ToDo│MainWindow::onAction_TestViCommands()：ex コマンドテスト対応
 0436 ● C 06/17            │ToDo│
 0437 ● C 06/17            │ToDo│
 0438 ● C 06/17            │ToDo│

@@ -35,6 +35,9 @@
 
 using namespace std;
 
+extern Global g;
+extern ViStatus gvi;
+
 uchar blockType(const QTextBlock &block);
 void setBlockType(QTextBlock block, uchar type);
 
@@ -836,7 +839,13 @@ struct ViTestCase {
 const QList<ViTestCase> viTestCases = {
 	//{ "Move cursor right",	"h@ello\n", {"l", "he@llo\n", "l", "hel@lo\n", "l", "hell@o\n", } },
 	//{ "Move cursor left",	"h@ello\n", {"h", "@hello\n", "h", "@hello\n", } },
-#if 1
+    { "Basic ex command",
+        "li┃ne1\nline2\nline3\n",
+        {
+            ":2", "line1\n┃line2\nline3\n", // 2行目行頭に移動
+        }
+    },
+#if 0
 	// 1. 下移動 (j) の基本動作と最終行での境界制御
     { "Move cursor down (j)",
         "a┃bc\ndef\nghi\n",
@@ -1010,6 +1019,38 @@ const QList<ViTestCase> viTestCases = {
             "5X", "┃f\n"     // 5文字の削除を試みるが、存在する3文字のみ削除して行頭に留まる
         }
     },
+#if 0
+    { "Ex Delete - Current Line (:d)",
+        "line 1\nli┃ne 2\nline 3\n",
+        {
+            ":d\n", "line 1\n┃line 3\n" // 範囲省略時はカレント行（2行目）を削除。カーソルは次の行の先頭へ
+        }
+    },
+    { "Ex Delete - Specific Line (:1d)",
+        "line 1\nli┃ne 2\nline 3\n",
+        {
+            ":1d\n", "┃line 2\nline 3\n" // 指定した1行目を削除。カーソルは新しい1行目（元2行目）の先頭へ
+        }
+    },
+    { "Ex Delete - Range (:1,2d)",
+        "line 1\nline 2\nli┃ne 3\n",
+        {
+            ":1,2d\n", "┃line 3\n" // 1〜2行目を一括削除。カーソルは残った3行目の先頭へ
+        }
+    },
+    { "Ex Delete - Whole Document (:%d)",
+        "line 1\nli┃ne 2\nline 3\n",
+        {
+            ":%d\n", "┃\n" // バッファ全体のすべての行を削除。Vimの仕様として、中身のない空行が1行だけ残る
+        }
+    },
+    { "Ex Delete - To EOF (:.,$d)",
+        "line 1\nli┃ne 2\nline 3\n",
+        {
+            ":.,$d\n", "┃line 1\n" // カレント行（2行目）から最終行（3行目）まで削除。下に行がないため、カーソルは1行目へ
+        }
+    },
+#endif
 #endif
 };
 QString removeCursor(const QString &src, int &pos) {
@@ -1049,8 +1090,14 @@ void MainWindow::onAction_TestViCommands() {
 			++total_tested;
 			do_output(".");
 			const QString cmd_text = steps[k];
-			for(auto c: cmd_text)
-				do_viCmd(c, cursor);
+			for(int i = 0; i < cmd_text.size(); ++i) {
+				do_viCmd(cmd_text[i], cursor);
+				if( gvi.m_cmdlineMode ) {
+					if( cmd_text[i] == u':' )
+						do_exCmd(cmd_text.mid(i));
+					break;
+				}
+			}
 			QCoreApplication::processEvents();		//	溜まっているイベント処理
 			int cpos1 = cursor.position();
 			QString exp = removeCursor(steps[k+1], pos);

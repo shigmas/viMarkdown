@@ -1467,6 +1467,9 @@ void MainWindow::on_cmdLine_enter() {
 	QString text = m_cmdLine->text();
 	qDebug() << "cmdline text = " << text;
 	close_cmdLine();
+	do_exCmd(text);
+}
+void MainWindow::do_exCmd(const QString &text) {
     DocWidget *docWidget = getCurDocWidget();
     if( docWidget == nullptr ) return;
 	QTextCursor cursor = gvi.m_prevFocusWidget == (QWidget*)docWidget->m_editor ?
@@ -1504,7 +1507,7 @@ void MainWindow::on_cmdLine_enter() {
 			gvi.m_rangeStart = gvi.m_rangeEnd;
 		}
 	}
-	if( ix >= text.size() ) {	//	:{range} Enter の場合
+	if( ix >= text.size() || text[ix] == u'\n' ) {	//	:{range} Enter の場合
 		QTextBlock block = doc->findBlockByNumber(gvi.m_rangeEnd - 1);
 		cursor.setPosition(block.position());
 		hat(cursor);
