@@ -408,6 +408,12 @@ void MainWindow::do_test(DocWidget *docWidget, int type) {
 			block2 = block2.next();
 			continue;
 		}
+		if( blockType(block1) == BT_SVG_BEGIN || blockType(block1) == BT_SVG_BLOCK ) {
+			while( blockType(block1) == BT_SVG_BEGIN || blockType(block1) == BT_SVG_BLOCK )
+				block1 = block1.next();
+			block2 = block2.next();
+			continue;
+		}
 		while( /*blockType(block1) == BT_KEISEN_BLOCK &&*/ block1.text().startsWith("```") ) {
 			block1 = block1.next();
 		}
