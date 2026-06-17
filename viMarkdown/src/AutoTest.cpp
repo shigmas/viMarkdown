@@ -766,31 +766,35 @@ void MainWindow::onAction_DumpCharFlags() {
 void MainWindow::onAction_DumpBlockUserStates() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
-	QString txt = "\n## userStates of Editor Blocks\n\n```\n";
+	//QString txt = "\n## userStates of Editor Blocks\n\n```\n";
+	do_output("\n## userStates of Editor Blocks\n\n");
 	QTextBlock block = docWidget->m_editor->document()->firstBlock();
 	while( block.isValid() ) {
 		//qDebug() << block.blockNumber() << ": " << blockType(block) << ", " << block.text();
 		//txt += QString::number((int)block.blockNumber()) + ": '" + blockType(block);
 		//txt += QString("%1: %2 '%3'\n").arg(block.blockNumber()+1).arg(blockType(block)).arg(block.text());
-		txt += QString("%1: 0x%2 '%3'\n").arg(block.blockNumber()+1).arg((unsigned int)block.userState(), 4, 16, QChar('0')).arg(block.text());
+		//txt += QString("%1: 0x%2 '%3'\n").arg(block.blockNumber()+1).arg((unsigned int)block.userState(), 4, 16, QChar('0')).arg(block.text());
+		do_output(QString("%1: 0x%2 '%3'\n").arg(block.blockNumber()+1).arg((unsigned int)block.userState(), 4, 16, QChar('0')).arg(block.text()));
 		block = block.next();
 	}
-	txt += "```\n";
-	txt += "\n## userStates of Preview Blocks\n\n```\n";
+	//txt += "```\n";
+	//txt += "\n## userStates of Preview Blocks\n\n```\n";
+	do_output("\n## userStates of Preview Blocks\n\n");
 	block = docWidget->m_preview->document()->firstBlock();
 	while( block.isValid() ) {
 		//qDebug() << block.blockNumber() << ": " << blockType(block) << ", " << block.text();
 		//txt += QString::number((int)block.blockNumber()) + ": '" + blockType(block);
 		//txt += QString("%1: %2 '%3'\n").arg(block.blockNumber()+1).arg(blockType(block)).arg(block.text());
-		txt += QString("%1: 0x%2 '%3'\n").arg(block.blockNumber()+1).arg((unsigned int)block.userState(), 4, 16, QChar('0')).arg(block.text());
+		//txt += QString("%1: 0x%2 '%3'\n").arg(block.blockNumber()+1).arg((unsigned int)block.userState(), 4, 16, QChar('0')).arg(block.text());
+		do_output(QString("%1: 0x%2 '%3'\n").arg(block.blockNumber()+1).arg((unsigned int)block.userState(), 4, 16, QChar('0')).arg(block.text()));
 		block = block.next();
 	}
-	txt += "```\n";
+	//txt += "```\n";
 
-	QTextCursor cursor = docWidget->m_editor->textCursor();
-	cursor.movePosition(QTextCursor::End);
-	cursor.insertText(txt);
-	docWidget->m_editor->setTextCursor(cursor);
+	//QTextCursor cursor = docWidget->m_editor->textCursor();
+	//cursor.movePosition(QTextCursor::End);
+	//cursor.insertText(txt);
+	//docWidget->m_editor->setTextCursor(cursor);
 }
 static QString g_script_1 = R"(
 	TYPE "hoge"
