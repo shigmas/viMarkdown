@@ -985,6 +985,31 @@ const QList<ViTestCase> viTestCases = {
             "x", "┃cdef\n"     		// 被選択 a, b が削除される
         }
     },
+    { "Delete character before cursor (X) - Basic",
+        "abc┃d\n",
+        {
+            "X", "ab┃d\n", // 'c' を削除、カーソルはそのまま 'd' を維持
+            "X", "a┃d\n",  // 'b' を削除、カーソルはそのまま 'd' を維持
+            "X", "┃d\n",   // 'a' を削除。これ以上左に文字がないため、カーソルは 'd'（行頭）へ
+            "X", "┃d\n"    // 行頭での実行。削除されず、状態とカーソル位置を維持（0158の検証）
+        }
+    },
+    { "Delete character before cursor (X) - Japanese",
+        "あいう┃え\n",
+        {
+            "X", "あい┃え\n", // 'う' を削除、カーソルはそのまま 'え' を維持
+            "X", "あ┃え\n",  // 'い' を削除、カーソルはそのまま 'え' を維持
+            "X", "┃え\n",   // 'あ' を削除。行頭になったため、カーソルは 'え'（行頭）へ
+            "X", "┃え\n"    // 行頭での実行。日本語でも何も起こらないことを確認
+        }
+    },
+    { "Delete character before cursor (X) - Count",
+        "abcde┃f\n",
+        {
+            "2X", "abc┃f\n", // 'd', 'e' の2文字を削除、カーソルはそのまま 'f' を維持
+            "5X", "┃f\n"     // 5文字の削除を試みるが、存在する3文字のみ削除して行頭に留まる
+        }
+    },
 #endif
 };
 QString removeCursor(const QString &src, int &pos) {
@@ -1048,7 +1073,7 @@ void MainWindow::onAction_TestViCommands() {
 				act.insert(cursor.position(), u'┃');
 				act.replace('\n', "\\n");
 				++total_failed;
-				do_output(QString("\n[FAILED #%1] nwrong document text.\n").arg(total_failed));
+				do_output(QString("\n[FAILED #%1] wrong document text.\n").arg(total_failed));
 				do_output("Commands: '" + cmd_text + "'\n");
 				do_output(QString("Expected: '%1'\nActual:   '%2'\n").arg(exp).arg(act));
 				//do_output("expected:\n'" + exp + "', but:\n'" + cursor.document()->toPlainText() + "'\n");
