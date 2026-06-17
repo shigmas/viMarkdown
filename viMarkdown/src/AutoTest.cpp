@@ -1029,7 +1029,7 @@ const QList<ViTestCase> viTestCases = {
             ":1", "┃line 1\nline 2\nline 3\nline 4\n"  // 1行目の行頭へジャンプ
         }
     },
-#if 0
+#if 1
     { "Ex Range - Current Line (:.)",
         "line 1\nli┃ne 2\nline 3\n",
         {
@@ -1073,35 +1073,35 @@ const QList<ViTestCase> viTestCases = {
         }
     },
 #endif
-#if 0
+#if 1
     { "Ex Delete - Current Line (:d)",
         "line 1\nli┃ne 2\nline 3\n",
         {
-            ":d\n", "line 1\n┃line 3\n" // 範囲省略時はカレント行（2行目）を削除。カーソルは次の行の先頭へ
+            ":d", "line 1\n┃line 3\n" // 範囲省略時はカレント行（2行目）を削除。カーソルは次の行の先頭へ
         }
     },
     { "Ex Delete - Specific Line (:1d)",
         "line 1\nli┃ne 2\nline 3\n",
         {
-            ":1d\n", "┃line 2\nline 3\n" // 指定した1行目を削除。カーソルは新しい1行目（元2行目）の先頭へ
+            ":1d", "┃line 2\nline 3\n" // 指定した1行目を削除。カーソルは新しい1行目（元2行目）の先頭へ
         }
     },
     { "Ex Delete - Range (:1,2d)",
         "line 1\nline 2\nli┃ne 3\n",
         {
-            ":1,2d\n", "┃line 3\n" // 1〜2行目を一括削除。カーソルは残った3行目の先頭へ
+            ":1,2d", "┃line 3\n" // 1〜2行目を一括削除。カーソルは残った3行目の先頭へ
         }
     },
     { "Ex Delete - Whole Document (:%d)",
         "line 1\nli┃ne 2\nline 3\n",
         {
-            ":%d\n", "┃\n" // バッファ全体のすべての行を削除。Vimの仕様として、中身のない空行が1行だけ残る
+            ":%d", "┃\n" // バッファ全体のすべての行を削除。Vimの仕様として、中身のない空行が1行だけ残る
         }
     },
     { "Ex Delete - To EOF (:.,$d)",
         "line 1\nli┃ne 2\nline 3\n",
         {
-            ":.,$d\n", "┃line 1\n" // カレント行（2行目）から最終行（3行目）まで削除。下に行がないため、カーソルは1行目へ
+            ":.,$d", "┃line 1\n" // カレント行（2行目）から最終行（3行目）まで削除。下に行がないため、カーソルは1行目へ
         }
     },
 #endif
