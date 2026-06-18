@@ -2,7 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include <QTextCursor>
-#include <qsplitter>
+#include <QSplitter>
 #include <QTimer>
 //#include "ui_MainWindow.h"
 //#include "markdowntohtmlconvertor.h"
