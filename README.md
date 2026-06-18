@@ -36,21 +36,23 @@ It is designed for developers and writers who love efficiency.
 |0.1.2xx| beta | Bug fixes only | 10 Mar 2026 –|
 |0.2.xxx| rc | Bug fixes only (ensuring no side effects) | 21 Apr 2026 –  |
 |0.2.xxx| Stable | Maintenance mode | End Apr 2026 – |
-|0.3.0xx|dev|Feature implementation & verification|May 2026～(**Current**)|
-|0.3.1xx|alpha|Bug fixes and occasional feature additions|Aug 2026～|
+|0.3.0xx|dev|Feature implementation & verification|May 2026- (**Current**)|
+|0.3.1xx|alpha|Bug fixes, refactoring, documentation, and minor feature additions|Aug 2026 - |
+|0.3.2xx|beta|Bug fixes, minor refactoring, and documentation|Oct 2026 -|
 |0.4.xxx| rc | Bug fixes only (ensuring no side effects) | Dec 2026 –  |
 |0.4.xxx| Stable | Maintenance mode | Mid Dec 2026 – |
 
+\* Note: The schedule above is current and subject to change without notice at the author's sole discretion.
 ## Roadmap
 
 | Ver. | Features / Overview | Schedule |
 | :--- | :--- | :--- |
-| 0.2 | Basic editor features, Basic Markdown, Ruled-line (Keisen) blocks, CSV blocks | Scheduled for release by the end of April 2026.|
-| 0.4 | Vi key bindings, Japanese localization for menus and UI, regex search, grep, diff?, rectangular selection, SVG blocks, Graph View?, usability and performance improvements, migration to CMake (Qt Creator / Mac / Linux? support) | Dev version starting around May 2026, Alpha version around Aug 2026, Stable release (Win/Mac?) planned for Dec 2026. |
+| 0.2 | Basic editor features, Basic Markdown, Ruled-line (Keisen) blocks, CSV blocks, Direct editing in the previewer (limited) | Scheduled for release ( windows binary only) by the end of April 2026.|
+| 0.4 | Vi key bindings, Japanese localization for menus and UI, regex search, grep, diff?, rectangular selection, SVG blocks, Graph View?, usability and performance improvements, migration to CMake (Qt Creator / Mac / Linux? support) | Dev version starting around May 2026, Alpha in Aug 2026, and Beta in Oct 2026. RC and Stable versions (Win/Mac? binaries) planned for release in Dec 2026. |
 | 0.6 | Math formulas, Mind maps, Page view, Presentation mode? | TBD |
-| 0.8 | Mermaid diagrams?, Direct editing in the previewer? | TBD |
+| 0.8 | Mermaid diagrams?  | TBD |
 
-\* This roadmap is current and subject to change without notice at the author's sole discretion.
+\* Note: This roadmap is current and subject to change without notice at the author's sole discretion.
 
 ## Installation & Execution (Windows)
 Download the `viMarkdown-0xxxx.zip` file from the link below, extract it, and run `viMarkdown.exe`.

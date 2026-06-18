@@ -8,8 +8,10 @@ OutputView::OutputView(QWidget *parent)
 	: QPlainTextEdit(parent)
 {
 	qDebug() << "OutputView::OutputView()";
+	QFont font = this->font();
+    font.setPointSize(14);
+    setFont(font);
 }
-
 OutputView::~OutputView()
 {}
 
