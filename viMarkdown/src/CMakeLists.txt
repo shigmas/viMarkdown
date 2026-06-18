@@ -7,9 +7,9 @@ set(PROJECT_SOURCES
         DocWidget.cpp
         DocWidget.h
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+        MainWindow.cpp
+        MainWindow.h
+        MainWindow.ui
         MarkdownEditor.cpp
         MarkdownEditor.h
         MarkdownPreview.cpp
@@ -39,7 +39,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(viMarkdown
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        mainwindow.qrc
+        MainWindow.qrc
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET viMarkdown APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

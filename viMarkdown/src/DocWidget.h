@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <QStringConverter>
-#include <QWidget.h>
+#include <QWidget>
 //#include "C:\Qt\6.10.0\msvc2022_64\include\QtWidgets\qwidget.h"
 //#include "markdowntohtmlconvertor.h"
 

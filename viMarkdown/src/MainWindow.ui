@@ -1187,7 +1187,7 @@
   <customwidget>
    <class>OutputView</class>
    <extends>QPlainTextEdit</extends>
-   <header>outputview.h</header>
+   <header>OutputView.h</header>
   </customwidget>
  </customwidgets>
  <resources>

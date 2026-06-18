@@ -5,7 +5,7 @@
 #include <QTextTable>
 #include <QTextList>
 #include <QAbstractTextDocumentLayout>
-#include <QScrollbar>
+#include <QScrollBar>
 #include <QDir>
 #include <QImage>
 #include <QSvgRenderer>
