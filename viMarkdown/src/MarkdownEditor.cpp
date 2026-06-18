@@ -18,7 +18,7 @@
 #include "MainWindow.h"
 #include "DocWidget.h"
 
-#ifdef	_WIN32
+#ifdef	Q_OS_WIN
 #include <windows.h>
 #include <imm.h>
 #pragma comment(lib, "imm32.lib")
@@ -80,7 +80,7 @@ bool isTableHyphenLine(const QString& lnStr) {
 	std::vector<char> tableAlign;
 	return isTableHyphenLine(lnStr, tableAlign);
 }
-#ifdef	_WIN32
+#ifdef	Q_OS_WIN
 void setImePosition(QWidget *widget, QPoint pos)
 {
     HWND hwnd = (HWND)widget->winId();
@@ -812,7 +812,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 			gvi.m_viCmdMode = true;
 			gvi.m_recInsertedText = false;
 		}
-#if _WIN32
+#ifdef Q_OS_WIN
 		HWND hwnd = (HWND)this->winId();
 		HIMC himc = ImmGetContext(hwnd);
 		if( himc ) {
@@ -2282,7 +2282,7 @@ void MarkdownEditor::onCursorPosChanged() {
 		check_svg_completer();
 	//	Undone: プレビューの対応段落（見出し行＋本文）を画面内に
 	syncPreviewCursorFromEditor();
-#ifdef _WIN32
+#ifdef Q_OS_WIN
 	QRect r = cursorRect();
     // ビューポート座標 → ウィジェット座標
     QPoint pos = viewport()->mapTo(this, r.bottomLeft());

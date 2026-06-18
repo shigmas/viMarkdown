@@ -861,7 +861,7 @@ const QList<ViTestCase> viTestCases = {
         }
     },
 #endif
-#if 0
+#if 1
 	// 1. 下移動 (j) の基本動作と最終行での境界制御
     { "Move cursor down (j)",
         "a┃bc\ndef\nghi\n",
@@ -987,6 +987,116 @@ const QList<ViTestCase> viTestCases = {
             "w", "日本語 abc カタカナ 123┃。ひらがな", // スペース無しでの文字種変更を検知し、記号 "。" の先頭へ
             "w", "日本語 abc カタカナ 123。┃ひらがな", // スペース無しでの文字種変更を検知し、ひらがな "ひらがな" の先頭へ
             "w", "日本語 abc カタカナ 123。ひらが┃な"  // 次の単語がないため、末尾の文字 'な' で停止
+        }
+    },
+    { "Move to end of word (e) - Basic spacing",
+        "┃abc def ghi",
+        {
+            "e", "ab┃c def ghi", // 現在の単語 "abc" の末尾 "c" へ移動
+            "e", "abc de┃f ghi", // 次の単語 "def" の末尾 "f" へ移動
+            "e", "abc def gh┃i"  // 次の単語 "ghi" の末尾 "i" へ移動
+        }
+    },
+    { "Move to end of word (e) - Across lines and empty lines",
+        "┃abc\n  def\n\nghi",
+        {
+            "e", "ab┃c\n  def\n\nghi", // 現在の単語 "abc" の末尾 "c" へ移動
+            "e", "abc\n  de┃f\n\nghi", // 改行とインデントをスキップし、"def" の末尾 "f" へ
+            "e", "abc\n  def\n\ngh┃i"  // 空行をスキップし、"ghi" の末尾 "i" へ
+        }
+    },
+    { "Move to end of word (e) - Punctuation boundaries",
+        "┃abc.def!ghi",
+        {
+            "e", "ab┃c.def!ghi", // 現在の単語 "abc" の末尾 "c" へ移動
+            "e", "abc┃.def!ghi", // 記号 "." の末尾（記号自身）へ移動
+            "e", "abc.de┃f!ghi", // 次の単語 "def" の末尾 "f" へ移動
+            "e", "abc.def┃!ghi", // 記号 "!" の末尾（記号自身）へ移動
+            "e", "abc.def!gh┃i"  // 次の単語 "ghi" の末尾 "i" へ移動
+        }
+    },
+    { "Move to end of multiple words (num e) - Basic counts",
+        "┃abc def ghi jkl mno",
+        {
+            "2e", "abc de┃f ghi jkl mno", // 2単語分移動して "def" の末尾 "f" へ
+            "2e", "abc def ghi jk┃l mno", // さらに2単語分移動して "jkl" の末尾 "l" へ
+            "3e", "abc def ghi jkl mn┃o"  // 3単語分移動（足りないためファイル末尾の文字 'o' で停止）
+        }
+    },
+    { "Move to end of word (e) - Japanese word classes",
+        "┃日本語ひらがなカタカナ。漢字",
+        {
+            "e", "日本┃語ひらがなカタカナ。漢字", // 漢字「日本語」の末尾「語」へ
+            "e", "日本語ひらが┃なカタカナ。漢字", // ひらがな「ひらがな」の末尾「な」へ
+            "e", "日本語ひらがなカタカ┃ナ。漢字", // カタカナ「カタカナ」の末尾「ナ」へ
+            "e", "日本語ひらがなカタカナ┃。漢字", // 記号「。」の末尾（記号自身）へ
+            "e", "日本語ひらがなカタカナ。漢┃字"  // 漢字「漢字」の末尾「字」へ
+        }
+    },
+    { "Move to end of word (e) - Japanese mixed with alphanumeric and spaces",
+        "┃日本語 abc カタカナ 123。ひらがな",
+        {
+            "e", "日本┃語 abc カタカナ 123。ひらがな", // 漢字「日本語」の末尾「語」へ
+            "e", "日本語 ab┃c カタカナ 123。ひらがな", // 半角英字 "abc" の末尾 "c" へ
+            "e", "日本語 abc カタカ┃ナ 123。ひらがな", // カタカナ "カタカナ" の末尾 "ナ" へ
+            "e", "日本語 abc カタカナ 12┃3。ひらがな", // 半角数字 "123" の末尾 "3" へ
+            "e", "日本語 abc カタカナ 123┃。ひらがな", // 記号 "。" の末尾（記号自身）へ
+            "e", "日本語 abc カタカナ 123。ひらが┃な"  // ひらがな "ひらがな" の末尾 "な" へ
+        }
+    },
+    { "Move backward word (b) - Basic spacing",
+        "abc def gh┃i",
+        {
+            "b", "abc def ┃ghi", // 現在の単語 "ghi" の先頭へ移動
+            "b", "abc ┃def ghi", // 前の単語 "def" の先頭へ移動
+            "b", "┃abc def ghi"  // 前の単語 "abc" の先頭へ移動
+        }
+    },
+    { "Move backward word (b) - Across lines and empty lines",
+        "abc\n  def\n\ngh┃i",
+        {
+            "b", "abc\n  def\n\n┃ghi", // 現在の単語 "ghi" の先頭へ移動
+            "b", "abc\n  ┃def\n\nghi", // 空行をスキップし、前の単語 "def" の先頭へ移動
+            "b", "┃abc\n  def\n\nghi"  // インデントと改行をスキップし、前の単語 "abc" の先頭へ移動
+        }
+    },
+    { "Move backward word (b) - Punctuation boundaries",
+        "abc.def!gh┃i",
+        {
+            "b", "abc.def!┃ghi", // 現在の単語 "ghi" の先頭へ移動
+            "b", "abc.def┃!ghi", // 記号 "!" の先頭（記号自身）へ移動
+            "b", "abc.┃def!ghi", // 前の単語 "def" の先頭へ移動
+            "b", "abc┃.def!ghi", // 記号 "." の先頭（記号自身）へ移動
+            "b", "┃abc.def!ghi"  // 前の単語 "abc" の先頭へ移動
+        }
+    },
+    { "Move backward multiple words (num b) - Basic counts",
+        "abc def ghi jkl mn┃o",
+        {
+            "2b", "abc def ghi ┃jkl mno", // 2単語分戻って "jkl" の先頭へ（1b目で "mno" の先頭、2b目で "jkl" の先頭）
+            "2b", "abc ┃def ghi jkl mno", // さらに2単語分戻って "def" の先頭へ
+            "3b", "┃abc def ghi jkl mno"  // 3単語分戻る（足りないためファイル先頭の文字 'a' で停止）
+        }
+    },
+    { "Move backward word (b) - Japanese word classes",
+        "日本語ひらがなカタカナ。漢┃字",
+        {
+            "b", "日本語ひらがなカタカナ。┃漢字", // 漢字「漢字」の先頭「漢」へ
+            "b", "日本語ひらがなカタカナ┃。漢字", // 記号「。」の先頭（記号自身）へ
+            "b", "日本語ひらがな┃カタカナ。漢字", // カタカナ「カタカナ」の先頭「カ」へ
+            "b", "日本語┃ひらがなカタカナ。漢字", // ひらがな「ひらがな」の先頭「ひ」へ
+            "b", "┃日本語ひらがなカタカナ。漢字"  // 漢字「日本語」の先頭「日」へ
+        }
+    },
+    { "Move backward word (b) - Japanese mixed with alphanumeric and spaces",
+        "日本語 abc カタカナ 123。ひらが┃な",
+        {
+            "b", "日本語 abc カタカナ 123。┃ひらがな", // ひらがな「ひらがな」の先頭「ひ」へ
+            "b", "日本語 abc カタカナ 123┃。ひらがな", // 記号 "。" の先頭（記号自身）へ
+            "b", "日本語 abc カタカナ ┃123。ひらがな", // 半角数字 "123" の先頭 "1" へ
+            "b", "日本語 abc ┃カタカナ 123。ひらがな", // カタカナ "カタカナ" の先頭 "カ" へ
+            "b", "日本語 ┃abc カタカナ 123。ひらがな", // 半角英字 "abc" の先頭 "a" へ
+            "b", "┃日本語 abc カタカナ 123。ひらがな"  // 漢字「日本語」の先頭「日」へ
         }
     },
     { "Delete character under cursor (x) - Basic",

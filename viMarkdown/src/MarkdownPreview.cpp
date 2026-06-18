@@ -18,7 +18,7 @@
 #include "DocWidget.h"
 #include "lunasvg.h"
 
-#ifdef	_WIN32
+#ifdef	Q_OS_WIN
 #include <windows.h>
 #include <imm.h>
 #pragma comment(lib, "imm32.lib")
@@ -261,7 +261,7 @@ void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 			cursor.setPosition(cursor.position());		//	選択解除
 			setTextCursor(cursor);
 		}
-#if _WIN32
+#ifdef Q_OS_WIN
 		HWND hwnd = (HWND)this->winId();
 		HIMC himc = ImmGetContext(hwnd);
 		if( himc ) {

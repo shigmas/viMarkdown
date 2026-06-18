@@ -407,7 +407,7 @@ SPR# 状 P Open Close ver     Type  概要
 0404 ● C 06/15            │問題│<num>dd の <num> が効かない？
 0405 ● C 06/15            │ToDo│CSV ブロック：^ < でセル連結？
 0406 ◎ C 06/15 06/15 03023│ToDo│Test > vi：w テスト追加
-0407 ● C 06/15            │ToDo│Test > vi：b e W B E テスト追加
+0407 ◎ C 06/15 06/18 03025│ToDo│Test > vi：b e テスト追加
 0408 ● C 06/15            │問題│hoge 改行 位置にカーソルあるとき、w で次の行に移動しない
 0409 ◎ C 06/15 06/16 03023│問題│Test > vi：カーソル位置不一致の場合は 'ab@c' expected, but 'abc@' のように表示した方がよい
 0410 ◎ C 06/15 06/16 03023│ToDo│Clear Output にショートカットキー Ctrl + L を割り振る
@@ -446,8 +446,8 @@ SPR# 状 P Open Close ver     Type  概要
 0443 ● C 06/18            │問題│「test 改行」のように、行末に半角空白があるとき、そこにカーソルがある場合の PtoE カーソル同期が動作不良
 0444 ◎ C 06/18 06/18 03024│問題│README.md > Development Phases, Roadmap の内容が更新されていない
 0445 ◎ C 06/18 06/18 03024│問題│#include <q...> の大文字・小文字が不正確なので、Linux でビルドするとビルドエラーになる（Shiggie）
-0446 ● C 06/18            │ToDo│
-0447 ● C 06/18            │ToDo│
-0448 ● C 06/18            │ToDo│
-0449 ● C 06/18            │ToDo│
-0450 ● C 06/18            │ToDo│
+0446 ● C 06/18            │ToDo│Test > vi：W B E テスト追加
+0447 ◎ C 06/19 06/19 03025│ToDo│#ifdef _WIN32 を Q_OS_WIN に変更
+0448 ◎ C 06/19 06/19 03025│ToDo│#if _WIN32 → #ifdef Q_OS_WIN に
+0449 ● C 06/19            │ToDo│
+0450 ● C 06/19            │ToDo│
