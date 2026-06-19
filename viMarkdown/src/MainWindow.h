@@ -142,7 +142,7 @@ struct Global {
 	QColor	m_keisenBlockColor;		//	罫線ブロック背景色
 };
 struct ViStatus {
-    bool	m_viCmdMode = false;
+    bool	m_viCmdMode = false;		//	false for Insert mode
     bool	m_cmdlineMode = false;		//	:/? 表示・編集用
     bool	m_isEditCommand = false;
     bool	m_linewiseMoved = false;	//	行単位移動した（jkG等）
@@ -156,7 +156,7 @@ struct ViStatus {
     QChar	m_fFtT = ' ';				//	{fFtT}
     QChar	m_last_fFtT = ' ';			//	{fFtT}
     QChar	m_last_fFtT_char = ' ';		//	{fFtT}
-    QChar	m_v_mode = ' ';				//	v V モード
+    QChar	m_vMode = ' ';				//	v V モード
 	int		m_vAnchor;					//	v コマンド用アンカー位置（position）
 	int		m_vAnchorBlock;				//	v コマンド用アンカー位置（blocknumber）
     int		m_opCount = 1;				//	op 繰り返し回数 for c d y

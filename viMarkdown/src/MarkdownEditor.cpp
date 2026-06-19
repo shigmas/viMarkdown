@@ -808,9 +808,10 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 				cursor.movePosition(QTextCursor::Left);
 				this->setTextCursor(cursor);
 			}
-			gvi.m_v_mode = u' ';
+			gvi.m_vMode = u' ';
 			gvi.m_viCmdMode = true;
 			gvi.m_recInsertedText = false;
+			highlightVText(cursor);
 		}
 #ifdef Q_OS_WIN
 		HWND hwnd = (HWND)this->winId();
@@ -2454,7 +2455,7 @@ void MarkdownEditor::highlightVText(QTextCursor cursor) {
 	QList<QTextEdit::ExtraSelection> extraSelections;
     QTextEdit::ExtraSelection selection;
 
-    if( gvi.m_v_mode == u'v' ) {
+    if( gvi.m_vMode == u'v' ) {
 	    // 1. 濃い青色のフォーマット（書式）を設定
 	    selection.format.setBackground(QColor(0, 0, 139)); // 濃い青 (Dark Blue)
 	    selection.format.setForeground(Qt::white);         // 文字色は白

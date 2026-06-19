@@ -217,6 +217,9 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor, int rcnt) {
 	gvi.m_viCmdMode = false;
 }
 void MainWindow::do_vi_delete(QChar cmd, QTextCursor& cursor, int rcnt) {		//	x X D
+	if( gvi.m_vMode != u' ' ) {
+
+	}
 	QTextBlock block = cursor.block();
 	switch( cmd.unicode() ) {
 	case 'x':
@@ -248,7 +251,7 @@ void MainWindow::do_vi_delete(QChar cmd, QTextCursor& cursor, int rcnt) {		//	x 
 	default:
 		return;
 	}
-	gvi.m_v_mode = u' ';
+	gvi.m_vMode = u' ';
 	gvi.m_isEditCommand = true;
 }
 void do_yank_line(QTextCursor& cursor, int rcnt) {
@@ -650,7 +653,7 @@ void do_match_paren(QTextCursor& cursor) {
 void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidget* docWidget) {		//	hjkl等
 	gvi.m_linewiseMoved = false;
 	bool isEditor = cursor.document() == docWidget->m_editor->document();
-	auto moveMode = gvi.m_v_mode != u' ' || (gvi.m_operator == ' ' && gvi.m_v_mode == ' ') ?
+	auto moveMode = gvi.m_vMode != u' ' || (gvi.m_operator == ' ' && gvi.m_vMode == ' ') ?
 						QTextCursor::MoveAnchor : QTextCursor::KeepAnchor;
 	QTextDocument *doc = cursor.document();
 	QTextBlock block = cursor.block();
@@ -833,7 +836,7 @@ doneW:
 		return;
 	}
 	do_cdy(cursor);
-	if( gvi.m_v_mode != u' ' )
+	if( gvi.m_vMode != u' ' )
 		docWidget->m_editor->highlightVText(cursor);
 }
 void do_join(QTextCursor& cursor, int rcnt) {
@@ -1045,11 +1048,11 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 			gvi.m_redoing = false;
 			break;
 		case 'v':
-			if( gvi.m_v_mode == u'v' ) {
-				gvi.m_v_mode = u' ';
+			if( gvi.m_vMode == u'v' ) {
+				gvi.m_vMode = u' ';
 				gvi.m_vAnchor = -1;
 			} else {
-				gvi.m_v_mode = u'v';
+				gvi.m_vMode = u'v';
 				gvi.m_vAnchor = cursor.position();
 			}
 			docWidget->m_editor->highlightVText(cursor);
