@@ -157,6 +157,8 @@ struct ViStatus {
     QChar	m_last_fFtT = ' ';			//	{fFtT}
     QChar	m_last_fFtT_char = ' ';		//	{fFtT}
     QChar	m_v_mode = ' ';				//	v V モード
+	int		m_vAnchor;					//	v コマンド用アンカー位置（position）
+	int		m_vAnchorBlock;				//	v コマンド用アンカー位置（blocknumber）
     int		m_opCount = 1;				//	op 繰り返し回数 for c d y
     int		m_repeatCount = 0;			//	vi コマンド繰り返し回数
     int		m_rangeStart = 1;

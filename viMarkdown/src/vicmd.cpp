@@ -1044,6 +1044,8 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 			break;
 		case 'v':
 			gvi.m_v_mode = u'v';
+			gvi.m_vAnchor = cursor.position();
+			docWidget->m_editor->highlightVText(cursor);
 			break;
 		default:	//	不正コマンド
 			//	undone: エラー表示
