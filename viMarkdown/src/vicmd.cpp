@@ -1043,8 +1043,13 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 			gvi.m_redoing = false;
 			break;
 		case 'v':
-			gvi.m_v_mode = u'v';
-			gvi.m_vAnchor = cursor.position();
+			if( gvi.m_v_mode == u'v' ) {
+				gvi.m_v_mode = u' ';
+				gvi.m_vAnchor = -1;
+			} else {
+				gvi.m_v_mode = u'v';
+				gvi.m_vAnchor = cursor.position();
+			}
 			docWidget->m_editor->highlightVText(cursor);
 			break;
 		default:	//	不正コマンド

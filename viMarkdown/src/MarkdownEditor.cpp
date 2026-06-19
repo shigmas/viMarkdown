@@ -2454,32 +2454,33 @@ void MarkdownEditor::highlightVText(QTextCursor cursor) {
 	QList<QTextEdit::ExtraSelection> extraSelections;
     QTextEdit::ExtraSelection selection;
 
-    // 1. 濃い青色のフォーマット（書式）を設定
-    selection.format.setBackground(QColor(0, 0, 139)); // 濃い青 (Dark Blue)
-    selection.format.setForeground(Qt::white);         // 文字色は白
+    if( gvi.m_v_mode == u'v' ) {
+	    // 1. 濃い青色のフォーマット（書式）を設定
+	    selection.format.setBackground(QColor(0, 0, 139)); // 濃い青 (Dark Blue)
+	    selection.format.setForeground(Qt::white);         // 文字色は白
 
-    // 2. アンカーと現在地を取得
-    int anchor = gvi.m_vAnchor;
-    int pos = cursor.position();
+	    // 2. アンカーと現在地を取得
+	    int anchor = gvi.m_vAnchor;
+	    int pos = cursor.position();
 
-    // 3. Vimの「文字を内包する」選択範囲を計算
-    int start = qMin(anchor, pos);
-    int end = qMax(anchor, pos) + 1;
+	    // 3. Vimの「文字を内包する」選択範囲を計算
+	    int start = qMin(anchor, pos);
+	    int end = qMax(anchor, pos) + 1;
 
-    // ドキュメントの最大長を超えないようにクリップ
-    int maxPos = document()->characterCount() - 1;
-    if (end > maxPos) {
-        end = maxPos;
+	    // ドキュメントの最大長を超えないようにクリップ
+	    int maxPos = document()->characterCount() - 1;
+	    if (end > maxPos) {
+	        end = maxPos;
+	    }
+
+	    // 4. 計算した範囲をカバーする QTextCursor を作成
+	    QTextCursor selectCursor = cursor;
+	    selectCursor.setPosition(start);
+	    selectCursor.setPosition(end, QTextCursor::KeepAnchor);
+
+	    selection.cursor = selectCursor;
+	    extraSelections.append(selection);
     }
-
-    // 4. 計算した範囲をカバーする QTextCursor を作成
-    QTextCursor selectCursor = cursor;
-    selectCursor.setPosition(start);
-    selectCursor.setPosition(end, QTextCursor::KeepAnchor);
-
-    selection.cursor = selectCursor;
-    extraSelections.append(selection);
-
     // 5. エディタにExtraSelectionを適用
     this->setExtraSelections(extraSelections);
 }
