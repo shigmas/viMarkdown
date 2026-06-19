@@ -218,7 +218,23 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor, int rcnt) {
 }
 void MainWindow::do_vi_delete(QChar cmd, QTextCursor& cursor, int rcnt) {		//	x X D
 	if( gvi.m_vMode != u' ' ) {
-
+		switch( cmd.unicode() ) {
+		case 'x':
+		case 'X':
+			if( gvi.m_vAnchor <= cursor.position() ) {
+				cursor.movePosition(QTextCursor::Right);
+				cursor.setPosition(gvi.m_vAnchor, QTextCursor::KeepAnchor);
+			} else {
+				cursor.setPosition(gvi.m_vAnchor, QTextCursor::KeepAnchor);
+				cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+			}
+			gvi.m_yankBuffer = cursor.selectedText();
+			gvi.m_linewiseYanked = false;
+			cursor.deleteChar();
+			gvi.m_vMode = u' ';
+			break;
+		}
+		return;
 	}
 	QTextBlock block = cursor.block();
 	switch( cmd.unicode() ) {
