@@ -26,6 +26,15 @@ It is designed for developers and writers who love efficiency.
 - **Native Implementation with Qt6/C++**
   Unlike Electron-based editors, this app is built natively using Qt6 and C++, delivering highly lightweight performance and outstanding responsiveness.
   
+## License
+This app is published under a Source Available license.  
+Please refer to the [LICENSE](LICENSE) file for more details.  
+
+- **Free of Charge:** Personal non-commercial, educational, and learning use.
+- **Special Student Exception:** Students of all levels (including graduate, undergraduate, research, technical college, vocational school, middle/high school, elementary school, and kindergarten) can use the app **completely free of charge**, regardless of the purpose.
+- **Commercial & Business Use:** Commercial or business use by non-student working professionals requires a **paid license**.
+  - **For ver 1.0:** Planned license fee of 4,000 JPY (US$30) + transaction fee (details to be finalized later).
+  - **For versions below 1.0:** Planned early-bird / developer-support price of 2,000 JPY (US$15) + transaction fee (details to be finalized later).
 ## Development Phases
 
 |ver.| Phase | Description | Schedule |
