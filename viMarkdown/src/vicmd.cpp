@@ -650,7 +650,7 @@ void do_match_paren(QTextCursor& cursor) {
 void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidget* docWidget) {		//	hjkl等
 	gvi.m_linewiseMoved = false;
 	bool isEditor = cursor.document() == docWidget->m_editor->document();
-	auto moveMode = gvi.m_operator == ' ' && gvi.m_v_mode == ' ' ?
+	auto moveMode = gvi.m_v_mode != u' ' || (gvi.m_operator == ' ' && gvi.m_v_mode == ' ') ?
 						QTextCursor::MoveAnchor : QTextCursor::KeepAnchor;
 	QTextDocument *doc = cursor.document();
 	QTextBlock block = cursor.block();
@@ -833,6 +833,8 @@ doneW:
 		return;
 	}
 	do_cdy(cursor);
+	if( gvi.m_v_mode != u' ' )
+		docWidget->m_editor->highlightVText(cursor);
 }
 void do_join(QTextCursor& cursor, int rcnt) {
 	QTextDocument *doc = cursor.document();
