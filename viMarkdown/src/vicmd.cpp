@@ -1105,6 +1105,10 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		}
 		qDebug() << "gvi.m_lastEditCommand = " << gvi.m_lastEditCommand;
 	}
+	if( gvi.m_vMode == u'v' ) {
+		statusBar()->showMessage("-- VISUAL --");
+	} else
+		statusBar()->clearMessage();
 }
 int do_search_line(const QString &text, int &i, int currentLine, const QTextDocument *doc) {
 	QChar c = text[i++];

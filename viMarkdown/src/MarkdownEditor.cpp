@@ -812,6 +812,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 			gvi.m_viCmdMode = true;
 			gvi.m_recInsertedText = false;
 			highlightVText(cursor);
+			m_mainWindow->statusBar()->clearMessage();
 		}
 #ifdef Q_OS_WIN
 		HWND hwnd = (HWND)this->winId();
