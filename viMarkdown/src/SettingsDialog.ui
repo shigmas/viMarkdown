@@ -51,7 +51,7 @@
        </item>
        <item>
         <property name="text">
-         <string>Color</string>
+         <string>Font/Color</string>
         </property>
        </item>
       </widget>
@@ -65,7 +65,7 @@
         </size>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="page_5">
         <layout class="QVBoxLayout" name="verticalLayout_2">
