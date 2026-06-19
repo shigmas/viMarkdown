@@ -449,5 +449,15 @@ SPR# 状 P Open Close ver     Type  概要
 0446 ● C 06/18            │ToDo│Test > vi：W B E テスト追加
 0447 ◎ C 06/19 06/19 03025│ToDo│#ifdef _WIN32 を Q_OS_WIN に変更
 0448 ◎ C 06/19 06/19 03025│ToDo│#if _WIN32 → #ifdef Q_OS_WIN に
-0449 ● C 06/19            │ToDo│
-0450 ● C 06/19            │ToDo│
+0449 ◎ C 06/20 06/20 03025│ToDo│「Check if merging menu bar into toolbar works on Linux」を issue に登録しておく
+0450 ● C 06/20            │ToDo│
+0451 ● C 06/20            │ToDo│
+0452 ● C 06/20            │ToDo│
+0453 ● C 06/20            │ToDo│
+0454 ● C 06/20            │ToDo│
+0455 ● C 06/20            │ToDo│
+0456 ● C 06/20            │ToDo│
+0457 ● C 06/20            │ToDo│
+0458 ● C 06/20            │ToDo│
+0459 ● C 06/20            │ToDo│
+0460 ● C 06/20            │ToDo│
