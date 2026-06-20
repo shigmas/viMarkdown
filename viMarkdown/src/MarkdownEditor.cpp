@@ -779,7 +779,7 @@ void MarkdownEditor::svg_esc_pressed() {
 void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	QTextCursor cursor = this->textCursor();
 	if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {		//	改行入力
-		if( gvi.m_viCmdMode ) {
+		if( gvi.m_currentMode == ViMode::Normal ) {
 			emit do_viCmd(QChar(u'\n'), cursor);
 			setTextCursor(cursor);
 		} else {
@@ -818,8 +818,9 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 				cursor.movePosition(QTextCursor::Left);
 				this->setTextCursor(cursor);
 			}
+			gvi.m_currentMode = ViMode::Normal;
+			//gvi.m_viCmdMode = true;
 			gvi.m_vMode = u' ';
-			gvi.m_viCmdMode = true;
 			gvi.m_recInsertedText = false;
 			highlightVText(cursor);
 			m_mainWindow->statusBar()->clearMessage();
@@ -911,7 +912,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	qDebug() << "e->text() = " << e->text();
 	if( !txt.isEmpty() ) {
 		if( (e->modifiers() & Qt::ControlModifier) == 0 ) {
-			if( gvi.m_viCmdMode ) {
+			if( gvi.m_currentMode == ViMode::Normal ) {
 				emit do_viCmd(txt[0], cursor);
 				setTextCursor(cursor);
 				viewport()->update();
@@ -2392,7 +2393,7 @@ void drawEOF(QPainter &p, QRect r) {
 //    this->viewport()->update(); 
 //}
 void drawTextCursor(QWidget *viewport, QPainter& p, QTextCursor cursor, QRect rect, QFontMetrics fontMetrics, bool hasFocus) {
-	if( gvi.m_viCmdMode ) {
+	if( gvi.m_currentMode == ViMode::Normal ) {
 		auto ht = rect.height();
 		rect.setY(rect.y() + ht/2);
 		rect.setHeight(ht - ht/2);

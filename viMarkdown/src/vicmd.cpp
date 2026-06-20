@@ -87,7 +87,8 @@ void do_cdy_moved(QTextCursor& cursor) {
 	if( gvi.m_operator == 'c' ) {
 		if( cursor.hasSelection() )
 			cursor.deleteChar();
-		gvi.m_viCmdMode = false;
+		gvi.m_currentMode = ViMode::Insert;
+		//gvi.m_viCmdMode = false;
 	} else if( gvi.m_operator == 'd' || gvi.m_operator == 'y' ) {	//	d<move> or y<move>
 		if( cursor.hasSelection() ) {
 			gvi.m_yankBuffer = cursor.selectedText();
@@ -138,7 +139,8 @@ void do_vi_change_line(QTextCursor& cursor) {
 	}
 	cursor.endEditBlock();
 	gvi.m_joinEditBlock = true;
-	gvi.m_viCmdMode = false;
+	gvi.m_currentMode = ViMode::Insert;
+	//gvi.m_viCmdMode = false;
 }
 void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor, int rcnt) {
 	QTextBlock block = cursor.block();
@@ -214,7 +216,8 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor, int rcnt) {
 		return;
 	}
 	gvi.m_isEditCommand = true;
-	gvi.m_viCmdMode = false;
+	gvi.m_currentMode = ViMode::Insert;
+	//gvi.m_viCmdMode = false;
 }
 void MainWindow::do_vi_delete(QChar cmd, QTextCursor& cursor, int rcnt) {		//	x X D
 	if( gvi.m_vMode == u'v' ) {
@@ -478,7 +481,8 @@ bool do_cdy(QChar cmd, QTextCursor& cursor) {
 				cursor.deleteChar();
 				cursor.endEditBlock();
 				gvi.m_joinEditBlock = true;
-				gvi.m_viCmdMode = false;
+				//gvi.m_viCmdMode = false;
+				gvi.m_currentMode = ViMode::Insert;
 				return true;
 			case 'd':
 				gvi.m_yankBuffer = cursor.selectedText();
@@ -506,7 +510,8 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWid
 				cursor.deleteChar();
 				cursor.endEditBlock();
 				gvi.m_joinEditBlock = true;
-				gvi.m_viCmdMode = false;
+				//gvi.m_viCmdMode = false;
+				gvi.m_currentMode = ViMode::Insert;
 				return true;
 			case 'd':
 				gvi.m_yankBuffer = cursor.selectedText();
@@ -985,7 +990,8 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 	gvi.m_pendingCommand += cmd;
 	if( gvi.m_pendingCommand == ":" || gvi.m_pendingCommand == "/"  || gvi.m_pendingCommand == "?" ) {
 		statusBar()->clearMessage();
-		gvi.m_cmdlineMode = true;
+		gvi.m_currentMode = ViMode::CommandLine;
+		//gvi.m_cmdlineMode = true;
 		gvi.m_prevFocusWidget = cursor.document() == docWidget->m_editor->document() ?
 									(QWidget*)docWidget->m_editor : (QWidget*)docWidget->m_preview;
 		m_cmdLine->setText(gvi.m_pendingCommand);
@@ -1161,9 +1167,10 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		}
 	}
 	if( completed ) {	//	コマンド完結
-		if( gvi.m_redoing && !gvi.m_viCmdMode && !gvi.m_insertedText.isEmpty() ) {
+		if( gvi.m_redoing && gvi.m_currentMode == ViMode::Insert && !gvi.m_insertedText.isEmpty() ) {
 			cursor.insertText(gvi.m_insertedText);
-			gvi.m_viCmdMode = true;
+			//gvi.m_viCmdMode = true;
+			gvi.m_currentMode = ViMode::Normal;
 		}
 		gvi.m_opCount = 1;
 		gvi.m_repeatCount = 0;
@@ -1174,7 +1181,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 			gvi.m_lastEditCommand = gvi.m_pendingCommand;
 		//else
 		//	gvi.m_lastEditCommand.clear();
-		if( !gvi.m_viCmdMode ) {
+		if( gvi.m_currentMode == ViMode::Insert ) {
 			gvi.m_recInsertedText = true;
 			gvi.m_insertedText.clear();
 		} else
@@ -1732,7 +1739,8 @@ void MainWindow::on_cmdLine_down() {
 }
 void MainWindow::close_cmdLine() {
 	m_cmdLine->hide();
-	gvi.m_cmdlineMode = false;
+	gvi.m_currentMode = ViMode::Normal;
+	//gvi.m_cmdlineMode = false;
 	gvi.m_pendingCommand.clear();
 	gvi.m_prevFocusWidget->setFocus();
 }

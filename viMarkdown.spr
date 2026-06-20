@@ -469,5 +469,15 @@ SPR# 状 P Open Close ver     Type  概要
 0466 ◎ C 06/20 06/20 03026│ToDo│V モード：ステータスバーに -- VISUAL LINE -- 表示
 0467 ◎ C 06/20 06/20 03026│問題│V モード削除後に p or P したときに、行単位ペーストされない
 0468 ◎ C 06/21 06/21 03026│ToDo│Insertキー：挿入・上書きモード切り替え
-0469 ● C 06/21            │ToDo│
+0469 ● C 06/21            │ToDo│enum class ViMode を導入し、状態は m_currentMode だけにする
+0470 ● C 06/21            │ToDo│m_cmdlineMode は廃止
+0470 ● C 06/21            │ToDo│
+0470 ● C 06/21            │ToDo│
+0470 ● C 06/21            │ToDo│
+0470 ● C 06/21            │ToDo│
+0470 ● C 06/21            │ToDo│
+0470 ● C 06/21            │ToDo│
+0470 ● C 06/21            │ToDo│
+0470 ● C 06/21            │ToDo│
+0470 ● C 06/21            │ToDo│
 0470 ● C 06/21            │ToDo│

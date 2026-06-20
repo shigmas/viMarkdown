@@ -141,9 +141,16 @@ struct Global {
 	QColor	m_codeBlockColor;		//	コードブロック背景色
 	QColor	m_keisenBlockColor;		//	罫線ブロック背景色
 };
+enum class ViMode {
+    Normal = 0,
+    Insert,
+    Replace,
+    CommandLine,		//	for :/?
+};
 struct ViStatus {
-    bool	m_viCmdMode = false;		//	false for Insert mode
-    bool	m_cmdlineMode = false;		//	:/? 表示・編集用
+    ViMode	m_currentMode = ViMode::Insert;
+    //bool	m_viCmdMode = false;		//	false for Insert mode
+    //bool	m_cmdlineMode = false;		//	:/? 表示・編集用
     bool	m_isEditCommand = false;
     bool	m_linewiseMoved = false;	//	行単位移動した（jkG等）
     bool	m_linewiseYanked = false;	//	行単位にヤンクされた

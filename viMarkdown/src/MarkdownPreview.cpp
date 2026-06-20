@@ -239,7 +239,7 @@ bool MarkdownPreview::isTableHyphenLine(const QString& lnStr) {
 void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 	QTextCursor cursor = textCursor();
 	if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {		//	改行入力
-		if( gvi.m_viCmdMode ) {
+		if( gvi.m_currentMode == ViMode::Normal ) {
 			emit do_viCmd(u'\n', cursor);
 			setTextCursor(cursor);
 		} else {
@@ -253,7 +253,8 @@ void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 				cursor.endEditBlock();
 				g.m_editBlockOpen = false;
 			}
-			gvi.m_viCmdMode = true;
+			gvi.m_currentMode = ViMode::Normal;
+			//gvi.m_viCmdMode = true;
 		}
 		//gvi.m_viCmdMode = true;
 		//QTextCursor cursor = textCursor();
@@ -334,7 +335,7 @@ void MarkdownPreview::keyPressEvent(QKeyEvent *e) {
 			return;
 		}
 	}
-	if( gvi.m_viCmdMode ) {
+	if( gvi.m_currentMode == ViMode::Normal ) {
 		QString txt = e->text();
 		//QTextCursor cursor = textCursor();
 		if( !txt.isEmpty() ) {

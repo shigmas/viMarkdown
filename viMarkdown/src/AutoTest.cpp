@@ -1269,7 +1269,7 @@ void MainWindow::onAction_TestViCommands() {
 			const QString cmd_text = steps[k];
 			for(int i = 0; i < cmd_text.size(); ++i) {
 				do_viCmd(cmd_text[i], cursor);
-				if( gvi.m_cmdlineMode ) {
+				if( gvi.m_currentMode == ViMode::CommandLine ) {
 					if( cmd_text[i] == u':' )
 						do_exCmd(cmd_text.mid(i));
 					break;
