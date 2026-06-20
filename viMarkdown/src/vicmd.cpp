@@ -83,7 +83,7 @@ void do_swap_case(QTextCursor& cursor, int rcnt) {
 	cursor.setPosition(block.position() + ix9, QTextCursor::KeepAnchor);
 	cursor.insertText(text);
 }
-void do_cdy(QTextCursor& cursor) {
+void do_cdy_moved(QTextCursor& cursor) {
 	if( gvi.m_operator == 'c' ) {
 		if( cursor.hasSelection() )
 			cursor.deleteChar();
@@ -427,6 +427,18 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 }
 bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWidget* docWidget) {		//	{c d y < >}<move>
 	if( gvi.m_operator == ' ' ) {
+#if 0
+		if( gvi.m_vMode == u'v' ) {
+			if( gvi.m_vAnchor <= cursor.position() ) {
+				cursor.movePosition(QTextCursor::Right);
+				cursor.setPosition(gvi.m_vAnchor, QTextCursor::KeepAnchor);
+			} else {
+				cursor.setPosition(gvi.m_vAnchor, QTextCursor::KeepAnchor);
+				cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+			}
+			gvi.m_vMode = u' ';
+		}
+#endif
 		if( cursor.hasSelection() ) {
 			switch( cmd.unicode() ) {
 			case 'c':
@@ -851,7 +863,7 @@ doneW:
 	default:
 		return;
 	}
-	do_cdy(cursor);
+	do_cdy_moved(cursor);
 	if( gvi.m_vMode != u' ' )
 		docWidget->m_editor->highlightVText(cursor);
 }
@@ -928,7 +940,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		return;
 	} else if( gvi.m_fFtT == 'f' || gvi.m_fFtT == 'F' || gvi.m_fFtT == 't' || gvi.m_fFtT == 'T' ) {
 		if( do_fFtT(cursor, gvi.m_fFtT, cmd, rcnt) )
-			do_cdy(cursor);
+			do_cdy_moved(cursor);
 	} else if( gvi.m_prefix == 'r' ) {
 		do_r(cmd, cursor, rcnt);
 	} else if( gvi.m_prefix != ' ' ) {
@@ -957,7 +969,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		if( cmd == u'0' && gvi.m_repeatCount == 0 ) {
 			auto moveMode = gvi.m_operator == ' ' ? QTextCursor::MoveAnchor : QTextCursor::KeepAnchor;
 			cursor.movePosition(QTextCursor::StartOfBlock, moveMode);
-			do_cdy(cursor);
+			do_cdy_moved(cursor);
 		} else {
 			gvi.m_repeatCount = gvi.m_repeatCount * 10 + (cmd.unicode() - u'0');
 			completed = false;
