@@ -250,7 +250,7 @@ void MainWindow::do_vi_delete(QChar cmd, QTextCursor& cursor, int rcnt) {		//	x 
 				cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor);
 			}
 			gvi.m_yankBuffer = cursor.selectedText();
-			gvi.m_linewiseYanked = false;
+			gvi.m_linewiseYanked = true;
 			cursor.deleteChar();
 			gvi.m_vMode = u' ';
 			break;
@@ -447,13 +447,27 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 	}
 }
 bool do_cdy(QChar cmd, QTextCursor& cursor) {
-	if( gvi.m_vMode == u'v' ) {
-		if( gvi.m_vAnchor <= cursor.position() ) {
-			cursor.movePosition(QTextCursor::Right);
-			cursor.setPosition(gvi.m_vAnchor, QTextCursor::KeepAnchor);
+	if( gvi.m_vMode == u'v' || gvi.m_vMode == u'V' ) {
+		if( gvi.m_vMode == u'v' ) {
+			if( gvi.m_vAnchor <= cursor.position() ) {
+				cursor.movePosition(QTextCursor::Right);
+				cursor.setPosition(gvi.m_vAnchor, QTextCursor::KeepAnchor);
+			} else {
+				cursor.setPosition(gvi.m_vAnchor, QTextCursor::KeepAnchor);
+				cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+			}
+			gvi.m_linewiseYanked = false;
 		} else {
-			cursor.setPosition(gvi.m_vAnchor, QTextCursor::KeepAnchor);
-			cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+			QTextDocument *doc = cursor.document();
+			QTextBlock anchorBlock = doc->findBlockByNumber(gvi.m_vAnchorBlock);
+			if( gvi.m_vAnchorBlock <= cursor.block().blockNumber() ) {
+				cursor.movePosition(QTextCursor::NextBlock);
+				cursor.setPosition(anchorBlock.position(), QTextCursor::KeepAnchor);
+			} else {
+				cursor.setPosition(anchorBlock.position(), QTextCursor::KeepAnchor);
+				cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor);
+			}
+			gvi.m_linewiseYanked = true;
 		}
 		gvi.m_vMode = u' ';
 		if( cursor.hasSelection() ) {
@@ -1175,6 +1189,8 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 	}
 	if( gvi.m_vMode == u'v' ) {
 		statusBar()->showMessage("-- VISUAL --");
+	} else if( gvi.m_vMode == u'V' ) {
+		statusBar()->showMessage("-- VISUAL LINE --");
 	} else
 		statusBar()->clearMessage();
 }
