@@ -798,6 +798,16 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	} else if (e->key() == Qt::Key_Tab ) {
 		emit tab_pressed();
 		return;
+	} else if (e->key() == Qt::Key_Insert && e->modifiers() == Qt::NoModifier) {
+		auto om = !overwriteMode();
+		setOverwriteMode(om);
+		if( om )
+			m_mainWindow->statusBar()->showMessage("-- REPLACE --");
+		else {
+			m_mainWindow->statusBar()->showMessage("-- INSERT --");
+			//m_mainWindow->statusBar()->clearMessage();
+		}
+		return;
 	} else if (e->key() == Qt::Key_Escape ) {
 		if( g.m_viKeybindings ) {
 			if( g.m_editBlockOpen ) {
