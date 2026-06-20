@@ -748,6 +748,9 @@ void MainWindow::onCurrentTabChanged(int ix) {
 	m_altTitle = m_curTitle;
 	m_curFullPath = docWidget->m_fullPath;
 	m_curTitle = docWidget->m_title;
+	gvi.m_vMode = u' ';
+	statusBar()->clearMessage();
+	docWidget->m_editor->highlightVText(docWidget->m_editor->textCursor());		//	選択解除
 	//int curBlockNum = docWidget->m_editor->textCursor().blockNumber();
 	int curPos = docWidget->m_editor->textCursor().position();
 	appendToDocLoc(m_curTitle, m_curFullPath, curPos);		//	現在位置をリストに追加
