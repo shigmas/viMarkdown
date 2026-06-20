@@ -2456,16 +2456,14 @@ void MarkdownEditor::highlightVText(QTextCursor cursor) {
 	QList<QTextEdit::ExtraSelection> extraSelections;
     QTextEdit::ExtraSelection selection;
 
+    selection.format.setBackground(QColor(0, 0, 139)); // 濃い青 (Dark Blue)
+    selection.format.setForeground(Qt::white);         // 文字色は白
     if( gvi.m_vMode == u'v' ) {
-	    // 1. 濃い青色のフォーマット（書式）を設定
-	    selection.format.setBackground(QColor(0, 0, 139)); // 濃い青 (Dark Blue)
-	    selection.format.setForeground(Qt::white);         // 文字色は白
-
-	    // 2. アンカーと現在地を取得
+	    // アンカーと現在地を取得
 	    int anchor = gvi.m_vAnchor;
 	    int pos = cursor.position();
 
-	    // 3. Vimの「文字を内包する」選択範囲を計算
+	    // Vimの「文字を内包する」選択範囲を計算
 	    int start = qMin(anchor, pos);
 	    int end = qMax(anchor, pos) + 1;
 
@@ -2475,13 +2473,37 @@ void MarkdownEditor::highlightVText(QTextCursor cursor) {
 	        end = maxPos;
 	    }
 
-	    // 4. 計算した範囲をカバーする QTextCursor を作成
+	    // 計算した範囲をカバーする QTextCursor を作成
 	    QTextCursor selectCursor = cursor;
 	    selectCursor.setPosition(start);
 	    selectCursor.setPosition(end, QTextCursor::KeepAnchor);
 
 	    selection.cursor = selectCursor;
 	    extraSelections.append(selection);
+    } else if( gvi.m_vMode == u'V' ) {
+		int startBlockNum = qMin(gvi.m_vAnchorBlock, cursor.block().blockNumber());
+		int endBlockNum = qMax(gvi.m_vAnchorBlock, cursor.block().blockNumber());
+    	// 開始行の行頭位置と、終了行の行末位置を取得
+        QTextBlock startBlock = document()->findBlockByNumber(startBlockNum);
+        QTextBlock endBlock = document()->findBlockByNumber(endBlockNum);
+
+        int startPos = startBlock.position();
+        // block.length() を加算することで、改行コードを含めた行全体の長さをカバーします
+        int endPos = endBlock.position() + endBlock.length();
+
+        // ドキュメントの最大長を超えないようにクリップ
+        int maxPos = document()->characterCount() - 1;
+        if (endPos > maxPos) {
+            endPos = maxPos;
+        }
+
+        // 計算した行範囲をカバーする QTextCursor を作成
+        QTextCursor selectCursor = cursor;
+        selectCursor.setPosition(startPos);
+        selectCursor.setPosition(endPos, QTextCursor::KeepAnchor);
+
+        selection.cursor = selectCursor;
+        extraSelections.append(selection);
     }
     // 5. エディタにExtraSelectionを適用
     this->setExtraSelections(extraSelections);
