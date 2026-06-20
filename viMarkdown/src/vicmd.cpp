@@ -217,7 +217,7 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor, int rcnt) {
 	gvi.m_viCmdMode = false;
 }
 void MainWindow::do_vi_delete(QChar cmd, QTextCursor& cursor, int rcnt) {		//	x X D
-	if( gvi.m_vMode != u' ' ) {
+	if( gvi.m_vMode == u'v' ) {
 		switch( cmd.unicode() ) {
 		case 'x':
 		case 'X':
@@ -227,6 +227,27 @@ void MainWindow::do_vi_delete(QChar cmd, QTextCursor& cursor, int rcnt) {		//	x 
 			} else {
 				cursor.setPosition(gvi.m_vAnchor, QTextCursor::KeepAnchor);
 				cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+			}
+			gvi.m_yankBuffer = cursor.selectedText();
+			gvi.m_linewiseYanked = false;
+			cursor.deleteChar();
+			gvi.m_vMode = u' ';
+			break;
+		}
+		return;
+	}
+	if( gvi.m_vMode == u'V' ) {
+		QTextDocument *doc = cursor.document();
+		QTextBlock anchorBlock = doc->findBlockByNumber(gvi.m_vAnchorBlock);
+		switch( cmd.unicode() ) {
+		case 'x':
+		case 'X':
+			if( gvi.m_vAnchorBlock <= cursor.block().blockNumber() ) {
+				cursor.movePosition(QTextCursor::NextBlock);
+				cursor.setPosition(anchorBlock.position(), QTextCursor::KeepAnchor);
+			} else {
+				cursor.setPosition(anchorBlock.position(), QTextCursor::KeepAnchor);
+				cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor);
 			}
 			gvi.m_yankBuffer = cursor.selectedText();
 			gvi.m_linewiseYanked = false;
