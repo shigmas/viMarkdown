@@ -425,20 +425,44 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 		break;
 	}
 }
+bool do_cdy(QChar cmd, QTextCursor& cursor) {
+	if( gvi.m_vMode == u'v' ) {
+		if( gvi.m_vAnchor <= cursor.position() ) {
+			cursor.movePosition(QTextCursor::Right);
+			cursor.setPosition(gvi.m_vAnchor, QTextCursor::KeepAnchor);
+		} else {
+			cursor.setPosition(gvi.m_vAnchor, QTextCursor::KeepAnchor);
+			cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+		}
+		gvi.m_vMode = u' ';
+		if( cursor.hasSelection() ) {
+			switch( cmd.unicode() ) {
+			case 'c':
+				gvi.m_yankBuffer = cursor.selectedText();
+				cursor.beginEditBlock();
+				cursor.deleteChar();
+				cursor.endEditBlock();
+				gvi.m_joinEditBlock = true;
+				gvi.m_viCmdMode = false;
+				return true;
+			case 'd':
+				gvi.m_yankBuffer = cursor.selectedText();
+				cursor.deleteChar();
+				return true;
+			case 'y':
+				gvi.m_yankBuffer = cursor.selectedText();
+				cursor.setPosition(cursor.selectionStart());
+				return true;
+			}
+		}
+	}
+	gvi.m_operator = cmd;
+	if( gvi.m_repeatCount != 0 ) gvi.m_opCount = gvi.m_repeatCount;
+	gvi.m_repeatCount = 0;
+	return false;
+}
 bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWidget* docWidget) {		//	{c d y < >}<move>
 	if( gvi.m_operator == ' ' ) {
-#if 0
-		if( gvi.m_vMode == u'v' ) {
-			if( gvi.m_vAnchor <= cursor.position() ) {
-				cursor.movePosition(QTextCursor::Right);
-				cursor.setPosition(gvi.m_vAnchor, QTextCursor::KeepAnchor);
-			} else {
-				cursor.setPosition(gvi.m_vAnchor, QTextCursor::KeepAnchor);
-				cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-			}
-			gvi.m_vMode = u' ';
-		}
-#endif
 		if( cursor.hasSelection() ) {
 			switch( cmd.unicode() ) {
 			case 'c':
@@ -951,10 +975,11 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 	} else if( gvi.m_operator != ' ' && gvi.m_operator == cmd ) {		//	cc dd yy << >>
 		completed = do_vi_operator(cmd, cursor, rcnt, docWidget);		//	op cmd
 	} else if( cmd == 'c' || cmd == 'd' || cmd == 'y' || cmd == '<' || cmd == '>' ) {
-		gvi.m_operator = cmd;
-		if( gvi.m_repeatCount != 0 ) gvi.m_opCount = gvi.m_repeatCount;
-		gvi.m_repeatCount = 0;
-		completed = false;
+		completed = do_cdy(cmd, cursor);
+		//gvi.m_operator = cmd;
+		//if( gvi.m_repeatCount != 0 ) gvi.m_opCount = gvi.m_repeatCount;
+		//gvi.m_repeatCount = 0;
+		//completed = false;
 	} else if( cmd == 'i' || cmd == 'I' || cmd == 'a' || cmd == 'A' || cmd == 'o' || cmd == 'O' || cmd == 's' || cmd == 'S' || cmd == 'C' ) {
 		do_vi_insert(cmd, cursor, rcnt);
 	} else if( cmd == 'x' || cmd == 'X' || cmd == 'D' ) {
