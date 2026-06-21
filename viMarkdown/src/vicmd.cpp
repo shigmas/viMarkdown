@@ -1023,6 +1023,9 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		//completed = false;
 	} else if( cmd == 'i' || cmd == 'I' || cmd == 'a' || cmd == 'A' || cmd == 'o' || cmd == 'O' || cmd == 's' || cmd == 'S' || cmd == 'C' ) {
 		do_vi_insert(cmd, cursor, rcnt);
+	} else if( cmd == u'R' ) {
+		gvi.m_currentMode = ViMode::Replace;
+		docWidget->m_editor->setOverwriteMode(true);
 	} else if( cmd == 'x' || cmd == 'X' || cmd == 'D' ) {
 		do_vi_delete(cmd, cursor,rcnt);
 	}
@@ -1194,7 +1197,11 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		}
 		qDebug() << "gvi.m_lastEditCommand = " << gvi.m_lastEditCommand;
 	}
-	if( gvi.m_vMode == u'v' ) {
+	if( gvi.m_currentMode == ViMode::Insert ) {
+		statusBar()->showMessage("-- INSERT --");
+	} else if( gvi.m_currentMode == ViMode::Replace ) {
+		statusBar()->showMessage("-- REPLACE --");
+	} else if( gvi.m_vMode == u'v' ) {
 		statusBar()->showMessage("-- VISUAL --");
 	} else if( gvi.m_vMode == u'V' ) {
 		statusBar()->showMessage("-- VISUAL LINE --");

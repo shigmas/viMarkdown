@@ -818,6 +818,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 				cursor.movePosition(QTextCursor::Left);
 				this->setTextCursor(cursor);
 			}
+			setOverwriteMode(false);
 			gvi.m_currentMode = ViMode::Normal;
 			//gvi.m_viCmdMode = true;
 			gvi.m_vMode = u' ';
