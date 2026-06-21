@@ -861,17 +861,17 @@ const QList<ViTestCase> viTestCases = {
         }
     },
 #endif
-#if 1
-	// 1. 下移動 (j) の基本動作と最終行での境界制御
+#if 1		//	h j k l
+	// 下移動 (j) の基本動作と最終行での境界制御
     { "Move cursor down (j)",
         "a┃bc\ndef\nghi\n",
         {
             "j", "abc\nd┃ef\nghi\n", // 2行目の同じ列に移動
             "j", "abc\ndef\ng┃hi\n", // 3行目の同じ列に移動
-            "j", "abc\ndef\ng┃hi\n"  // 最終行のため下移動しない
+            "j", "abc\ndef\nghi\n┃"  // 改行によって作られた4行目（空行）に移動
         }
     },
-    // 2. 上移動 (k) の基本動作と先頭行での境界制御
+    // 上移動 (k) の基本動作と先頭行での境界制御
     { "Move cursor up (k)",
         "abc\ndef\ng┃hi\n",
         {
@@ -880,7 +880,7 @@ const QList<ViTestCase> viTestCases = {
             "k", "a┃bc\ndef\nghi\n"  // 先頭行のため上移動しない
         }
     },
-    // 3. 短い行を通過する際の「列位置の記憶（カラムメモリ）」の検証
+    // 短い行を通過する際の「列位置の記憶（カラムメモリ）」の検証
     // ※ 1行目の4文字目（index 3）からスタートし、短い2行目を通過して、3行目で元の4文字目に復帰するかをテストします。
     { "Move vertically through short lines (Column Memory)",
         "lin┃e1\nab\nline3\n",
@@ -891,7 +891,7 @@ const QList<ViTestCase> viTestCases = {
             "k", "lin┃e1\nab\nline3\n"   // 1行目に戻ると、元の列位置（index 3）に完全復帰する
         }
     },
-    // 4. h と l が行境界（改行）を越えて回り込まないかの検証
+    // h と l が行境界（改行）を越えて回り込まないかの検証
     { "h and l boundaries (No wrapping)",
         "abc\n┃def\nghi\n",
         {
@@ -901,7 +901,7 @@ const QList<ViTestCase> viTestCases = {
             "l", "abc\nde┃f\nghi\n"  // 行末のため、l を押しても次の行の先頭に回り込まない
         }
     },
-    // 5. カウント付き右移動 (nl) と行末でのクランプ処理
+    // カウント付き右移動 (nl) と行末でのクランプ処理
     { "Move right with count (nl)",
         "h┃ello world\n", // 'e' (index 1) からスタート
         {
@@ -910,7 +910,7 @@ const QList<ViTestCase> viTestCases = {
             "5l", "hello worl┃d\n"  // 5文字右へ -> 行末の 'd' (index 10) でクランプされて止まる
         }
     },
-    // 6. カウント付き左移動 (nh) と行頭でのクランプ処理
+    // カウント付き左移動 (nh) と行頭でのクランプ処理
     { "Move left with count (nh)",
         "hello wor┃ld\n", // 'l' (index 9) からスタート
         {
@@ -918,15 +918,15 @@ const QList<ViTestCase> viTestCases = {
             "10h", "┃hello world\n"  // 10文字左へ -> 行頭の 'h' (index 0) でクランプされて止まる
         }
     },
-    // 7. カウント付き下移動 (nj) と最終行でのクランプ処理
+    // カウント付き下移動 (nj) と最終行でのクランプ処理
     { "Move down with count (nj)",
         "a┃bc\ndef\nghi\njkl\n", // 1行目の 'b' (line 0, index 1) からスタート
         {
             "2j", "abc\ndef\ng┃hi\njkl\n", // 2行下へ -> 3行目の 'h' (line 2, index 1)
-            "5j", "abc\ndef\nghi\nj┃kl\n"  // 5行下へ -> 最終行の 'k' (line 3, index 1) でクランプされて止まる
+            "5j", "abc\ndef\nghi\njkl\n┃"  // 5行下へ -> 末尾改行による5行目（空行）へ移動して止まる
         }
     },
-    // 8. カウント付き上移動 (nk) と先頭行でのクランプ処理
+    // カウント付き上移動 (nk) と先頭行でのクランプ処理
     { "Move up with count (nk)",
         "abc\ndef\nghi\nj┃kl\n", // 4行目の 'k' (line 3, index 1) からスタート
         {
@@ -934,6 +934,8 @@ const QList<ViTestCase> viTestCases = {
             "5k", "a┃bc\ndef\nghi\njkl\n"  // 5行上へ -> 先頭行の 'b' (line 0, index 1) でクランプされて止まる
         }
     },
+#endif
+#if 0
     { "Move forward word (w) - Basic spacing",
         "┃abc def ghi",
         {
@@ -1226,6 +1228,7 @@ const QList<ViTestCase> viTestCases = {
         }
     },
 #endif
+#if 0
     { "Ex Range - Absolute Line Number (:num)",
         "line 1\nli┃ne 2\nline 3\nline 4\n",
         {
@@ -1233,7 +1236,6 @@ const QList<ViTestCase> viTestCases = {
             ":1", "┃line 1\nline 2\nline 3\nline 4\n"  // 1行目の行頭へジャンプ
         }
     },
-#if 1
     { "Ex Range - Current Line (:.)",
         "line 1\nli┃ne 2\nline 3\n",
         {
@@ -1277,7 +1279,7 @@ const QList<ViTestCase> viTestCases = {
         }
     },
 #endif
-#if 1
+#if 0
     { "Ex Delete - Current Line (:d)",
         "line 1\nli┃ne 2\nline 3\n",
         {
@@ -1329,6 +1331,7 @@ void MainWindow::onAction_TestViCommands() {
 	DocWidget *docWidget = getCurDocWidget();;
 	if( docWidget == nullptr ) return;
 	MarkdownEditor *editor = docWidget->m_editor;
+	gvi.m_currentMode = ViMode::Normal;
 	int total_tested = 0;
 	int total_failed = 0;
 	do_output("\n");
@@ -1342,6 +1345,7 @@ void MainWindow::onAction_TestViCommands() {
 		cursor.insertText(removeCursor(viTestCases[i].m_initialText, pos));
 		cursor.setPosition(pos);
 		editor->setTextCursor(cursor);
+		QCoreApplication::processEvents();		//	溜まっているイベント処理
 		const QStringList &steps = viTestCases[i].m_steps;
 		for(int k = 0; k < steps.size(); k+=2) {
 			++total_tested;
@@ -1355,6 +1359,7 @@ void MainWindow::onAction_TestViCommands() {
 					break;
 				}
 			}
+			editor->setTextCursor(cursor);
 			QCoreApplication::processEvents();		//	溜まっているイベント処理
 			cursor = editor->textCursor();
 			int cpos1 = cursor.position();

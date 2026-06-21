@@ -743,6 +743,7 @@ void do_match_paren(QTextCursor& cursor) {
 	}
 }
 void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidget* docWidget) {		//	hjkl等
+	auto p = cursor.position();		//	for Debug
 	gvi.m_linewiseMoved = false;
 	bool isEditor = cursor.document() == docWidget->m_editor->document();
 	auto moveMode = gvi.m_vMode != u' ' || (gvi.m_operator == ' ' && gvi.m_vMode == ' ') ?
@@ -1169,6 +1170,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 			completed = true;
 		}
 	}
+	auto p2 = cursor.position();	//	fora Debug
 	if( completed ) {	//	コマンド完結
 		if( gvi.m_redoing && gvi.m_currentMode == ViMode::Insert && !gvi.m_insertedText.isEmpty() ) {
 			cursor.insertText(gvi.m_insertedText);
