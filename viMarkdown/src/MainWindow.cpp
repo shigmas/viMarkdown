@@ -260,7 +260,7 @@ void MainWindow::insertSearchComboBox() {
 		QFileInfo fi(recentFilePaths.front());
 		QDir::setCurrent(fi.path());
 	}
-#ifdef	Q_OS_WIN
+#if	defined(Q_OS_WIN) || defined(Q_OS_LINUX)
 	//	メニューバーをメインツールバーに統合
 	ui->mainToolBar->insertWidget(ui->action_Undo, ui->menuBar);
 #endif
