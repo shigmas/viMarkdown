@@ -1674,6 +1674,10 @@ void MainWindow::do_exCmd(const QString &text, int ix, /*QString cmd, QChar nch,
 	} else if( is_match(cmd, "e(dit") ) {
 		if( nch == u'\0')
 			onAction_Open();
+		else {
+			QString arg = text.mid(ix).trimmed();
+			do_open("", arg);
+		}
 	} else if( is_match(cmd, "w(rite") ) {
 		onAction_Save();
 	} else if( is_match(cmd, "d(elete") ) {
