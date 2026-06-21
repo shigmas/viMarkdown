@@ -1099,6 +1099,86 @@ const QList<ViTestCase> viTestCases = {
             "b", "┃日本語 abc カタカナ 123。ひらがな"  // 漢字「日本語」の先頭「日」へ
         }
     },
+    // 基本的な空白区切り（wと同様の動作をするケース）
+    { "Move forward WORD (W) - Basic spacing",
+        "┃abc def ghi",
+        {
+            "W", "abc ┃def ghi", // 次のWORD "def" の先頭へ移動
+            "W", "abc def ┃ghi", // 次のWORD "ghi" の先頭へ移動
+            "W", "abc def gh┃i"  // これ以上WORDがないため、ファイル末尾の文字 'i' で停止
+        }
+    },
+    // 記号ハンドリング（Wコマンドの真価：記号をスキップせずWORDの一部とする）
+    { "Move forward WORD (W) - Punctuation handling",
+        "┃foo-bar.baz qux",
+        {
+            // w コマンドなら「-」や「.」の場所で止まりますが、W は空白まで一気にジャンプします
+            "W", "foo-bar.baz ┃qux", // 記号を含む "foo-bar.baz" を1つのWORDとして扱い、次の "qux" の先頭へ
+            "W", "foo-bar.baz qu┃x"  // これ以上WORDがないため、末尾の文字 'x' で停止
+        }
+    },
+    // 連続する空白と記号が混在するケース
+    { "Move forward WORD (W) - Mixed punctuation and spacing",
+        "┃a.b   c,d.e!  f",
+        {
+            "W", "a.b   ┃c,d.e!  f", // 複数の空白をスキップし、記号混じりの "c,d.e!" の先頭へ
+            "W", "a.b   c,d.e!  ┃f", // "f" の先頭へ
+            "W", "a.b   c,d.e!  ┃f"  // これ以上WORDがないため、末尾の文字 'f' で停止
+        }
+    },
+    // 基本的な空白区切り（eと同様の動作をするケース）
+    { "Move to end of WORD (E) - Basic spacing",
+        "┃abc def ghi",
+        {
+            "E", "ab┃c def ghi", // 現在のWORD "abc" の末尾 'c' へ移動
+            "E", "abc de┃f ghi", // 次のWORD "def" の末尾 'f' へ移動
+            "E", "abc def gh┃i", // 次のWORD "ghi" の末尾 'i' へ移動
+            "E", "abc def gh┃i"  // これ以上WORDがないため、末尾の文字 'i' で停止
+        }
+    },
+    // 記号ハンドリング（Eコマンドの真価：記号をスキップして全体の末尾へ）
+    { "Move to end of WORD (E) - Punctuation handling",
+        "┃foo-bar.baz qux",
+        {
+            // e コマンドなら "foo" の末尾 'o' や "bar" の末尾 'r' で止まりますが、E は一気に 'z' まで進みます
+            "E", "foo-bar.ba┃z qux", // 記号を含む "foo-bar.baz" 全体の末尾 'z' へ移動
+            "E", "foo-bar.baz qu┃x"  // 次のWORD "qux" の末尾 'x' へ移動
+        }
+    },
+    // WORDの途中から開始するケース
+    { "Move to end of WORD (E) - Starting inside a WORD",
+        "fo┃o-bar.baz   qux",
+        {
+            "E", "foo-bar.ba┃z   qux", // 現在のWORD "foo-bar.baz" の末尾 'z' へ移動
+            "E", "foo-bar.baz   qu┃x"  // 空白をスキップし、次のWORD "qux" の末尾 'x' へ移動
+        }
+    },
+    // 基本的な空白区切り（bと同様の動作をするケース）
+    { "Move backward WORD (B) - Basic spacing",
+        "abc def gh┃i",
+        {
+            "B", "abc def ┃ghi", // 現在のWORD "ghi" の先頭 'g' へ移動
+            "B", "abc ┃def ghi", // 前のWORD "def" の先頭 'd' へ移動
+            "B", "┃abc def ghi", // 前のWORD "abc" の先頭 'a' へ移動
+            "B", "┃abc def ghi"  // これ以上戻れないため、先頭の文字 'a' で停止
+        }
+    },
+    // 記号ハンドリング（Bコマンドの真価：記号をスキップして全体の先頭へ）
+    { "Move backward WORD (B) - Punctuation handling",
+        "foo-bar.baz qu┃x",
+        {
+            // b コマンドなら "baz" や "bar" の先頭や記号部分で細かく止まりますが、B は一気に 'f' まで戻ります
+            "B", "foo-bar.baz ┃qux", // 現在のWORD "qux" の先頭 'q' へ移動
+            "B", "┃foo-bar.baz qux"  // 空白をスキップし、前のWORD "foo-bar.baz" 全体の先頭 'f' へ移動
+        }
+    },
+    // すでにWORDの先頭にいる状態から開始するケース
+    { "Move backward WORD (B) - Starting at the start of a WORD",
+        "foo-bar.baz   ┃qux",
+        {
+            "B", "┃foo-bar.baz   qux" // すでに "qux" の先頭にいるため、空白をスキップして前のWORD "foo-bar.baz" の先頭 'f' へ移動
+        }
+    },
     { "Delete character under cursor (x) - Basic",
         "a┃bc\n",
         {

@@ -388,7 +388,7 @@ SPR# 状 P Open Close ver     Type  概要
 0385 ◎ C 06/13 06/16 03023│ToDo│^F, ^B
 0386 ◎ C 06/13 06/16 03023│ToDo│^D, ^U
 0387 ● C 06/13            │ToDo│:x ZZ
-0388 ● C 06/13            │ToDo│表示 > すべて折り畳み（zM）、すべて展開（zO）メニュー追加
+0388 ● C 06/13            │ToDo│表示 > すべて折り畳み（zM）、すべて展開（zO）メニュー追加？
 0389 ◎ C 06/13 06/13 03022│ToDo│Windows > QtCreator でビルドすると IME 関連関数が未定義というエラーが出る
 0390 ◎ C 06/13 06/13 03022│問題│MacOS：プレビューデフォルトフォントサイズが設定サイズになっていない
 0391 ◎ C 06/13 06/13 03022│ToDo│View メニュー：View, Navi に分ける
@@ -446,7 +446,7 @@ SPR# 状 P Open Close ver     Type  概要
 0443 ● C 06/18            │問題│「test 改行」のように、行末に半角空白があるとき、そこにカーソルがある場合の PtoE カーソル同期が動作不良
 0444 ◎ C 06/18 06/18 03024│問題│README.md > Development Phases, Roadmap の内容が更新されていない
 0445 ◎ C 06/18 06/18 03024│問題│#include <q...> の大文字・小文字が不正確なので、Linux でビルドするとビルドエラーになる（Shiggie）
-0446 ● C 06/18            │ToDo│Test > vi：W B E テスト追加
+0446 ◎ C 06/18 06/21 03026│ToDo│Test > vi：W B E テスト追加
 0447 ◎ C 06/19 06/19 03025│ToDo│#ifdef _WIN32 を Q_OS_WIN に変更
 0448 ◎ C 06/19 06/19 03025│ToDo│#if _WIN32 → #ifdef Q_OS_WIN に
 0449 ◎ C 06/20 06/20 03025│ToDo│「Check if merging menu bar into toolbar works on Linux」を issue に登録しておく
