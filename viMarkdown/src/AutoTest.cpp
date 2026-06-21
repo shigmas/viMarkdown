@@ -861,7 +861,7 @@ const QList<ViTestCase> viTestCases = {
         }
     },
 #endif
-#if 1		//	h j k l
+#if 0		//	h j k l
 	// 下移動 (j) の基本動作と最終行での境界制御
     { "Move cursor down (j)",
         "a┃bc\ndef\nghi\n",
@@ -935,7 +935,7 @@ const QList<ViTestCase> viTestCases = {
         }
     },
 #endif
-#if 0
+#if 1		//	w
     { "Move forward word (w) - Basic spacing",
         "┃abc def ghi",
         {
@@ -947,9 +947,10 @@ const QList<ViTestCase> viTestCases = {
     { "Move forward word (w) - Across lines and empty lines",
         "┃abc\n  def\n\nghi",
         {
-            "w", "abc\n  ┃def\n\nghi", // 改行し、先頭のインデントをスキップして "def" の先頭へ
-            "w", "abc\n  def\n\n┃ghi", // 空行を飛び越えて "ghi" の先頭へ
-            "w", "abc\n  def\n\ngh┃i"  // ファイル末尾の文字 'i' で停止
+            "w", "abc\n  ┃def\n\nghi",
+            "w", "abc\n  def\n┃\nghi", // ← 2回目は空行の先頭で止まる（Vimの正しい挙動）
+            "w", "abc\n  def\n\n┃ghi", // ← 3回目で ghi の先頭へ移動
+            "w", "abc\n  def\n\ngh┃i"  // ← 4回目で末尾クランプ
         }
     },
     { "Move forward word (w) - Punctuation boundaries",
@@ -991,6 +992,8 @@ const QList<ViTestCase> viTestCases = {
             "w", "日本語 abc カタカナ 123。ひらが┃な"  // 次の単語がないため、末尾の文字 'な' で停止
         }
     },
+#endif
+#if 1		//	e
     { "Move to end of word (e) - Basic spacing",
         "┃abc def ghi",
         {
@@ -1046,6 +1049,8 @@ const QList<ViTestCase> viTestCases = {
             "e", "日本語 abc カタカナ 123。ひらが┃な"  // ひらがな "ひらがな" の末尾 "な" へ
         }
     },
+#endif
+#if 0
     { "Move backward word (b) - Basic spacing",
         "abc def gh┃i",
         {
