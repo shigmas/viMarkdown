@@ -2616,6 +2616,19 @@ void MainWindow::onAction_About() {
 //---------------------------------------------------------------------
 void MainWindow::onAction_SlideShow() {
 	qDebug() << "MainWindow::onAction_SlideShow()";
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	QStringList lst;
+	QTextDocument *doc = docWidget->m_editor->document();
+	static QRegularExpression re("^#{1,2}[^#]");
+	for(QTextBlock block = doc->firstBlock(); block.isValid(); block = block.next()) {
+		QString buf = block.text().trimmed();
+		QRegularExpressionMatch match = re.match(buf);
+		if (match.hasMatch()) {
+			int matchLength = match.capturedLength(); 
+			lst.push_back(buf.mid(matchLength).trimmed());
+		}
+	}
 	SlideShow *ss = new SlideShow(this);
 	ss->setAttribute(Qt::WA_DeleteOnClose);		//	close時にメモリクリア
 	ss->startPresentation();

@@ -4,6 +4,7 @@
 #include <QLineEdit>
 #include <QStatusBar>
 #include <QRegularExpression>
+#include <QDir>
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 #include "DocWidget.h"
@@ -83,7 +84,7 @@ void do_swap_case(QTextCursor& cursor, int rcnt) {
 	cursor.setPosition(block.position() + ix9, QTextCursor::KeepAnchor);
 	cursor.insertText(text);
 }
-void do_cdy_moved(QTextCursor& cursor) {
+void MainWindow::do_cdy_moved(QTextCursor& cursor) {
 	if( gvi.m_operator == 'c' ) {
 		if( cursor.hasSelection() )
 			cursor.deleteChar();
@@ -95,8 +96,10 @@ void do_cdy_moved(QTextCursor& cursor) {
 			gvi.m_linewiseYanked = gvi.m_linewiseMoved;
 			if( gvi.m_operator == 'd' )
 				cursor.deleteChar();
-			else
+			else {
+				statusBar()->showMessage(QString("%1 charactors yanked.").arg(gvi.m_yankBuffer.size()), 5000);
 				cursor.clearSelection();
+			}
 		}
 	}
 }
@@ -299,6 +302,7 @@ void do_yank_line(QTextCursor& cursor, int rcnt) {
 	cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor, rcnt);
 	if( cursor.hasSelection() ) {
 		gvi.m_yankBuffer = cursor.selectedText();
+		//statusBar()->showMessage("%1 charactors yanked.", 5000).arg(gvi.m_yankBuffer.size());
 		gvi.m_linewiseYanked = true;
 		cursor.clearSelection();
 	}
@@ -308,7 +312,8 @@ int heading_level(QTextBlock block) {
 	int i = 0;
 	while( i < text.size() && text[i] == u'#' ) ++i;
 	if( i != 0 ) return i;
-	if( blockType(block) == BT_LIST ) {
+	auto bt = blockType(block);
+	if( bt == BT_LIST || bt == BT_CHECKBOX || bt == BT_NUMLIST ) {
 		text = block.text();
 		while( i < text.size() && text[i] == u' ' ) ++i;
 		i += 10;
@@ -449,7 +454,7 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 		break;
 	}
 }
-bool do_cdy(QChar cmd, QTextCursor& cursor) {
+bool MainWindow::do_cdy(QChar cmd, QTextCursor& cursor) {
 	if( gvi.m_vMode == u'v' || gvi.m_vMode == u'V' ) {
 		if( gvi.m_vMode == u'v' ) {
 			if( gvi.m_vAnchor <= cursor.position() ) {
@@ -475,7 +480,7 @@ bool do_cdy(QChar cmd, QTextCursor& cursor) {
 		gvi.m_vMode = u' ';
 		if( cursor.hasSelection() ) {
 			switch( cmd.unicode() ) {
-			case 'c':
+			case 'c':	//	選択状態で c
 				gvi.m_yankBuffer = cursor.selectedText();
 				cursor.beginEditBlock();
 				cursor.deleteChar();
@@ -484,12 +489,13 @@ bool do_cdy(QChar cmd, QTextCursor& cursor) {
 				//gvi.m_viCmdMode = false;
 				gvi.m_currentMode = ViMode::Insert;
 				return true;
-			case 'd':
+			case 'd':	//	選択状態で d
 				gvi.m_yankBuffer = cursor.selectedText();
 				cursor.deleteChar();
 				return true;
-			case 'y':
+			case 'y':	//	選択状態で y
 				gvi.m_yankBuffer = cursor.selectedText();
+				statusBar()->showMessage(QString("%1 charactors yanked.").arg(gvi.m_yankBuffer.size()), 5000);
 				cursor.setPosition(cursor.selectionStart());
 				return true;
 			}
@@ -519,6 +525,7 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWid
 				return true;
 			case 'y':
 				gvi.m_yankBuffer = cursor.selectedText();
+				statusBar()->showMessage(QString("%1 charactors yanked.").arg(gvi.m_yankBuffer.size()), 5000);
 				cursor.setPosition(cursor.selectionStart());
 				return true;
 			}
@@ -568,6 +575,7 @@ bool MainWindow::do_vi_operator(QChar cmd, QTextCursor& cursor, int rcnt, DocWid
 			break;
 		case 'y':	//	yy
 			do_yank_line(cursor, rcnt);
+			statusBar()->showMessage(QString("%1 charactors yanked.").arg(gvi.m_yankBuffer.size()), 5000);
 			break;
 		//case 'g':	//	gg
 		//	cursor.movePosition(QTextCursor::Start);
@@ -1072,6 +1080,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 			break;
 		case 'Y':
 			do_yank_line(cursor, rcnt);
+			statusBar()->showMessage(QString("%1 charactors yanked.").arg(gvi.m_yankBuffer.size()), 5000);
 			break;
 		case 'p':
 			if( !gvi.m_yankBuffer.isEmpty() ) {
@@ -1207,8 +1216,8 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		statusBar()->showMessage("-- VISUAL --");
 	} else if( gvi.m_vMode == u'V' ) {
 		statusBar()->showMessage("-- VISUAL LINE --");
-	} else
-		statusBar()->clearMessage();
+	} //else
+	//	statusBar()->clearMessage();
 }
 int do_search_line(const QString &text, int &i, int currentLine, const QTextDocument *doc) {
 	QChar c = text[i++];
@@ -1671,6 +1680,8 @@ void MainWindow::do_exCmd(const QString &text, int ix, /*QString cmd, QChar nch,
 	//}
 	if( is_match(cmd, "q(uit") ) {
 		do_close(nch == u'!');
+	} else if( is_match(cmd, "pwd") ) {
+		do_output(QString("\ncurrent path: %1\n").arg(QDir::currentPath()));
 	} else if( is_match(cmd, "e(dit") ) {
 		if( nch == u'\0')
 			onAction_Open();

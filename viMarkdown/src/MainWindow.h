@@ -403,6 +403,8 @@ protected:
     void	do_vi_search(const QString&, QTextCursor&, int rcnt, DocWidget*);
     void	do_subst(const QString &, int, QTextDocument*);
     void	do_global(const QString &, int, QTextCursor&, QTextDocument*, DocWidget*);
+    bool	do_cdy(QChar cmd, QTextCursor& cursor);
+    void	do_cdy_moved(QTextCursor& cursor);
 
 private:
     bool	m_processing = false;

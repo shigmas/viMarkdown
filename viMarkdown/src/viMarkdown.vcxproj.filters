@@ -133,6 +133,9 @@
     <ClCompile Include="SlideShow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MainWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DocWidget.h">
@@ -228,9 +231,6 @@
     </QtMoc>
     <QtMoc Include="OutputView.h">
       <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="MainWindow.cpp">
-      <Filter>Source Files</Filter>
     </QtMoc>
     <QtMoc Include="SlideShow.h">
       <Filter>Header Files</Filter>
