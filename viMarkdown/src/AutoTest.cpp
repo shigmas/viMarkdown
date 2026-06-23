@@ -1321,13 +1321,20 @@ const QList<ViTestCase> viTestCases = {
     },
 #endif
 };
-QString removeCursor(const QString &src, int &pos) {
+QString removeCursor(const QString &src, int &pos, int &anchor) {
 	QString dst;
 	int p = 0;
+	anchor = -1;
 	for(auto ch: src) {
-		if( ch == u'┃' )
+		if( ch == u'┃' ) {
 			pos = p;
-		else {
+			if( anchor == pos ) anchor = -1;
+		} else if( ch == u'┣' ) {
+			anchor = p;
+		} else if( ch == u'┫' ) {
+			if( anchor < 0 )
+				anchor = p - 1;
+		} else {
 			dst += ch;
 			++p;
 		}
@@ -1345,13 +1352,13 @@ void MainWindow::onAction_TestViCommands() {
 	int total_failed = 0;
 	do_output("\n");
 	do_output("Test vi commands...\n\n");
-	int pos;
+	int pos, anchor;
 	for(int i = 0; i < viTestCases.size(); ++i) {
 		do_output(viTestCases[i].m_name + ": ");
 		QTextCursor cursor = editor->textCursor();
 		cursor.movePosition(QTextCursor::Start);
 		cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
-		cursor.insertText(removeCursor(viTestCases[i].m_initialText, pos));
+		cursor.insertText(removeCursor(viTestCases[i].m_initialText, pos, anchor));
 		cursor.setPosition(pos);
 		editor->setTextCursor(cursor);
 		QCoreApplication::processEvents();		//	溜まっているイベント処理
@@ -1375,7 +1382,7 @@ void MainWindow::onAction_TestViCommands() {
 			QCoreApplication::processEvents();		//	溜まっているイベント処理
 			cursor = editor->textCursor();
 			int cpos1 = cursor.position();
-			QString exp = removeCursor(steps[k+1], pos);
+			QString exp = removeCursor(steps[k+1], pos, anchor);
 			//cursor = editor->textCursor();
 			//int cpos2 = cursor.position();
 			if( cursor.position() != pos ) {
