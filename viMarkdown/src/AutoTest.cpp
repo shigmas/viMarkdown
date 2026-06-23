@@ -1388,6 +1388,8 @@ void MainWindow::onAction_TestViCommands() {
 				do_output(QString("Before:   '%1'\n").arg(before));
 				do_output("Commands: '" + cmd_text + "'\n");
 				do_output(QString("Expected: '%1'\nActual:   '%2'\n").arg(exp).arg(act));
+				cursor.setPosition(pos);
+				editor->setTextCursor(cursor);
 			}
 			if( cursor.document()->toPlainText() != exp ) {
 				QString exp = steps[k+1];
