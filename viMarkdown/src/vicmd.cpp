@@ -43,6 +43,11 @@ int getRepeatCount() {
 bool isSpaceChar(QChar ch) {
 	return ch == u' ' || ch == u'\t' || ch == u'\n'|| ch.unicode() == 0x2029;	//	0x2029: 改行コード
 }
+void moveLeftIfAtEol(QTextCursor& cursor) {
+	QTextBlock block = cursor.block();
+	if( cursor.position() != block.position() && cursor.position() == block.position() + block.text().size() )
+		cursor.movePosition(QTextCursor::Left);
+}
 void hat(QTextCursor& cursor, QTextCursor::MoveMode moveMode = QTextCursor::MoveAnchor) {
 	cursor.movePosition(QTextCursor::StartOfBlock);
 	for(;;) {
@@ -234,9 +239,7 @@ void MainWindow::do_vi_delete(QChar cmd, QTextCursor& cursor, int rcnt) {		//	x 
 				cursor.setPosition(gvi.m_vAnchor, QTextCursor::KeepAnchor);
 				cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 			}
-			QTextBlock block = cursor.block();
-			if( cursor.position() != block.position() && cursor.position() == block.position() + block.text().size() )
-				cursor.movePosition(QTextCursor::Left);
+			moveLeftIfAtEol(cursor);
 			gvi.m_yankBuffer = cursor.selectedText();
 			gvi.m_linewiseYanked = false;
 			cursor.deleteChar();
@@ -275,9 +278,7 @@ void MainWindow::do_vi_delete(QChar cmd, QTextCursor& cursor, int rcnt) {		//	x 
 			gvi.m_yankBuffer = cursor.selectedText();
 			gvi.m_linewiseYanked = false;
 			cursor.deleteChar();
-			QTextBlock block = cursor.block();
-			if( cursor.position() != block.position() && cursor.position() == block.position() + block.text().size() )
-				cursor.movePosition(QTextCursor::Left);
+			moveLeftIfAtEol(cursor);
 		}
 		break;
 	case 'X':
