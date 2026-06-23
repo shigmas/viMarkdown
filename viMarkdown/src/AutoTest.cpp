@@ -1207,7 +1207,7 @@ const QList<ViTestCase> viTestCases = {
     { "Anchor test",
         "┃abcdef\n",
         {
-            "vl", "┣a┃b┫def\n",	// a, b 選択、カーソルは b 位置
+            "vl", "┣a┃b┫cdef\n",	// a, b 選択、カーソルは b 位置
             "x", "┃cdef\n"     		// 被選択 a, b が削除される
         }
     },
@@ -1341,6 +1341,18 @@ QString removeCursor(const QString &src, int &pos, int &anchor) {
 	}
 	return dst;
 }
+QString actualText(const QTextCursor& cursor) {
+	QString act = cursor.document()->toPlainText();
+	act.insert(cursor.position(), u'┃');
+	if( gvi.m_vMode == u'v' ) {
+		if( gvi.m_vAnchor <= cursor.position() ) {
+			act.insert(gvi.m_vAnchor, u'┣');
+			act.insert(cursor.position() + 3, u'┫');
+		}
+	}
+	act.replace('\n', "\\n");
+	return act;
+}
 void MainWindow::onAction_TestViCommands() {
 	qDebug() << "MainWindow::onAction_TestViCommands()";
 	addTab(QString("QA-%1").arg(++m_QA_tab_number));
@@ -1389,9 +1401,7 @@ void MainWindow::onAction_TestViCommands() {
 				//do_output(QString("wrong cursor position. pos = %1 expected, but %2\n").arg(pos).arg(cursor.position()));
 				QString exp = steps[k+1];
 				exp.replace('\n', "\\n");
-				QString act = cursor.document()->toPlainText();
-				act.insert(cursor.position(), u'┃');
-				act.replace('\n', "\\n");
+				QString act = actualText(cursor);
 				++total_failed;
 				do_output(QString("\n[FAILED #%1] wrong cursor position.\n").arg(total_failed));
 				do_output(QString("Before:   '%1'\n").arg(before));
@@ -1403,9 +1413,7 @@ void MainWindow::onAction_TestViCommands() {
 			if( cursor.document()->toPlainText() != exp ) {
 				QString exp = steps[k+1];
 				exp.replace('\n', "\\n");
-				QString act = cursor.document()->toPlainText();
-				act.insert(cursor.position(), u'┃');
-				act.replace('\n', "\\n");
+				QString act = actualText(cursor);
 				++total_failed;
 				do_output(QString("\n[FAILED #%1] wrong document text.\n").arg(total_failed));
 				do_output(QString("Before:   '%1'\n").arg(before));
