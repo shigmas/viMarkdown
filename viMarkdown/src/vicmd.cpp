@@ -234,6 +234,9 @@ void MainWindow::do_vi_delete(QChar cmd, QTextCursor& cursor, int rcnt) {		//	x 
 				cursor.setPosition(gvi.m_vAnchor, QTextCursor::KeepAnchor);
 				cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 			}
+			QTextBlock block = cursor.block();
+			if( cursor.position() != block.position() && cursor.position() == block.position() + block.text().size() )
+				cursor.movePosition(QTextCursor::Left);
 			gvi.m_yankBuffer = cursor.selectedText();
 			gvi.m_linewiseYanked = false;
 			cursor.deleteChar();
@@ -272,6 +275,9 @@ void MainWindow::do_vi_delete(QChar cmd, QTextCursor& cursor, int rcnt) {		//	x 
 			gvi.m_yankBuffer = cursor.selectedText();
 			gvi.m_linewiseYanked = false;
 			cursor.deleteChar();
+			QTextBlock block = cursor.block();
+			if( cursor.position() != block.position() && cursor.position() == block.position() + block.text().size() )
+				cursor.movePosition(QTextCursor::Left);
 		}
 		break;
 	case 'X':

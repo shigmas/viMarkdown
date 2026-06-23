@@ -57,8 +57,8 @@ Please refer to the [LICENSE](LICENSE) file for more details.
 | Ver. | Features / Overview | Schedule |
 | :--- | :--- | :--- |
 | 0.2 | Basic editor features, Basic Markdown, Ruled-line (Keisen) blocks, CSV blocks, Direct editing in the previewer (limited) | Scheduled for release ( windows binary only) by the end of April 2026.|
-| 0.4 | Vi key bindings, Japanese localization for menus and UI, regex search, grep, diff?, rectangular selection, SVG blocks, Graph View?, usability and performance improvements, migration to CMake (Qt Creator / Mac / Linux? support) | Dev version starting around May 2026, Alpha in Aug 2026, and Beta in Oct 2026. RC and Stable versions (Win/Mac? binaries) planned for release in Dec 2026. |
-| 0.6 | Math formulas, Mind maps, Page view, Presentation mode? | TBD |
+| 0.4 | Vi key bindings, Japanese localization for menus and UI, regex search, grep, diff?, SVG blocks, Graph View?, usability and performance improvements, migration to CMake (Qt Creator / Mac / Linux? support) | Dev version starting around May 2026, Alpha in Aug 2026, and Beta in Oct 2026. RC and Stable versions (Win/Mac? binaries) planned for release in Dec 2026. |
+| 0.6 | Math formulas, Mind maps, Page view, rectangular selection, Presentation mode? | TBD |
 | 0.8 | Mermaid diagrams?  | TBD |
 
 \* Note: This roadmap is current and subject to change without notice at the author's sole discretion.

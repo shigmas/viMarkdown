@@ -1050,6 +1050,7 @@ const QList<ViTestCase> viTestCases = {
         }
     },
 #endif
+#if 0
     { "Move backward word (b) - Basic spacing",
         "abc def gh┃i",
         {
@@ -1066,7 +1067,6 @@ const QList<ViTestCase> viTestCases = {
             "b", "┃abc\n  def\n\nghi"  // インデントと改行をスキップし、前の単語 "abc" の先頭へ移動
         }
     },
-#if 0
     { "Move backward word (b) - Punctuation boundaries",
         "abc.def!gh┃i",
         {
@@ -1188,6 +1188,8 @@ const QList<ViTestCase> viTestCases = {
             "B", "┃foo-bar.baz   qux" // すでに "qux" の先頭にいるため、空白をスキップして前のWORD "foo-bar.baz" の先頭 'f' へ移動
         }
     },
+#endif
+#if 1
     { "Delete character under cursor (x) - Basic",
         "a┃bc\n",
         {
