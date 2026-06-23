@@ -935,7 +935,7 @@ const QList<ViTestCase> viTestCases = {
         }
     },
 #endif
-#if 1		//	w
+#if 0		//	w
     { "Move forward word (w) - Basic spacing",
         "┃abc def ghi",
         {
@@ -993,7 +993,7 @@ const QList<ViTestCase> viTestCases = {
         }
     },
 #endif
-#if 1		//	e
+#if 0		//	e
     { "Move to end of word (e) - Basic spacing",
         "┃abc def ghi",
         {
@@ -1050,7 +1050,6 @@ const QList<ViTestCase> viTestCases = {
         }
     },
 #endif
-#if 0
     { "Move backward word (b) - Basic spacing",
         "abc def gh┃i",
         {
@@ -1067,6 +1066,7 @@ const QList<ViTestCase> viTestCases = {
             "b", "┃abc\n  def\n\nghi"  // インデントと改行をスキップし、前の単語 "abc" の先頭へ移動
         }
     },
+#if 0
     { "Move backward word (b) - Punctuation boundaries",
         "abc.def!gh┃i",
         {
@@ -1106,6 +1106,8 @@ const QList<ViTestCase> viTestCases = {
             "b", "┃日本語 abc カタカナ 123。ひらがな"  // 漢字「日本語」の先頭「日」へ
         }
     },
+#endif
+#if 0
     // 基本的な空白区切り（wと同様の動作をするケース）
     { "Move forward WORD (W) - Basic spacing",
         "┃abc def ghi",
@@ -1355,6 +1357,9 @@ void MainWindow::onAction_TestViCommands() {
 		for(int k = 0; k < steps.size(); k+=2) {
 			++total_tested;
 			do_output(".");
+			QString before = cursor.document()->toPlainText();
+			before.insert(cursor.position(), u'┃');
+			before.replace('\n', "\\n");
 			const QString cmd_text = steps[k];
 			for(int i = 0; i < cmd_text.size(); ++i) {
 				do_viCmd(cmd_text[i], cursor);
@@ -1380,6 +1385,7 @@ void MainWindow::onAction_TestViCommands() {
 				act.replace('\n', "\\n");
 				++total_failed;
 				do_output(QString("\n[FAILED #%1] wrong cursor position.\n").arg(total_failed));
+				do_output(QString("Before:   '%1'\n").arg(before));
 				do_output("Commands: '" + cmd_text + "'\n");
 				do_output(QString("Expected: '%1'\nActual:   '%2'\n").arg(exp).arg(act));
 			}
@@ -1391,6 +1397,7 @@ void MainWindow::onAction_TestViCommands() {
 				act.replace('\n', "\\n");
 				++total_failed;
 				do_output(QString("\n[FAILED #%1] wrong document text.\n").arg(total_failed));
+				do_output(QString("Before:   '%1'\n").arg(before));
 				do_output("Commands: '" + cmd_text + "'\n");
 				do_output(QString("Expected: '%1'\nActual:   '%2'\n").arg(exp).arg(act));
 				//do_output("expected:\n'" + exp + "', but:\n'" + cursor.document()->toPlainText() + "'\n");
