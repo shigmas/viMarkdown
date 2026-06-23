@@ -239,10 +239,10 @@ void MainWindow::do_vi_delete(QChar cmd, QTextCursor& cursor, int rcnt) {		//	x 
 				cursor.setPosition(gvi.m_vAnchor, QTextCursor::KeepAnchor);
 				cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 			}
-			moveLeftIfAtEol(cursor);
 			gvi.m_yankBuffer = cursor.selectedText();
 			gvi.m_linewiseYanked = false;
 			cursor.deleteChar();
+			moveLeftIfAtEol(cursor);
 			gvi.m_vMode = u' ';
 			break;
 		}
@@ -296,6 +296,7 @@ void MainWindow::do_vi_delete(QChar cmd, QTextCursor& cursor, int rcnt) {		//	x 
 			gvi.m_yankBuffer = cursor.selectedText();
 			gvi.m_linewiseYanked = false;
 			cursor.deleteChar();
+			moveLeftIfAtEol(cursor);
 		}
 		break;
 	default:
