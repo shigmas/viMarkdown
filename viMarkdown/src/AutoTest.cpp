@@ -1208,7 +1208,10 @@ const QList<ViTestCase> viTestCases = {
         "┃abcdef\n",
         {
             "vl", "┣a┃b┫cdef\n",	// a, b 選択、カーソルは b 位置
-            "x", "┃cdef\n"     		// 被選択 a, b が削除される
+            "x", "┃cdef\n",     		// 被選択 a, b が削除される
+            "u", "┃abcdef\n",
+            "3lvh", "ab┣┃cd┫ef\n",	// d まで移動し cd 選択、カーソルは c 位置
+            "x", "ab┃ef\n",     		// 被選択 cd が削除される
         }
     },
     { "Delete character before cursor (X) - Basic",
@@ -1236,6 +1239,19 @@ const QList<ViTestCase> viTestCases = {
             "5X", "┃f\n"     // 5文字の削除を試みるが、存在する3文字のみ削除して行頭に留まる
         }
     },
+    { "Delete character under cursor (x) - Japanese",
+	    "あ┃いうえ\n",
+	    {
+	        "x", "あ┃うえ\n",  // 日本語1文字削除
+	        "2x", "┃あ\n"      // count付き日本語削除
+	    }
+	},
+	{ "Delete character under cursor (x) - Empty line",
+	    "abc\n┃\ndef\n",
+	    {
+	        "x", "abc\n┃\ndef\n"  // 空行でxは何もしない（またはSPR #174相当）
+	    }
+	},
 #endif
 #if 0
     { "Ex Range - Absolute Line Number (:num)",
@@ -1348,6 +1364,9 @@ QString actualText(const QTextCursor& cursor) {
 		if( gvi.m_vAnchor <= cursor.position() ) {
 			act.insert(gvi.m_vAnchor, u'┣');
 			act.insert(cursor.position() + 3, u'┫');
+		} else {
+			act.insert(cursor.position(), u'┣');
+			act.insert(gvi.m_vAnchor + 3, u'┫');
 		}
 	}
 	act.replace('\n', "\\n");
