@@ -17,5 +17,6 @@ signals:
 
 protected:
     void	mouseDoubleClickEvent(QMouseEvent *e) override;
+    void	keyPressEvent(QKeyEvent *e) override;
 };
 

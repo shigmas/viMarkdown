@@ -64,3 +64,10 @@ void OutputView::mouseDoubleClickEvent(QMouseEvent *e) {
 	qDebug() << "path = " << path;
 	emit do_open(path, ln-1);
 }
+void OutputView::keyPressEvent(QKeyEvent *e) {
+	if (e->key() == Qt::Key_C && (e->modifiers() & Qt::ControlModifier) != 0 ) {
+		copy();
+		return;
+	}
+	QPlainTextEdit::keyPressEvent(e);
+}

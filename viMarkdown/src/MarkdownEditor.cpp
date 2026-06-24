@@ -71,6 +71,7 @@ bool is_foldable(QTextBlock block) {
 	int lvl = heading_level(block);
 	if( lvl == 0 ) return false;	//	非見出し行
 	if( !(block = block.next()).isValid() ) return false;
+	if( block.text().isEmpty() && !block.next().isValid() ) return false;		//	空行＆最終行
 	int lvl2 = heading_level(block);
 	return lvl2 == 0 || lvl2 > lvl;
 }

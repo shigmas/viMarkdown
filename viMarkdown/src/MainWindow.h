@@ -242,6 +242,7 @@ protected:
     void	do_redo_replaceDlg();
     void	zoomIn();
     void	zoomOut();
+    void	onImeLocaleChanged();
 
     void	onOutlineBarVisibilityChanged(bool visible);
     void	onOutputBarVisibilityChanged(bool visible);

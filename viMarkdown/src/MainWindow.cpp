@@ -25,6 +25,9 @@
 #include <QShortcut>
 #include <QFile>
 #include <QTextStream>
+#include <QGuiApplication>
+#include <QInputMethod>
+#include <QLocale>
 #include "ver.h"
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
@@ -93,6 +96,8 @@ MainWindow::MainWindow(QWidget *parent)
 	setAcceptDrops(true);		//	ファイルドロップ可
 	setup_tabMenu();
 	setup_connections();
+	connect(QGuiApplication::inputMethod(), &QInputMethod::localeChanged, 
+	        this, &MainWindow::onImeLocaleChanged);
 	// 拡大 (自動的に Windows: Ctrl++, Mac: Cmd++)
 	QShortcut *shortcutZoomIn = new QShortcut(QKeySequence::ZoomIn, this);
 	connect(shortcutZoomIn, &QShortcut::activated, this, [=](){
@@ -117,6 +122,12 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
 	delete ui;
+}
+void MainWindow::onImeLocaleChanged() {
+    QLocale locale = QGuiApplication::inputMethod()->locale();
+    if (locale.language() == QLocale::Japanese) {
+        qDebug() << "locale.language() == QLocale::Japanese";
+    }
 }
 void MainWindow::setup_statusBar() {
 	//	/?: 用ラインエディット
