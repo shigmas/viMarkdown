@@ -399,6 +399,14 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 		    editor->verticalScrollBar()->setValue(qMax(0, blockNum - visibleLines + 1));
 			break;
 		}
+		case '.':
+		case 'z': {		// zz: カーソル行を画面中央行にする（カーソル位置はそのまま）
+			auto editor = docWidget->m_editor;
+		    int blockNum = cursor.blockNumber();
+		    int visibleLines = editor->viewport()->height() / editor->fontMetrics().height();
+		    editor->verticalScrollBar()->setValue( qMax(0, blockNum - visibleLines / 2) );
+			break;
+		}
 		case 'a':		//	za
 			if (!block.isValid()) break;
 			if( is_folded(block) )
