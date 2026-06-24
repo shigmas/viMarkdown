@@ -388,6 +388,7 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 		case 't': {		// zt: カーソル行を画面最上行にする（カーソル位置はそのまま）
 			int blockNum = cursor.blockNumber();
 			docWidget->m_editor->verticalScrollBar()->setValue(blockNum);
+    		if( cmd.unicode() == u'\n' || cmd.unicode() == u'\r' ) hat(cursor);
     		break;
 		}
 		case '-':
@@ -397,6 +398,7 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 		    int visibleLines = editor->viewport()->height()
 		                     / editor->fontMetrics().height();
 		    editor->verticalScrollBar()->setValue(qMax(0, blockNum - visibleLines + 1));
+    		if( cmd.unicode() == u'-' ) hat(cursor);
 			break;
 		}
 		case '.':
@@ -405,6 +407,7 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 		    int blockNum = cursor.blockNumber();
 		    int visibleLines = editor->viewport()->height() / editor->fontMetrics().height();
 		    editor->verticalScrollBar()->setValue( qMax(0, blockNum - visibleLines / 2) );
+    		if( cmd.unicode() == u'.' ) hat(cursor);
 			break;
 		}
 		case 'a':		//	za
