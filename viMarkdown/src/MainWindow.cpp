@@ -96,8 +96,8 @@ MainWindow::MainWindow(QWidget *parent)
 	setAcceptDrops(true);		//	ファイルドロップ可
 	setup_tabMenu();
 	setup_connections();
-	connect(QGuiApplication::inputMethod(), &QInputMethod::localeChanged, 
-	        this, &MainWindow::onImeLocaleChanged);
+	//connect(QGuiApplication::inputMethod(), &QInputMethod::localeChanged, 
+	//        this, &MainWindow::onImeLocaleChanged);
 	// 拡大 (自動的に Windows: Ctrl++, Mac: Cmd++)
 	QShortcut *shortcutZoomIn = new QShortcut(QKeySequence::ZoomIn, this);
 	connect(shortcutZoomIn, &QShortcut::activated, this, [=](){
@@ -123,12 +123,37 @@ MainWindow::~MainWindow()
 {
 	delete ui;
 }
+bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, qintptr *result) {
+#ifdef Q_OS_WIN
+    if (eventType == "windows_generic_MSG") {
+        MSG *msg = static_cast<MSG *>(message);
+        if (msg->message == WM_IME_NOTIFY) {
+            if (msg->wParam == IMN_SETOPENSTATUS) {
+                HIMC hImc = ImmGetContext(msg->hwnd);
+                bool imeOpen = ImmGetOpenStatus(hImc);
+                ImmReleaseContext(msg->hwnd, hImc);
+                qDebug() << "IME状態:" << (imeOpen ? "日本語モード" : "直接入力");
+                if( imeOpen && gvi.m_currentMode == ViMode::Normal ) {
+					gvi.m_currentMode = ViMode::Insert;
+					statusBar()->showMessage("-- INSERT --");
+					DocWidget *docWidget = getCurDocWidget();
+					if( docWidget != nullptr )
+						docWidget->m_editor->viewport()->update();
+                }
+            }
+        }
+    }
+#endif
+    return QWidget::nativeEvent(eventType, message, result);
+}
+#if 0	//	期待したように動作しない
 void MainWindow::onImeLocaleChanged() {
     QLocale locale = QGuiApplication::inputMethod()->locale();
     if (locale.language() == QLocale::Japanese) {
         qDebug() << "locale.language() == QLocale::Japanese";
     }
 }
+#endif
 void MainWindow::setup_statusBar() {
 	//	/?: 用ラインエディット
 	m_cmdLine = new QLineEdit(this);
