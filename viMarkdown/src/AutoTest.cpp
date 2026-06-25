@@ -1191,6 +1191,67 @@ const QList<ViTestCase> viTestCases = {
         }
     },
 #endif
+	{ "Move to start of line (0)",
+        "abc d┃ef\n  ghi\n\n",
+        {
+            "0", "┃abc def\n  ghi\n\n", // 1行目の絶対行頭（カラム0）に移動
+            "j", "abc def\n┃  ghi\n\n", // 2行目の絶対行頭（カラム0）へ移動（縦移動のカラムメモリ検証）
+            "l", "abc def\n ┃ ghi\n\n", // 右に1文字移動（1つ目のスペース）
+            "l", "abc def\n  ┃ghi\n\n", // 右に1文字移動（2つ目のスペース）
+            "0", "abc def\n┃  ghi\n\n", // インデントを無視して絶対行頭（カラム0）に戻る
+            "j", "abc def\n  ghi\n┃\n",  // 3行目の空行に移動
+            "0", "abc def\n  ghi\n┃\n"   // 空行で実行しても安全にその場にとどまる
+        }
+    },
+	{ "Move to first non-blank character (^)",
+        "abc d┃ef\n  ghi\n\n",
+        {
+            "^", "┃abc def\n  ghi\n\n", // 1行目の先頭文字（スペース無しの場合は絶対行頭）に移動
+            "j", "abc def\n┃  ghi\n\n", // 2行目の絶対行頭に移動（カラム0）
+            "^", "abc def\n  ┃ghi\n\n", // 2行目のインデントを考慮した最初の非空白文字 'g' に移動
+            "j", "abc def\n  ghi\n┃\n",  // 3行目の空行に移動
+            "^", "abc def\n  ghi\n┃\n"   // 空行で実行しても安全にとどまる
+        }
+    },
+	{ "Move to end of line ($) and EOL memory",
+        "a┃bc\n  defgh\n\nij\n",
+        {
+            "$", "ab┃c\n  defgh\n\nij\n", // 1行目の末尾 'c' に移動
+            "j", "abc\n  defg┃h\n\nij\n", // 2行目の末尾 'h' に移動（スナップ先の長さが変わっても末尾を維持）
+            "j", "abc\n  defgh\n┃\nij\n",  // 3行目の空行に移動
+            "j", "abc\n  defgh\n\ni┃j\n",  // 4行目の末尾 'j' に移動（空行を跨いでも行末維持メモリが継続しているか）
+            "0", "abc\n  defgh\n\n┃ij\n",  // 4行目の絶対行頭 'i' に移動（カラムメモリが 0 に上書きされる）
+            "k", "abc\n  defgh\n┃\nij\n",  // 3行目の空行に戻る
+            "k", "abc\n┃  defgh\n\nij\n"   // 2行目のカラム0（1つ目のスペース）に戻る（行末維持が解除されているか）
+        }
+    },
+	{ "Jump to matching bracket (%) - Basic and Search",
+        "┃(abc [def] {ghi})\n",
+        {
+            "%", "(abc [def] {ghi}┃)\n", // 外側の '(' から対応する ')' にジャンプ
+            "%", "┃(abc [def] {ghi})\n", // ')' から対応する '(' に戻る
+            "l", "(┃abc [def] {ghi})\n", // カーソルを1文字右（'a'）に移動
+            "%", "(abc [def┃] {ghi})\n", // 右側にある最初の括弧 '[' を自動検知し、そのペア ']' にジャンプ
+            "%", "(abc ┃[def] {ghi})\n", // ']' からペアである '[' に戻る
+            "l", "(abc [┃def] {ghi})\n", // カーソルを 'd' に移動
+            "%", "(abc ┃[def] {ghi})\n", // 右側で最初に見つかる括弧 ']' を検知し、そのペアである '[' にジャンプ（Vim標準挙動）
+            "%", "(abc [def┃] {ghi})\n"  // '[' から再びペアである ']' に戻る
+        }
+    },
+	{ "Jump to matching bracket (%) - Nested",
+        "┃(abc (def) ghi)\n",
+        {
+            "%", "(abc (def) ghi┃)\n", // 外側の '(' から、正しく「外側の ')'」にジャンプできるか
+            "%", "┃(abc (def) ghi)\n", // 外側の ')' から、正しく「外側の '('」に戻れるか
+        }
+    },
+    { "Jump to matching bracket (%) - Inner Nested",
+        "(abc ┃(def) ghi)\n",
+        {
+            "%", "(abc (def┃) ghi)\n", // 内側の '(' から、正しく「内側の ')'」にジャンプできるか（外側を無視）
+            "%", "(abc ┃(def) ghi)\n"  // 内側の ')' から、正しく「内側の '('」に戻れるか
+        }
+    },
 #if 1
     { "Delete character under cursor (x) - Basic",
         "a┃bc\n",
