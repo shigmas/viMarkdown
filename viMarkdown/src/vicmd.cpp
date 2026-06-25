@@ -1636,13 +1636,17 @@ void MainWindow::on_cmdLine_enter() {
 	QString text = m_cmdLine->text();
 	qDebug() << "cmdline text = " << text;
 	close_cmdLine();
-	do_exCmd(text);
-}
-void MainWindow::do_exCmd(const QString &text) {
     DocWidget *docWidget = getCurDocWidget();
     if( docWidget == nullptr ) return;
 	QTextCursor cursor = gvi.m_prevFocusWidget == (QWidget*)docWidget->m_editor ?
 							docWidget->m_editor->textCursor() : docWidget->m_preview->textCursor();
+	do_exCmd(text, cursor);
+}
+void MainWindow::do_exCmd(const QString &text, QTextCursor& cursor) {
+    DocWidget *docWidget = getCurDocWidget();
+    if( docWidget == nullptr ) return;
+	//QTextCursor cursor = gvi.m_prevFocusWidget == (QWidget*)docWidget->m_editor ?
+	//						docWidget->m_editor->textCursor() : docWidget->m_preview->textCursor();
 	QTextDocument *doc = cursor.document();
 	if( text[0] == '/' || text[0] == '?' ) {
 		do_vi_search(text, cursor, gvi.m_repeatCount, docWidget);

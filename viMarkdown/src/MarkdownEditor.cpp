@@ -486,20 +486,25 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, DocWidget* docWidge
     //connect(m_blinkTimer, &QTimer::timeout, this, &MarkdownEditor::toggleCursor);
     //m_blinkTimer->start(500);
 }
-QVariant MarkdownEditor::inputMethodQuery(Qt::InputMethodQuery query /*, const QVariant &argument*/) const {
+QVariant MarkdownEditor::inputMethodQuery(Qt::InputMethodQuery query) const {
+	qDebug() << "query = " << query;
 	if (query == Qt::ImCursorRectangle) {
         // 現在のカーソル位置の矩形（Viewport相対座標）をOSに伝える
         //return cursorRect();
         auto r = cursorRect();
-        r.setX(r.x() + lnAreaWidth());
+        QPoint offset = viewport()->pos();  // viewportのwidget内オフセット
+        r.translate(offset);
+        //r.translate(QPoint(lnAreaWidth()+1000, 1000));
+        //r.setX(r.x() + lnAreaWidth());
         //return QRect( viewport()->mapToGlobal(r.topLeft()), r.size());
         //return r.translated(viewport()->pos());
         //QPoint widgetPos = viewport()->mapTo(this, r.topLeft());
         //r.moveTo(widgetPos);
         //QPoint mainWindowPos = viewport()->mapTo(m_mainWindow, r.topLeft());
         //r.moveTo(mainWindowPos);
-        QPoint pos = mapTo(m_mainWindow, QPoint(0, 0));
-        r.translate(pos);	//	r += pos
+        //QPoint pos = mapTo(m_mainWindow, QPoint(0, 0));
+        //r.translate(pos);	//	r += pos
+        qDebug() << "pos = " << r;
         return r;
     }
 	return QPlainTextEdit::inputMethodQuery(query);

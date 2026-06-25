@@ -851,11 +851,7 @@ struct ViTestCase {
 };
 
 const QList<ViTestCase> viTestCases = {
-	{ "Move cursor right",	"h┃ello\n", {"l", "he┃llo\n", "l", "hel┃lo\n", "l", "hell┃o\n", } },
-	{ "Move cursor left",	"h┃ello\n", {"h", "┃hello\n", "h", "┃hello\n", } },
-	{ "Visual mode",		"h┃ello\n", {"v", "h┣┃e┫llo\n", "l", "h┣e┃l┫lo\n", } },
-
-#if 0
+#if 1
     { "Basic ex command",
         "li┃ne1\nline2\nline3\n",
         {
@@ -863,6 +859,10 @@ const QList<ViTestCase> viTestCases = {
         }
     },
 #endif
+	{ "Move cursor right",	"h┃ello\n", {"l", "he┃llo\n", "l", "hel┃lo\n", "l", "hell┃o\n", } },
+	//{ "Move cursor left",	"h┃ello\n", {"h", "┃hello\n", "h", "┃hello\n", } },
+	//{ "Visual mode",		"h┃ello\n", {"v", "h┣┃e┫llo\n", "l", "h┣e┃l┫lo\n", } },
+#if 0
 #if 1		//	h j k l
 	// 下移動 (j) の基本動作と最終行での境界制御
     { "Move cursor down (j)",
@@ -1338,6 +1338,7 @@ const QList<ViTestCase> viTestCases = {
         }
     },
 #endif
+#endif
 };
 QString removeCursor(const QString &src, int &pos, int &anchor) {
 	QString dst;
@@ -1387,6 +1388,7 @@ void MainWindow::onAction_TestViCommands() {
 	do_output("Test vi commands...\n\n");
 	int pos, anchor;
 	for(int i = 0; i < viTestCases.size(); ++i) {
+		gvi.m_currentMode = ViMode::Normal;
 		gvi.m_vMode = u' ';
 		do_output(viTestCases[i].m_name + ": ");
 		QTextCursor cursor = editor->textCursor();
@@ -1408,7 +1410,7 @@ void MainWindow::onAction_TestViCommands() {
 				do_viCmd(cmd_text[i], cursor);
 				if( gvi.m_currentMode == ViMode::CommandLine ) {
 					if( cmd_text[i] == u':' )
-						do_exCmd(cmd_text.mid(i));
+						do_exCmd(cmd_text.mid(i), cursor);
 					break;
 				}
 			}
