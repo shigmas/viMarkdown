@@ -1387,6 +1387,7 @@ void MainWindow::onAction_TestViCommands() {
 	do_output("Test vi commands...\n\n");
 	int pos, anchor;
 	for(int i = 0; i < viTestCases.size(); ++i) {
+		gvi.m_vMode = u' ';
 		do_output(viTestCases[i].m_name + ": ");
 		QTextCursor cursor = editor->textCursor();
 		cursor.movePosition(QTextCursor::Start);
