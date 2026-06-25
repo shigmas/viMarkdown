@@ -132,7 +132,7 @@ bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, qintptr
                 HIMC hImc = ImmGetContext(msg->hwnd);
                 bool imeOpen = ImmGetOpenStatus(hImc);
                 ImmReleaseContext(msg->hwnd, hImc);
-                qDebug() << "IME状態:" << (imeOpen ? "日本語モード" : "直接入力");
+                //qDebug() << "IME状態:" << (imeOpen ? "日本語モード" : "直接入力");
                 if( imeOpen && gvi.m_currentMode == ViMode::Normal ) {
 					gvi.m_currentMode = ViMode::Insert;
 					statusBar()->showMessage("-- INSERT --");

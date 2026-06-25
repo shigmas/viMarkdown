@@ -456,6 +456,7 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, DocWidget* docWidge
 	: m_mainWindow(mainWindow), m_docWidget(docWidget), MarkdownBaseEdit(parent)
 {
 	setReadOnly(readOnly);
+	setAttribute(Qt::WA_InputMethodEnabled, true);
 	m_highlighter = new MarkdownHighlighter(this->document());
 #if 0
 	QTextCursor cursor = this->textCursor();
@@ -484,6 +485,24 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, DocWidget* docWidge
     //m_blinkTimer = new QTimer(this);	// カーソル点滅用タイマーの設定 (500ms)
     //connect(m_blinkTimer, &QTimer::timeout, this, &MarkdownEditor::toggleCursor);
     //m_blinkTimer->start(500);
+}
+QVariant MarkdownEditor::inputMethodQuery(Qt::InputMethodQuery query /*, const QVariant &argument*/) const {
+	if (query == Qt::ImCursorRectangle) {
+        // 現在のカーソル位置の矩形（Viewport相対座標）をOSに伝える
+        //return cursorRect();
+        auto r = cursorRect();
+        r.setX(r.x() + lnAreaWidth());
+        //return QRect( viewport()->mapToGlobal(r.topLeft()), r.size());
+        //return r.translated(viewport()->pos());
+        //QPoint widgetPos = viewport()->mapTo(this, r.topLeft());
+        //r.moveTo(widgetPos);
+        //QPoint mainWindowPos = viewport()->mapTo(m_mainWindow, r.topLeft());
+        //r.moveTo(mainWindowPos);
+        QPoint pos = mapTo(m_mainWindow, QPoint(0, 0));
+        r.translate(pos);	//	r += pos
+        return r;
+    }
+	return QPlainTextEdit::inputMethodQuery(query);
 }
 void MarkdownEditor::rehighlight() { m_highlighter->rehighlight(); }
 //void MarkdownEditor::setBoldColor(QColor col) {
@@ -993,6 +1012,8 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	}
 #endif
 	MarkdownBaseEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
+	qApp->inputMethod()->update(Qt::ImCursorRectangle);
+	qDebug() << "cursorRect = " << cursorRect();
 }
 int indexOfNotEsc(const QString &text, QChar ch, int ix) {
 	for(;;) {

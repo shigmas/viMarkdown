@@ -50,7 +50,7 @@ public:
 	void	lnAreaMousePressEvent(QMouseEvent *event);
 	void	lnAreaMouseMoveEvent(QMouseEvent *event);
 	void	lnAreaMouseReleaseEvent(QMouseEvent *event);
-	int lnAreaWidth() {
+	int lnAreaWidth() const {
         return fontMetrics().horizontalAdvance('9') * LN_WIDTH;
     }
 	void	updateViewportMargines();
@@ -119,6 +119,7 @@ protected:
     void	resizeEvent(QResizeEvent *event) override;
     void	inputMethodEvent(QInputMethodEvent *event) override;
     void	insertFromMimeData(const QMimeData *source) override;
+    QVariant	inputMethodQuery(Qt::InputMethodQuery query /*, const QVariant &argument*/) const ;
 #if 0
     void	dragEnterEvent(QDragEnterEvent *e) override {
         e->acceptProposedAction();

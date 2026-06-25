@@ -1740,11 +1740,12 @@ void MainWindow::do_exCmd(const QString &text, int ix, /*QString cmd, QChar nch,
 					startPos = startBlock.previous().position() + startBlock.previous().length() - 1;
 				}
 			}
-			
 			cursor.setPosition(startPos);
 			cursor.setPosition(endPos, QTextCursor::KeepAnchor);
 			cursor.removeSelectedText();
 			cursor.endEditBlock();
+			hat(cursor);
+			docWidget->m_editor->setTextCursor(cursor);
 		}
 	} else if( is_match(cmd, "p(rint") ) {
 		for(int ln = gvi.m_rangeStart; ln <= gvi.m_rangeEnd; ++ln) {

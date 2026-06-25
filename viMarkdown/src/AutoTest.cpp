@@ -863,7 +863,7 @@ const QList<ViTestCase> viTestCases = {
         }
     },
 #endif
-#if 0		//	h j k l
+#if 1		//	h j k l
 	// 下移動 (j) の基本動作と最終行での境界制御
     { "Move cursor down (j)",
         "a┃bc\ndef\nghi\n",
@@ -937,7 +937,7 @@ const QList<ViTestCase> viTestCases = {
         }
     },
 #endif
-#if 0		//	w
+#if 1		//	w
     { "Move forward word (w) - Basic spacing",
         "┃abc def ghi",
         {
@@ -995,7 +995,7 @@ const QList<ViTestCase> viTestCases = {
         }
     },
 #endif
-#if 0		//	e
+#if 1		//	e
     { "Move to end of word (e) - Basic spacing",
         "┃abc def ghi",
         {
@@ -1052,7 +1052,7 @@ const QList<ViTestCase> viTestCases = {
         }
     },
 #endif
-#if 0
+#if 1
     { "Move backward word (b) - Basic spacing",
         "abc def gh┃i",
         {
@@ -1109,7 +1109,7 @@ const QList<ViTestCase> viTestCases = {
         }
     },
 #endif
-#if 0
+#if 1
     // 基本的な空白区切り（wと同様の動作をするケース）
     { "Move forward WORD (W) - Basic spacing",
         "┃abc def ghi",
@@ -1255,7 +1255,7 @@ const QList<ViTestCase> viTestCases = {
 	    }
 	},
 #endif
-#if 0
+#if 1
     { "Ex Range - Absolute Line Number (:num)",
         "line 1\nli┃ne 2\nline 3\nline 4\n",
         {
@@ -1306,7 +1306,7 @@ const QList<ViTestCase> viTestCases = {
         }
     },
 #endif
-#if 0
+#if 1
     { "Ex Delete - Current Line (:d)",
         "line 1\nli┃ne 2\nline 3\n",
         {
