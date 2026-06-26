@@ -112,21 +112,23 @@ bool do_fFtT(QTextCursor& cursor, QChar cmd, QChar ch, int rcnt) {
 	QTextBlock block = cursor.block();
 	const QString buf = block.text();
 	int ix = cursor.position() - block.position();		//	ブロック内インデックス
-	int ix0 = ix;
+	int ix0 = ix, ix2 = -1;
 	if( cmd== 'f' || cmd== 't' ) {		//	順方向検索
 		for(int i = 0; i != rcnt; ++i) {
-			int ix2 = buf.indexOf(ch, ix+1);
+			ix2 = buf.indexOf(ch, ix+1);
 			if( ix2 < 0 ) break;	//	未発見
 			ix = ix2;
 		}
 		if( cmd== 't' ) --ix;
+		if( ix2 < 0 ) ix = ix0;		//	未発見の場合
 	} else {		//	F T 逆方向検索
 		for(int i = 0; i != rcnt; ++i) {
-			int ix2 = buf.lastIndexOf(ch, ix-1);
+			ix2 = buf.lastIndexOf(ch, ix-1);
 			if( ix2 < 0 ) break;	//	未発見
 			ix = ix2;
 		}
 		if( cmd== 'T' ) ++ix;
+		if( ix2 < 0 ) ix = ix0;		//	未発見の場合
 	}
 	if( ix != ix0 ) {
 		gvi.m_last_fFtT = cmd;

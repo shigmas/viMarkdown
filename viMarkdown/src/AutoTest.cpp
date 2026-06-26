@@ -1282,6 +1282,28 @@ const QList<ViTestCase> viTestCases = {
             "4Fa", "┃abc abc abc abc\n"  // カラム0から左側には 'a' が存在しないため「移動しない」
         }
     },
+    { "Find till character (t and T) - Basic and Count",
+        "┃abc def abc def\n",
+        {
+            "td",  "abc┃ def abc def\n", // 次の 'd'（カラム4）の「手前」（カラム3：スペース）にジャンプ
+            "tb",  "abc def ┃abc def\n", // 次の 'b'（カラム9）の「手前」（カラム8：'a'）にジャンプ
+            "2td", "abc def ┃abc def\n", // カラム8から右側に 'd' は1つしかないため、2回に満たず「移動しない」
+            "1td", "abc def abc┃ def\n", // カラム8から、1番目の 'd'（カラム12）の「手前」（カラム11：スペース）にジャンプ
+            "Ta",  "abc def a┃bc def\n", // カラム11から、左の 'a'（カラム8）の「直後」（カラム9：'b'）にジャンプ
+            "2Ta", "a┃bc def abc def\n", // カラム9から、左に2番目の 'a'（カラム0）の「直後」（カラム1：'b'）にジャンプ
+            "tx",  "a┃bc def abc def\n", // 'x' は存在しないので移動しない
+            "Ty",  "a┃bc def abc def\n"  // 'y' は存在しないので移動しない
+        }
+    },
+    { "Find till character (t and T) - Line limitation",
+        "┃abc\ndef\n",
+        {
+            "td", "┃abc\ndef\n", // 'd' は次の行にあるため、t コマンドは移動しない
+            "j",  "abc\n┃def\n", // 2行目の先頭 'd' に移動
+            "tf", "abc\nd ┃ef\n", // 同一行内の 'f' の「手前」である 'e' にジャンプ
+            "Ta", "abc\nde┃f\n"  // 'a' は前の行にあるため、T コマンドは移動しない
+        }
+    },
 #if 1
     { "Delete character under cursor (x) - Basic",
         "a┃bc\n",
