@@ -448,6 +448,14 @@ void MainWindow::do_prefix_cmd(QChar cmd, QTextCursor& cursor, int rcnt, DocWidg
 			break;
 		}
 		break;
+	case 'Z':
+		switch( cmd.unicode() ) {
+		case 'Z':		//	ZZ
+			do_save();
+			do_close();
+			break;
+		}
+		break;
 	case '[':
 		switch( cmd.unicode() ) {
 		case '[': {	//	[[
@@ -1049,7 +1057,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		do_r(cmd, cursor, rcnt);
 	} else if( gvi.m_prefix != ' ' ) {
 		do_prefix_cmd(cmd, cursor, rcnt, docWidget);		//	{g z r [ ]} cmd
-	} else if( cmd == 'g' || cmd == 'z' || cmd == 'r' || cmd == '[' || cmd == ']' ) {
+	} else if( cmd == 'g' || cmd == 'z' || cmd == 'Z' || cmd == 'r' || cmd == '[' || cmd == ']' ) {
 		gvi.m_prefix = cmd;
 		completed = false;
 	} else if( gvi.m_operator != ' ' && gvi.m_operator == cmd ) {		//	cc dd yy << >>
@@ -1712,7 +1720,10 @@ void MainWindow::do_exCmd(const QString &text, int ix, /*QString cmd, QChar nch,
 	//	nch = u'!';
 	//	cmd = cmd.left(cmd.size() - 1);
 	//}
-	if( is_match(cmd, "q(uit") ) {
+	if( is_match(cmd, "x") ) {
+		do_save();
+		do_close();
+	} else if( is_match(cmd, "q(uit") ) {
 		do_close(nch == u'!');
 	} else if( is_match(cmd, "pwd") ) {
 		do_output(QString("\ncurrent path: %1\n").arg(QDir::currentPath()));
