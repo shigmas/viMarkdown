@@ -861,7 +861,7 @@ const QList<ViTestCase> viTestCases = {
 #endif
 	{ "Move cursor right",	"h┃ello\n", {"l", "he┃llo\n", "l", "hel┃lo\n", "l", "hell┃o\n", } },
 	//{ "Move cursor left",	"h┃ello\n", {"h", "┃hello\n", "h", "┃hello\n", } },
-	//{ "Visual mode",		"h┃ello\n", {"v", "h┣┃e┫llo\n", "l", "h┣e┃l┫lo\n", } },
+	//{ "Visual mode",		"h┃ello\n", {"v", "h《┃e》llo\n", "l", "h《e┃l》lo\n", } },
 #if 1
 #if 1		//	h j k l
 	// 下移動 (j) の基本動作と最終行での境界制御
@@ -1338,10 +1338,10 @@ const QList<ViTestCase> viTestCases = {
     { "Anchor test",
         "┃abcdef\n",
         {
-            "vl", "┣a┃b┫cdef\n",	// a, b 選択、カーソルは b 位置
+            "vl", "《a┃b》cdef\n",	// a, b 選択、カーソルは b 位置
             "x", "┃cdef\n",     		// 被選択 a, b が削除される
             "u", "┃abcdef\n",
-            "3lvh", "ab┣┃cd┫ef\n",	// d まで移動し cd 選択、カーソルは c 位置
+            "3lvh", "ab《┃cd》ef\n",	// d まで移動し cd 選択、カーソルは c 位置
             "x", "ab┃ef\n",     		// 被選択 cd が削除される
         }
     },
@@ -1477,9 +1477,9 @@ QString removeCursor(const QString &src, int &pos, int &anchor) {
 		if( ch == u'┃' ) {
 			pos = p;
 			if( anchor == pos ) anchor = -1;
-		} else if( ch == u'┣' ) {
+		} else if( ch == u'《' ) {
 			anchor = p;
-		} else if( ch == u'┫' ) {
+		} else if( ch == u'》' ) {
 			if( anchor < 0 )
 				anchor = p - 1;
 		} else {
@@ -1494,11 +1494,11 @@ QString actualText(const QTextCursor& cursor) {
 	act.insert(cursor.position(), u'┃');
 	if( gvi.m_vMode == u'v' ) {
 		if( gvi.m_vAnchor <= cursor.position() ) {
-			act.insert(gvi.m_vAnchor, u'┣');
-			act.insert(cursor.position() + 3, u'┫');
+			act.insert(gvi.m_vAnchor, u'《');
+			act.insert(cursor.position() + 3, u'》');
 		} else {
-			act.insert(cursor.position(), u'┣');
-			act.insert(gvi.m_vAnchor + 3, u'┫');
+			act.insert(cursor.position(), u'《');
+			act.insert(gvi.m_vAnchor + 3, u'》');
 		}
 	}
 	act.replace('\n', "\\n");
