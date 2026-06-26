@@ -503,7 +503,7 @@ SPR# 状 P Open Close ver     Type  概要
 0500 ◎ C 06/26 06/26 03028│ToDo│MainWindow::do_exCmd(const QString &text)：引数に QTextCursor& 追加
 0501 ◎ C 06/26 06/26 03028│ToDo│0 ^ $ テストケース追加
 0502 ◎ C 06/26 06/26 03028│ToDo│% テストケース追加
-0503 ● C 06/26            │ToDo│
+0503 ◎ C 06/26 06/26 03028│ToDo│fF テストケース追加
 0504 ● C 06/26            │ToDo│
 0505 ● C 06/26            │ToDo│
 0506 ● C 06/26            │ToDo│

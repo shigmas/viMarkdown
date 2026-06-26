@@ -1252,6 +1252,36 @@ const QList<ViTestCase> viTestCases = {
             "%", "(abc ┃(def) ghi)\n"  // 内側の ')' から、正しく「内側の '('」に戻れるか
         }
     },
+    { "Find character (f and F) - Basic and Boundary",
+        "┃abc def abc def\n",
+        {
+            "fa", "abc def ┃abc def\n", // 現在地 'a' の次の 'a'（カラム8）にジャンプ
+            "fd", "abc def abc ┃def\n", // カムラ8より右側にある最初の 'd'（カラム12）にジャンプ
+            "Fa", "abc def ┃abc def\n", // カラム12より左側にある最初の 'a'（カラム8）にジャンプ
+            "Fb", "a┃bc def abc def\n", // カラム8より左側にある最初の 'b'（カラム1）にジャンプ
+            "fx", "a┃bc def abc def\n", // 'x' は存在しないのでカーソルは移動しない
+            "Fy", "a┃bc def abc def\n"  // 'y' は存在しないのでカーソルは移動しない
+        }
+    },
+    { "Find character (f and F) - Line limitation",
+        "┃abc\ndef\n",
+        {
+            "fd", "┃abc\ndef\n", // 'd' は次の行にあるため、f コマンドは移動しない（行を跨がない）
+            "j",  "abc\n┃def\n", // 2行目の先頭 'd' に移動
+            "ff", "abc\nde┃f\n", // 同一行内の 'f' にジャンプ
+            "Fa", "abc\nde┃f\n"  // 'a' は前の行にあるため、F コマンドは移動しない（行を跨がない）
+        }
+    },
+    { "Find character with count ([num]f and [num]F)",
+        "┃abc abc abc abc\n",
+        {
+            "2fa", "abc abc ┃abc abc\n", // カラム0から、2番目の 'a'（カラム8）にジャンプ
+            "2fa", "abc abc ┃abc abc\n", // カラム8から右側には 'a' が1つ（カラム12）しか無いため、2回に満たず「移動しない」
+            "1fa", "abc abc abc ┃abc\n", // カラム8から、1番目の 'a'（カラム12）にジャンプ
+            "3Fa", "┃abc abc abc abc\n", // カラム12から、左に向かって3番目の 'a'（カラム0）にジャンプ
+            "4Fa", "┃abc abc abc abc\n"  // カラム0から左側には 'a' が存在しないため「移動しない」
+        }
+    },
 #if 1
     { "Delete character under cursor (x) - Basic",
         "a┃bc\n",
