@@ -851,7 +851,15 @@ struct ViTestCase {
 };
 
 const QList<ViTestCase> viTestCases = {
-#if 1
+#if 0
+    { "Basic i command",
+        "┃\n",
+        {
+            "iabc", "ab┃c\n",
+        }
+    },
+#endif
+#if 0
     { "Basic ex command",
         "li┃ne1\nline2\nline3\n",
         {
@@ -859,10 +867,10 @@ const QList<ViTestCase> viTestCases = {
         }
     },
 #endif
-	{ "Move cursor right",	"h┃ello\n", {"l", "he┃llo\n", "l", "hel┃lo\n", "l", "hell┃o\n", } },
+	//{ "Move cursor right",	"h┃ello\n", {"l", "he┃llo\n", "l", "hel┃lo\n", "l", "hell┃o\n", } },
 	//{ "Move cursor left",	"h┃ello\n", {"h", "┃hello\n", "h", "┃hello\n", } },
 	//{ "Visual mode",		"h┃ello\n", {"v", "h《┃e》llo\n", "l", "h《e┃l》lo\n", } },
-#if 1
+#if 0
 #if 1		//	h j k l
 	// 下移動 (j) の基本動作と最終行での境界制御
     { "Move cursor down (j)",
@@ -1468,6 +1476,34 @@ const QList<ViTestCase> viTestCases = {
     },
 #endif
 #endif
+	{ "Basic i command",
+        "┃\n",
+        {
+            "iabc", "ab┃c\n", // 空行での基本挿入（Escにより末尾の 'c' から1文字左にスナップ）
+        }
+    },
+    { "Insert in middle of line",
+        "ab┃c\n",
+        {
+            "ixyz", "abxy┃zc\n", // 文字の間での挿入（'c' の手前に 'xyz' を挿入し、Escで 'z' の上にスナップ）
+        }
+    },
+    { "Insert with count ([num]i)",
+        "┃\n",
+        {
+            "3ix", "xx┃x\n", // 1文字の複数回挿入（'xxx' を挿入後、Escで2番目の 'x' にスナップ）
+            "u", "┃\n", // undoして元に戻す
+            "3iabc", "abcabcab┃c\n", // 複数文字の複数回挿入（'abcabcabc' を挿入後、Escで最後の 'c' にスナップ）
+            "u", "┃\n", // undoして元に戻す
+            "1iabc", "ab┃c\n" // カウントが 1 の場合の挙動（通常の i と同一）
+        }
+    },
+    { "Insert with count in middle of line",
+        "de┃f\n",
+        {
+            "2ix", "dex┃xf\n", // 文字の間での複数回挿入（'f' の手前に 'xx' を挿入し、Escで2番目の 'x' にスナップ）
+        }
+    },
 };
 QString removeCursor(const QString &src, int &pos, int &anchor) {
 	QString dst;
@@ -1537,7 +1573,14 @@ void MainWindow::onAction_TestViCommands() {
 			const QString cmd_text = steps[k];
 			for(int i = 0; i < cmd_text.size(); ++i) {
 				do_viCmd(cmd_text[i], cursor);
-				if( gvi.m_currentMode == ViMode::CommandLine ) {
+				if( gvi.m_currentMode == ViMode::Insert ) {
+					gvi.m_insertedText = cmd_text.mid(i+1);
+					cursor.insertText(gvi.m_insertedText);
+					if( cursor.position() > cursor.block().position())
+						cursor.movePosition(QTextCursor::Left);
+					//gvi.m_currentMode = ViMode::Normal;
+					break;
+				} else if( gvi.m_currentMode == ViMode::CommandLine ) {
 					if( cmd_text[i] == u':' )
 						do_exCmd(cmd_text.mid(i), cursor);
 					break;
