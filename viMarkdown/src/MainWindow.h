@@ -168,6 +168,7 @@ struct ViStatus {
 	int		m_vAnchorBlock;				//	v コマンド用アンカー位置（blocknumber）
     int		m_opCount = 1;				//	op 繰り返し回数 for c d y
     int		m_repeatCount = 0;			//	vi コマンド繰り返し回数
+    int		m_insRepCount = 1;			//	挿入回数
     int		m_rangeStart = 1;
     int		m_nRange = 0;				//	指定された行番号数
     int		m_rangeEnd = 1;
@@ -200,6 +201,7 @@ public:
     void	syncEditorToPreviewCursor();
     void	onChangeEditorFontSize(int);
     void	onChangePreviewFontSize(int);
+    void	exitInsertMode(QTextCursor& cursor);
 
 protected:
     void	load_settings();

@@ -186,6 +186,7 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor, int rcnt) {
 			cursor.deleteChar();
 			gvi.m_joinEditBlock = true;
 		}
+		rcnt = 1;
 		cursor.endEditBlock();
 		break;
 	case 'O':
@@ -225,6 +226,7 @@ void MainWindow::do_vi_insert(QChar cmd, QTextCursor& cursor, int rcnt) {
 	default:
 		return;
 	}
+	gvi.m_insRepCount = rcnt;
 	gvi.m_isEditCommand = true;
 	gvi.m_currentMode = ViMode::Insert;
 	//gvi.m_viCmdMode = false;
@@ -1256,6 +1258,29 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		statusBar()->showMessage("-- VISUAL LINE --");
 	} //else
 	//	statusBar()->clearMessage();
+}
+void MainWindow::exitInsertMode(QTextCursor& cursor) {
+	if( gvi.m_insRepCount > 1 && !gvi.m_insertedText.isEmpty() ) {
+		QString txt;
+		for(int i = 0; i < gvi.m_insRepCount - 1; ++i)
+			txt += gvi.m_insertedText;
+		cursor.insertText(txt);
+	}
+	if( g.m_editBlockOpen ) {
+		//cursor.endEditBlock();
+		g.m_editBlockOpen = false;
+	}
+	if( /*!gvi.m_insertedText.isEmpty() &&*/ cursor.position() > cursor.block().position()) {
+		cursor.movePosition(QTextCursor::Left);
+		//##this->setTextCursor(cursor);
+	}
+	//##setOverwriteMode(false);
+	gvi.m_currentMode = ViMode::Normal;
+	//gvi.m_viCmdMode = true;
+	gvi.m_vMode = u' ';
+	gvi.m_recInsertedText = false;
+	//highlightVText(cursor);
+	statusBar()->clearMessage();
 }
 int do_search_line(const QString &text, int &i, int currentLine, const QTextDocument *doc) {
 	QChar c = text[i++];

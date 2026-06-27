@@ -835,21 +835,10 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 		return;
 	} else if (e->key() == Qt::Key_Escape ) {
 		if( g.m_viKeybindings ) {
-			if( g.m_editBlockOpen ) {
-				//cursor.endEditBlock();
-				g.m_editBlockOpen = false;
-			}
-			if( /*!gvi.m_insertedText.isEmpty() &&*/ cursor.position() > cursor.block().position()) {
-				cursor.movePosition(QTextCursor::Left);
-				this->setTextCursor(cursor);
-			}
+			((MainWindow*)m_mainWindow)->exitInsertMode(cursor);	//	暫定的
 			setOverwriteMode(false);
-			gvi.m_currentMode = ViMode::Normal;
-			//gvi.m_viCmdMode = true;
-			gvi.m_vMode = u' ';
-			gvi.m_recInsertedText = false;
+			this->setTextCursor(cursor);
 			highlightVText(cursor);
-			m_mainWindow->statusBar()->clearMessage();
 		}
 #ifdef Q_OS_WIN
 		HWND hwnd = (HWND)this->winId();
