@@ -1576,8 +1576,9 @@ void MainWindow::onAction_TestViCommands() {
 				if( gvi.m_currentMode == ViMode::Insert ) {
 					gvi.m_insertedText = cmd_text.mid(i+1);
 					cursor.insertText(gvi.m_insertedText);
-					if( cursor.position() > cursor.block().position())
-						cursor.movePosition(QTextCursor::Left);
+					exitInsertMode(cursor);
+					//if( cursor.position() > cursor.block().position())
+					//	cursor.movePosition(QTextCursor::Left);
 					//gvi.m_currentMode = ViMode::Normal;
 					break;
 				} else if( gvi.m_currentMode == ViMode::CommandLine ) {
