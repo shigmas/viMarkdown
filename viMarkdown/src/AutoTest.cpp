@@ -1586,6 +1586,36 @@ const QList<ViTestCase> viTestCases = {
             "sxyz", "xy┃z\n",   // 空行での置換（削除するものがないため、実質的に i コマンドと同様の挙動）
         }
     },
+    { "Basic C command",
+        "a┃bc\n",
+        {
+            "Cxyz", "axy┃z\n", // カーソル位置（b）から行末までを置換して挿入
+        }
+    },
+    { "C command at start of line",
+        "┃abc\n",
+        {
+            "Cxyz", "xy┃z\n", // 行頭での挙動（行全体の置換）
+        }
+    },
+    { "C command at end of line",
+        "ab┃c\n",
+        {
+            "Cxyz", "abxy┃z\n", // 行末1文字での挙動
+        }
+    },
+    { "C command on empty line",
+        "┃\n",
+        {
+            "Cxyz", "xy┃z\n", // 空行での挙動（削除なしで挿入モードに移行）
+        }
+    },
+    { "C command with count",
+        "a┃bc\ndef\nghi\n",
+        {
+            "2Cxyz", "axy┃z\nghi\n", // 2行分（現在の行のカーソルから次の行の末尾まで）を削除して置換
+        }
+    },
 };
 QString removeCursor(const QString &src, int &pos, int &anchor) {
 	QString dst;
