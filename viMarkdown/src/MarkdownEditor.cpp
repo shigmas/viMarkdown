@@ -834,7 +834,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 		}
 		return;
 	} else if (e->key() == Qt::Key_Escape ) {
-		if( g.m_viKeybindings ) {
+		if( g.m_viKeybindings && gvi.m_currentMode == ViMode::Insert ) {
 			((MainWindow*)m_mainWindow)->exitInsertMode(cursor);	//	暫定的
 			setOverwriteMode(false);
 			this->setTextCursor(cursor);
