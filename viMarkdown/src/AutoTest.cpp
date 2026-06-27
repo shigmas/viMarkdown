@@ -1504,6 +1504,72 @@ const QList<ViTestCase> viTestCases = {
             "2ix", "dex┃xf\n", // 文字の間での複数回挿入（'f' の手前に 'xx' を挿入し、Escで2番目の 'x' にスナップ）
         }
     },
+    { "Basic a command",
+        "┃\n",
+        {
+            "aabc", "ab┃c\n", // 空行での追加（右側に文字がないためiと同様の挙動、Escで 'c' から1文字左にスナップ）
+        }
+    },
+    { "Append in middle of line",
+        "ab┃c\n",
+        {
+            "axyz", "abcxy┃z\n", // 文字の後ろへの追加（'c' の後ろに 'xyz' を追加し、Escで 'z' の上にスナップ）
+        }
+    },
+    { "Append with count ([num]a)",
+        "┃\n",
+        {
+            "3ax", "xx┃x\n", // 空行での複数回追加
+            "u", "┃\n", // undoして元に戻す
+            "2axyz", "xyzxy┃z\n" // 空行での複数文字の複数回追加（'xyzxyz' を追加後、Escで最後の 'z' にスナップ）
+        }
+    },
+    { "Append with count in middle of line",
+        "a┃b\n",
+        {
+            "2axyz", "abxyzxy┃z\n", // 文字の後ろへの複数回追加（'b' の後ろに 'xyzxyz' を追加し、Escで最後の 'z' にスナップ）
+        }
+    },
+    { "Basic I command",
+        "  abc┃ def\n",
+        {
+            "Ixyz", "  xy┃zabc def\n", // インデントを考慮し、最初の非空白文字 'a' の手前に 'xyz' を挿入（Escで 'z' にスナップ）
+        }
+    },
+    { "I command without leading spaces",
+        "abc┃ def\n",
+        {
+            "Ixyz", "xy┃zabc def\n", // 先頭にスペースがない場合は絶対行頭に挿入
+        }
+    },
+    { "I command with count ([num]I)",
+        "  ab┃c\n",
+        {
+            "3Ix", "  xx┃xabc\n", // インデント手前に 'xxx' を挿入後、Escで3番目の 'x' にスナップ
+            "u", "  ┃abc\n", // undoして「編集開始位置である 'a'（カラム2）」にカーソルが戻る（Vim標準挙動！）
+            "2Ixyz", "  xyzxy┃zabc\n" // インデント手前に 'xyzxyz' を挿入後、Escで最後の 'z' にスナップ
+        }
+    },
+    { "Basic A command",
+        "ab┃c\n",
+        {
+            "Axyz", "abcxy┃z\n", // 行末の後ろに 'xyz' を追加（Escで 'z' にスナップ）
+        }
+    },
+    { "A command on empty line",
+        "┃\n",
+        {
+            "Axyz", "xy┃z\n", // 空行での挙動（i や a と同様に絶対行頭に挿入される）
+        }
+    },
+    { "A command with count ([num]A)",
+        "ab┃c\n",
+        {
+            "3Ax", "abcxx┃x\n", // 行末の後ろに 'xxx' を追加後、Escで3番目の 'x' にスナップ
+            "u", "ab┃c\n", // undoして元のテキスト（"abc"）に戻り、カーソルは行末の 'c' にスナップ（Vim標準挙動）
+            "2Axyz", "abcxyzxy┃z\n" // 行末の後ろに 'xyzxyz' を追加後、Escで最後の 'z' にスナップ
+        }
+    },
 };
 QString removeCursor(const QString &src, int &pos, int &anchor) {
 	QString dst;
