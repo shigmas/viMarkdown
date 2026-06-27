@@ -1144,9 +1144,12 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 		case 'J':
 			do_join(cursor, rcnt);
 			break;
-		case 'u':
+		case 'u': {
 			docWidget->m_editor->undo();
+			cursor = docWidget->m_editor->textCursor();
+			moveLeftIfAtEol(cursor);
 			break;
+		}
 		case 'U':
 			docWidget->m_editor->redo();
 			break;
