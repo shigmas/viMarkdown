@@ -1476,20 +1476,17 @@ const QList<ViTestCase> viTestCases = {
     },
 #endif
 #endif
-	{ "Basic i command",
-        "┃\n",
+	{ "Basic i command", "┃\n",
         {
             "iabc", "ab┃c\n", // 空行での基本挿入（Escにより末尾の 'c' から1文字左にスナップ）
         }
     },
-    { "Insert in middle of line",
-        "ab┃c\n",
+    { "Insert in middle of line", "ab┃c\n",
         {
             "ixyz", "abxy┃zc\n", // 文字の間での挿入（'c' の手前に 'xyz' を挿入し、Escで 'z' の上にスナップ）
         }
     },
-    { "Insert with count ([num]i)",
-        "┃\n",
+    { "Insert with count ([num]i)", "┃\n",
         {
             "3ix", "xx┃x\n", // 1文字の複数回挿入（'xxx' を挿入後、Escで2番目の 'x' にスナップ）
             "u", "┃\n", // undoして元に戻す
@@ -1498,76 +1495,95 @@ const QList<ViTestCase> viTestCases = {
             "1iabc", "ab┃c\n" // カウントが 1 の場合の挙動（通常の i と同一）
         }
     },
-    { "Insert with count in middle of line",
-        "de┃f\n",
+    { "Insert with count in middle of line", "de┃f\n",
         {
             "2ix", "dex┃xf\n", // 文字の間での複数回挿入（'f' の手前に 'xx' を挿入し、Escで2番目の 'x' にスナップ）
         }
     },
-    { "Basic a command",
-        "┃\n",
+    { "Basic a command", "┃\n",
         {
             "aabc", "ab┃c\n", // 空行での追加（右側に文字がないためiと同様の挙動、Escで 'c' から1文字左にスナップ）
         }
     },
-    { "Append in middle of line",
-        "ab┃c\n",
+    { "Append in middle of line", "ab┃c\n",
         {
             "axyz", "abcxy┃z\n", // 文字の後ろへの追加（'c' の後ろに 'xyz' を追加し、Escで 'z' の上にスナップ）
         }
     },
-    { "Append with count ([num]a)",
-        "┃\n",
+    { "Append with count ([num]a)", "┃\n",
         {
             "3ax", "xx┃x\n", // 空行での複数回追加
             "u", "┃\n", // undoして元に戻す
             "2axyz", "xyzxy┃z\n" // 空行での複数文字の複数回追加（'xyzxyz' を追加後、Escで最後の 'z' にスナップ）
         }
     },
-    { "Append with count in middle of line",
-        "a┃b\n",
+    { "Append with count in middle of line", "a┃b\n",
         {
             "2axyz", "abxyzxy┃z\n", // 文字の後ろへの複数回追加（'b' の後ろに 'xyzxyz' を追加し、Escで最後の 'z' にスナップ）
         }
     },
-    { "Basic I command",
-        "  abc┃ def\n",
+    { "Basic I command", "  abc┃ def\n",
         {
             "Ixyz", "  xy┃zabc def\n", // インデントを考慮し、最初の非空白文字 'a' の手前に 'xyz' を挿入（Escで 'z' にスナップ）
         }
     },
-    { "I command without leading spaces",
-        "abc┃ def\n",
+    { "I command without leading spaces", "abc┃ def\n",
         {
             "Ixyz", "xy┃zabc def\n", // 先頭にスペースがない場合は絶対行頭に挿入
         }
     },
-    { "I command with count ([num]I)",
-        "  ab┃c\n",
+    { "I command with count ([num]I)", "  ab┃c\n",
         {
             "3Ix", "  xx┃xabc\n", // インデント手前に 'xxx' を挿入後、Escで3番目の 'x' にスナップ
             "u", "  ┃abc\n", // undoして「編集開始位置である 'a'（カラム2）」にカーソルが戻る（Vim標準挙動！）
             "2Ixyz", "  xyzxy┃zabc\n" // インデント手前に 'xyzxyz' を挿入後、Escで最後の 'z' にスナップ
         }
     },
-    { "Basic A command",
-        "ab┃c\n",
+    { "Basic A command", "ab┃c\n",
         {
             "Axyz", "abcxy┃z\n", // 行末の後ろに 'xyz' を追加（Escで 'z' にスナップ）
         }
     },
-    { "A command on empty line",
-        "┃\n",
+    { "A command on empty line", "┃\n",
         {
             "Axyz", "xy┃z\n", // 空行での挙動（i や a と同様に絶対行頭に挿入される）
         }
     },
-    { "A command with count ([num]A)",
-        "ab┃c\n",
+    { "A command with count ([num]A)", "ab┃c\n",
         {
             "3Ax", "abcxx┃x\n", // 行末の後ろに 'xxx' を追加後、Escで3番目の 'x' にスナップ
             "u", "ab┃c\n", // undoして元のテキスト（"abc"）に戻り、カーソルは行末の 'c' にスナップ（Vim標準挙動）
             "2Axyz", "abcxyzxy┃z\n" // 行末の後ろに 'xyzxyz' を追加後、Escで最後の 'z' にスナップ
+        }
+    },
+    { "Basic s command",
+        "a┃bc\n",
+        {
+            "sxyz", "axy┃zc\n", // 1文字置換して挿入（Escにより末尾の 'z' から1文字左にスナップ）
+        }
+    },
+    { "s command with count",
+        "a┃bc\n",
+        {
+            "2sxyz", "axy┃z\n",  // カウント指定：2文字（bc）を置換して挿入
+        }
+    },
+    { "s command with large count",
+        "a┃bc\n",
+        {
+            "5sxyz", "axy┃z\n",  // 範囲外のカウント：行末を超える場合は行末まで削除して置換
+        }
+    },
+    { "s command at end of line",
+        "ab┃c\n",
+        {
+            "sxyz", "abxy┃z\n", // 行末の1文字を置換して挿入（削除後に末尾へ挿入）
+        }
+    },
+    { "s command on empty line",
+        "┃\n",
+        {
+            "sxyz", "xy┃z\n",   // 空行での置換（削除するものがないため、実質的に i コマンドと同様の挙動）
         }
     },
 };
