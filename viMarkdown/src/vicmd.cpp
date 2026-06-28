@@ -803,6 +803,11 @@ void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidge
 		do {
 			if( !cursor.movePosition(QTextCursor::Up, moveMode, rcnt) ) break;
 		} while( cursor.block().isValid() && !cursor.block().isVisible() );
+		block = cursor.block();
+		if( gvi.m_preferred_x == INT_MAX ) {
+			cursor.setPosition(block.position() + block.text().size());
+			moveLeftIfAtEol(cursor);
+		}
 		gvi.m_linewiseMoved = true;
 		break;
 	case 'j':
@@ -810,7 +815,10 @@ void MainWindow::do_vi_motion(QChar cmd, QTextCursor& cursor, int rcnt, DocWidge
 			if( !cursor.movePosition(QTextCursor::Down, moveMode, rcnt) ) break;
 		} while( cursor.block().isValid() && !cursor.block().isVisible() );
 		block = cursor.block();
-		if( block.isValid() && !block.text().isEmpty() && cursor.position() == block.position() + block.text().size() )
+		if( gvi.m_preferred_x == INT_MAX ) {
+			cursor.setPosition(block.position() + block.text().size());
+			moveLeftIfAtEol(cursor);
+		} else if( block.isValid() && !block.text().isEmpty() && cursor.position() == block.position() + block.text().size() )
 			cursor.movePosition(QTextCursor::Left);
 		gvi.m_linewiseMoved = true;
 		break;
@@ -915,6 +923,7 @@ doneW:
 		break;
 	case '$':
 		if( !block.text().isEmpty() ) {
+			gvi.m_preferred_x = INT_MAX;
 			cursor.setPosition(block.position() + block.text().size() - 1, moveMode);
 		}
 		break;
@@ -979,6 +988,10 @@ doneW:
 	do_cdy_moved(cursor);
 	if( gvi.m_vMode != u' ' )
 		docWidget->m_editor->highlightVText(cursor);
+	if( cmd.unicode() != u'$' && cmd.unicode() != u'j' && cmd.unicode() != u'k' ) {
+		auto r = docWidget->m_editor->cursorRect();
+		gvi.m_preferred_x = r.x();
+	}
 }
 void do_join(QTextCursor& cursor, int rcnt) {
 	QTextDocument *doc = cursor.document();
