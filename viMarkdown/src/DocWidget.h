@@ -55,6 +55,12 @@ bool isUnderlineHeading(const QString& txt);
 bool updateCharFlags(BlockData* data, const QString &buf, int ix, int ix9, bool esc = false);
 void updateCharFlags(QTextBlock);
 
+enum class DocType {
+    Markdown,
+    Plain,
+    Diff
+};
+
 class DocWidget : public QWidget
 {
 public:
@@ -71,6 +77,7 @@ public:
     void	setEditorCurPos(int pos);
 
 public:
+	DocType		m_docType = DocType::Markdown;
 	//bool	m_modified = false;		//	編集＆未保存状態
 	bool	m_saving = false;
 	bool	m_hasSaved = false;		//	保存直後
