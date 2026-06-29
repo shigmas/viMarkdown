@@ -220,7 +220,7 @@ void MainWindow::load_settings() {
 	QSettings settings;
 	QString dfltdir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
 	if( dfltdir.isEmpty() ) dfltdir = QDir::homePath();
-	g.m_defaultDir = dfltdir;
+	g.m_defaultDir = settings.value(KEY_DEFAULT_DIR, dfltdir).toString();
 	g.m_viKeybindings = settings.value(KEY_VI_KEYBINDINGS, false).toBool();
 	g.m_ignoreCase = settings.value(KEY_IGNORE_CASE, true).toBool();
 	g.m_regexp = settings.value(KEY_REGEXP, true).toBool();
