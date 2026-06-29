@@ -143,6 +143,7 @@ void SettingsDialog::accept() {
 	settings.setValue(KEY_EDITOR_FONT_SIZE, ui->editorFontSize->value());
 	settings.setValue(KEY_PREVIEW_FONT_SIZE, ui->previewFontSize->value());
 	settings.setValue(KEY_AUTO_SVG_CMPL, g.m_auto_svg_completer = ui->autoSvgCompleter->isChecked());
+	settings.setValue(KEY_DEFAULT_DIR, g.m_defaultDir = ui->defaultDir->text());
 	QDialog::accept();
 }
 void SettingsDialog::pickColor(QColor &targetColor, const QString &title) {

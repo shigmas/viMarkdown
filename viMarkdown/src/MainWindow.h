@@ -34,6 +34,7 @@ QT_END_NAMESPACE
 #define	KEY_KEISEN_BLOCK_COLOR		u"keisenBlockColor"
 #define	KEY_LANGUAGE				u"language"
 #define	KEY_AUTO_SVG_CMPL			u"autoSvgCmpl"
+#define	KEY_DEFAULT_DIR				u"defaultDir"
 
 enum {
     SystemDefault = 0,  // Localeに従う（OSの設定に依存）
