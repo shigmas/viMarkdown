@@ -133,7 +133,12 @@ bool do_fFtT(QTextCursor& cursor, QChar cmd, QChar ch, int rcnt) {
 	if( ix != ix0 ) {
 		gvi.m_last_fFtT = cmd;
 		gvi.m_last_fFtT_char = ch;
-		cursor.setPosition(block.position() + ix);
+		if( gvi.m_operator == ' ' )
+			cursor.setPosition(block.position() + ix);
+		else {
+			cursor.setPosition(block.position() + ix0);
+			cursor.setPosition(block.position() + ix + 1, QTextCursor::KeepAnchor);
+		}
 		return true;
 	} else
 		return false;
