@@ -101,9 +101,10 @@ void MainWindow::do_cdy_moved(QTextCursor& cursor) {
 			gvi.m_linewiseYanked = gvi.m_linewiseMoved;
 			if( gvi.m_operator == 'd' )
 				cursor.deleteChar();
-			else {
+			else {		//	y<move>
 				statusBar()->showMessage(QString("%1 charactors yanked.").arg(gvi.m_yankBuffer.size()), 5000);
-				cursor.clearSelection();
+				cursor.setPosition(qMin(cursor.anchor(), cursor.position()));
+				//cursor.clearSelection();
 			}
 		}
 	}
