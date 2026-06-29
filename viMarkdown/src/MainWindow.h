@@ -123,6 +123,7 @@ struct Global {
 	int		m_editorFontSize;
 	int		m_previewFontSize;
 	int		m_matchedPosition;		//	マッチ位置
+    QString	m_defaultDir;			//	（load, save) デフォルトディレクトリ
     QString	m_lastSearchedPat;		//	最新検索文字列
     //QTextCursor	m_matchedCursor;	//	一致位置カーソル
 	QColor	m_activeLnColor;		//	アクティブ時アンダーライン行カーソル色

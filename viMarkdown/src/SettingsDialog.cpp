@@ -19,6 +19,7 @@ SettingsDialog::SettingsDialog(QWidget *parent, int page)
 	ui->editorFontSize->setValue(g.m_editorFontSize);
 	ui->previewFontSize->setValue(g.m_previewFontSize);
 	ui->autoSvgCompleter->setChecked(g.m_auto_svg_completer);
+	ui->defaultDir->setText(g.m_defaultDir);
 	updateColorButtons();
 	//QColor color("#800000");
 	connect(ui->editorFontSize, &QSpinBox::valueChanged, this, &SettingsDialog::onEditorFontSizeChanged);

@@ -28,6 +28,7 @@
 #include <QGuiApplication>
 #include <QInputMethod>
 #include <QLocale>
+#include <QStandardPaths>
 #include "ver.h"
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
@@ -68,6 +69,8 @@ MainWindow::MainWindow(QWidget *parent)
 	, ui(new Ui::MainWindowClass())
 {
 	load_settings();
+	QDir::setCurrent(g.m_defaultDir);
+	qDebug() << "setCurrent(" << g.m_defaultDir << ")";
 	//static bool to_restore_win = true;
 	ui->setupUi(this);
 	bool isDarkMode = (qApp->palette().color(QPalette::Window).lightness() < 128);
@@ -215,6 +218,9 @@ void MainWindow::invertActionIcons(QMenuBar *menuBar) {
 }
 void MainWindow::load_settings() {
 	QSettings settings;
+	QString dfltdir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+	if( dfltdir.isEmpty() ) dfltdir = QDir::homePath();
+	g.m_defaultDir = dfltdir;
 	g.m_viKeybindings = settings.value(KEY_VI_KEYBINDINGS, false).toBool();
 	g.m_ignoreCase = settings.value(KEY_IGNORE_CASE, true).toBool();
 	g.m_regexp = settings.value(KEY_REGEXP, true).toBool();
@@ -290,12 +296,15 @@ void MainWindow::insertSearchComboBox() {
     m_searchCB->clear();
     m_searchCB->addItems(m_searchHist);
 	m_grepDirHist = settings.value("search/grepDir").toStringList();
+#if 0
     //	ついでに最近のファイル・ディレクトリをカレントディレクトリに設定
 	QStringList recentFilePaths = settings.value(KEY_RECENT_FILES).toStringList();
 	if( !recentFilePaths.isEmpty() ) {
 		QFileInfo fi(recentFilePaths.front());
 		QDir::setCurrent(fi.path());
+		qDebug() << "setCurrent(" << fi.path() << ")";
 	}
+#endif
 #if	defined(Q_OS_WIN) || defined(Q_OS_LINUX)
 	//	メニューバーをメインツールバーに統合
 	ui->mainToolBar->insertWidget(ui->action_Undo, ui->menuBar);
@@ -796,6 +805,7 @@ void MainWindow::onCurrentTabChanged(int ix) {
 		QFileInfo fi(docWidget->m_fullPath);
 		QString dirPath = fi.absolutePath();
 	    QDir::setCurrent(dirPath);
+		qDebug() << "setCurrent(" << dirPath << ")";
 	}
 #if 1
 	int data = docWidget->m_encoding*2 + (docWidget->m_withBOM ? 1 : 0);
@@ -1768,6 +1778,7 @@ bool MainWindow::do_open(const QString& title0, const QString& fullPath, const Q
 	addTab(title, fullPath, content, withBOM, encoding, readOnly);
 	updateOutlineTree();
 	QDir::setCurrent(fileInfo.path());
+	qDebug() << "setCurrent(" << fileInfo.path() << ")";
 	m_watcher->addPath(fullPath);
 	m_opening_file = false;
 
