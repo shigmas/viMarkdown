@@ -1774,7 +1774,12 @@ void MainWindow::do_exCmd(const QString &text, int ix, /*QString cmd, QChar nch,
 	} else if( is_match(cmd, "q(uit") ) {
 		do_close(nch == u'!');
 	} else if( is_match(cmd, "pwd") ) {
-		do_output(QString("\ncurrent path: %1\n").arg(QDir::currentPath()));
+		do_output(QString("\ncurrent directory: %1\n").arg(QDir::currentPath()));
+	} else if( is_match(cmd, "cd") ) {
+		if( !g.m_defaultDir.isEmpty() ) {
+			QDir::setCurrent(g.m_defaultDir);
+			do_output(QString("\ncurrent directory: %1\n").arg(QDir::currentPath()));
+		}
 	} else if( is_match(cmd, "e(dit") ) {
 		if( nch == u'\0')
 			onAction_Open();
