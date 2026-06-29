@@ -1,5 +1,6 @@
 ﻿#include <QSettings>
 #include <QColorDialog>
+#include <QFileDialog>
 #include "MainWindow.h"
 #include "SettingsDialog.h"
 
@@ -22,6 +23,7 @@ SettingsDialog::SettingsDialog(QWidget *parent, int page)
 	ui->defaultDir->setText(g.m_defaultDir);
 	updateColorButtons();
 	//QColor color("#800000");
+	connect(ui->defaultDirPB, &QPushButton::clicked, this, &SettingsDialog::onDefaultDir);
 	connect(ui->editorFontSize, &QSpinBox::valueChanged, this, &SettingsDialog::onEditorFontSizeChanged);
 	connect(ui->previewFontSize, &QSpinBox::valueChanged, this, &SettingsDialog::onPreviewFontSizeChanged);
 	connect(ui->headingsColorPB, &QPushButton::clicked, this, &SettingsDialog::onHeadingColorButtonClicked);
@@ -59,6 +61,15 @@ void SettingsDialog::setPage(int page) {
     } else if (page == 1) {
         ui->stackedWidget->setCurrentWidget(ui->page_5); // Color
     }
+}
+void SettingsDialog::onDefaultDir() {
+	QString dir = QFileDialog::getExistingDirectory(
+				    this,
+				    tr("Select Directory"),
+				    g.m_defaultDir );
+	if( !dir.isEmpty() ) {
+		ui->defaultDir->setText(dir);
+	}
 }
 static void setColorButtonStyle(QPushButton* button, const QColor& color) {
     button->setStyleSheet(QString(

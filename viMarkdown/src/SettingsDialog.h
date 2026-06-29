@@ -18,6 +18,8 @@ public:
 protected:
 	void accept() override;
 
+	void	onDefaultDir();
+
 	void onEditorFontSizeChanged(int);
 	void onPreviewFontSizeChanged(int);
 	void onHeadingColorButtonClicked();
