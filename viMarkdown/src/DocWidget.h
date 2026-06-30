@@ -64,6 +64,7 @@ enum class DocType {
 };
 
 using DiffView = QPlainTextEdit;
+using MiniMap = QWidget;
 
 class DocWidget : public QWidget
 {
@@ -79,6 +80,7 @@ public:
     int		prvToSrcHeading(int blockNum);		//	プレビューの見出し行番号（0 org.）をエディタのそれに変換
     int		srcToPrvHeading(int blockNum);		//	エディタの見出し行番号（0 org.）をプレビューのそれに変換
     void	setEditorCurPos(int pos);
+    void	updatePanes();						//	スプリッター下の各ペインの表示・非表示設定
 
 public:
 	DocType		m_docType = DocType::Markdown;
@@ -93,6 +95,7 @@ public:
 	QString	m_fullPath;
 	MarkdownEditor		*m_editor = nullptr;	//	マークダウンエディタへのポインタ
 	MarkdownPreview		*m_preview = nullptr;	//	マークダウンプレビューワへのポインタ
+	MiniMap				*m_minimap = nullptr;
 	DiffView			*m_diffview = nullptr;	//	比較相手ビュー（QPlainTextEdit 派生クラス）
 	std::vector<int>	m_srcHeadingBlocks;		//	各見出し行 ブロック番号（0 org.）in マークダウンソース
 	std::vector<int>	m_prvHeadingBlocks;		//	各見出し行 ブロック番号（0 org.）in マークダウンプレビューワ

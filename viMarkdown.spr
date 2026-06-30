@@ -539,9 +539,9 @@ SPR# 状 P Open Close ver     Type  概要
 0536 ● C 06/30            │ToDo│MainWindow::newTabWidget() が大きすぎるので、Markdown, Plain 用に分ける？
 0537 ● C 06/30            │問題│マークダウン文書以外をオープンした場合でも、マークダウン要素が強調表示されてしまう
 0538 ◎ C 06/30 07/01 03030│ToDo│MainWindow::newTabWidget()：diff 表示用に、比較対象 Editor も生成しておく？
-0539 ● C 07/01            │ToDo│Tool > Diff メニュー追加：{マークダウン|プレイン} ←→ Diff表示切り替え
+0539 ◎ C 07/01 07/01 03030│ToDo│Tool > Diff メニュー追加：{マークダウン|プレイン} ←→ Diff表示切り替え
 0540 ◎ C 07/01 07/01 03030│ToDo│DocType は Markdown/Plain のみとし、diff表示中フラグを追加
-0541 ● C 07/01            │ToDo│
+0541 ◎ C 07/01 07/01 03030│ToDo│ミニマップ用のペインもとりあえず配置しておく
 0542 ● C 07/01            │ToDo│
 0543 ● C 07/01            │ToDo│
 0544 ● C 07/01            │ToDo│

@@ -336,6 +336,21 @@ DocWidget::DocWidget(const QString& title, const QString& fullPath, QWidget *par
 	, QWidget(parent)
 {
 }
+void DocWidget::updatePanes() {
+	if( m_diffMode ) {
+		m_minimap->show();
+		m_preview->hide();
+		m_diffview->show();
+	} else {
+		m_minimap->hide();
+		m_diffview->hide();
+		if( m_docType == DocType::Markdown ) {
+			m_preview->show();
+		} else {
+			m_preview->hide();
+		}
+	}
+}
 bool DocWidget::isModified() const {
 	return m_editor->document()->isModified();
 }

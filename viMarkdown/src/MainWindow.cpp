@@ -711,6 +711,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_ClearSearchHighlights, &QAction::triggered, this, &MainWindow::onAction_ClearSearchHighlights);
 	connect(ui->action_Replace, &QAction::triggered, this, &MainWindow::onAction_Replace);
 	connect(ui->action_Grep, &QAction::triggered, this, &MainWindow::onAction_Grep);
+	connect(ui->action_DiffMode, &QAction::toggled, this, &MainWindow::onAction_DiffMode);
 	connect(ui->action_KeisenMode, &QAction::toggled, this, &MainWindow::onAction_KeisenMode);
 	connect(ui->action_ThinKeisen, &QAction::toggled, this, &MainWindow::onAction_ThinKeisen);
 	connect(ui->action_ThickKeisen, &QAction::toggled, this, &MainWindow::onAction_ThickKeisen);
@@ -953,11 +954,14 @@ See Output for Markdown formatting...
 	connect(markdownPreview, &MarkdownPreview::posContextChanged, this, &MainWindow::onPrvPosContextChanged);
 	connect(markdownPreview, &MarkdownPreview::do_output, this, &MainWindow::do_output);
 	connect(markdownPreview, &MarkdownPreview::do_viCmd, this, &MainWindow::do_viCmd);
-	DiffView *diffview = new DiffView(splitter);
+	MiniMap *minimap = docWidget->m_minimap = new MiniMap(splitter);
+	minimap->setFixedWidth(40);
+	DiffView *diffview = docWidget->m_diffview = new DiffView(splitter);
 	splitter->addWidget(mdEditor);
 	splitter->addWidget(markdownPreview);
+	splitter->addWidget(minimap);
 	splitter->addWidget(diffview);
-	splitter->setSizes(QList<int>() << 500 << 500 << 500);
+	splitter->setSizes(QList<int>() << 500 << 500 << 40 << 500);
 	QVBoxLayout *layout = new QVBoxLayout(docWidget);
 	layout->addWidget(splitter);
 	layout->setContentsMargins(0, 0, 0, 0); // 余白をなくして端まで広げる
@@ -965,8 +969,9 @@ See Output for Markdown formatting...
 	connect(mdEditor, &MarkdownEditor::textChanged, this, &MainWindow::onMDTextChanged);
 	//connect(mdEditor, &MarkdownPreview::textChanged, this, &MainWindow::onMDTextChanged);
 
-	if( docWidget->m_docType != DocType::Markdown )
-		docWidget->m_preview->hide();
+	docWidget->updatePanes();
+	//if( docWidget->m_docType != DocType::Markdown )
+	//	docWidget->m_preview->hide();
 
 	docWidget->setModified(false);
 	return docWidget;
@@ -2304,6 +2309,12 @@ void MainWindow::onAction_IgnoreCase(bool checked) {
 void MainWindow::onAction_RegExp(bool checked) {
 	g.m_regexp = checked;
 	save_settings();
+}
+void MainWindow::onAction_DiffMode(bool checked) {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	docWidget->m_diffMode = checked;
+	docWidget->updatePanes();
 }
 void MainWindow::onAction_KeisenMode(bool checked) {
 	m_keisenMode = checked;

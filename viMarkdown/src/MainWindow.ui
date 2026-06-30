@@ -211,7 +211,7 @@
     <property name="title">
      <string>&amp;Tool</string>
     </property>
-    <addaction name="action_Diff"/>
+    <addaction name="action_DiffMode"/>
     <addaction name="separator"/>
     <addaction name="action_KeisenMode"/>
     <addaction name="action_ThinKeisen"/>
@@ -1183,12 +1183,15 @@
     <string>F5</string>
    </property>
   </action>
-  <action name="action_Diff">
+  <action name="action_DiffMode">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
     <string>&amp;Diff</string>
+   </property>
+   <property name="toolTip">
+    <string>toggle Diff Mode</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+D</string>

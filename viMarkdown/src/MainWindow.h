@@ -215,6 +215,7 @@ protected:
     void	setup_encodingCombo();
     void	restore_win();
     DocWidget	*newTabWidget(const QString& title, const QString& fullPath, bool readOnly = false);
+    //void	updatePanes(DocWidget*);						//	スプリッター下の各ペインの表示・非表示設定
     void	onMDTextChanged();
     void	invertActionIcons(QMenuBar*);
     void	invertActionIcons(QMenu*);
@@ -337,6 +338,7 @@ protected:
     void	onAction_ClearSearchHighlights();
     void	onAction_Replace();
     void	onAction_Grep();
+    void	onAction_DiffMode(bool);
     void	onAction_KeisenMode(bool);
     void	onAction_ThinKeisen(bool);
     void	onAction_ThickKeisen(bool);
