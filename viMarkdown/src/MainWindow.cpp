@@ -2507,6 +2507,7 @@ void expandAllChildren(QTreeWidgetItem *item) {
 void MainWindow::updateOutlineTree() {
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
+	if( docWidget->m_docType != DocType::Markdown ) return;
 	//	現文書に対応するトップレベルアイテムへのポインタ取得
 	QTreeWidgetItem* item0 = findTopLevelItemByFullPath(docWidget->m_title, docWidget->m_fullPath);
 	if( item0 == nullptr ) return;
