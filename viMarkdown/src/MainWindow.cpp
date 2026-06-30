@@ -956,15 +956,25 @@ See Output for Markdown formatting...
 	connect(markdownPreview, &MarkdownPreview::do_viCmd, this, &MainWindow::do_viCmd);
 	MiniMap *minimap = docWidget->m_minimap = new MiniMap(splitter);
 	minimap->setFixedWidth(40);
-	DiffView *diffview = docWidget->m_diffview = new DiffView(splitter);
+	DiffView *diffview = docWidget->m_diffview = new DiffView(this, docWidget, splitter);
 	splitter->addWidget(mdEditor);
 	splitter->addWidget(markdownPreview);
 	splitter->addWidget(minimap);
 	splitter->addWidget(diffview);
 	splitter->setSizes(QList<int>() << 500 << 500 << 40 << 500);
+	QWidget *headerWidget = docWidget->m_headerWidget = new QFrame(docWidget);
+	headerWidget->setFixedHeight(24); // 高さを固定
+	headerWidget->setObjectName("HeaderWidget");
+	headerWidget->setStyleSheet(
+		"#HeaderWidget {"
+		"   background-color: #f7f7f7;"          // 少し明るめのグレー
+		"   border-bottom: 1px solid #d5d5d5;"   // 下側だけの境界線
+		"}");
 	QVBoxLayout *layout = new QVBoxLayout(docWidget);
+	layout->addWidget(headerWidget);
 	layout->addWidget(splitter);
 	layout->setContentsMargins(0, 0, 0, 0); // 余白をなくして端まで広げる
+	layout->setSpacing(0); 
 
 	connect(mdEditor, &MarkdownEditor::textChanged, this, &MainWindow::onMDTextChanged);
 	//connect(mdEditor, &MarkdownPreview::textChanged, this, &MainWindow::onMDTextChanged);

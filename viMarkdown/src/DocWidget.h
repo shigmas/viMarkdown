@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <QStringConverter>
+#include <QFrame>
 #include <QWidget>
 #include <QPlainTextEdit>
 
@@ -63,7 +64,8 @@ enum class DocType {
     //Diff
 };
 
-using DiffView = QPlainTextEdit;
+//using DiffView = QPlainTextEdit;
+using DiffView = MarkdownEditor;
 using MiniMap = QWidget;
 
 class DocWidget : public QWidget
@@ -93,6 +95,7 @@ public:
 	QStringConverter::Encoding m_encoding = QStringConverter::Utf8;
 	QString	m_title;				//	タブタイトル
 	QString	m_fullPath;
+	QFrame				*m_headerWidget = nullptr;
 	MarkdownEditor		*m_editor = nullptr;	//	マークダウンエディタへのポインタ
 	MarkdownPreview		*m_preview = nullptr;	//	マークダウンプレビューワへのポインタ
 	MiniMap				*m_minimap = nullptr;

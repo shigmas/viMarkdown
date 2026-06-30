@@ -338,10 +338,12 @@ DocWidget::DocWidget(const QString& title, const QString& fullPath, QWidget *par
 }
 void DocWidget::updatePanes() {
 	if( m_diffMode ) {
+		m_headerWidget->show();
 		m_minimap->show();
 		m_preview->hide();
 		m_diffview->show();
 	} else {
+		m_headerWidget->hide();
 		m_minimap->hide();
 		m_diffview->hide();
 		if( m_docType == DocType::Markdown ) {
