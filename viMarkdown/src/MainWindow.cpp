@@ -970,6 +970,13 @@ See Output for Markdown formatting...
 		"   background-color: #f7f7f7;"          // 少し明るめのグレー
 		"   border-bottom: 1px solid #d5d5d5;"   // 下側だけの境界線
 		"}");
+	auto* headerLayout = new QHBoxLayout(headerWidget);
+    headerLayout->setContentsMargins(8, 4, 8, 4);
+	auto* titleLabel = new QLabel("'file name-1' : 'file name-2'", headerWidget);
+    titleLabel->setStyleSheet("font-weight: bold; color: #333;");
+    headerLayout->addWidget(titleLabel);
+    headerLayout->addStretch();
+    //
 	QVBoxLayout *layout = new QVBoxLayout(docWidget);
 	layout->addWidget(headerWidget);
 	layout->addWidget(splitter);
