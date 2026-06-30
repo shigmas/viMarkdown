@@ -879,8 +879,13 @@ void MainWindow::updateHTMLModeCheck() {
 }
 #endif
 DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPath, bool readOnly) {
-	//auto containerWidget = new QWidget;
 	auto *docWidget = new DocWidget(title, fullPath);
+	QFileInfo fi(fullPath);
+	if( fullPath.isEmpty() || fi.suffix().toLower() == "md" || fi.suffix().toLower() == "markdown" )
+		docWidget->m_docType = DocType::Markdown;
+	else
+		docWidget->m_docType = DocType::Plain;
+	//auto containerWidget = new QWidget;
 	//docWidget->setStyleSheet("font-size: 12pt; line-height: 200%;");
 	QSplitter *splitter = new QSplitter(Qt::Horizontal, docWidget);
 	MarkdownEditor *mdEditor = docWidget->m_editor = new MarkdownEditor(this, docWidget, splitter);
@@ -957,6 +962,9 @@ See Output for Markdown formatting...
 
 	connect(mdEditor, &MarkdownEditor::textChanged, this, &MainWindow::onMDTextChanged);
 	//connect(mdEditor, &MarkdownPreview::textChanged, this, &MainWindow::onMDTextChanged);
+
+	if( docWidget->m_docType != DocType::Markdown )
+		docWidget->m_preview->hide();
 
 	docWidget->setModified(false);
 	return docWidget;
