@@ -537,7 +537,7 @@ SPR# 状 P Open Close ver     Type  概要
 0534 ◎ C 06/30 06/30 03030│ToDo│DocWidget::m_docType 追加
 0535 ◎ C 06/30 06/30 03030│ToDo│マークダウン文書以外をオープンした場合は、m_docType = Plain にし、プレビュー無し？に
 0536 ● C 06/30            │ToDo│MainWindow::newTabWidget() が大きすぎるので、Markdown, Plain 用に分ける？
-0537 ● C 06/30            │ToDo│
-0538 ● C 06/30            │ToDo│
+0537 ● C 06/30            │問題│マークダウン文書以外をオープンした場合でも、マークダウン要素が強調表示されてしまう
+0538 ◎ C 06/30 07/01 03030│ToDo│MainWindow::newTabWidget()：diff 表示用に、比較対象 Editor も生成しておく？
 0539 ● C 06/30            │ToDo│
 0540 ● C 06/30            │ToDo│

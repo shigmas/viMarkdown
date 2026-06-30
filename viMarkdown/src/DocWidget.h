@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <QStringConverter>
 #include <QWidget>
+#include <QPlainTextEdit>
+
 //#include "C:\Qt\6.10.0\msvc2022_64\include\QtWidgets\qwidget.h"
 //#include "markdowntohtmlconvertor.h"
 
@@ -61,6 +63,8 @@ enum class DocType {
     Diff
 };
 
+using DiffView = QPlainTextEdit;
+
 class DocWidget : public QWidget
 {
 public:
@@ -88,6 +92,7 @@ public:
 	QString	m_fullPath;
 	MarkdownEditor		*m_editor = nullptr;	//	マークダウンエディタへのポインタ
 	MarkdownPreview		*m_preview = nullptr;	//	マークダウンプレビューワへのポインタ
+	DiffView			*m_diffview = nullptr;	//	比較相手ビュー（QPlainTextEdit 派生クラス）
 	std::vector<int>	m_srcHeadingBlocks;		//	各見出し行 ブロック番号（0 org.）in マークダウンソース
 	std::vector<int>	m_prvHeadingBlocks;		//	各見出し行 ブロック番号（0 org.）in マークダウンプレビューワ
     //MarkdownToHtmlConvertor	m_htmlComvertor;

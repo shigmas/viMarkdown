@@ -953,9 +953,11 @@ See Output for Markdown formatting...
 	connect(markdownPreview, &MarkdownPreview::posContextChanged, this, &MainWindow::onPrvPosContextChanged);
 	connect(markdownPreview, &MarkdownPreview::do_output, this, &MainWindow::do_output);
 	connect(markdownPreview, &MarkdownPreview::do_viCmd, this, &MainWindow::do_viCmd);
+	DiffView *diffview = new DiffView(splitter);
 	splitter->addWidget(mdEditor);
 	splitter->addWidget(markdownPreview);
-	splitter->setSizes(QList<int>() << 500 << 500);
+	splitter->addWidget(diffview);
+	splitter->setSizes(QList<int>() << 500 << 500 << 500);
 	QVBoxLayout *layout = new QVBoxLayout(docWidget);
 	layout->addWidget(splitter);
 	layout->setContentsMargins(0, 0, 0, 0); // 余白をなくして端まで広げる
