@@ -60,7 +60,7 @@ void updateCharFlags(QTextBlock);
 enum class DocType {
     Markdown,
     Plain,
-    Diff
+    //Diff
 };
 
 using DiffView = QPlainTextEdit;
@@ -83,6 +83,7 @@ public:
 public:
 	DocType		m_docType = DocType::Markdown;
 	//bool	m_modified = false;		//	編集＆未保存状態
+	bool	m_diffMode = false;		//	diff 表示中か？
 	bool	m_saving = false;
 	bool	m_hasSaved = false;		//	保存直後
 	bool	m_withBOM = true;		//	BOM付き

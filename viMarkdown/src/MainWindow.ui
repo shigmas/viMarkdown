@@ -211,11 +211,13 @@
     <property name="title">
      <string>&amp;Tool</string>
     </property>
+    <addaction name="action_Diff"/>
+    <addaction name="separator"/>
     <addaction name="action_KeisenMode"/>
     <addaction name="action_ThinKeisen"/>
     <addaction name="action_ThickKeisen"/>
     <addaction name="action_OpenPrev"/>
-    <addaction name="action_OpenNext"/>
+    <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menu_Navi">
     <property name="title">
@@ -1179,6 +1181,17 @@
    </property>
    <property name="shortcut">
     <string>F5</string>
+   </property>
+  </action>
+  <action name="action_Diff">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Diff</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+D</string>
    </property>
   </action>
  </widget>
