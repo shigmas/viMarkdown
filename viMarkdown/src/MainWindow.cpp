@@ -889,44 +889,8 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	//auto containerWidget = new QWidget;
 	//docWidget->setStyleSheet("font-size: 12pt; line-height: 200%;");
 	QSplitter *splitter = new QSplitter(Qt::Horizontal, docWidget);
-	MarkdownEditor *mdEditor = docWidget->m_editor = new MarkdownEditor(this, docWidget, splitter);
-	mdEditor->setReadOnly(readOnly);
-	//mdEditor->setLineWrapMode(QPlainTextEdit::NoWrap);		//	折り返しモード OFF
-	//QFont font("MS Gothic");
-	//QFont font("Consolas");
-	//font.setPointSize(12);		// 12ptに設定
-	//font.setFixedPitch(true);	// 明示的に固定幅として扱う設定
-	//mdEditor->setFont(font);
-	//mdEditor->setStyleSheet("font-size: 12pt;");
-	QFont font = mdEditor->font();
-	font.setPointSize(g.m_editorFontSize);
-	mdEditor->setFont(font);
-	mdEditor->setUndoRedoEnabled(true);		//	Undo/Redo 有効
-	//QFontMetrics fm(mdEditor->font());
-	//int lnAreaWidth = fm.horizontalAdvance('9') * 8;
-	//mdEditor->setViewportMargins(lnAreaWidth, 0, 0, 0);
-	connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onMdEditCurPosChanged);
-	connect(mdEditor, &MarkdownEditor::tab_pressed, this, &MainWindow::onMdEditTabPressed);
-	connect(mdEditor, &MarkdownEditor::esc_pressed, this, &MainWindow::onMdEditEscPressed);
-	connect(mdEditor, &MarkdownEditor::link_clicked, this, &MainWindow::do_open);
-	connect(mdEditor, &MarkdownEditor::do_viCmd, this, &MainWindow::do_viCmd);
-	//connect(mdEditor, &MarkdownEditor::title_clicked, this, &MainWindow::do_open);
-	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onEditorCurPosChanged);
-	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::syncPreviewCursorWithEditor);
-	connect(mdEditor, &MarkdownEditor::changeFontSize, this, &MainWindow::onChangeEditorFontSize);
-	connect(mdEditor, &MarkdownEditor::posContextChanged, this, &MainWindow::onSrcPosContextChanged);
-	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
-	//connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onSrcCursorPosChanged);
-	//QTextEdit *mdEditor = new QTextEdit(splitter);
-	mdEditor->setPlaceholderText(g.m_japanese ? R"(
-ここにMarkdownを入力
-マークダウン書式は Output を見てね
-)" : R"(
-Enter your Markdown here
-See Output for Markdown formatting...
-)" );
+	MarkdownEditor *mdEditor = newEditor(docWidget, splitter, readOnly);
 	MarkdownPreview *markdownPreview = docWidget->m_preview = new MarkdownPreview(this, docWidget, splitter, readOnly);
-	//markdownPreview->setReadOnly(readOnly);
 	markdownPreview->setMouseTracking(true); // マウスの動きを常に追跡
 	markdownPreview->setPlaceholderText(g.m_japanese ?
 										"プレビュー画面　ここで簡単な編集もできるよ\n" :
@@ -962,6 +926,8 @@ See Output for Markdown formatting...
 	splitter->addWidget(minimap);
 	splitter->addWidget(diffview);
 	splitter->setSizes(QList<int>() << 500 << 500 << 40 << 500);
+	//QSplitterHandle *handle = splitter->handle(2);
+	//handle->setEnabled(false);
 	QWidget *headerWidget = docWidget->m_headerWidget = new QFrame(docWidget);
 	headerWidget->setFixedHeight(24); // 高さを固定
 	headerWidget->setObjectName("HeaderWidget");
@@ -992,6 +958,30 @@ See Output for Markdown formatting...
 
 	docWidget->setModified(false);
 	return docWidget;
+}
+MarkdownEditor *MainWindow::newEditor(DocWidget *docWidget, QSplitter *splitter, bool readOnly) {
+	MarkdownEditor *mdEditor = docWidget->m_editor = new MarkdownEditor(this, docWidget, splitter);
+	mdEditor->setReadOnly(readOnly);
+	QFont font = mdEditor->font();
+	font.setPointSize(g.m_editorFontSize);
+	mdEditor->setFont(font);
+	mdEditor->setUndoRedoEnabled(true);		//	Undo/Redo 有効
+	connect(mdEditor, &MarkdownEditor::cursorPositionChanged, this, &MainWindow::onMdEditCurPosChanged);
+	connect(mdEditor, &MarkdownEditor::tab_pressed, this, &MainWindow::onMdEditTabPressed);
+	connect(mdEditor, &MarkdownEditor::esc_pressed, this, &MainWindow::onMdEditEscPressed);
+	connect(mdEditor, &MarkdownEditor::link_clicked, this, &MainWindow::do_open);
+	connect(mdEditor, &MarkdownEditor::do_viCmd, this, &MainWindow::do_viCmd);
+	connect(mdEditor, &MarkdownEditor::changeFontSize, this, &MainWindow::onChangeEditorFontSize);
+	connect(mdEditor, &MarkdownEditor::posContextChanged, this, &MainWindow::onSrcPosContextChanged);
+	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
+	mdEditor->setPlaceholderText(g.m_japanese ? R"(
+ここにMarkdownを入力
+マークダウン書式は Output を見てね
+)" : R"(
+Enter your Markdown here
+See Output for Markdown formatting...
+)" );
+	return mdEditor;
 }
 #if 0
 void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソルが移動した
