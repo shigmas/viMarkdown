@@ -894,6 +894,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	MiniMap *minimap = docWidget->m_minimap = new MiniMap(splitter);
 	minimap->setFixedWidth(40);
 	DiffView *diffview = docWidget->m_diffview = new DiffView(this, docWidget, splitter);
+	diffview->setDiffMode(true);
 	splitter->addWidget(mdEditor);
 	splitter->addWidget(markdownPreview);
 	splitter->addWidget(minimap);
