@@ -890,34 +890,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	//docWidget->setStyleSheet("font-size: 12pt; line-height: 200%;");
 	QSplitter *splitter = new QSplitter(Qt::Horizontal, docWidget);
 	MarkdownEditor *mdEditor = newEditor(docWidget, splitter, readOnly);
-	MarkdownPreview *markdownPreview = docWidget->m_preview = new MarkdownPreview(this, docWidget, splitter, readOnly);
-	markdownPreview->setMouseTracking(true); // マウスの動きを常に追跡
-	markdownPreview->setPlaceholderText(g.m_japanese ?
-										"プレビュー画面　ここで簡単な編集もできるよ\n" :
-										"Preview: Simple editing is supported here.\n");
-	//markdownPreview->setStyleSheet("font-size: 12pt;");
-	//##markdownPreview->setStyleSheet("font-size: 12pt; line-height: 2.0;");
-	QFont prvFont = markdownPreview->font();
-	prvFont.setPointSize(g.m_previewFontSize);
-	markdownPreview->setFont(prvFont);
-	if (markdownPreview->document())
-	    markdownPreview->document()->setDefaultFont(prvFont);
-	connect(markdownPreview, &MarkdownPreview::checkboxLineClicked, this, &MainWindow::onMarkdownPreviewLineClicked);
-	connect(markdownPreview, &MarkdownPreview::anchorClicked, this, &MainWindow::do_open);
-	connect(markdownPreview, &MarkdownPreview::textInserted, this, &MainWindow::onTextInsertedAtPreview);
-	connect(markdownPreview, &MarkdownPreview::textRemoved, this, &MainWindow::onTextRemovedAtPreview);
-	connect(markdownPreview, &MarkdownPreview::Enter_pressed, this, &MainWindow::onEnter_pressed);
-	connect(markdownPreview, &MarkdownPreview::Tab_pressed, this, &MainWindow::onTab_pressed);
-	connect(markdownPreview, &MarkdownPreview::BS_pressed, this, &MainWindow::onBS_pressed);
-	connect(markdownPreview, &MarkdownPreview::Del_pressed, this, &MainWindow::onDel_pressed);
-	connect(markdownPreview, &MarkdownPreview::cut_triggered, this, &MainWindow::onCutTriggered);
-	connect(markdownPreview, &MarkdownPreview::undo_triggered, this, &MainWindow::onUndoTriggered);
-	connect(markdownPreview, &MarkdownPreview::redo_triggered, this, &MainWindow::onRedoTriggered);
-	connect(markdownPreview, &MarkdownPreview::fontSizeChanged, this, &MainWindow::onChangePreviewFontSize);
-	//connect(markdownPreview, &MarkdownPreview::cursorPositionChanged, this, &MainWindow::onPreviewCurPosChanged);
-	connect(markdownPreview, &MarkdownPreview::posContextChanged, this, &MainWindow::onPrvPosContextChanged);
-	connect(markdownPreview, &MarkdownPreview::do_output, this, &MainWindow::do_output);
-	connect(markdownPreview, &MarkdownPreview::do_viCmd, this, &MainWindow::do_viCmd);
+	MarkdownPreview *markdownPreview = newPreview(docWidget, splitter, readOnly);
 	MiniMap *minimap = docWidget->m_minimap = new MiniMap(splitter);
 	minimap->setFixedWidth(40);
 	DiffView *diffview = docWidget->m_diffview = new DiffView(this, docWidget, splitter);
@@ -982,6 +955,38 @@ Enter your Markdown here
 See Output for Markdown formatting...
 )" );
 	return mdEditor;
+}
+MarkdownPreview *MainWindow::newPreview(DocWidget *docWidget, QSplitter *splitter, bool readOnly) {
+	MarkdownPreview *preview = docWidget->m_preview = new MarkdownPreview(this, docWidget, splitter, readOnly);
+	preview->setMouseTracking(true); // マウスの動きを常に追跡
+	preview->setPlaceholderText(g.m_japanese ?
+										"プレビュー画面　ここで簡単な編集もできるよ\n" :
+										"Preview: Simple editing is supported here.\n");
+	//preview->setStyleSheet("font-size: 12pt;");
+	//##preview->setStyleSheet("font-size: 12pt; line-height: 2.0;");
+	QFont prvFont = preview->font();
+	prvFont.setPointSize(g.m_previewFontSize);
+	preview->setFont(prvFont);
+	if (preview->document())
+	    preview->document()->setDefaultFont(prvFont);
+	connect(preview, &MarkdownPreview::checkboxLineClicked, this, &MainWindow::onMarkdownPreviewLineClicked);
+	connect(preview, &MarkdownPreview::anchorClicked, this, &MainWindow::do_open);
+	connect(preview, &MarkdownPreview::textInserted, this, &MainWindow::onTextInsertedAtPreview);
+	connect(preview, &MarkdownPreview::textRemoved, this, &MainWindow::onTextRemovedAtPreview);
+	connect(preview, &MarkdownPreview::Enter_pressed, this, &MainWindow::onEnter_pressed);
+	connect(preview, &MarkdownPreview::Tab_pressed, this, &MainWindow::onTab_pressed);
+	connect(preview, &MarkdownPreview::BS_pressed, this, &MainWindow::onBS_pressed);
+	connect(preview, &MarkdownPreview::Del_pressed, this, &MainWindow::onDel_pressed);
+	connect(preview, &MarkdownPreview::cut_triggered, this, &MainWindow::onCutTriggered);
+	connect(preview, &MarkdownPreview::undo_triggered, this, &MainWindow::onUndoTriggered);
+	connect(preview, &MarkdownPreview::redo_triggered, this, &MainWindow::onRedoTriggered);
+	connect(preview, &MarkdownPreview::fontSizeChanged, this, &MainWindow::onChangePreviewFontSize);
+	//connect(preview, &MarkdownPreview::cursorPositionChanged, this, &MainWindow::onPreviewCurPosChanged);
+	connect(preview, &MarkdownPreview::posContextChanged, this, &MainWindow::onPrvPosContextChanged);
+	connect(preview, &MarkdownPreview::do_output, this, &MainWindow::do_output);
+	connect(preview, &MarkdownPreview::do_viCmd, this, &MainWindow::do_viCmd);
+
+	return preview;
 }
 #if 0
 void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソルが移動した

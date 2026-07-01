@@ -91,6 +91,7 @@ struct PosContext {
 #define		U_KEISEN_BLOCK	0xe000		//	罫線ブロック文字 ユニコード（PAU)
 
 class MarkdownEditor;
+class MarkdownPreview;
 class DocWidget;
 class BlockData;
 class QTreeWidgetItem;
@@ -217,6 +218,7 @@ protected:
     void	restore_win();
     DocWidget	*newTabWidget(const QString& title, const QString& fullPath, bool readOnly = false);
     MarkdownEditor	*newEditor(DocWidget*, QSplitter*, bool);
+    MarkdownPreview	*newPreview(DocWidget*, QSplitter*, bool);
     //void	updatePanes(DocWidget*);						//	スプリッター下の各ペインの表示・非表示設定
     void	onMDTextChanged();
     void	invertActionIcons(QMenuBar*);
