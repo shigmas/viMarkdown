@@ -99,6 +99,7 @@ public:
     void	onCursorPosChanged();
     void	check_svg_completer();
     void	setDiffMode(bool b) { m_diffMode = b; }
+    void	expandAll();		//	すべて展開
 
 signals:
     void	tab_pressed();

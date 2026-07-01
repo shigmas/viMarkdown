@@ -519,6 +519,14 @@ void MarkdownEditor::updateInlineColors() {
 void MarkdownEditor::updateViewportMargines() {
 	setViewportMargins(lnAreaWidth(), 0, 0, 0);
 }
+void MarkdownEditor::expandAll() {
+	QTextBlock block = document()->begin();
+	while( block.isValid() ) {
+		if( is_folded(block) )
+			do_unfold(block);
+		block = block.next();
+	}
+}
 void MarkdownEditor::onKeisenMode(bool b) {
 	int charWidth = 2;
 	if( b ) {

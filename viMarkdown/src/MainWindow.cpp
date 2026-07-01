@@ -2332,6 +2332,8 @@ void MainWindow::onAction_DiffMode(bool checked) {
 	if( docWidget == nullptr ) return;
 	docWidget->m_diffMode = checked;
 	docWidget->m_editor->setDiffMode(checked);
+	if (checked)
+		docWidget->m_editor->expandAll();
 	docWidget->updatePanes();
 }
 void MainWindow::onAction_KeisenMode(bool checked) {
