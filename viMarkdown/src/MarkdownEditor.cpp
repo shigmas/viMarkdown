@@ -2652,15 +2652,17 @@ void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
 			// 右詰めで描画するために幅を調整（右側に2ピクセルの余白）
 			painter.drawText(0, top, m_lnAreaWidget->width() - charWidth*2, lineHeight,
 							 Qt::AlignRight, number);
-			int ax = m_lnAreaWidget->width() - (charWidth + charWidth / 2) + 2;
-			if( is_folded(block) ) {
-				drawArrow(ax, top, charWidth, lineHeight, true);  // ＞
-				//painter.drawText(m_lnAreaWidget->width() - (charWidth+charWidth/2), top,
-                //                 charWidth, lineHeight, Qt::AlignLeft, ">");
-			} else if( is_foldable(block) ) {
-				drawArrow(ax, top, charWidth, lineHeight, false); // ▽
-				//painter.drawText(m_lnAreaWidget->width() - (charWidth+charWidth/2), top,
-                //                 charWidth, lineHeight, Qt::AlignLeft, "v");
+			if( !m_diffMode ) {
+				int ax = m_lnAreaWidget->width() - (charWidth + charWidth / 2) + 2;
+				if( is_folded(block) ) {
+					drawArrow(ax, top, charWidth, lineHeight, true);  // ＞
+					//painter.drawText(m_lnAreaWidget->width() - (charWidth+charWidth/2), top,
+	                //                 charWidth, lineHeight, Qt::AlignLeft, ">");
+				} else if( is_foldable(block) ) {
+					drawArrow(ax, top, charWidth, lineHeight, false); // ▽
+					//painter.drawText(m_lnAreaWidget->width() - (charWidth+charWidth/2), top,
+	                //                 charWidth, lineHeight, Qt::AlignLeft, "v");
+				}
 			}
 		}
 
@@ -2696,7 +2698,7 @@ void MarkdownEditor::lnAreaMousePressEvent(QMouseEvent *event) {
 		setTextCursor(cursor);
 		m_isCursorAboveAnchor = false;
 		m_lnAreaPressed = true;
-	} else {
+	} else if( !m_diffMode ) {
 		QTextBlock block = cursor.block();
 		if( block.isValid() ) {
 			if( is_folded(block) )

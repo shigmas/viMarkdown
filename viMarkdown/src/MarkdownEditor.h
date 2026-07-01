@@ -98,6 +98,7 @@ public:
 	void	backSpaceWord();
     void	onCursorPosChanged();
     void	check_svg_completer();
+    void	setDiffMode(bool b) { m_diffMode = b; }
 
 signals:
     void	tab_pressed();
@@ -152,6 +153,7 @@ private:
 	bool	m_isComposing = false;			// IME入力中フラグ
 	bool	m_lnAreaPressed = false;
 	bool	m_isCursorAboveAnchor = false;		//	アンカーから上（ドキュメント先頭方向）に向かって選択されている
+	bool	m_diffMode = false;
 	int		m_anchorStartPosition = 0;
 	int		m_anchorBlockNum = 0;
 	int		m_curBlockNum = 0;
