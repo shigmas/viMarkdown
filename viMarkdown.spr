@@ -552,7 +552,7 @@ SPR# 状 P Open Close ver     Type  概要
 0549 ◎ C 07/02 07/02 03031│ToDo│diff モード > ヘッダ部分：QLabel を２つ設置
 0550 ◎ C 07/02 07/02 03031│ToDo│MainWindow::newTabWidget()：MarkdownEditor* を生成している部分を別関数にし、行数を減らす
 0551 ◎ C 07/02 07/02 03031│ToDo│MainWindow::newTabWidget()：MarkdownPreview* を生成している部分も別関数にし、行数を減らす
-0552 ● C 07/02            │ToDo│
+0552 ◎ C 07/02 07/02 03031│ToDo│diff モード > ヘッダ：左ラベルには比較元文書タイトル表示
 0553 ● C 07/02            │ToDo│
 0554 ● C 07/02            │ToDo│
 0555 ● C 07/02            │ToDo│
