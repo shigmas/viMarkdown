@@ -911,10 +911,14 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 		"}");
 	auto* headerLayout = new QHBoxLayout(headerWidget);
     headerLayout->setContentsMargins(8, 4, 8, 4);
-	auto* titleLabel = new QLabel("'file name-1' : 'file name-2'", headerWidget);
+	auto* titleLabel = new QLabel(title, headerWidget);
     titleLabel->setStyleSheet("font-weight: bold; color: #333;");
     headerLayout->addWidget(titleLabel);
-    headerLayout->addStretch();
+	auto* dstLabel = new QLabel("'dst file name'", headerWidget);
+    dstLabel->setStyleSheet("font-weight: bold; color: #333;");
+    headerLayout->addWidget(titleLabel);
+    headerLayout->addWidget(dstLabel);
+    //headerLayout->addStretch();
     //
 	QVBoxLayout *layout = new QVBoxLayout(docWidget);
 	layout->addWidget(headerWidget);
