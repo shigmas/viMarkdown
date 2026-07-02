@@ -923,6 +923,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	dummySpacer->setFixedWidth(40+50);
 	QPushButton *pb = new QPushButton("Open...");
 	pb->setFixedWidth(50);
+	connect(pb, &QAbstractButton::clicked, this, &MainWindow::diffview_open);
     headerLayout->addWidget(titleLabel);
     headerLayout->addWidget(dummySpacer);
     headerLayout->addWidget(dstLabel);
@@ -999,6 +1000,29 @@ MarkdownPreview *MainWindow::newPreview(DocWidget *docWidget, QSplitter *splitte
 	connect(preview, &MarkdownPreview::do_viCmd, this, &MainWindow::do_viCmd);
 
 	return preview;
+}
+void MainWindow::diffview_open() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr || !docWidget->m_diffMode )
+		return;
+	QString fullPath = QFileDialog::getOpenFileName(
+		this,
+		"select diff file",			// ダイアログのタイトル
+		QDir::currentPath(),		// 初期ディレクトリ
+		"markdown file (*.md *.markdown);;text file(*.txt);;all(*.*)"	// フィルター
+	);
+	if( fullPath.isEmpty() ) return;
+	QFile file(fullPath);
+	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		QMessageBox::warning(this, tr("エラー"), tr("ファイルが開けません:\n%1").arg(fullPath));
+		return;
+	}
+	QTextStream in(&file);
+	in.setAutoDetectUnicode(true); 
+    QString content = in.readAll();
+    //auto encoding = in.encoding();
+    file.close();
+	docWidget->m_diffview->setPlainText(content);
 }
 #if 0
 void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソルが移動した
