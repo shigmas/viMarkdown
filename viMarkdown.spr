@@ -537,7 +537,7 @@ SPR# 状 P Open Close ver     Type  概要
 0534 ◎ C 06/30 06/30 03030│ToDo│DocWidget::m_docType 追加
 0535 ◎ C 06/30 06/30 03030│ToDo│マークダウン文書以外をオープンした場合は、m_docType = Plain にし、プレビュー無し？に
 0536 ● C 06/30            │ToDo│MainWindow::newTabWidget() が大きすぎるので、Markdown, Plain 用に分ける？
-0537 ● C 06/30            │問題│マークダウン文書以外をオープンした場合でも、マークダウン要素が強調表示されてしまう
+0537 ◎ C 06/30 07/03 03031│問題│マークダウン文書以外をオープンした場合でも、マークダウン要素が強調表示されてしまう
 0538 ◎ C 06/30 07/01 03030│ToDo│MainWindow::newTabWidget()：diff 表示用に、比較対象 Editor も生成しておく？
 0539 ◎ C 07/01 07/01 03030│ToDo│Tool > Diff メニュー追加：{マークダウン|プレイン} ←→ Diff表示切り替え
 0540 ◎ C 07/01 07/01 03030│ToDo│DocType は Markdown/Plain のみとし、diff表示中フラグを追加
@@ -565,9 +565,9 @@ SPR# 状 P Open Close ver     Type  概要
 0562 ◎ C 07/02 07/02 03031│ToDo│diff モード：比較元ファイル名は拡張子も含めて表示
 0563 ◎ C 07/02 07/02 03031│ToDo│diff モード：比較先ファイルが無い場合は、ファイル名表示を空に
 0564 ◎ C 07/02 07/02 03031│ToDo│アバウトダイアログ：powered by に dtl を追加
-0565 ● C 07/02            │ToDo│
-0566 ● C 07/02            │ToDo│
-0567 ● C 07/02            │ToDo│
-0568 ● C 07/02            │ToDo│
-0569 ● C 07/02            │ToDo│
-0570 ● C 07/02            │ToDo│
+0565 ● C 07/03            │ToDo│diff モード：ミニマップ幅にはちゃんとシンボルを割り当てておく
+0566 ● C 07/03            │ToDo│class MarkdownHighlighter：マークダウン構文をハイライトするかどうかの状態を保持？
+0567 ● C 07/03            │ToDo│
+0568 ● C 07/03            │ToDo│
+0569 ● C 07/03            │ToDo│
+0570 ● C 07/03            │ToDo│

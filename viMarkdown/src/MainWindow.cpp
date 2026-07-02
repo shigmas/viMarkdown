@@ -940,6 +940,8 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	docWidget->updatePanes();
 	//if( docWidget->m_docType != DocType::Markdown )
 	//	docWidget->m_preview->hide();
+	if( docWidget->m_docType == DocType::Plain )
+		mdEditor->setHighlightMarkdown(false);
 
 	docWidget->setModified(false);
 	return docWidget;

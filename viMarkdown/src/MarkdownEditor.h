@@ -2,17 +2,94 @@
 #include <QTextEdit>
 #include <QScrollBar>
 #include <QPlainTextEdit>
+#include <QSyntaxHighlighter>
+#include <QRegularExpression>
 //#include <QTimer>
 //#include "C:\Qt\6.10.0\msvc2022_64\include\QtWidgets\qplaintextedit.h"
+#include "MainWindow.h"
 
 enum class Align { Left, Center, Right };
 
 const int LN_WIDTH = 7;
 
+
 class MainWindow;
 class DocWidget;
 //class QTextEdit;
 //class SvgCompleter;
+
+extern Global g;
+
+class MarkdownHighlighter : public QSyntaxHighlighter {
+public:
+	MarkdownHighlighter(QTextDocument *parent) : QSyntaxHighlighter(parent)
+	{
+		m_boldItalicFormat.setForeground(g.m_boldItalicColor);
+		//m_boldFormat.setFontWeight(QFont::Bold);
+		m_boldFormat.setForeground(g.m_boldColor);
+		m_italicFormat.setForeground(g.m_italicColor);
+		m_strikethroughFormat.setForeground(g.m_strikethroughColor);
+		m_boldItalicRegex = QRegularExpression(R"(\*\*\*([^\*]+)\*\*\*)");
+		m_boldRegex = QRegularExpression(R"((?<![\*\\])\*\*([^\\\*]+)\*\*)");
+		m_italicRegex = QRegularExpression(R"((?<![\*\\])\*([^\\\*]+)\*)");
+		m_strikethroughRegex = QRegularExpression(R"((?<![\*\\])(\~\~([^\\\*]+)\~\~))");
+	}
+	//void setBoldColor(const QColor &color) {
+	//	  m_boldFormat.setForeground(color);
+	//	  rehighlight(); // これを呼ぶことでドキュメント全体の highlightBlock が再実行される
+	//}
+	void updateInlineColors() {
+		m_boldItalicFormat.setForeground(g.m_boldItalicColor);
+		m_boldFormat.setForeground(g.m_boldColor);
+		m_italicFormat.setForeground(g.m_italicColor);
+		m_strikethroughFormat.setForeground(g.m_strikethroughColor);
+		rehighlight(); // これを呼ぶことでドキュメント全体の highlightBlock が再実行される
+	}
+protected:
+	void highlightBlock(const QString &text) override {
+		if( !m_highlightMarkdown ) return;
+		if (text.startsWith("#")) {
+			QTextCharFormat fmt_darkred;
+			fmt_darkred.setForeground(g.m_headingsColor);
+			setFormat(0, text.length(), fmt_darkred);
+		} else {
+			// デフォルトの色（黒）
+			//QPalette currentPalette = parentWidget->palette();
+			//setFormat(0, text.length(), currentPalette.color(QPalette::Text));
+			auto it = m_boldItalicRegex.globalMatch(text);
+			while (it.hasNext()) {
+				QRegularExpressionMatch match = it.next();
+				setFormat(match.capturedStart(), match.capturedLength(), m_boldItalicFormat);
+			}
+			it = m_boldRegex.globalMatch(text);
+			while (it.hasNext()) {
+				QRegularExpressionMatch match = it.next();
+				setFormat(match.capturedStart(), match.capturedLength(), m_boldFormat);
+			}
+			it = m_italicRegex.globalMatch(text);
+			while (it.hasNext()) {
+				QRegularExpressionMatch match = it.next();
+				setFormat(match.capturedStart(), match.capturedLength(), m_italicFormat);
+			}
+			it = m_strikethroughRegex.globalMatch(text);
+			while (it.hasNext()) {
+				QRegularExpressionMatch match = it.next();
+				setFormat(match.capturedStart(), match.capturedLength(), m_strikethroughFormat);
+			}
+		}
+	}
+public:
+	bool	m_highlightMarkdown = true;
+private:
+	QTextCharFormat m_boldItalicFormat;
+	QTextCharFormat m_boldFormat;
+	QTextCharFormat m_italicFormat;
+	QTextCharFormat m_strikethroughFormat;
+	QRegularExpression m_boldItalicRegex;
+	QRegularExpression m_boldRegex;
+	QRegularExpression m_italicRegex;
+	QRegularExpression m_strikethroughRegex;
+};
 
 class SvgCompleter : public QTextEdit
 {
@@ -100,6 +177,7 @@ public:
     void	check_svg_completer();
     void	setDiffMode(bool b) { m_diffMode = b; }
     void	expandAll();		//	すべて展開
+    void	setHighlightMarkdown(bool b) { m_highlighter->m_highlightMarkdown = b; }
 
 signals:
     void	tab_pressed();
