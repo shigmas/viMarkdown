@@ -452,6 +452,7 @@ private:
     class QComboBox				*m_searchCB = nullptr;
     class QFileSystemWatcher	*m_watcher;
     //QList<QStringPair>			m_pathTitleList;
+	QLabel	*m_diffviewLabel = nullptr;
 	QTimer	*m_blinkTimer;
     //bool	m_cursorVisible = true;
     int							m_docLocIX = -1;	//	m_docLocHist の現文書インデックス

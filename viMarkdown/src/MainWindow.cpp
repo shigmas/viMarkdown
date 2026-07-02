@@ -917,8 +917,8 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	auto* titleLabel = new QLabel(title, headerWidget);
     titleLabel->setStyleSheet("font-weight: bold; color: #333;");
     headerLayout->addWidget(titleLabel);
-	auto* dstLabel = new QLabel("'dst file name'", headerWidget);
-    dstLabel->setStyleSheet("font-weight: bold; color: #333;");
+	m_diffviewLabel = new QLabel("'dst file name'", headerWidget);
+    m_diffviewLabel->setStyleSheet("font-weight: bold; color: #333;");
     QWidget *dummySpacer = new QWidget(this);
 	dummySpacer->setFixedWidth(40+50);
 	QPushButton *pb = new QPushButton("Open...");
@@ -926,7 +926,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	connect(pb, &QAbstractButton::clicked, this, &MainWindow::diffview_open);
     headerLayout->addWidget(titleLabel);
     headerLayout->addWidget(dummySpacer);
-    headerLayout->addWidget(dstLabel);
+    headerLayout->addWidget(m_diffviewLabel);
     headerLayout->addWidget(pb);
     //headerLayout->addStretch();
     //
@@ -1022,6 +1022,8 @@ void MainWindow::diffview_open() {
     QString content = in.readAll();
     //auto encoding = in.encoding();
     file.close();
+    QFileInfo fi(fullPath);
+    m_diffviewLabel->setText(fi.fileName());
 	docWidget->m_diffview->setPlainText(content);
 }
 #if 0
