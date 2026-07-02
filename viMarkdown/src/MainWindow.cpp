@@ -914,10 +914,11 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 		"}");
 	auto* headerLayout = new QHBoxLayout(headerWidget);
     headerLayout->setContentsMargins(0, 0, 0, 0);
-	auto* titleLabel = new QLabel(title, headerWidget);
+    //QFileInfo fi(fullPath);
+	auto* titleLabel = new QLabel(fi.fileName(), headerWidget);
     titleLabel->setStyleSheet("font-weight: bold; color: #333;");
     headerLayout->addWidget(titleLabel);
-	m_diffviewLabel = new QLabel("'dst file name'", headerWidget);
+	m_diffviewLabel = new QLabel("", headerWidget);
     m_diffviewLabel->setStyleSheet("font-weight: bold; color: #333;");
     QWidget *dummySpacer = new QWidget(this);
 	dummySpacer->setFixedWidth(40+50);
@@ -1022,8 +1023,8 @@ void MainWindow::diffview_open() {
     QString content = in.readAll();
     //auto encoding = in.encoding();
     file.close();
-    QFileInfo fi(fullPath);
-    m_diffviewLabel->setText(fi.fileName());
+    QFileInfo fi2(fullPath);
+    m_diffviewLabel->setText(fi2.fileName());
 	docWidget->m_diffview->setPlainText(content);
 }
 #if 0
