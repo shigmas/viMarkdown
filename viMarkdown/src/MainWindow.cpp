@@ -2368,8 +2368,12 @@ void MainWindow::onAction_DiffMode(bool checked) {
 	if( docWidget == nullptr ) return;
 	docWidget->m_diffMode = checked;
 	docWidget->m_editor->setDiffMode(checked);
-	if (checked)
+	if (checked) {
 		docWidget->m_editor->expandAll();
+		docWidget->m_editor->setHighlightMarkdown(false);
+	} else if( docWidget->m_docType == DocType::Markdown )
+		docWidget->m_editor->setHighlightMarkdown(true);
+	docWidget->m_editor->rehighlight();
 	docWidget->updatePanes();
 }
 void MainWindow::onAction_KeisenMode(bool checked) {
