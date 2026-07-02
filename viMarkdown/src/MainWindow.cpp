@@ -913,17 +913,20 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 		"   border-bottom: 1px solid #d5d5d5;"   // 下側だけの境界線
 		"}");
 	auto* headerLayout = new QHBoxLayout(headerWidget);
-    headerLayout->setContentsMargins(8, 4, 8, 4);
+    headerLayout->setContentsMargins(0, 0, 0, 0);
 	auto* titleLabel = new QLabel(title, headerWidget);
     titleLabel->setStyleSheet("font-weight: bold; color: #333;");
     headerLayout->addWidget(titleLabel);
 	auto* dstLabel = new QLabel("'dst file name'", headerWidget);
     dstLabel->setStyleSheet("font-weight: bold; color: #333;");
     QWidget *dummySpacer = new QWidget(this);
-	dummySpacer->setFixedWidth(40);
+	dummySpacer->setFixedWidth(40+50);
+	QPushButton *pb = new QPushButton("Open...");
+	pb->setFixedWidth(50);
     headerLayout->addWidget(titleLabel);
     headerLayout->addWidget(dummySpacer);
     headerLayout->addWidget(dstLabel);
+    headerLayout->addWidget(pb);
     //headerLayout->addStretch();
     //
 	QVBoxLayout *layout = new QVBoxLayout(docWidget);
