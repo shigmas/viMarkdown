@@ -221,6 +221,7 @@ protected:
     MarkdownPreview	*newPreview(DocWidget*, QSplitter*, bool);
     //void	updatePanes(DocWidget*);						//	スプリッター下の各ペインの表示・非表示設定
     void	onMDTextChanged();
+    void	onDiffViewChanged();
     void	invertActionIcons(QMenuBar*);
     void	invertActionIcons(QMenu*);
     QSplitter	*getCurTabSplitter();

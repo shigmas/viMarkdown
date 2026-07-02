@@ -29,6 +29,7 @@
 #include <QInputMethod>
 #include <QLocale>
 #include <QStandardPaths>
+#include "dtl/dtl.hpp"
 #include "ver.h"
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
@@ -895,6 +896,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	minimap->setFixedWidth(40);
 	DiffView *diffview = docWidget->m_diffview = new DiffView(this, docWidget, splitter);
 	diffview->setDiffMode(true);
+	connect(diffview, &MarkdownEditor::textChanged, this, &MainWindow::onDiffViewChanged);
 	splitter->addWidget(mdEditor);
 	splitter->addWidget(markdownPreview);
 	splitter->addWidget(minimap);
@@ -917,7 +919,10 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
     headerLayout->addWidget(titleLabel);
 	auto* dstLabel = new QLabel("'dst file name'", headerWidget);
     dstLabel->setStyleSheet("font-weight: bold; color: #333;");
+    QWidget *dummySpacer = new QWidget(this);
+	dummySpacer->setFixedWidth(40);
     headerLayout->addWidget(titleLabel);
+    headerLayout->addWidget(dummySpacer);
     headerLayout->addWidget(dstLabel);
     //headerLayout->addStretch();
     //
@@ -926,9 +931,6 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	layout->addWidget(splitter);
 	layout->setContentsMargins(0, 0, 0, 0); // 余白をなくして端まで広げる
 	layout->setSpacing(0); 
-
-	connect(mdEditor, &MarkdownEditor::textChanged, this, &MainWindow::onMDTextChanged);
-	//connect(mdEditor, &MarkdownPreview::textChanged, this, &MainWindow::onMDTextChanged);
 
 	docWidget->updatePanes();
 	//if( docWidget->m_docType != DocType::Markdown )
@@ -951,6 +953,8 @@ MarkdownEditor *MainWindow::newEditor(DocWidget *docWidget, QSplitter *splitter,
 	connect(mdEditor, &MarkdownEditor::do_viCmd, this, &MainWindow::do_viCmd);
 	connect(mdEditor, &MarkdownEditor::changeFontSize, this, &MainWindow::onChangeEditorFontSize);
 	connect(mdEditor, &MarkdownEditor::posContextChanged, this, &MainWindow::onSrcPosContextChanged);
+	connect(mdEditor, &MarkdownEditor::textChanged, this, &MainWindow::onMDTextChanged);
+	//connect(mdEditor, &MarkdownPreview::textChanged, this, &MainWindow::onMDTextChanged);
 	connect(mdEditor->document(), &QTextDocument::modificationChanged, this, &MainWindow::onModificationChanged);
 	mdEditor->setPlaceholderText(g.m_japanese ? R"(
 ここにMarkdownを入力
@@ -2598,6 +2602,9 @@ void MainWindow::syncEditorPreviewScroll() {
     if( abs(diff) >= 16 )
 	    docWidget->m_preview->verticalScrollBar()->setValue(currentScroll + diff);	//	スクロール
 }
+void MainWindow::onDiffViewChanged() {
+	qDebug() << "MainWindow::onDiffViewChanged()";
+}
 void MainWindow::onMDTextChanged() {
 	//qDebug() << "MainWindow::onMDTextChanged()";
 
@@ -2608,7 +2615,7 @@ void MainWindow::onMDTextChanged() {
 	MarkdownEditor *mdEditor = docWidget->m_editor;
 	//m_plainText = mdEditor->toPlainText();
 #if 1
-	if( !mdEditor->isComposing() ) {
+	if( !mdEditor->isComposing() && !docWidget->m_diffMode ) {
 		int scrollPos = docWidget->m_preview->verticalScrollBar()->value();
 		docWidget->m_editor->setProcessing(true);
 		docWidget->m_preview->setMarkdown(mdEditor->document());
