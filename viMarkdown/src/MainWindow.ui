@@ -271,6 +271,7 @@
    <addaction name="separator"/>
    <addaction name="action_IgnoreCase"/>
    <addaction name="action_RegExp"/>
+   <addaction name="action_DiffMode"/>
    <addaction name="action_List"/>
    <addaction name="action_NumList"/>
    <addaction name="action_Checkbox"/>
@@ -1186,6 +1187,10 @@
   <action name="action_DiffMode">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/difference.png</normaloff>:/MainWindow/images/difference.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Diff</string>

@@ -53,5 +53,6 @@
         <file>viMarkdown_ja.qm</file>
         <file>images/match_case_off.png</file>
         <file>images/regexp.png</file>
+        <file>images/difference.png</file>
     </qresource>
 </RCC>
