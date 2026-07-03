@@ -45,17 +45,53 @@ void MainWindow::do_diff() {
     d.compose();
 
     auto ses = d.getSes().getSequence();
+    int diffLn1 = INT_MAX, diffLn2 = INT_MAX;
+    int nDelete = 0, nAdd = 0;
     for (const auto& item : ses) {
-        auto first = item.first;
 #if 0
+        auto first = item.first;
+        auto second = item.second;
     	qDebug().noquote()
-			        << item.first.beforeIdx
-			        << item.first.afterIdx
-			        << item.second.type
-			        << "'" << item.second.elem << "'";
+			        << second.beforeIdx
+			        << second.afterIdx
+			        << second.type
+			        << "'" << first << "'";
 #endif
         const QString& line = item.first;
         dtl::elemInfo info = item.second;
+        switch (info.type) {
+        case dtl::SES_COMMON:
+        	if( nDelete != 0 || nAdd != 0) {
+        		if( nAdd == 0 ) {	//	右側（doc2）で削除された場合のみ
+        			for(int ln = diffLn1; ln < info.beforeIdx; ++ln)
+        				do_output(QString("- %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
+        		} else if( nDelete == 0 ) {		// 右側（doc2）で新しく追加された場合のみ
+        			for(int ln = diffLn2; ln < info.afterIdx; ++ln)
+        				do_output(QString("+ 0 %1 '%2'\n").arg(ln).arg(lines2[ln-1]));
+        		} else {
+        			for(int ln = diffLn1; ln < info.beforeIdx; ++ln)
+        				do_output(QString("! %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
+        			for(int ln = diffLn2; ln < info.afterIdx; ++ln)
+        				do_output(QString("! 0 %1 '%2'\n").arg(ln).arg(lines2[ln-1]));
+        		}
+        		nDelete = nAdd = 0;
+        		diffLn1 = diffLn2 = INT_MAX;
+        	}
+        	do_output(QString("= %1 %2 '%3'\n").arg(info.beforeIdx).arg(info.afterIdx).arg(line));
+        	break;
+        case dtl::SES_DELETE:	//	右側（doc2）で削除された行
+        	diffLn1 = qMin(diffLn1, info.beforeIdx);
+        	nDelete += 1;
+        	break;
+        case dtl::SES_ADD:		// 右側（doc2）で新しく追加された行
+        	diffLn2 = qMin(diffLn2, info.afterIdx);
+        	nAdd += 1;
+        	break;
+        }
+    	if( nDelete != 0 || nAdd != 0) {
+    	}
+
+#if 0
         switch (info.type) {
         case dtl::SES_COMMON:
             // 両方に共通する行（通常の行）
@@ -70,5 +106,6 @@ void MainWindow::do_diff() {
             do_output("+ '" + line + "'\n");
             break;
         }
+#endif
     }
 }
