@@ -30,6 +30,9 @@ std::vector<QString> extractLinesFromDocument(const QTextDocument *doc) {
 }
 void MainWindow::onDiffViewChanged() {
 	qDebug() << "MainWindow::onDiffViewChanged()";
+	do_diff();
+}
+void MainWindow::do_diff() {
 	DocWidget *docWidget = getCurDocWidget();
 	if (docWidget == nullptr || !docWidget->m_diffMode)
 		return;
@@ -43,6 +46,7 @@ void MainWindow::onDiffViewChanged() {
 
     auto ses = d.getSes().getSequence();
     for (const auto& item : ses) {
+        auto first = item.first;
 #if 0
     	qDebug().noquote()
 			        << item.first.beforeIdx

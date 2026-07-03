@@ -2646,6 +2646,8 @@ void MainWindow::onMDTextChanged() {
 	//qDebug() << "docWidget = " << docWidget;
 	MarkdownEditor *mdEditor = docWidget->m_editor;
 	//m_plainText = mdEditor->toPlainText();
+	if( docWidget->m_diffMode )
+		do_diff();
 #if 1
 	if( !mdEditor->isComposing() && !docWidget->m_diffMode ) {
 		int scrollPos = docWidget->m_preview->verticalScrollBar()->value();

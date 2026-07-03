@@ -572,7 +572,7 @@ SPR# 状 P Open Close ver     Type  概要
 0569 ● C 07/04            │ToDo│diff モード：削除行に '-' 表示（= INSERTED... = の場合）
 0570 ● C 07/04            │ToDo│diff モード：変更行に '!' 表示（= {DELETED|INSERTED}... = の場合）
 0571 ◎ C 07/04 07/04 03032│ToDo│diff 関連コードを diff.cpp に移動
-0572 ● C 07/04            │ToDo│
+0572 ◎ C 07/04 07/04 03032│問題│diff モード：比較元文書を編集しても、diff 処理が行われない
 0573 ● C 07/04            │ToDo│
 0574 ● C 07/04            │ToDo│
 0575 ● C 07/04            │ToDo│
