@@ -175,7 +175,7 @@ public:
 	void	backSpaceWord();
     void	onCursorPosChanged();
     void	check_svg_completer();
-    void	setDiffMode(bool b) { m_diffMode = b; }
+    void	setDiffMode(bool b) { setHighlightMarkdown(!(m_diffMode = b)); }
     void	expandAll();		//	すべて展開
     void	setHighlightMarkdown(bool b) { m_highlighter->m_highlightMarkdown = b; }
 
