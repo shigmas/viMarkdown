@@ -582,7 +582,7 @@ SPR# 状 P Open Close ver     Type  概要
 0579 ◎ C 07/04 07/04 03032│ToDo│QTextBlock.userState ダンプ：diff モードの場合は、プレビューではなく比較先ビューを処理対象に
 0580 ◎ C 07/04 07/04 03032│ToDo│QTextBlock に行番号・diff 結果を格納・参照可能に
 0581 ◎ C 07/04 07/04 03032│問題│QtCreator でビルドすると未定義エラーが出る
-0582 ● C 07/04            │ToDo│diff結果を QTextBlock に保存
+0582 ◎ C 07/04 07/05 03032│ToDo│diff結果を QTextBlock に保存
 0583 ◎ C 07/05 07/05 03032│ToDo│「a\nb\nc\n」と「a\nc\n」を比較結果の、アウトプット出力が不正
 0584 ● C 07/05            │ToDo│
 0585 ● C 07/05            │ToDo│

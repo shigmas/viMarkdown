@@ -85,24 +85,24 @@ void MainWindow::do_diff() {
         if (nAdd == 0) {        // 右側（doc2）で削除された場合のみ
             for (int ln = diffLn1; ln < endLn1; ++ln) {
                 do_output(QString("- %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
-	        	setPhysicalLine(block1, ++ln1, false);
+	        	setPhysicalLine(block1, ++ln1, true);
 	        	block1 = block1.next();
             }
         } else if (nDelete == 0) { // 右側（doc2）で新しく追加された場合のみ
             for (int ln = diffLn2; ln < endLn2; ++ln) {
                 do_output(QString("+ 0 %1 '%2'\n").arg(ln).arg(lines2[ln-1]));
-	        	setPhysicalLine(block2, ++ln2, false);
+	        	setPhysicalLine(block2, ++ln2, true);
 	        	block2 = block2.next();
             }
         } else {
             for (int ln = diffLn1; ln < endLn1; ++ln) {
                 do_output(QString("! %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
-	        	setPhysicalLine(block1, ++ln1, false);
+	        	setPhysicalLine(block1, ++ln1, true);
 	        	block1 = block1.next();
             }
             for (int ln = diffLn2; ln < endLn2; ++ln) {
                 do_output(QString("! 0 %1 '%2'\n").arg(ln).arg(lines2[ln-1]));
-	        	setPhysicalLine(block2, ++ln2, false);
+	        	setPhysicalLine(block2, ++ln2, true);
 	        	block2 = block2.next();
             }
         }
