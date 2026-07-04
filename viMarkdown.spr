@@ -580,7 +580,7 @@ SPR# 状 P Open Close ver     Type  概要
 0577 ◎ C 07/04 07/04 03032│ToDo│diff コマンドをツールバーに追加
 0578 ◎ C 07/04 07/04 03032│ToDo│diff アイコン
 0579 ◎ C 07/04 07/04 03032│ToDo│QTextBlock.userState ダンプ：diff モードの場合は、プレビューではなく比較先ビューを処理対象に
-0580 ● C 07/04            │ToDo│
+0580 ◎ C 07/04 07/04 03032│ToDo│QTextBlock に行番号・diff 結果を格納・参照可能に
 0581 ● C 07/04            │ToDo│
 0582 ● C 07/04            │ToDo│
 0583 ● C 07/04            │ToDo│

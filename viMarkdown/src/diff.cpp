@@ -15,6 +15,36 @@
 #include "MarkdownEditor.h"
 #include "MarkdownPreview.h"
 
+// 1. ダミー行（高さを揃えるための空行）かどうかの判定
+bool isDummyLine(const QTextBlock &block) {
+    return block.userState() == 0;
+}
+
+// 2. 行番号の取得（1ビット右シフトするだけ）
+int lineNumber(const QTextBlock &block) {
+    return (unsigned)block.userState() >> 1;
+}
+
+// 3. 差分の有無（最下位ビットが 1 なら差分あり / 0 なら差分なし）
+bool hasDiff(const QTextBlock &block) {
+    return (block.userState() & 0x01) != 0;
+}
+
+// -------------------------------------------------------------
+// 【書き込み時の処理例】
+// -------------------------------------------------------------
+
+// ダミー行をセットする場合
+void setDummyLine(QTextBlock &block) {
+    block.setUserState(0);
+}
+
+// 物理的な行をセットする場合
+void setPhysicalLine(QTextBlock &block, int ln, bool changed) {
+    int state = (ln << 1) | (changed ? 1 : 0);
+    block.setUserState(state);
+}
+// -------------------------------------------------------------
 std::vector<QString> extractLinesFromDocument(const QTextDocument *doc) {
     std::vector<QString> lines;
     if (!doc) return lines;
@@ -47,36 +77,29 @@ void MainWindow::do_diff() {
     auto ses = d.getSes().getSequence();
     int diffLn1 = INT_MAX, diffLn2 = INT_MAX;
     int nDelete = 0, nAdd = 0;
+    auto flushPending = [&](int endLn1, int endLn2) {
+        if (nDelete == 0 && nAdd == 0) return;
+        if (nAdd == 0) {        // 右側（doc2）で削除された場合のみ
+            for (int ln = diffLn1; ln < endLn1; ++ln)
+                do_output(QString("- %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
+        } else if (nDelete == 0) { // 右側（doc2）で新しく追加された場合のみ
+            for (int ln = diffLn2; ln < endLn2; ++ln)
+                do_output(QString("+ 0 %1 '%2'\n").arg(ln).arg(lines2[ln-1]));
+        } else {
+            for (int ln = diffLn1; ln < endLn1; ++ln)
+                do_output(QString("! %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
+            for (int ln = diffLn2; ln < endLn2; ++ln)
+                do_output(QString("! 0 %1 '%2'\n").arg(ln).arg(lines2[ln-1]));
+        }
+        nDelete = nAdd = 0;
+        diffLn1 = diffLn2 = INT_MAX;
+    };
     for (const auto& item : ses) {
-#if 0
-        auto first = item.first;
-        auto second = item.second;
-    	qDebug().noquote()
-			        << second.beforeIdx
-			        << second.afterIdx
-			        << second.type
-			        << "'" << first << "'";
-#endif
         const QString& line = item.first;
         dtl::elemInfo info = item.second;
         switch (info.type) {
         case dtl::SES_COMMON:
-        	if( nDelete != 0 || nAdd != 0) {
-        		if( nAdd == 0 ) {	//	右側（doc2）で削除された場合のみ
-        			for(int ln = diffLn1; ln < info.beforeIdx; ++ln)
-        				do_output(QString("- %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
-        		} else if( nDelete == 0 ) {		// 右側（doc2）で新しく追加された場合のみ
-        			for(int ln = diffLn2; ln < info.afterIdx; ++ln)
-        				do_output(QString("+ 0 %1 '%2'\n").arg(ln).arg(lines2[ln-1]));
-        		} else {
-        			for(int ln = diffLn1; ln < info.beforeIdx; ++ln)
-        				do_output(QString("! %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
-        			for(int ln = diffLn2; ln < info.afterIdx; ++ln)
-        				do_output(QString("! 0 %1 '%2'\n").arg(ln).arg(lines2[ln-1]));
-        		}
-        		nDelete = nAdd = 0;
-        		diffLn1 = diffLn2 = INT_MAX;
-        	}
+       		flushPending(info.beforeIdx, info.afterIdx);
         	do_output(QString("= %1 %2 '%3'\n").arg(info.beforeIdx).arg(info.afterIdx).arg(line));
         	break;
         case dtl::SES_DELETE:	//	右側（doc2）で削除された行
@@ -88,24 +111,6 @@ void MainWindow::do_diff() {
         	nAdd += 1;
         	break;
         }
-    	if( nDelete != 0 || nAdd != 0) {
-    	}
-
-#if 0
-        switch (info.type) {
-        case dtl::SES_COMMON:
-            // 両方に共通する行（通常の行）
-            do_output("= '" + line + "'\n");
-            break;
-        case dtl::SES_DELETE:
-            // 左側（doc1）にのみ存在し、右側（doc2）で削除された行
-            do_output("- '" + line + "'\n");
-            break;
-        case dtl::SES_ADD:
-            // 右側（doc2）で新しく追加された行
-            do_output("+ '" + line + "'\n");
-            break;
-        }
-#endif
+ 		flushPending(doc1->blockCount() + 1, doc2->blockCount() + 1);
     }
 }
