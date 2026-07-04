@@ -74,22 +74,37 @@ void MainWindow::do_diff() {
     dtl::Diff<QString, std::vector<QString>> d(lines1, lines2);
     d.compose();
 
+    QTextBlock block1 = doc1->begin();
+    QTextBlock block2 = doc2->begin();
+    int ln1 = 0, ln2 = 0;
     auto ses = d.getSes().getSequence();
     int diffLn1 = INT_MAX, diffLn2 = INT_MAX;
     int nDelete = 0, nAdd = 0;
     auto flushPending = [&](int endLn1, int endLn2) {
         if (nDelete == 0 && nAdd == 0) return;
         if (nAdd == 0) {        // 右側（doc2）で削除された場合のみ
-            for (int ln = diffLn1; ln < endLn1; ++ln)
+            for (int ln = diffLn1; ln < endLn1; ++ln) {
                 do_output(QString("- %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
+	        	setPhysicalLine(block1, ++ln1, false);
+	        	block1 = block1.next();
+            }
         } else if (nDelete == 0) { // 右側（doc2）で新しく追加された場合のみ
-            for (int ln = diffLn2; ln < endLn2; ++ln)
+            for (int ln = diffLn2; ln < endLn2; ++ln) {
                 do_output(QString("+ 0 %1 '%2'\n").arg(ln).arg(lines2[ln-1]));
+	        	setPhysicalLine(block2, ++ln2, false);
+	        	block2 = block2.next();
+            }
         } else {
-            for (int ln = diffLn1; ln < endLn1; ++ln)
+            for (int ln = diffLn1; ln < endLn1; ++ln) {
                 do_output(QString("! %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
-            for (int ln = diffLn2; ln < endLn2; ++ln)
+	        	setPhysicalLine(block1, ++ln1, false);
+	        	block1 = block1.next();
+            }
+            for (int ln = diffLn2; ln < endLn2; ++ln) {
                 do_output(QString("! 0 %1 '%2'\n").arg(ln).arg(lines2[ln-1]));
+	        	setPhysicalLine(block2, ++ln2, false);
+	        	block2 = block2.next();
+            }
         }
         nDelete = nAdd = 0;
         diffLn1 = diffLn2 = INT_MAX;
@@ -101,6 +116,10 @@ void MainWindow::do_diff() {
         case dtl::SES_COMMON:
        		flushPending(info.beforeIdx, info.afterIdx);
         	do_output(QString("= %1 %2 '%3'\n").arg(info.beforeIdx).arg(info.afterIdx).arg(line));
+        	setPhysicalLine(block1, ++ln1, false);
+        	block1 = block1.next();
+        	setPhysicalLine(block2, ++ln2, false);
+        	block2 = block2.next();
         	break;
         case dtl::SES_DELETE:	//	右側（doc2）で削除された行
         	diffLn1 = qMin(diffLn1, info.beforeIdx);
@@ -111,6 +130,6 @@ void MainWindow::do_diff() {
         	nAdd += 1;
         	break;
         }
- 		flushPending(doc1->blockCount() + 1, doc2->blockCount() + 1);
     }
+    flushPending(doc1->blockCount() + 1, doc2->blockCount() + 1);
 }
