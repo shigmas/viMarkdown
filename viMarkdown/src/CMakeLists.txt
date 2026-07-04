@@ -31,6 +31,7 @@ set(PROJECT_SOURCES
         SlideShow.h
         SlideShow.cpp
         vicmd.cpp
+        diff.cpp
         ver.h
         ${TS_FILES}
 )
