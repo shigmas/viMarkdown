@@ -35,7 +35,7 @@ bool hasDiff(const QTextBlock &block) {
 // -------------------------------------------------------------
 
 // ダミー行をセットする場合
-void setDummyLine(QTextBlock &block) {
+void setDummyLine(QTextBlock block) {
     block.setUserState(0);
 }
 
@@ -60,12 +60,15 @@ std::vector<QString> extractLinesFromDocument(const QTextDocument *doc) {
 }
 void MainWindow::onDiffViewChanged() {
 	qDebug() << "MainWindow::onDiffViewChanged()";
-	do_diff();
+    if (m_processing) return;
+    do_diff();
 }
 void MainWindow::do_diff() {
+	if( m_processing ) return;
 	DocWidget *docWidget = getCurDocWidget();
 	if (docWidget == nullptr || !docWidget->m_diffMode)
 		return;
+	m_processing = true;
 	QTextDocument *doc1 = docWidget->m_editor->document();
 	QTextDocument *doc2 = docWidget->m_diffview->document();
 	std::vector<QString> lines1 = extractLinesFromDocument(doc1);
@@ -87,6 +90,11 @@ void MainWindow::do_diff() {
                 do_output(QString("- %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
 	        	setPhysicalLine(block1, ++ln1, true);
 	        	block1 = block1.next();
+	        	block2 = block2.next();
+	        	QTextCursor cursor(block2);
+	        	cursor.insertBlock();
+	        	QTextBlock b = block2.previous();
+	        	setDummyLine(b);
             }
         } else if (nDelete == 0) { // 右側（doc2）で新しく追加された場合のみ
             for (int ln = diffLn2; ln < endLn2; ++ln) {
@@ -132,4 +140,5 @@ void MainWindow::do_diff() {
         }
     }
     flushPending(doc1->blockCount() + 1, doc2->blockCount() + 1);
+	m_processing = false;
 }
