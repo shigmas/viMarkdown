@@ -27,6 +27,10 @@
 extern Global g;
 extern ViStatus gvi;
 
+bool isDummyLine(const QTextBlock &block);
+int lineNumber(const QTextBlock &block);
+bool hasDiff(const QTextBlock &block);
+
 //extern bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment, bool &commented);
 //extern bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens);
 //extern bool isTableLine(const QString& lnStr, QStringList &tableTokens);
@@ -2384,10 +2388,14 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
 
 	QFontMetrics fm(this->font());
 	int zWidth = fm.horizontalAdvance("□"); 
-	//	全角空白 □、改行マーク描画
+	//	diff表示時背景、全角空白 □、改行マーク描画
 	for (QTextBlock b = firstVisibleBlock(); b.isValid(); b = b.next()) {
 		QRectF r = blockBoundingRect(b).translated(contentOffset());
 		if (r.top() > viewport()->height()) break; // 画面外なら終了
+		if( m_diffMode && isDummyLine(b) ) {
+			p.setPen(Qt::transparent);
+			p.fillRect(blockBoundingGeometry(b), QColor("#e8e8e8"));
+		}
 		if( !b.isVisible() ) continue;
 		// --- 改行マーク（←）の描画 ---
 		QTextCursor cursor(b);
@@ -2587,12 +2595,14 @@ void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
 	};
 	while (block.isValid() && top <= event->rect().bottom()) {
 		if (block.isVisible() && bottom >= event->rect().top()) {
-			QString number = QString::number(blockNumber + 1);
-			painter.setPen(textColor); // 文字色
-			
-			// 右詰めで描画するために幅を調整（右側に2ピクセルの余白）
-			painter.drawText(0, top, m_lnAreaWidget->width() - charWidth*2, lineHeight,
-							 Qt::AlignRight, number);
+			if( !m_diffMode || !isDummyLine(block) ) {
+				QString number = QString::number(!m_diffMode ? blockNumber + 1 : lineNumber(block));
+				painter.setPen(textColor); // 文字色
+				
+				// 右詰めで描画するために幅を調整（右側に2ピクセルの余白）
+				painter.drawText(0, top, m_lnAreaWidget->width() - charWidth*2, lineHeight,
+								 Qt::AlignRight, number);
+			}
 			if( !m_diffMode ) {
 				int ax = m_lnAreaWidget->width() - (charWidth + charWidth / 2) + 2;
 				if( is_folded(block) ) {

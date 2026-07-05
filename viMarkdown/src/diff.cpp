@@ -90,14 +90,17 @@ void MainWindow::do_diff() {
                 do_output(QString("- %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
 	        	setPhysicalLine(block1, ++ln1, true);
 	        	block1 = block1.next();
-	        	block2 = block2.next();
+	        	//block2 = block2.next();
 	        	QTextCursor cursor(block2);
-	        	cursor.insertBlock();
-	        	QTextBlock b = block2.previous();
-	        	setDummyLine(b);
+	        	cursor.movePosition(QTextCursor::EndOfBlock);
+	        	cursor.insertText("\n");
+	        	//QTextBlock b = block2.previous();
+	        	setDummyLine(block2);
+	        	block2 = block2.next();
             }
         } else if (nDelete == 0) { // 右側（doc2）で新しく追加された場合のみ
             for (int ln = diffLn2; ln < endLn2; ++ln) {
+                if (ln - 1 >= lines2.size()) break;
                 do_output(QString("+ 0 %1 '%2'\n").arg(ln).arg(lines2[ln-1]));
 	        	setPhysicalLine(block2, ++ln2, true);
 	        	block2 = block2.next();
