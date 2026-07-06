@@ -895,6 +895,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	minimap->setFixedWidth(40);
 	DiffView *diffview = docWidget->m_diffview = new DiffView(this, docWidget, splitter);
 	diffview->setDiffMode(true);
+	diffview->setLineWrapMode(QPlainTextEdit::NoWrap);
 	connect(diffview, &MarkdownEditor::textChanged, this, &MainWindow::onDiffViewChanged);
 	splitter->addWidget(mdEditor);
 	splitter->addWidget(markdownPreview);
@@ -2370,8 +2371,12 @@ void MainWindow::onAction_DiffMode(bool checked) {
 	if (checked) {
 		docWidget->m_editor->expandAll();
 		docWidget->m_editor->setHighlightMarkdown(false);
-	} else if( docWidget->m_docType == DocType::Markdown )
-		docWidget->m_editor->setHighlightMarkdown(true);
+		docWidget->m_editor->setLineWrapMode(QPlainTextEdit::NoWrap);
+	} else {
+		if( docWidget->m_docType == DocType::Markdown )
+			docWidget->m_editor->setHighlightMarkdown(true);
+		docWidget->m_editor->setLineWrapMode(QPlainTextEdit::WidgetWidth);
+	}
 	docWidget->m_editor->rehighlight();
 	docWidget->updatePanes();
 }

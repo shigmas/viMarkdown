@@ -138,10 +138,10 @@ void MainWindow::do_diff() {
                 do_output(QString("- %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
 	        	setPhysicalLine(block1, ++ln1, true);
 	        	block1 = block1.next();
-	        	cur2.setPosition(block2.position() + block2.text().size());
-	        	cur2.insertText("\n");
-	        	setDummyLine(block2);
-	        	block2 = block2.next();
+	        	cur2.setPosition(block2.position()); 
+                cur2.insertText("\n");
+                setDummyLine(block2);   // 空になった現在のブロック（行）をダミーに設定
+                block2 = block2.next();  // 下に押し出されたテキストが入っているブロックへ進む
             }
         } else if (nDelete == 0) { // 右側（doc2）で新しく追加された場合のみ
             for (int ln = diffLn2; ln < endLn2; ++ln) {
@@ -149,10 +149,10 @@ void MainWindow::do_diff() {
                 do_output(QString("+ 0 %1 '%2'\n").arg(ln).arg(lines2[ln-1]));
 	        	setPhysicalLine(block2, ++ln2, true);
 	        	block2 = block2.next();
-	        	cur1.setPosition(block1.position() + block1.text().size());
-	        	cur1.insertText("\n");
-	        	setDummyLine(block1);
-	        	block1 = block1.next();
+	        	cur1.setPosition(block1.position());
+                cur1.insertText("\n");
+                setDummyLine(block1);   // 空になった現在のブロック（行）をダミーに設定
+                block1 = block1.next();  // 下に押し出されたテキストが入っているブロックへ進む
             }
         } else {
             for (int ln = diffLn1; ln < endLn1; ++ln) {
@@ -164,6 +164,22 @@ void MainWindow::do_diff() {
                 do_output(QString("! 0 %1 '%2'\n").arg(ln).arg(lines2[ln-1]));
 	        	setPhysicalLine(block2, ++ln2, true);
 	        	block2 = block2.next();
+            }
+            int d = (endLn1 - diffLn1) - (endLn2 - diffLn2);
+            if( d > 0 ) {
+            	for(int i = 0; i < d; ++i) {
+		        	cur2.setPosition(block2.position());
+                    cur2.insertText("\n");
+                    setDummyLine(block2);
+                    block2 = block2.next();
+            	}
+            } else if( d < 0 ) {
+            	for(int i = 0; i < -d; ++i) {
+		        	cur1.setPosition(block1.position());
+                    cur1.insertText("\n");
+                    setDummyLine(block1);
+                    block1 = block1.next();
+            	}
             }
         }
         nDelete = nAdd = 0;
