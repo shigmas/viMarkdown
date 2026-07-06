@@ -44,6 +44,50 @@ void setPhysicalLine(QTextBlock &block, int ln, bool changed) {
     int state = (ln << 1) | (changed ? 1 : 0);
     block.setUserState(state);
 }
+//
+void removeAllDummyLines(QTextDocument *doc) {
+    if (!doc) return;
+
+    QTextCursor cursor(doc);
+    // 描画更新を一時停止し、処理を高速化
+    cursor.beginEditBlock();
+
+    // 末尾のブロックから先頭に向かって逆順に巡回します
+    QTextBlock block = doc->lastBlock();
+    while (block.isValid()) {
+        // 削除操作によってブロックが破棄される前に、前のブロックへの参照を確保しておく
+        QTextBlock prevBlock = block.previous();
+
+        if (isDummyLine(block)) {
+            cursor.setPosition(block.position());
+
+            if (block.next().isValid()) {
+                // パターンA: 末尾以外のブロックを削除する場合
+                // 「自ブロックの先頭」から「次のブロックの先頭」までを選択（これで改行コードも含まれます）
+                cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor);
+                cursor.removeSelectedText();
+            } else {
+                // パターンB: 末尾のブロックを削除する場合
+                if (prevBlock.isValid()) {
+                    // 前の行が存在する場合、手前の改行コードも含めて後方から選択・削除します
+                    cursor.movePosition(QTextCursor::EndOfBlock);
+                    cursor.movePosition(QTextCursor::StartOfBlock, QTextCursor::KeepAnchor);
+                    cursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor); // 手前の改行を巻き込む
+                    cursor.removeSelectedText();
+                } else {
+                    // ドキュメントにこの1行しか残っていない場合は、プレーンにテキストのみクリア
+                    cursor.select(QTextCursor::BlockUnderCursor);
+                    cursor.removeSelectedText();
+                }
+            }
+        }
+
+        // 次の巡回先（手前のブロック）に移行
+        block = prevBlock;
+    }
+
+    cursor.endEditBlock(); // レイアウトを再計算して画面を更新
+}
 // -------------------------------------------------------------
 std::vector<QString> extractLinesFromDocument(const QTextDocument *doc) {
     std::vector<QString> lines;
@@ -71,6 +115,8 @@ void MainWindow::do_diff() {
 	m_processing = true;
 	QTextDocument *doc1 = docWidget->m_editor->document();
 	QTextDocument *doc2 = docWidget->m_diffview->document();
+	removeAllDummyLines(doc1);
+	removeAllDummyLines(doc2);
 	std::vector<QString> lines1 = extractLinesFromDocument(doc1);
     std::vector<QString> lines2 = extractLinesFromDocument(doc2);
 
@@ -79,6 +125,8 @@ void MainWindow::do_diff() {
 
     QTextBlock block1 = doc1->begin();
     QTextBlock block2 = doc2->begin();
+    QTextCursor cur1 = docWidget->m_editor->textCursor();
+    QTextCursor cur2 = docWidget->m_diffview->textCursor();
     int ln1 = 0, ln2 = 0;
     auto ses = d.getSes().getSequence();
     int diffLn1 = INT_MAX, diffLn2 = INT_MAX;
@@ -90,11 +138,8 @@ void MainWindow::do_diff() {
                 do_output(QString("- %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
 	        	setPhysicalLine(block1, ++ln1, true);
 	        	block1 = block1.next();
-	        	//block2 = block2.next();
-	        	QTextCursor cursor(block2);
-	        	cursor.movePosition(QTextCursor::EndOfBlock);
-	        	cursor.insertText("\n");
-	        	//QTextBlock b = block2.previous();
+	        	cur2.setPosition(block2.position() + block2.text().size());
+	        	cur2.insertText("\n");
 	        	setDummyLine(block2);
 	        	block2 = block2.next();
             }
@@ -104,6 +149,10 @@ void MainWindow::do_diff() {
                 do_output(QString("+ 0 %1 '%2'\n").arg(ln).arg(lines2[ln-1]));
 	        	setPhysicalLine(block2, ++ln2, true);
 	        	block2 = block2.next();
+	        	cur1.setPosition(block1.position() + block1.text().size());
+	        	cur1.insertText("\n");
+	        	setDummyLine(block1);
+	        	block1 = block1.next();
             }
         } else {
             for (int ln = diffLn1; ln < endLn1; ++ln) {
@@ -120,6 +169,8 @@ void MainWindow::do_diff() {
         nDelete = nAdd = 0;
         diffLn1 = diffLn2 = INT_MAX;
     };
+    docWidget->m_editor->setTextCursor(cur1);
+    docWidget->m_diffview->setTextCursor(cur2);
     for (const auto& item : ses) {
         const QString& line = item.first;
         dtl::elemInfo info = item.second;

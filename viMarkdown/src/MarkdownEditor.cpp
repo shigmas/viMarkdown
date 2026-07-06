@@ -2380,7 +2380,18 @@ void drawTextCursor(QWidget *viewport, QPainter& p, QTextCursor cursor, QRect re
 	p.drawLine(left, y, right, y);
 }
 void MarkdownEditor::paintEvent(QPaintEvent *e) {
-	MarkdownBaseEdit::paintEvent(e); // 先にテキストを普通に描画
+	if( m_diffMode ) {
+		QPainter p(viewport());
+		for (QTextBlock b = firstVisibleBlock(); b.isValid(); b = b.next()) {
+			QRectF r = blockBoundingRect(b).translated(contentOffset());
+			if (r.top() > viewport()->height()) break; // 画面外なら終了
+			if( isDummyLine(b) || hasDiff(b) ) {
+				p.setPen(Qt::transparent);
+				p.fillRect(blockBoundingGeometry(b), QColor(isDummyLine(b) ? "#e8e8e8" : "#ffecec"));
+			}
+		}
+	}
+	MarkdownBaseEdit::paintEvent(e); // テキストを普通に描画
 
 	QPainter p(viewport());
 	//p.setPen(QColor(0, 120, 215, 80)); // 薄い青色（透過度 80）
@@ -2392,25 +2403,22 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
 	for (QTextBlock b = firstVisibleBlock(); b.isValid(); b = b.next()) {
 		QRectF r = blockBoundingRect(b).translated(contentOffset());
 		if (r.top() > viewport()->height()) break; // 画面外なら終了
-		if( m_diffMode && isDummyLine(b) ) {
-			p.setPen(Qt::transparent);
-			p.fillRect(blockBoundingGeometry(b), QColor("#e8e8e8"));
-		}
 		if( !b.isVisible() ) continue;
 		// --- 改行マーク（←）の描画 ---
-		QTextCursor cursor(b);
-		cursor.movePosition(QTextCursor::EndOfBlock);
-		QRect cr = cursorRect(cursor);
-		cr.setWidth(zWidth);
-		if( b != document()->lastBlock() ) {
-			//drawLeftArrow(p, cr);		 
-			drawCRLF(p, cr);		 
-			if( is_folded(b) ) {
-				int nx = cr.right() + zWidth;
-				drawFolded(p, QRect(nx, cr.y(), zWidth*10, cr.height()), count_folded(b));
-			}
-		} else
-			drawEOF(p, cr);
+		if( !m_diffMode || !isDummyLine(b) ) {
+			QTextCursor cursor(b);
+			cursor.movePosition(QTextCursor::EndOfBlock);
+			QRect cr = cursorRect(cursor);
+			cr.setWidth(zWidth);
+			if( b != document()->lastBlock() ) {
+				drawCRLF(p, cr);		 
+				if( is_folded(b) ) {
+					int nx = cr.right() + zWidth;
+					drawFolded(p, QRect(nx, cr.y(), zWidth*10, cr.height()), count_folded(b));
+				}
+			} else
+				drawEOF(p, cr);
+		}
 		QString s = b.text();
 		for (int i = 0; i < s.size(); ++i) {
 			if (s[i] == u'　') { // 全角空白を見つけたら
