@@ -178,6 +178,8 @@ public:
     void	setDiffMode(bool b) { setHighlightMarkdown(!(m_diffMode = b)); }
     void	expandAll();		//	すべて展開
     void	setHighlightMarkdown(bool b) { m_highlighter->m_highlightMarkdown = b; }
+    bool	dummyInserted() const { return m_dummyInserted; }
+    void	setDummyInserted(bool b) { m_dummyInserted = b; }
 
 signals:
     void	tab_pressed();
@@ -233,6 +235,7 @@ private:
 	bool	m_lnAreaPressed = false;
 	bool	m_isCursorAboveAnchor = false;		//	アンカーから上（ドキュメント先頭方向）に向かって選択されている
 	bool	m_diffMode = false;
+	bool	m_dummyInserted = false;		//	ダミー行が挿入された
 	int		m_anchorStartPosition = 0;
 	int		m_anchorBlockNum = 0;
 	int		m_curBlockNum = 0;

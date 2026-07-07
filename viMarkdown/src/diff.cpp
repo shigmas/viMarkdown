@@ -102,6 +102,29 @@ std::vector<QString> extractLinesFromDocument(const QTextDocument *doc) {
     }
     return lines;
 }
+void MainWindow::onAction_DiffMode(bool checked) {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	docWidget->m_diffMode = checked;
+	docWidget->m_editor->setDiffMode(checked);
+	if (checked) {
+		docWidget->m_editor->expandAll();
+		docWidget->m_editor->setHighlightMarkdown(false);
+		docWidget->m_editor->setLineWrapMode(QPlainTextEdit::NoWrap);
+	} else {
+		if( docWidget->m_docType == DocType::Markdown )
+			docWidget->m_editor->setHighlightMarkdown(true);
+		docWidget->m_editor->setLineWrapMode(QPlainTextEdit::WidgetWidth);
+		QTextDocument *doc1 = docWidget->m_editor->document();
+		QTextDocument *doc2 = docWidget->m_diffview->document();
+		removeAllDummyLines(doc1);
+		removeAllDummyLines(doc2);
+	    docWidget->m_editor->setDummyInserted(false);
+	    docWidget->m_diffview->setDummyInserted(false);
+	}
+	docWidget->m_editor->rehighlight();
+	docWidget->updatePanes();
+}
 void MainWindow::onDiffViewChanged() {
 	qDebug() << "MainWindow::onDiffViewChanged()";
     if (m_processing) return;
@@ -115,8 +138,10 @@ void MainWindow::do_diff() {
 	m_processing = true;
 	QTextDocument *doc1 = docWidget->m_editor->document();
 	QTextDocument *doc2 = docWidget->m_diffview->document();
-	removeAllDummyLines(doc1);
-	removeAllDummyLines(doc2);
+	if( docWidget->m_editor->dummyInserted() )
+		removeAllDummyLines(doc1);
+	if( docWidget->m_diffview->dummyInserted() )
+		removeAllDummyLines(doc2);
 	std::vector<QString> lines1 = extractLinesFromDocument(doc1);
     std::vector<QString> lines2 = extractLinesFromDocument(doc2);
 
@@ -210,5 +235,7 @@ void MainWindow::do_diff() {
         }
     }
     flushPending(doc1->blockCount() + 1, doc2->blockCount() + 1);
+    docWidget->m_editor->setDummyInserted(true);
+    docWidget->m_diffview->setDummyInserted(true);
 	m_processing = false;
 }

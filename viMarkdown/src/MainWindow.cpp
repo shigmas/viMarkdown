@@ -2363,23 +2363,6 @@ void MainWindow::onAction_RegExp(bool checked) {
 	g.m_regexp = checked;
 	save_settings();
 }
-void MainWindow::onAction_DiffMode(bool checked) {
-	DocWidget *docWidget = getCurDocWidget();
-	if( docWidget == nullptr ) return;
-	docWidget->m_diffMode = checked;
-	docWidget->m_editor->setDiffMode(checked);
-	if (checked) {
-		docWidget->m_editor->expandAll();
-		docWidget->m_editor->setHighlightMarkdown(false);
-		docWidget->m_editor->setLineWrapMode(QPlainTextEdit::NoWrap);
-	} else {
-		if( docWidget->m_docType == DocType::Markdown )
-			docWidget->m_editor->setHighlightMarkdown(true);
-		docWidget->m_editor->setLineWrapMode(QPlainTextEdit::WidgetWidth);
-	}
-	docWidget->m_editor->rehighlight();
-	docWidget->updatePanes();
-}
 void MainWindow::onAction_KeisenMode(bool checked) {
 	m_keisenMode = checked;
 	for(int ix = 0; ix < ui->tabWidget->count(); ++ix) {
