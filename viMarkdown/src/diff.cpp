@@ -243,6 +243,7 @@ void MainWindow::do_diff() {
 		delete docWidget->m_mmPixmap;
 	//##docWidget->m_mmPixmap = new QPixmap(MINMAP_WIDTH, doc1->blockCount());
 	//##docWidget->m_minimap->addChild(docWidget->m_mmPixmap);
+	docWidget->m_minimap->resize(MINMAP_WIDTH, doc1->blockCount());
 	//
 	m_processing = false;
 }

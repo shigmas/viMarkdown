@@ -598,6 +598,6 @@ SPR# 状 P Open Close ver     Type  概要
 0595 ◎ C 07/07 07/08 03033│ToDo│ミニマップ用 QPixmap m_mapPixmap を生成し、MiniMap が保持
 0596 ◎ C 07/08 07/08 03033│ToDo│QWidget 派生の MiniMap クラス定義
 0597 ◎ C 07/08 07/08 03033│問題│diff表示：背景強調が上に数ドットずれている
-0598 ● C 07/08            │ToDo│
+0598 ◎ C 07/08 07/08 03033│ToDo│diff結果に応じて m_mapPixmap をリサイズ
 0599 ● C 07/08            │ToDo│
 0600 ● C 07/08            │ToDo│
