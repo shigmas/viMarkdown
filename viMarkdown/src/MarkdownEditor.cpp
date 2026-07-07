@@ -2387,7 +2387,9 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
 			if (r.top() > viewport()->height()) break; // 画面外なら終了
 			if( isDummyLine(b) || hasDiff(b) ) {
 				p.setPen(Qt::transparent);
-				p.fillRect(blockBoundingGeometry(b), QColor(isDummyLine(b) ? "#e8e8e8" : "#ffecec"));
+				auto g = blockBoundingGeometry(b).translated(0, 3);
+				//g.setY(g.y() + 2);
+				p.fillRect(g, QColor(isDummyLine(b) ? "#e8e8e8" : "#ffecec"));
 			}
 		}
 	}

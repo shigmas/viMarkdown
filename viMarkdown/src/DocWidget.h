@@ -66,7 +66,12 @@ enum class DocType {
 
 //using DiffView = QPlainTextEdit;
 using DiffView = MarkdownEditor;
-using MiniMap = QWidget;
+//using MiniMap = QWidget;
+class MiniMap : public QWidget {
+public:
+	MiniMap(QWidget* parent) : QWidget(parent)
+	{}
+};
 
 class DocWidget : public QWidget
 {
@@ -95,6 +100,7 @@ public:
 	QStringConverter::Encoding m_encoding = QStringConverter::Utf8;
 	QString	m_title;				//	タブタイトル
 	QString	m_fullPath;
+	QPixmap				*m_mmPixmap = nullptr;	//	ミニマップ用画像
 	QFrame				*m_headerWidget = nullptr;
 	MarkdownEditor		*m_editor = nullptr;	//	マークダウンエディタへのポインタ
 	MarkdownPreview		*m_preview = nullptr;	//	マークダウンプレビューワへのポインタ

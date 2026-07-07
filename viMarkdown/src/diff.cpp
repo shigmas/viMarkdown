@@ -148,6 +148,7 @@ void MainWindow::do_diff() {
     dtl::Diff<QString, std::vector<QString>> d(lines1, lines2);
     d.compose();
 
+    do_output("\n");
     QTextBlock block1 = doc1->begin();
     QTextBlock block2 = doc2->begin();
     QTextCursor cur1 = docWidget->m_editor->textCursor();
@@ -237,5 +238,11 @@ void MainWindow::do_diff() {
     flushPending(doc1->blockCount() + 1, doc2->blockCount() + 1);
     docWidget->m_editor->setDummyInserted(true);
     docWidget->m_diffview->setDummyInserted(true);
+    //
+	if( docWidget->m_mmPixmap != nullptr )
+		delete docWidget->m_mmPixmap;
+	//##docWidget->m_mmPixmap = new QPixmap(MINMAP_WIDTH, doc1->blockCount());
+	//##docWidget->m_minimap->addChild(docWidget->m_mmPixmap);
+	//
 	m_processing = false;
 }

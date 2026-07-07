@@ -54,6 +54,8 @@ const int N_RECENT_FILES = 10 + 26;
 const int N_FAVORITE_FILES = 10 + 26;
 const int MAX_DOC_LOC_HIST_SIZE = 100;
 
+const int OPEN_DST_WIDTH = 50;
+
 const QStringView KEY_RECENT_FILES(u"recentFilePaths");
 const QStringView KEY_FAVORITE_FILES(u"favoriteFilePaths");
 //const QStringView KEY_EDITOR_FONT_SIZE(u"editorFontSize");
@@ -892,7 +894,8 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	MarkdownEditor *mdEditor = newEditor(docWidget, splitter, readOnly);
 	MarkdownPreview *markdownPreview = newPreview(docWidget, splitter, readOnly);
 	MiniMap *minimap = docWidget->m_minimap = new MiniMap(splitter);
-	minimap->setFixedWidth(40);
+	minimap->setFixedWidth(MINMAP_WIDTH);
+	//docWidget->m_mmPixmap = new QPixmap(MINMAP_WIDTH, 100);
 	DiffView *diffview = docWidget->m_diffview = new DiffView(this, docWidget, splitter);
 	diffview->setDiffMode(true);
 	diffview->setLineWrapMode(QPlainTextEdit::NoWrap);
@@ -901,7 +904,7 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	splitter->addWidget(markdownPreview);
 	splitter->addWidget(minimap);
 	splitter->addWidget(diffview);
-	splitter->setSizes(QList<int>() << 500 << 500 << 40 << 500);
+	splitter->setSizes(QList<int>() << 500 << 500 << MINMAP_WIDTH << 500);
 	//QSplitterHandle *handle = splitter->handle(2);
 	//handle->setEnabled(false);
 	QWidget *headerWidget = docWidget->m_headerWidget = new QFrame(docWidget);
@@ -921,9 +924,9 @@ DocWidget *MainWindow::newTabWidget(const QString& title, const QString& fullPat
 	m_diffviewLabel = new QLabel("", headerWidget);
     m_diffviewLabel->setStyleSheet("font-weight: bold; color: #333;");
     QWidget *dummySpacer = new QWidget(this);
-	dummySpacer->setFixedWidth(40+50);
+	dummySpacer->setFixedWidth(MINMAP_WIDTH+OPEN_DST_WIDTH);
 	QPushButton *pb = new QPushButton("Open...");
-	pb->setFixedWidth(50);
+	pb->setFixedWidth(OPEN_DST_WIDTH);
 	connect(pb, &QAbstractButton::clicked, this, &MainWindow::diffview_open);
     headerLayout->addWidget(titleLabel);
     headerLayout->addWidget(dummySpacer);
