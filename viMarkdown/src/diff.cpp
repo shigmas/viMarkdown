@@ -89,6 +89,28 @@ void removeAllDummyLines(QTextDocument *doc) {
     cursor.endEditBlock(); // レイアウトを再計算して画面を更新
 }
 // -------------------------------------------------------------
+void updateMapSub(QPainter &p, int x, QTextDocument* doc) {
+	QTextBlock block = doc->begin();
+	for(int y = 0; y < doc->blockCount() && block.isValid(); ++y, block=block.next()) {
+		QColor col = Qt::white;		//QColor("#808080");
+		if( isDummyLine(block) ) col = QColor("#e8e8e8");
+		else if( hasDiff(block) ) col = QColor("#ffa0a0");	//QColor("#ccffcc");	//QColor("#ffecec");
+		p.setPen(col);
+		p.drawLine(x, y, x+MINMAP_WIDTH/2-1, y);
+	}
+}
+void MiniMap::updateMap(QTextDocument* doc1, QTextDocument* doc2) {
+	//m_mapPixmap = QPixmap(MINMAP_WIDTH, doc1->blockCount());
+	auto ht = rect().height();
+	m_mapPixmap = QPixmap(MINMAP_WIDTH, ht);
+	QPainter p(&m_mapPixmap);
+	int x = 0;
+	updateMapSub(p, 0, doc1);
+	updateMapSub(p, MINMAP_WIDTH/2, doc2);
+	p.setBrush(QColor("#e8e8e8"));
+	p.drawRect(0, doc1->blockCount(), MINMAP_WIDTH, ht - doc1->blockCount());
+}
+// -------------------------------------------------------------
 std::vector<QString> extractLinesFromDocument(const QTextDocument *doc) {
     std::vector<QString> lines;
     if (!doc) return lines;
@@ -239,11 +261,12 @@ void MainWindow::do_diff() {
     docWidget->m_editor->setDummyInserted(true);
     docWidget->m_diffview->setDummyInserted(true);
     //
-	if( docWidget->m_mmPixmap != nullptr )
-		delete docWidget->m_mmPixmap;
+	//if( docWidget->m_minimap->m_mapPixmap != nullptr )
+	//	delete docWidget->m_minimap->m_mmPixmap;
 	//##docWidget->m_mmPixmap = new QPixmap(MINMAP_WIDTH, doc1->blockCount());
 	//##docWidget->m_minimap->addChild(docWidget->m_mmPixmap);
-	docWidget->m_minimap->resize(MINMAP_WIDTH, doc1->blockCount());
-	//
+	//docWidget->m_minimap->resize(MINMAP_WIDTH, doc1->blockCount());
+    docWidget->m_minimap->updateMap(doc1, doc2);
+    //
 	m_processing = false;
 }

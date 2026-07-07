@@ -81,6 +81,7 @@ public:
 		m_mapPixmap = QPixmap(width, height);
 		m_mapPixmap.fill(Qt::green);
 	}
+	void updateMap(QTextDocument* doc1, QTextDocument* doc2); 
 protected:
     void paintEvent(QPaintEvent* event) override {
     	if (m_mapPixmap.isNull()) return;
@@ -118,7 +119,7 @@ public:
 	QStringConverter::Encoding m_encoding = QStringConverter::Utf8;
 	QString	m_title;				//	タブタイトル
 	QString	m_fullPath;
-	QPixmap				*m_mmPixmap = nullptr;	//	ミニマップ用画像
+	//QPixmap				*m_mmPixmap = nullptr;	//	ミニマップ用画像
 	QFrame				*m_headerWidget = nullptr;
 	MarkdownEditor		*m_editor = nullptr;	//	マークダウンエディタへのポインタ
 	MarkdownPreview		*m_preview = nullptr;	//	マークダウンプレビューワへのポインタ
