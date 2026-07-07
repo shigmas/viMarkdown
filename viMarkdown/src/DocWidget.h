@@ -3,12 +3,15 @@
 #include <QFrame>
 #include <QWidget>
 #include <QPlainTextEdit>
+#include <QPainter>
 
 //#include "C:\Qt\6.10.0\msvc2022_64\include\QtWidgets\qwidget.h"
 //#include "markdowntohtmlconvertor.h"
 
 #define		CODE_IMAGE		0xfffc		//	プレビュー：画像アイコン
 #define		LINE_SEPARATOR	0x2028		//	リスト文字列内改行コード
+
+//const int MINMAP_WIDTH = 40;
 
 //class QPlainTextEdit;
 class MarkdownEditor;
@@ -68,9 +71,24 @@ enum class DocType {
 using DiffView = MarkdownEditor;
 //using MiniMap = QWidget;
 class MiniMap : public QWidget {
+	//##Q_OBJECT
 public:
-	MiniMap(QWidget* parent) : QWidget(parent)
-	{}
+	explicit MiniMap(QWidget* parent = nullptr) : QWidget(parent)
+	{
+		resize(MINMAP_WIDTH, 100);
+	}
+	void resize(int width, int height) {
+		m_mapPixmap = QPixmap(width, height);
+		m_mapPixmap.fill(Qt::green);
+	}
+protected:
+    void paintEvent(QPaintEvent* event) override {
+    	if (m_mapPixmap.isNull()) return;
+    	QPainter p(this);
+		p.drawPixmap(0, 0, m_mapPixmap);
+    }
+public:
+	QPixmap	m_mapPixmap;
 };
 
 class DocWidget : public QWidget

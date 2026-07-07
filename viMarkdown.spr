@@ -595,8 +595,8 @@ SPR# 状 P Open Close ver     Type  概要
 0592 ◎ C 07/06 07/06 03032│ToDo│diff状態では、右端で折り返し：OFF の方がよい
 0593 ◎ C 07/07 07/07 03033│問題│文書オープン→文書比較を行うと、元文書の1行目が消える（ダミー行と判定されている）
 0594 ◎ C 07/07 07/07 03033│ToDo│MainWindow::onAction_DiffMode(bool checked) は diff.cpp へ移動
-0595 ● C 07/07            │ToDo│ミニマップ用 QPixmap *pixmap を生成し、DocWidget が保持
-0596 ● C 07/08            │ToDo│QWidget 派生の MiniMap クラス定義
+0595 ◎ C 07/07 07/08 03033│ToDo│ミニマップ用 QPixmap m_mapPixmap を生成し、MiniMap が保持
+0596 ◎ C 07/08 07/08 03033│ToDo│QWidget 派生の MiniMap クラス定義
 0597 ◎ C 07/08 07/08 03033│問題│diff表示：背景強調が上に数ドットずれている
 0598 ● C 07/08            │ToDo│
 0599 ● C 07/08            │ToDo│
