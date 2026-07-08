@@ -601,7 +601,7 @@ SPR# 状 P Open Close ver     Type  概要
 0598 ◎ C 07/08 07/08 03033│ToDo│diff結果に応じて m_mapPixmap をリサイズ
 0599 ◎ C 07/08 07/08 03033│ToDo│diff結果を m_mapPixmap に描画
 0600 ◎ C 07/08 07/08 03033│ToDo│MiniMap：文章が無い部分はグレイ背景の方がよい？
-0601 ● C 07/08            │ToDo│diff表示：変更行部分は明黄色背景の方がよい？
+0601 ◎ C 07/08 07/09 03033│ToDo│diff表示：変更行部分は明黄色背景の方がよい？
 0602 ● C 07/08            │ToDo│
 0603 ● C 07/08            │ToDo│
 0604 ● C 07/08            │ToDo│
