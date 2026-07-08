@@ -11,6 +11,9 @@
 #define		CODE_IMAGE		0xfffc		//	プレビュー：画像アイコン
 #define		LINE_SEPARATOR	0x2028		//	リスト文字列内改行コード
 
+#define		ADDED_LINE		1
+#define		CHANGED_LINE	2
+
 //const int MINMAP_WIDTH = 40;
 
 //class QPlainTextEdit;

@@ -30,6 +30,7 @@ extern ViStatus gvi;
 bool isDummyLine(const QTextBlock &block);
 int lineNumber(const QTextBlock &block);
 bool hasDiff(const QTextBlock &block);
+int getDiff(const QTextBlock &block);
 
 //extern bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment, bool &commented);
 //extern bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens);
@@ -2389,7 +2390,7 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
 				p.setPen(Qt::transparent);
 				auto g = blockBoundingGeometry(b).translated(0, 3);
 				//g.setY(g.y() + 2);
-				p.fillRect(g, QColor(isDummyLine(b) ? "#e8e8e8" : "#ffecec"));
+				p.fillRect(g, QColor(isDummyLine(b) ? "#e8e8e8" : getDiff(b) == ADDED_LINE ? "#ffecec" : "#ffffec"));
 			}
 		}
 	}

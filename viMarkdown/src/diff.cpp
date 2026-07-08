@@ -19,8 +19,32 @@
 bool isDummyLine(const QTextBlock &block) {
     return block.userState() == 0;
 }
+#if 1
+// 2. 行番号（1オリジン）取得（2ビット右シフトするだけ）
+int lineNumber(const QTextBlock &block) {
+    return (unsigned)block.userState() >> 2;
+}
 
-// 2. 行番号の取得（1ビット右シフトするだけ）
+// 3. 差分の有無（下位2ビットが 0なら差分なし）
+int getDiff(const QTextBlock &block) {
+    return (block.userState() & 0x03);
+}
+bool hasDiff(const QTextBlock &block) {
+	return getDiff(block) != 0;
+}
+
+// ダミー行をセットする場合
+void setDummyLine(QTextBlock block) {
+    block.setUserState(0);
+}
+
+// 物理的な行をセットする場合
+void setPhysicalLine(QTextBlock &block, int ln, int flag) {
+    int state = (ln << 2) | flag;
+    block.setUserState(state);
+}
+#else
+// 2. 行番号（1オリジン）取得（1ビット右シフトするだけ）
 int lineNumber(const QTextBlock &block) {
     return (unsigned)block.userState() >> 1;
 }
@@ -29,10 +53,6 @@ int lineNumber(const QTextBlock &block) {
 bool hasDiff(const QTextBlock &block) {
     return (block.userState() & 0x01) != 0;
 }
-
-// -------------------------------------------------------------
-// 【書き込み時の処理例】
-// -------------------------------------------------------------
 
 // ダミー行をセットする場合
 void setDummyLine(QTextBlock block) {
@@ -44,6 +64,7 @@ void setPhysicalLine(QTextBlock &block, int ln, bool changed) {
     int state = (ln << 1) | (changed ? 1 : 0);
     block.setUserState(state);
 }
+#endif
 //
 void removeAllDummyLines(QTextDocument *doc) {
     if (!doc) return;
@@ -94,7 +115,12 @@ void updateMapSub(QPainter &p, int x, QTextDocument* doc) {
 	for(int y = 0; y < doc->blockCount() && block.isValid(); ++y, block=block.next()) {
 		QColor col = Qt::white;		//QColor("#808080");
 		if( isDummyLine(block) ) col = QColor("#e8e8e8");
-		else if( hasDiff(block) ) col = QColor("#ffa0a0");	//QColor("#ccffcc");	//QColor("#ffecec");
+		//else if( hasDiff(block) ) col = QColor("#ffa0a0");	//QColor("#ccffcc");	//QColor("#ffecec");
+		else {
+			auto d = getDiff(block);
+			if( d == ADDED_LINE ) col = QColor("#ffa0a0");
+			else if( d == CHANGED_LINE ) col = QColor("#ffffa0");
+		}
 		p.setPen(col);
 		p.drawLine(x, y, x+MINMAP_WIDTH/2-1, y);
 	}
@@ -184,7 +210,7 @@ void MainWindow::do_diff() {
         if (nAdd == 0) {        // 右側（doc2）で削除された場合のみ
             for (int ln = diffLn1; ln < endLn1; ++ln) {
                 do_output(QString("- %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
-	        	setPhysicalLine(block1, ++ln1, true);
+	        	setPhysicalLine(block1, ++ln1, ADDED_LINE);
 	        	block1 = block1.next();
 	        	cur2.setPosition(block2.position()); 
                 cur2.insertText("\n");
@@ -195,7 +221,7 @@ void MainWindow::do_diff() {
             for (int ln = diffLn2; ln < endLn2; ++ln) {
                 if (ln - 1 >= lines2.size()) break;
                 do_output(QString("+ 0 %1 '%2'\n").arg(ln).arg(lines2[ln-1]));
-	        	setPhysicalLine(block2, ++ln2, true);
+	        	setPhysicalLine(block2, ++ln2, ADDED_LINE);
 	        	block2 = block2.next();
 	        	cur1.setPosition(block1.position());
                 cur1.insertText("\n");
@@ -205,12 +231,12 @@ void MainWindow::do_diff() {
         } else {
             for (int ln = diffLn1; ln < endLn1; ++ln) {
                 do_output(QString("! %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
-	        	setPhysicalLine(block1, ++ln1, true);
+	        	setPhysicalLine(block1, ++ln1, CHANGED_LINE);
 	        	block1 = block1.next();
             }
             for (int ln = diffLn2; ln < endLn2; ++ln) {
                 do_output(QString("! 0 %1 '%2'\n").arg(ln).arg(lines2[ln-1]));
-	        	setPhysicalLine(block2, ++ln2, true);
+	        	setPhysicalLine(block2, ++ln2, CHANGED_LINE);
 	        	block2 = block2.next();
             }
             int d = (endLn1 - diffLn1) - (endLn2 - diffLn2);
@@ -242,9 +268,9 @@ void MainWindow::do_diff() {
         case dtl::SES_COMMON:
        		flushPending(info.beforeIdx, info.afterIdx);
         	do_output(QString("= %1 %2 '%3'\n").arg(info.beforeIdx).arg(info.afterIdx).arg(line));
-        	setPhysicalLine(block1, ++ln1, false);
+        	setPhysicalLine(block1, ++ln1, 0);
         	block1 = block1.next();
-        	setPhysicalLine(block2, ++ln2, false);
+        	setPhysicalLine(block2, ++ln2, 0);
         	block2 = block2.next();
         	break;
         case dtl::SES_DELETE:	//	右側（doc2）で削除された行
