@@ -182,11 +182,20 @@ void calculateAndSetCharDiff(QTextBlock block1, QTextBlock block2, int n1, int n
 	auto b1 = block1, b2 = block2;
 	std::vector<QChar> text1, text2;
 	for(int i = 0; i < n1; ++i, b1=b1.next()) {
-		text1.insert(text1.end(), b1.text().begin(), b1.text().end());
+		if( !b1.text().isEmpty() ) {
+			//auto t = b1.text();
+			//text1.insert(text1.end(), b1.text().begin(), b1.text().end());
+			const QChar *ptr = b1.text().data();
+			text1.insert(text1.end(), ptr, ptr + b1.text().size());
+		}
 		text1.push_back(QChar(u'\n'));
 	}
 	for(int i = 0; i < n2; ++i, b2=b2.next()) {
-		text2.insert(text2.end(), b2.text().begin(), b2.text().end());
+		if( !b2.text().isEmpty() ) {
+			//text2.insert(text2.end(), b2.text().begin(), b2.text().end());
+			const QChar *ptr = b2.text().data();
+			text2.insert(text2.end(), ptr, ptr + b2.text().size());
+		}
 		text2.push_back(QChar(u'\n'));
 	}
 	dtl::Diff<QChar, std::vector<QChar>> d(text1, text2);

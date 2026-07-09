@@ -604,8 +604,8 @@ SPR# 状 P Open Close ver     Type  概要
 0601 ◎ C 07/08 07/09 03033│ToDo│diff表示：変更行部分は明黄色背景の方がよい？
 0602 ◎ C 07/09 07/09 03033│ToDo│diff：変更行部分を文字単位比較を行い、SES_ADD, SES_DELETE 部分を userData に保存
 0603 ● C 07/09            │ToDo│Test > DumpCharFlags：diff 状態では SES_ADD, SES_DELETE 部分情報を表示
-0604 ● C 07/09            │ToDo│
-0605 ● C 07/09            │ToDo│
+0604 ◎ C 07/09 07/09 03033│ToDo│Test > DumpCharFlags → DumpUserData にリネーム
+0605 ◎ C 07/09 07/09 03033│問題│abc と a を文字単位比較したらクラッシュした
 0606 ● C 07/09            │ToDo│
 0607 ● C 07/09            │ToDo│
 0608 ● C 07/09            │ToDo│

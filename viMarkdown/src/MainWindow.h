@@ -381,7 +381,8 @@ protected:
     void	onAction_TestEtoPCurSync();
     void	onAction_TestViCommands();
     void	onAction_TestAll();
-    void	onAction_DumpCharFlags();
+    //void	onAction_DumpCharFlags();
+    void	onAction_DumpBlockUserData();
     void	onAction_DumpBlockUserStates();
     void	onAction_RunPTS();
     void	onAction_Exit();

@@ -668,7 +668,8 @@ void MainWindow::setup_connections() {
 	connect(ui->action_TestViCommands, &QAction::triggered, this, &MainWindow::onAction_TestViCommands);
 	connect(ui->action_TestAll, &QAction::triggered, this, &MainWindow::onAction_TestAll);
 	connect(ui->action_RunPTS, &QAction::triggered, this, &MainWindow::onAction_RunPTS);
-	connect(ui->action_DumpCharFlags, &QAction::triggered, this, &MainWindow::onAction_DumpCharFlags);
+	//connect(ui->action_DumpCharFlags, &QAction::triggered, this, &MainWindow::onAction_DumpCharFlags);
+	connect(ui->action_DumpBlockUserData, &QAction::triggered, this, &MainWindow::onAction_DumpBlockUserData);
 	connect(ui->action_DumpBlockUserStates, &QAction::triggered, this, &MainWindow::onAction_DumpBlockUserStates);
 	connect(ui->action_AddThisFavorite, &QAction::triggered, this, &MainWindow::onAction_AddThisFavorite);
 	connect(ui->action_New, &QAction::triggered, this, &MainWindow::onAction_New);
