@@ -602,12 +602,12 @@ SPR# 状 P Open Close ver     Type  概要
 0599 ◎ C 07/08 07/08 03033│ToDo│diff結果を m_mapPixmap に描画
 0600 ◎ C 07/08 07/08 03033│ToDo│MiniMap：文章が無い部分はグレイ背景の方がよい？
 0601 ◎ C 07/08 07/09 03033│ToDo│diff表示：変更行部分は明黄色背景の方がよい？
-0602 ● C 07/08            │ToDo│
-0603 ● C 07/08            │ToDo│
-0604 ● C 07/08            │ToDo│
-0605 ● C 07/08            │ToDo│
-0606 ● C 07/08            │ToDo│
-0607 ● C 07/08            │ToDo│
-0608 ● C 07/08            │ToDo│
-0609 ● C 07/08            │ToDo│
-0610 ● C 07/08            │ToDo│
+0602 ◎ C 07/09 07/09 03033│ToDo│diff：変更行部分を文字単位比較を行い、SES_ADD, SES_DELETE 部分を userData に保存
+0603 ● C 07/09            │ToDo│Test > DumpCharFlags：diff 状態では SES_ADD, SES_DELETE 部分情報を表示
+0604 ● C 07/09            │ToDo│
+0605 ● C 07/09            │ToDo│
+0606 ● C 07/09            │ToDo│
+0607 ● C 07/09            │ToDo│
+0608 ● C 07/09            │ToDo│
+0609 ● C 07/09            │ToDo│
+0610 ● C 07/09            │ToDo│

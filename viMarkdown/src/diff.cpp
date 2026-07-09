@@ -178,6 +178,93 @@ void MainWindow::onDiffViewChanged() {
     if (m_processing) return;
     do_diff();
 }
+void calculateAndSetCharDiff(QTextBlock block1, QTextBlock block2, int n1, int n2) {
+	auto b1 = block1, b2 = block2;
+	std::vector<QChar> text1, text2;
+	for(int i = 0; i < n1; ++i, b1=b1.next()) {
+		text1.insert(text1.end(), b1.text().begin(), b1.text().end());
+		text1.push_back(QChar(u'\n'));
+	}
+	for(int i = 0; i < n2; ++i, b2=b2.next()) {
+		text2.insert(text2.end(), b2.text().begin(), b2.text().end());
+		text2.push_back(QChar(u'\n'));
+	}
+	dtl::Diff<QChar, std::vector<QChar>> d(text1, text2);
+    d.compose();
+    auto ses = d.getSes().getSequence();
+    DiffBlockUserData *userData1 = nullptr;
+    DiffBlockUserData *userData2 = nullptr;
+    int ix1 = 0, ix2 = 0;
+    int deleteStart = -1;
+    int deleteLen = 0;
+    int addStart = -1;
+    int addLen = 0;
+	auto flushDeleteRange = [&]() {
+        if (deleteStart != -1) {
+            if (!userData1) userData1 = new DiffBlockUserData();
+            userData1->ranges.append({deleteStart, deleteLen});
+            deleteStart = -1;
+            deleteLen = 0;
+        }
+    };
+
+    // 溜まっている追加（右側）のハイライト範囲を確定してuserDataに保存するラムダ
+    auto flushAddRange = [&]() {
+        if (addStart != -1) {
+            if (!userData2) userData2 = new DiffBlockUserData();
+            userData2->ranges.append({addStart, addLen});
+            addStart = -1;
+            addLen = 0;
+        }
+    };
+    for (const auto &item : ses) {
+        dtl::elemInfo info = item.second;
+        switch( info.type ) {
+    	case dtl::SES_COMMON:
+			flushDeleteRange();
+            flushAddRange();
+            if( ++ix1 > block1.text().size() ) {
+				block1.setUserData(userData1);
+				userData1 = nullptr;
+    			ix1 = 0;
+    			block1 = block1.next();
+    		}
+    		if( ++ix2 > block2.text().size() ) {
+				block2.setUserData(userData2);
+				userData2 = nullptr;
+    			ix2 = 0;
+    			block2 = block2.next();
+    		}
+        	break;
+    	case dtl::SES_DELETE:	//	左側（doc1）のみに存在する行
+        	flushAddRange(); // 右側の追加区間が終了したので確定
+            // 削除された文字の範囲を記録
+            if (deleteStart == -1) {
+                deleteStart = ix1;
+            }
+            deleteLen++;
+            ix1++; // 【重要】左側（doc1）に存在する文字なのでインデックスを進める
+        	break;
+    	case dtl::SES_ADD:		//	右側（doc2）で新しく追加された行
+        	flushDeleteRange(); // 左側の削除区間が終了したので確定
+            // 追加された文字の範囲を記録
+            if (addStart == -1) {
+                addStart = ix2;
+            }
+            addLen++;
+            ix2++; // 【重要】右側（doc2）に存在する文字なのでインデックスを進める
+        	break;
+        }
+    }
+	flushDeleteRange();
+    flushAddRange();
+    if (block1.isValid()) {
+        block1.setUserData(userData1);
+    }
+    if (block2.isValid()) {
+        block2.setUserData(userData2);
+    }
+}
 void MainWindow::do_diff() {
 	if( m_processing ) return;
 	DocWidget *docWidget = getCurDocWidget();
@@ -211,10 +298,12 @@ void MainWindow::do_diff() {
             for (int ln = diffLn1; ln < endLn1; ++ln) {
                 do_output(QString("- %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
 	        	setPhysicalLine(block1, ++ln1, ADDED_LINE);
+	        	block1.setUserData(nullptr);		//	clear userData
 	        	block1 = block1.next();
 	        	cur2.setPosition(block2.position()); 
                 cur2.insertText("\n");
                 setDummyLine(block2);   // 空になった現在のブロック（行）をダミーに設定
+	        	block2.setUserData(nullptr);		//	clear userData
                 block2 = block2.next();  // 下に押し出されたテキストが入っているブロックへ進む
             }
         } else if (nDelete == 0) { // 右側（doc2）で新しく追加された場合のみ
@@ -222,13 +311,16 @@ void MainWindow::do_diff() {
                 if (ln - 1 >= lines2.size()) break;
                 do_output(QString("+ 0 %1 '%2'\n").arg(ln).arg(lines2[ln-1]));
 	        	setPhysicalLine(block2, ++ln2, ADDED_LINE);
+	        	block2.setUserData(nullptr);		//	clear userData
 	        	block2 = block2.next();
 	        	cur1.setPosition(block1.position());
                 cur1.insertText("\n");
                 setDummyLine(block1);   // 空になった現在のブロック（行）をダミーに設定
+	        	block1.setUserData(nullptr);		//	clear userData
                 block1 = block1.next();  // 下に押し出されたテキストが入っているブロックへ進む
             }
-        } else {
+        } else {	//	変更行
+            calculateAndSetCharDiff(block1, block2, nAdd, nDelete);
             for (int ln = diffLn1; ln < endLn1; ++ln) {
                 do_output(QString("! %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
 	        	setPhysicalLine(block1, ++ln1, CHANGED_LINE);
@@ -269,15 +361,17 @@ void MainWindow::do_diff() {
        		flushPending(info.beforeIdx, info.afterIdx);
         	do_output(QString("= %1 %2 '%3'\n").arg(info.beforeIdx).arg(info.afterIdx).arg(line));
         	setPhysicalLine(block1, ++ln1, 0);
+        	block1.setUserData(nullptr);		//	clear userData
         	block1 = block1.next();
         	setPhysicalLine(block2, ++ln2, 0);
+        	block2.setUserData(nullptr);		//	clear userData
         	block2 = block2.next();
         	break;
-        case dtl::SES_DELETE:	//	右側（doc2）で削除された行
+        case dtl::SES_DELETE:	//	左側（doc1）で削除された行
         	diffLn1 = qMin(diffLn1, info.beforeIdx);
         	nDelete += 1;
         	break;
-        case dtl::SES_ADD:		// 右側（doc2）で新しく追加された行
+        case dtl::SES_ADD:		//	右側（doc2）で新しく追加された行
         	diffLn2 = qMin(diffLn2, info.afterIdx);
         	nAdd += 1;
         	break;
