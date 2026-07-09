@@ -2610,11 +2610,13 @@ void MainWindow::onModificationChanged(bool b) {
 void MainWindow::syncEditorToPreviewCursor() {
 	DocWidget *docWidget = getCurDocWidget();
 	if (docWidget == nullptr) return;
+	if( docWidget->m_diffMode ) return;
 	docWidget->m_editor->syncPreviewCursorFromEditor();
 }
 void MainWindow::syncEditorPreviewScroll() {
 	DocWidget *docWidget = getCurDocWidget();
 	if (docWidget == nullptr) return;
+	if( docWidget->m_diffMode ) return;
 	QRect srcRect = docWidget->m_editor->cursorRect();
     int srcCursorY = srcRect.y(); // ビューポート上端からの相対座標
     int srcViewHeight = docWidget->m_editor->viewport()->height();

@@ -2198,6 +2198,7 @@ void MarkdownEditor::onContentsChanged(int position, int charsRemoved, int chars
 	//	カーソル同期処理
 void MarkdownEditor::syncPreviewCursorFromEditor() {
 	if( m_mainWindow->isEdittingInPreview() ) return;
+	if( m_diffMode ) return;
 	if( m_processing || m_mainWindow->isCursorCyncing() ) return;		//	再入禁止
 	m_processing = true;
 	m_mainWindow->setCursorCyncing();	//	同期処理中フラグON
