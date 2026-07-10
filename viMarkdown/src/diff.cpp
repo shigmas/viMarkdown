@@ -178,27 +178,14 @@ void MainWindow::onDiffViewChanged() {
     if (m_processing) return;
     do_diff();
 }
-void calculateAndSetCharDiff(QTextBlock block1, QTextBlock block2, int n1, int n2) {
+//void calculateAndSetCharDiff(QTextBlock block1, QTextBlock block2, const std::vector<QChar>& text1, const std::vector<QChar>& text2) {
+void calculateAndSetCharDiff(QTextBlock block1, QTextBlock block2, const QString& text1, const QString& text2) {
+    //QString t1(text1.data(), text1.size()), t2(text2.data(), text2.size());
+	qDebug() << "calculateAndSetCharDiff(" << text1 << ", " << text2 << ")";
+	std::vector<QChar> t1(text1.data(), text1.data() + text1.size());
+	std::vector<QChar> t2(text2.data(), text2.data() + text2.size());
 	auto b1 = block1, b2 = block2;
-	std::vector<QChar> text1, text2;
-	for(int i = 0; i < n1; ++i, b1=b1.next()) {
-		if( !b1.text().isEmpty() ) {
-			//auto t = b1.text();
-			//text1.insert(text1.end(), b1.text().begin(), b1.text().end());
-			const QChar *ptr = b1.text().data();
-			text1.insert(text1.end(), ptr, ptr + b1.text().size());
-		}
-		text1.push_back(QChar(u'\n'));
-	}
-	for(int i = 0; i < n2; ++i, b2=b2.next()) {
-		if( !b2.text().isEmpty() ) {
-			//text2.insert(text2.end(), b2.text().begin(), b2.text().end());
-			const QChar *ptr = b2.text().data();
-			text2.insert(text2.end(), ptr, ptr + b2.text().size());
-		}
-		text2.push_back(QChar(u'\n'));
-	}
-	dtl::Diff<QChar, std::vector<QChar>> d(text1, text2);
+	dtl::Diff<QChar, std::vector<QChar>> d(t1, t2);
     d.compose();
     auto ses = d.getSes().getSequence();
     DiffBlockUserData *userData1 = nullptr;
@@ -212,6 +199,7 @@ void calculateAndSetCharDiff(QTextBlock block1, QTextBlock block2, int n1, int n
         if (deleteStart != -1) {
             if (!userData1) userData1 = new DiffBlockUserData();
             userData1->ranges.append({deleteStart, deleteLen});
+            qDebug() << "flushDeleteRange " << deleteStart << ", " << deleteLen;
             deleteStart = -1;
             deleteLen = 0;
         }
@@ -222,6 +210,7 @@ void calculateAndSetCharDiff(QTextBlock block1, QTextBlock block2, int n1, int n
         if (addStart != -1) {
             if (!userData2) userData2 = new DiffBlockUserData();
             userData2->ranges.append({addStart, addLen});
+            qDebug() << "flushAddRange " << addStart << ", " << addLen;
             addStart = -1;
             addLen = 0;
         }
@@ -329,14 +318,33 @@ void MainWindow::do_diff() {
                 block1 = block1.next();  // 下に押し出されたテキストが入っているブロックへ進む
             }
         } else {	//	変更行
-            calculateAndSetCharDiff(block1, block2, nAdd, nDelete);
+			//std::vector<QChar> text1, text2;
+			QString text1, text2;
+			auto b1 = block1, b2 = block2;
+			for(int i = 0; i < nAdd; ++i, b1=b1.next()) {
+				if( !b1.text().isEmpty() ) {
+					//const QChar *ptr = b1.text().data();
+					//text1.insert(text1.end(), ptr, ptr + b1.text().size());
+					text1 += b1.text();
+				}
+				text1.push_back(QChar(u'\n'));
+			}
+			for(int i = 0; i < nDelete; ++i, b2=b2.next()) {
+				if( !b2.text().isEmpty() ) {
+					//const QChar *ptr = b2.text().data();
+					//text2.insert(text2.end(), ptr, ptr + b2.text().size());
+					text2 += b2.text();
+				}
+				text2.push_back(QChar(u'\n'));
+			}
+            calculateAndSetCharDiff(block1, block2, text1, text2);
             for (int ln = diffLn1; ln < endLn1; ++ln) {
-                do_output(QString("! %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
+                //##do_output(QString("! %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
 	        	setPhysicalLine(block1, ++ln1, CHANGED_LINE);
 	        	block1 = block1.next();
             }
             for (int ln = diffLn2; ln < endLn2; ++ln) {
-                do_output(QString("! 0 %1 '%2'\n").arg(ln).arg(lines2[ln-1]));
+                //##do_output(QString("! 0 %1 '%2'\n").arg(ln).arg(lines2[ln-1]));
 	        	setPhysicalLine(block2, ++ln2, CHANGED_LINE);
 	        	block2 = block2.next();
             }

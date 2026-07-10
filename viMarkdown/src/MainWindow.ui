@@ -1069,7 +1069,7 @@
     <string>DumpBlockUserData</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Alt+F</string>
+    <string>Ctrl+Alt+U</string>
    </property>
   </action>
   <action name="action_RunPTS">

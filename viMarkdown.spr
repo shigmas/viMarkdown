@@ -607,7 +607,17 @@ SPR# 状 P Open Close ver     Type  概要
 0604 ◎ C 07/09 07/09 03034│ToDo│Test > DumpCharFlags → DumpUserData にリネーム
 0605 ◎ C 07/09 07/09 03034│問題│abc と a を文字単位比較したらクラッシュした
 0606 ◎ C 07/09 07/10 03034│問題│abc と ac を文字単位比較したらクラッシュした
-0607 ● C 07/09            │ToDo│
-0608 ● C 07/09            │ToDo│
-0609 ● C 07/09            │ToDo│
-0610 ● C 07/09            │ToDo│
+0607 ● C 07/10            │問題│文字単位比較結果 > 挿入文字列情報：start が1オリジンになっている
+0608 ● C 07/10            │問題│aaxyzccaaxyzcc、aaccaacc の文字単位比較結果が不正
+0609 ◎ C 07/10 07/11 03034│ToDo│calculateAndSetCharDiff() の第3, 4 引数は const QString& に変更
+0610 ◎ C 07/10 07/11 03034│問題│std::vector<QChar>& でデータを渡すと、中身が書き換わる？？？
+0611 ● C 07/10            │ToDo│
+0612 ● C 07/10            │ToDo│
+0613 ● C 07/10            │ToDo│
+0614 ● C 07/10            │ToDo│
+0615 ● C 07/10            │ToDo│
+0616 ● C 07/10            │ToDo│
+0617 ● C 07/10            │ToDo│
+0618 ● C 07/10            │ToDo│
+0619 ● C 07/10            │ToDo│
+0620 ● C 07/10            │ToDo│
