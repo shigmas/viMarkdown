@@ -7,6 +7,7 @@
 //#include <QTimer>
 //#include "C:\Qt\6.10.0\msvc2022_64\include\QtWidgets\qplaintextedit.h"
 #include "MainWindow.h"
+#include "diff.h"
 
 enum class Align { Left, Center, Right };
 
@@ -47,39 +48,55 @@ public:
 	}
 protected:
 	void highlightBlock(const QString &text) override {
-		if( !m_highlightMarkdown ) return;
-		if (text.startsWith("#")) {
-			QTextCharFormat fmt_darkred;
-			fmt_darkred.setForeground(g.m_headingsColor);
-			setFormat(0, text.length(), fmt_darkred);
-		} else {
-			// デフォルトの色（黒）
-			//QPalette currentPalette = parentWidget->palette();
-			//setFormat(0, text.length(), currentPalette.color(QPalette::Text));
-			auto it = m_boldItalicRegex.globalMatch(text);
-			while (it.hasNext()) {
-				QRegularExpressionMatch match = it.next();
-				setFormat(match.capturedStart(), match.capturedLength(), m_boldItalicFormat);
+		if( m_highlightMarkdown ) {
+			if (text.startsWith("#")) {
+				QTextCharFormat fmt_darkred;
+				fmt_darkred.setForeground(g.m_headingsColor);
+				setFormat(0, text.length(), fmt_darkred);
+			} else {
+				// デフォルトの色（黒）
+				//QPalette currentPalette = parentWidget->palette();
+				//setFormat(0, text.length(), currentPalette.color(QPalette::Text));
+				auto it = m_boldItalicRegex.globalMatch(text);
+				while (it.hasNext()) {
+					QRegularExpressionMatch match = it.next();
+					setFormat(match.capturedStart(), match.capturedLength(), m_boldItalicFormat);
+				}
+				it = m_boldRegex.globalMatch(text);
+				while (it.hasNext()) {
+					QRegularExpressionMatch match = it.next();
+					setFormat(match.capturedStart(), match.capturedLength(), m_boldFormat);
+				}
+				it = m_italicRegex.globalMatch(text);
+				while (it.hasNext()) {
+					QRegularExpressionMatch match = it.next();
+					setFormat(match.capturedStart(), match.capturedLength(), m_italicFormat);
+				}
+				it = m_strikethroughRegex.globalMatch(text);
+				while (it.hasNext()) {
+					QRegularExpressionMatch match = it.next();
+					setFormat(match.capturedStart(), match.capturedLength(), m_strikethroughFormat);
+				}
 			}
-			it = m_boldRegex.globalMatch(text);
-			while (it.hasNext()) {
-				QRegularExpressionMatch match = it.next();
-				setFormat(match.capturedStart(), match.capturedLength(), m_boldFormat);
-			}
-			it = m_italicRegex.globalMatch(text);
-			while (it.hasNext()) {
-				QRegularExpressionMatch match = it.next();
-				setFormat(match.capturedStart(), match.capturedLength(), m_italicFormat);
-			}
-			it = m_strikethroughRegex.globalMatch(text);
-			while (it.hasNext()) {
-				QRegularExpressionMatch match = it.next();
-				setFormat(match.capturedStart(), match.capturedLength(), m_strikethroughFormat);
-			}
+		} else if( m_highlightDiff ) {
+			QTextBlock block = currentBlock();
+			const auto *userData = dynamic_cast<const DiffBlockUserData*>(block.userData());
+            // 差分データが存在する場合のみ、インラインハイライトを適用
+            if (userData) {
+                QTextCharFormat format;
+                // テキスト文字が見えづらくならない、淡いピンク（パステルレッド）の背景色
+                format.setBackground(QColor("#ffc0c0")); 
+
+                // 登録されている全ての部分範囲に対してフォーマットを適用
+                for (const auto &range : userData->ranges) {
+                    setFormat(range.start, range.length, format);
+                }
+            }
 		}
 	}
 public:
 	bool	m_highlightMarkdown = true;
+	bool	m_highlightDiff = false;
 private:
 	QTextCharFormat m_boldItalicFormat;
 	QTextCharFormat m_boldFormat;
@@ -178,6 +195,7 @@ public:
     void	setDiffMode(bool b) { setHighlightMarkdown(!(m_diffMode = b)); }
     void	expandAll();		//	すべて展開
     void	setHighlightMarkdown(bool b) { m_highlighter->m_highlightMarkdown = b; }
+    void	setHighlightDiff(bool b) { m_highlighter->m_highlightDiff = b; }
     bool	dummyInserted() const { return m_dummyInserted; }
     void	setDummyInserted(bool b) { m_dummyInserted = b; }
 

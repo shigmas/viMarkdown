@@ -64,16 +64,6 @@ bool isUnderlineHeading(const QString& txt);
 bool updateCharFlags(BlockData* data, const QString &buf, int ix, int ix9, bool esc = false);
 void updateCharFlags(QTextBlock);
 
-struct DiffRange {
-    int start;
-    int length;
-};
-
-class DiffBlockUserData : public QTextBlockUserData {
-public:
-    QList<DiffRange> ranges;
-};
-
 enum class DocType {
     Markdown,
     Plain,

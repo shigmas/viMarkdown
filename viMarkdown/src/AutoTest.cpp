@@ -31,6 +31,7 @@
 #include "MarkdownPreview.h"
 #include "SettingsDialog.h"
 #include "ReplaceDialog.h"
+#include "diff.h"
 
 using namespace std;
 

@@ -14,6 +14,7 @@
 #include "DocWidget.h"
 #include "MarkdownEditor.h"
 #include "MarkdownPreview.h"
+#include "diff.h"
 
 // 1. ダミー行（高さを揃えるための空行）かどうかの判定
 bool isDummyLine(const QTextBlock &block) {
@@ -157,11 +158,13 @@ void MainWindow::onAction_DiffMode(bool checked) {
 	docWidget->m_editor->setDiffMode(checked);
 	if (checked) {
 		docWidget->m_editor->expandAll();
+		docWidget->m_editor->setHighlightDiff(true);
 		docWidget->m_editor->setHighlightMarkdown(false);
 		docWidget->m_editor->setLineWrapMode(QPlainTextEdit::NoWrap);
 	} else {
 		if( docWidget->m_docType == DocType::Markdown )
 			docWidget->m_editor->setHighlightMarkdown(true);
+		docWidget->m_editor->setHighlightDiff(false);
 		docWidget->m_editor->setLineWrapMode(QPlainTextEdit::WidgetWidth);
 		QTextDocument *doc1 = docWidget->m_editor->document();
 		QTextDocument *doc2 = docWidget->m_diffview->document();
@@ -404,6 +407,8 @@ void MainWindow::do_diff() {
 	//##docWidget->m_minimap->addChild(docWidget->m_mmPixmap);
 	//docWidget->m_minimap->resize(MINMAP_WIDTH, doc1->blockCount());
     docWidget->m_minimap->updateMap(doc1, doc2);
+	docWidget->m_editor->rehighlight();
+	docWidget->m_diffview->rehighlight();
     //
 	m_processing = false;
 }
