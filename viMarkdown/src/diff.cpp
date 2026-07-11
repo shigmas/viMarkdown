@@ -221,6 +221,80 @@ void applyInlineHighlight(QTextBlock &block, const DiffBlockUserData *userData, 
     }
 }
 #endif
+std::vector<WordToken> tokenize(const QString &text) {
+    std::vector<WordToken> tokens;
+    int i = 0;
+    int len = text.length();
+
+    while (i < len) {
+        if (text[i].isSpace()) {
+            // 空白セグメント（スペースやタブの連続）
+            int start = i;
+            while (i < len && text[i].isSpace()) {
+                i++;
+            }
+            tokens.push_back({text.mid(start, i - start), start});
+        } 
+        else if (text[i].isLetterOrNumber()) {
+            // 英数字・日本語ワードセグメント
+            int start = i;
+            while (i < len && text[i].isLetterOrNumber()) {
+                i++;
+            }
+            tokens.push_back({text.mid(start, i - start), start});
+        } 
+        else {
+            // 記号（カンマ、ピリオド、ブラケットなど）は1文字ずつトークン化
+            tokens.push_back({text.mid(i, 1), i});
+            i++;
+        }
+    }
+    return tokens;
+}
+void calculateAndSetWordDiff(QTextBlock block1, QTextBlock block2, const QString& text1, const QString& text2) {
+	std::vector<WordToken> tokens1 = tokenize(text1);
+    std::vector<WordToken> tokens2 = tokenize(text2);
+    // 2. dtl::Diff<単語の型, ベクターの型> で単語単位の比較を実行！
+    dtl::Diff<WordToken, std::vector<WordToken>> d(tokens1, tokens2);
+    d.compose();
+    auto ses = d.getSes().getSequence();
+    DiffBlockUserData *userData1 = nullptr;
+    DiffBlockUserData *userData2 = nullptr;
+    for (const auto &item : ses) {
+    	const WordToken &token = item.first;
+        dtl::elemInfo info = item.second;
+        switch( info.type ) {
+    	case dtl::SES_COMMON:
+    		break;
+    	case dtl::SES_DELETE:
+    		if( token.start > block1.text().size() ) {
+		        block1.setUserData(userData1);
+		        block1 = block1.next();
+                userData1 = new DiffBlockUserData();
+    		} else if (userData1 == nullptr) {
+                userData1 = new DiffBlockUserData();
+            }
+            userData1->ranges.append({ token.start, (int)token.text.size() });
+    		break;
+    	case dtl::SES_ADD:
+    		if( token.start > block2.text().size() ) {
+		        block2.setUserData(userData2);
+		        block2 = block2.next();
+                userData2 = new DiffBlockUserData();
+    		} else if (userData2 == nullptr) {
+                userData2 = new DiffBlockUserData();
+            }
+            userData2->ranges.append({token.start, (int)token.text.size()});
+    		break;
+        }
+    }
+    if (block1.isValid()) {
+        block1.setUserData(userData1);
+    }
+    if (block2.isValid()) {
+        block2.setUserData(userData2);
+    }
+}
 //void calculateAndSetCharDiff(QTextBlock block1, QTextBlock block2, const std::vector<QChar>& text1, const std::vector<QChar>& text2) {
 void calculateAndSetCharDiff(QTextBlock block1, QTextBlock block2, const QString& text1, const QString& text2) {
     //QString t1(text1.data(), text1.size()), t2(text2.data(), text2.size());
@@ -380,7 +454,8 @@ void MainWindow::do_diff() {
 				}
 				text2.push_back(QChar(u'\n'));
 			}
-            calculateAndSetCharDiff(block1, block2, text1, text2);
+            //calculateAndSetCharDiff(block1, block2, text1, text2);
+            calculateAndSetWordDiff(block1, block2, text1, text2);
             for (int ln = diffLn1; ln < endLn1; ++ln) {
                 //##do_output(QString("! %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
 	        	setPhysicalLine(block1, ++ln1, CHANGED_LINE);
