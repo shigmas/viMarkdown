@@ -260,6 +260,7 @@ void calculateAndSetWordDiff(QTextBlock block1, QTextBlock block2, const QString
     auto ses = d.getSes().getSequence();
     DiffBlockUserData *userData1 = nullptr;
     DiffBlockUserData *userData2 = nullptr;
+    int offset1 = 0, offset2 = 0;
     for (const auto &item : ses) {
     	const WordToken &token = item.first;
         dtl::elemInfo info = item.second;
@@ -267,24 +268,26 @@ void calculateAndSetWordDiff(QTextBlock block1, QTextBlock block2, const QString
     	case dtl::SES_COMMON:
     		break;
     	case dtl::SES_DELETE:
-    		if( token.start > block1.text().size() ) {
+    		if( token.start > block1.text().size() + offset1 ) {
+		        offset1 += block1.text().size() + 1;
 		        block1.setUserData(userData1);
 		        block1 = block1.next();
                 userData1 = new DiffBlockUserData();
     		} else if (userData1 == nullptr) {
                 userData1 = new DiffBlockUserData();
             }
-            userData1->ranges.append({ token.start, (int)token.text.size() });
+            userData1->ranges.append({ token.start - offset1, (int)token.text.size() });
     		break;
     	case dtl::SES_ADD:
-    		if( token.start > block2.text().size() ) {
+    		if( token.start > block2.text().size() + offset2 ) {
+		        offset2 += block2.text().size() + 1;
 		        block2.setUserData(userData2);
 		        block2 = block2.next();
                 userData2 = new DiffBlockUserData();
     		} else if (userData2 == nullptr) {
                 userData2 = new DiffBlockUserData();
             }
-            userData2->ranges.append({token.start, (int)token.text.size()});
+            userData2->ranges.append({token.start - offset2, (int)token.text.size()});
     		break;
         }
     }
