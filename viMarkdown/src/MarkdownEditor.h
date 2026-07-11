@@ -21,6 +21,29 @@ class DocWidget;
 
 extern Global g;
 
+class DiffHighlighter : public QSyntaxHighlighter {
+public:
+	DiffHighlighter(QTextDocument *parent) : QSyntaxHighlighter(parent) {}
+	void updateInlineColors() {
+		rehighlight(); // これを呼ぶことでドキュメント全体の highlightBlock が再実行される
+	}
+protected:
+	void highlightBlock(const QString &text) override {
+		if( m_highlightDiff ) {
+			QTextBlock block = currentBlock();
+			const auto *userData = dynamic_cast<const DiffBlockUserData*>(block.userData());
+            if (userData) {
+                QTextCharFormat format;
+                format.setBackground(QColor("#ffc0c0")); 
+                for (const auto &range : userData->ranges) {
+                    setFormat(range.start, range.length, format);
+                }
+            }
+		}
+	}
+public:
+	bool	m_highlightDiff = false;
+};
 class MarkdownHighlighter : public QSyntaxHighlighter {
 public:
 	MarkdownHighlighter(QTextDocument *parent) : QSyntaxHighlighter(parent)
@@ -78,7 +101,9 @@ protected:
 					setFormat(match.capturedStart(), match.capturedLength(), m_strikethroughFormat);
 				}
 			}
-		} else if( m_highlightDiff ) {
+		}
+#if 0
+		else if( m_highlightDiff ) {
 			QTextBlock block = currentBlock();
 			const auto *userData = dynamic_cast<const DiffBlockUserData*>(block.userData());
             // 差分データが存在する場合のみ、インラインハイライトを適用
@@ -93,10 +118,11 @@ protected:
                 }
             }
 		}
+#endif
 	}
 public:
 	bool	m_highlightMarkdown = true;
-	bool	m_highlightDiff = false;
+	//bool	m_highlightDiff = false;
 private:
 	QTextCharFormat m_boldItalicFormat;
 	QTextCharFormat m_boldFormat;
@@ -195,7 +221,7 @@ public:
     void	setDiffMode(bool b) { setHighlightMarkdown(!(m_diffMode = b)); }
     void	expandAll();		//	すべて展開
     void	setHighlightMarkdown(bool b) { m_highlighter->m_highlightMarkdown = b; }
-    void	setHighlightDiff(bool b) { m_highlighter->m_highlightDiff = b; }
+    void	setHighlightDiff(bool b) { m_diffHighlighter->m_highlightDiff = b; }
     bool	dummyInserted() const { return m_dummyInserted; }
     void	setDummyInserted(bool b) { m_dummyInserted = b; }
 
@@ -264,7 +290,8 @@ private:
     //bool	m_cursorVisible = true;
 	QString	m_lastCurBlockText;				//	事前のカーソルブロックテキスト
 	//QString	m_completerText;
-    class MarkdownHighlighter *m_highlighter;
+    class MarkdownHighlighter	*m_highlighter;
+    class DiffHighlighter		*m_diffHighlighter;
 	class LnAreaWidget	*m_lnAreaWidget = nullptr;
 	SvgCompleter		*m_svgCompleter = nullptr;
     DocWidget			*m_docWidget;

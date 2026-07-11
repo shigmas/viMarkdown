@@ -396,6 +396,7 @@ MarkdownEditor::MarkdownEditor(const MainWindow* mainWindow, DocWidget* docWidge
 	setReadOnly(readOnly);
 	setAttribute(Qt::WA_InputMethodEnabled, true);
 	m_highlighter = new MarkdownHighlighter(this->document());
+	m_diffHighlighter = new DiffHighlighter(this->document());
 #if 0
 	QTextCursor cursor = this->textCursor();
 	QTextBlockFormat format;
@@ -447,12 +448,13 @@ QVariant MarkdownEditor::inputMethodQuery(Qt::InputMethodQuery query) const {
     }
 	return QPlainTextEdit::inputMethodQuery(query);
 }
-void MarkdownEditor::rehighlight() { m_highlighter->rehighlight(); }
-//void MarkdownEditor::setBoldColor(QColor col) {
-//	m_highlighter->setBoldColor(col);
-//}
+void MarkdownEditor::rehighlight() {
+	m_highlighter->rehighlight();
+	m_diffHighlighter->rehighlight();
+}
 void MarkdownEditor::updateInlineColors() {
 	m_highlighter->updateInlineColors();
+	m_diffHighlighter->updateInlineColors();
 }
 void MarkdownEditor::updateViewportMargines() {
 	setViewportMargins(lnAreaWidth(), 0, 0, 0);
@@ -2392,6 +2394,23 @@ void MarkdownEditor::paintEvent(QPaintEvent *e) {
 				auto g = blockBoundingGeometry(b).translated(0, 3);
 				//g.setY(g.y() + 2);
 				p.fillRect(g, QColor(isDummyLine(b) ? "#e8e8e8" : getDiff(b) == ADDED_LINE ? "#ffecec" : "#ffffec"));
+#if 0
+				if( getDiff(b) == CHANGED_LINE ) {
+					const auto *userData = dynamic_cast<const DiffBlockUserData*>(b.userData());
+		            if (userData) {
+		                QTextCharFormat format;
+		                QTextCursor cur(b);
+		                for (const auto &range : userData->ranges) {
+							cur.setPosition(b.position() + range.start);
+							cur.setPosition(b.position() + range.start + range.length, QTextCursor::KeepAnchor);
+							QAbstractTextDocumentLayout *layout = document()->documentLayout();
+							QAbstractTextDocumentLayout::Selection sel;
+							sel.cursor = cur;
+							auto rects = layout->selectionRects(sel);
+						}
+		            }
+				}
+#endif
 			}
 		}
 	}

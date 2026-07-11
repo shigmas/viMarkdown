@@ -159,12 +159,14 @@ void MainWindow::onAction_DiffMode(bool checked) {
 	if (checked) {
 		docWidget->m_editor->expandAll();
 		docWidget->m_editor->setHighlightDiff(true);
+		docWidget->m_diffview->setHighlightDiff(true);
 		docWidget->m_editor->setHighlightMarkdown(false);
 		docWidget->m_editor->setLineWrapMode(QPlainTextEdit::NoWrap);
 	} else {
 		if( docWidget->m_docType == DocType::Markdown )
 			docWidget->m_editor->setHighlightMarkdown(true);
 		docWidget->m_editor->setHighlightDiff(false);
+		docWidget->m_diffview->setHighlightDiff(false);
 		docWidget->m_editor->setLineWrapMode(QPlainTextEdit::WidgetWidth);
 		QTextDocument *doc1 = docWidget->m_editor->document();
 		QTextDocument *doc2 = docWidget->m_diffview->document();
@@ -181,6 +183,44 @@ void MainWindow::onDiffViewChanged() {
     if (m_processing) return;
     do_diff();
 }
+#if 0
+void applyInlineHighlight(QTextBlock &block, const DiffBlockUserData *userData, bool isLeft = true) {
+    if (!block.isValid()) return;
+
+    // データが空、または差分範囲がない場合はフォーマットを空にしてリセット
+    if (!userData || userData->ranges.isEmpty()) {
+        block.layout()->setFormats(QList<QTextLayout::FormatRange>()); // 空リストでリセット [1.1]
+        return;
+    }
+
+    QList<QTextLayout::FormatRange> formats;
+
+    // 1. 強調したい色を設定（ダミー行よりも一段階「濃い」パステルカラー）
+    QTextCharFormat format;
+    if (isLeft) {
+        format.setBackground(QColor("#ffc1c1")); // 削除された文字：少し濃い目のパステル赤
+    } else {
+        format.setBackground(QColor("#b2f0b2")); // 挿入された文字：少し濃い目のパステル緑
+    }
+
+    // 2. 自前の範囲データ（ranges）を、Qtが描画に使う FormatRange 構造体に変換して追加します [1.1, 1.2]
+    for (const auto &range : userData->ranges) {
+        QTextLayout::FormatRange fRange;
+        fRange.start = range.start;
+        fRange.length = range.length;
+        fRange.format = format;
+        formats.append(fRange);
+    }
+
+    // 3. 【マジック】レイアウトに対してフォーマットを直接登録します [1.1, 1.2]
+    block.layout()->setFormats(formats);
+
+    // 4. 【重要】この行（ブロック）の再描画が必要であることをQtの描画エンジンに通知します [1.1, 1.2]
+    if (block.document()) {
+        const_cast<QTextDocument*>(block.document())->markContentsDirty(block.position(), block.length());
+    }
+}
+#endif
 //void calculateAndSetCharDiff(QTextBlock block1, QTextBlock block2, const std::vector<QChar>& text1, const std::vector<QChar>& text2) {
 void calculateAndSetCharDiff(QTextBlock block1, QTextBlock block2, const QString& text1, const QString& text2) {
     //QString t1(text1.data(), text1.size()), t2(text2.data(), text2.size());
@@ -344,11 +384,15 @@ void MainWindow::do_diff() {
             for (int ln = diffLn1; ln < endLn1; ++ln) {
                 //##do_output(QString("! %1 0 '%2'\n").arg(ln).arg(lines1[ln-1]));
 	        	setPhysicalLine(block1, ++ln1, CHANGED_LINE);
+	        	//const auto *userData = dynamic_cast<const DiffBlockUserData*>(block1.userData());
+                //applyInlineHighlight(block1, userData);
 	        	block1 = block1.next();
             }
             for (int ln = diffLn2; ln < endLn2; ++ln) {
                 //##do_output(QString("! 0 %1 '%2'\n").arg(ln).arg(lines2[ln-1]));
 	        	setPhysicalLine(block2, ++ln2, CHANGED_LINE);
+	        	//const auto *userData = dynamic_cast<const DiffBlockUserData*>(block2.userData());
+                //applyInlineHighlight(block2, userData);
 	        	block2 = block2.next();
             }
             int d = (endLn1 - diffLn1) - (endLn2 - diffLn2);

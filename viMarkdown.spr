@@ -603,7 +603,7 @@ SPR# 状 P Open Close ver     Type  概要
 0600 ◎ C 07/08 07/08 03033│ToDo│MiniMap：文章が無い部分はグレイ背景の方がよい？
 0601 ◎ C 07/08 07/09 03034│ToDo│diff表示：変更行部分は明黄色背景の方がよい？
 0602 ◎ C 07/09 07/09 03034│ToDo│diff：変更行部分を文字単位比較を行い、SES_ADD, SES_DELETE 部分を userData に保存
-0603 ● C 07/09            │ToDo│Test > DumpCharFlags：diff 状態では SES_ADD, SES_DELETE 部分情報を表示
+0603 ◎ C 07/09 07/11 03034│ToDo│Test > DumpCharFlags：diff 状態では SES_ADD, SES_DELETE 部分情報を表示
 0604 ◎ C 07/09 07/09 03034│ToDo│Test > DumpCharFlags → DumpUserData にリネーム
 0605 ◎ C 07/09 07/09 03034│問題│abc と a を文字単位比較したらクラッシュした
 0606 ◎ C 07/09 07/10 03034│問題│abc と ac を文字単位比較したらクラッシュした
@@ -611,11 +611,12 @@ SPR# 状 P Open Close ver     Type  概要
 0608 ◎ C 07/10 07/11 03034│問題│aaxyzccaaxyzcc、aaccaacc の文字単位比較結果が不正
 0609 ◎ C 07/10 07/11 03034│ToDo│calculateAndSetCharDiff() の第3, 4 引数は const QString& に変更
 0610 ◎ C 07/10 07/11 03034│問題│std::vector<QChar>& でデータを渡すと、中身が書き換わる？？？
-0611 ● C 07/10            │ToDo│
-0612 ● C 07/10            │ToDo│
-0613 ● C 07/10            │ToDo│
-0614 ● C 07/10            │ToDo│
-0615 ● C 07/10            │ToDo│
+0611 ◎ C 07/10 07/11 03034│問題│文字単位比較結果：比較先ビューの挿入文字列が強調表示されない
+									原因：void highlightBlock(const QString &text) がコールされない
+0612 ◎ C 07/10 07/11 03034│問題│MarkdownHighlighter が diff 結果のハイライトも行うのであれば、その名前はいかがなものか？
+0613 ● C 07/10            │問題│diff表示：diff先（右側）ビューで Ctrl + マウスホイール しても、テキストサイズが変更されない
+0614 ● C 07/10            │問題│対応行を同じ位置に表示するため、diff先（右側）ビューは diff元（左側）と常に同じフォントサイズに設定するべき
+0615 ◎ C 07/10 07/11 03034│ToDo│DiffHighlighter を定義してみる
 0616 ● C 07/10            │ToDo│
 0617 ● C 07/10            │ToDo│
 0618 ● C 07/10            │ToDo│

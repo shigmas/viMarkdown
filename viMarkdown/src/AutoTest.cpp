@@ -761,10 +761,24 @@ void MainWindow::onAction_DumpBlockUserData() {
 			block = block.next();
 		}
 	} else {
-		do_output("\n# Dump userData\n\n");
+		do_output("\n# Dump editor userData\n\n");
 		while( block.isValid() ) {
 			do_output(QString::number((int)block.blockNumber()) + ": '" + block.text() + "' ");
-			//const BlockData* data = getBlockData(block);
+			const DiffBlockUserData *userData = dynamic_cast<const DiffBlockUserData*>(block.userData());
+			if( userData != nullptr ) {
+				const QList<DiffRange> &ranges = userData->ranges;
+				QString txt;
+				for(const auto dr: ranges) {
+					do_output(QString("(%1 %2) ").arg(dr.start).arg(dr.length));
+				}
+			}
+			do_output("\n");
+			block = block.next();
+		}
+		block = docWidget->m_diffview->document()->firstBlock();
+		do_output("\n# Dump diffview userData\n\n");
+		while( block.isValid() ) {
+			do_output(QString::number((int)block.blockNumber()) + ": '" + block.text() + "' ");
 			const DiffBlockUserData *userData = dynamic_cast<const DiffBlockUserData*>(block.userData());
 			if( userData != nullptr ) {
 				const QList<DiffRange> &ranges = userData->ranges;
