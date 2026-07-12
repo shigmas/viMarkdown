@@ -630,5 +630,15 @@ SPR# 状 P Open Close ver     Type  概要
 0626 ◎ C 07/13 07/13 03035│ToDo│diff表示：比較元・先文書のカーソル行は同期した方がよい
 0627 ◎ C 07/13 07/13 03035│ToDo│diff表示 > 比較元・先文書のカーソル同期：文字単位でも同期した方がよい
 0628 ◎ C 07/13 07/13 03035│ToDo│MarkdownEditor::syncDiffViewCursorFromEditor()：peerView を使って、よりシンプルに記述
-0629 ● C 07/13            │ToDo│
-0630 ● C 07/13            │ToDo│
+0629 ◎ C 07/13 07/13 03035│ToDo│ダミー行一括削除のために、ダミー行挿入処理中は {Begin|End}EditBlock() しておく
+0630 ● C 07/13            │問題│Ctrl + \：diff モードの場合は editor、diffview を切り替えた方がよい
+0631 ● C 07/13            │ToDo│
+0632 ● C 07/13            │ToDo│
+0633 ● C 07/13            │ToDo│
+0634 ● C 07/13            │ToDo│
+0635 ● C 07/13            │ToDo│
+0636 ● C 07/13            │ToDo│
+0637 ● C 07/13            │ToDo│
+0638 ● C 07/13            │ToDo│
+0639 ● C 07/13            │ToDo│
+0640 ● C 07/13            │ToDo│

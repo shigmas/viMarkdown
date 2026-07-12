@@ -471,6 +471,8 @@ void MainWindow::do_diff() {
     QTextBlock block2 = doc2->begin();
     QTextCursor cur1 = docWidget->m_editor->textCursor();
     QTextCursor cur2 = docWidget->m_diffview->textCursor();
+    cur1.beginEditBlock();
+    cur2.beginEditBlock();
     int ln1 = 0, ln2 = 0;
     auto ses = d.getSes().getSequence();
     int diffLn1 = INT_MAX, diffLn2 = INT_MAX;
@@ -585,6 +587,8 @@ void MainWindow::do_diff() {
         }
     }
     flushPending(doc1->blockCount() + 1, doc2->blockCount() + 1);
+    cur1.endEditBlock();
+    cur2.endEditBlock();
     docWidget->m_editor->setDummyInserted(true);
     docWidget->m_diffview->setDummyInserted(true);
     //
