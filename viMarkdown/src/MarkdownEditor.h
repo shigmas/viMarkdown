@@ -208,6 +208,7 @@ public:
     //int		srcToPrvHeading(int blockNum);		//	エディタの見出し行番号（0 org.）をプレビューのそれに変換
     int		findPosition(const struct PosContext&);
     void	syncPreviewCursorFromEditor();
+    void	syncDiffViewCursorFromEditor();
     void	tagJump();
 	void	make_link();
 	int		linkClickedPos() const { return m_linkClickedPos; }

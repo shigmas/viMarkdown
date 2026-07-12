@@ -2217,6 +2217,22 @@ void MarkdownEditor::syncPreviewCursorFromEditor() {
 	m_mainWindow->setCursorCyncing(false);
 	m_processing = false;
 }
+void MarkdownEditor::syncDiffViewCursorFromEditor() {
+	m_processing = true;
+	QTextCursor cursor = textCursor();
+	if( this == m_docWidget->m_editor ) {
+		QTextBlock block = m_docWidget->m_diffview->document()->findBlockByNumber(cursor.block().blockNumber());
+		QTextCursor cur2 = m_docWidget->m_diffview->textCursor();
+		cur2.setPosition(block.position());
+		m_docWidget->m_diffview->setTextCursor(cur2);
+	} else {
+		QTextBlock block = m_docWidget->m_editor->document()->findBlockByNumber(cursor.block().blockNumber());
+		QTextCursor cur2 = m_docWidget->m_editor->textCursor();
+		cur2.setPosition(block.position());
+		m_docWidget->m_editor->setTextCursor(cur2);
+	}
+	m_processing = false;
+}
 void MarkdownEditor::check_svg_completer() {	//	SVGブロック補完
 	QTextCursor cursor = this->textCursor();
 	if( cursor.hasSelection() ) return;			//	選択状態の場合は表示しない
@@ -2260,7 +2276,12 @@ void MarkdownEditor::onCursorPosChanged() {
 	if( g.m_auto_svg_completer )
 		check_svg_completer();
 	//	Undone: プレビューの対応段落（見出し行＋本文）を画面内に
-	syncPreviewCursorFromEditor();
+	if( !m_diffMode ) {
+		if( m_docWidget->m_docType == DocType::Markdown )
+			syncPreviewCursorFromEditor();
+	} else {	//	diff モード
+		syncDiffViewCursorFromEditor();
+	}
 #ifdef Q_OS_WIN
 	QRect r = cursorRect();
     // ビューポート座標 → ウィジェット座標
