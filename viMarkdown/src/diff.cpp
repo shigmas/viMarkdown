@@ -16,6 +16,8 @@
 #include "MarkdownPreview.h"
 #include "diff.h"
 
+CharType getCharType(QChar ch);
+
 // 1. ダミー行（高さを揃えるための空行）かどうかの判定
 bool isDummyLine(const QTextBlock &block) {
     return block.userState() == 0;
@@ -236,9 +238,10 @@ std::vector<WordToken> tokenize(const QString &text) {
             tokens.push_back({text.mid(start, i - start), start});
         } 
         else if (text[i].isLetterOrNumber()) {
+        	auto t = getCharType(text[i]);
             // 英数字・日本語ワードセグメント
             int start = i;
-            while (i < len && text[i].isLetterOrNumber()) {
+            while (i < len && text[i].isLetterOrNumber() && getCharType(text[i]) == t) {
                 i++;
             }
             tokens.push_back({text.mid(start, i - start), start});
