@@ -54,5 +54,6 @@
         <file>images/match_case_off.png</file>
         <file>images/regexp.png</file>
         <file>images/difference.png</file>
+        <file>images/diffWithFile.png</file>
     </qresource>
 </RCC>

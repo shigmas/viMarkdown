@@ -273,6 +273,7 @@
    <addaction name="action_IgnoreCase"/>
    <addaction name="action_RegExp"/>
    <addaction name="action_DiffMode"/>
+   <addaction name="action_DiffWithFile"/>
    <addaction name="action_List"/>
    <addaction name="action_NumList"/>
    <addaction name="action_Checkbox"/>
@@ -1204,6 +1205,10 @@
    </property>
   </action>
   <action name="action_DiffWithFile">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/MainWindow/images/diffWithFile.png</normaloff>:/MainWindow/images/diffWithFile.png</iconset>
+   </property>
    <property name="text">
     <string>Diff with file...</string>
    </property>
