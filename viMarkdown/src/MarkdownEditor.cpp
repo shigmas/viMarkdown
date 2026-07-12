@@ -2219,18 +2219,12 @@ void MarkdownEditor::syncPreviewCursorFromEditor() {
 }
 void MarkdownEditor::syncDiffViewCursorFromEditor() {
 	m_processing = true;
+	MarkdownEditor *peerView = this == m_docWidget->m_editor ? m_docWidget->m_diffview : m_docWidget->m_editor;
 	QTextCursor cursor = textCursor();
-	if( this == m_docWidget->m_editor ) {
-		QTextBlock block = m_docWidget->m_diffview->document()->findBlockByNumber(cursor.block().blockNumber());
-		QTextCursor cur2 = m_docWidget->m_diffview->textCursor();
-		cur2.setPosition(block.position());
-		m_docWidget->m_diffview->setTextCursor(cur2);
-	} else {
-		QTextBlock block = m_docWidget->m_editor->document()->findBlockByNumber(cursor.block().blockNumber());
-		QTextCursor cur2 = m_docWidget->m_editor->textCursor();
-		cur2.setPosition(block.position());
-		m_docWidget->m_editor->setTextCursor(cur2);
-	}
+	QTextBlock block = peerView->document()->findBlockByNumber(cursor.block().blockNumber());
+	QTextCursor cur2 = peerView->textCursor();
+	cur2.setPosition(block.position());
+	peerView->setTextCursor(cur2);
 	m_processing = false;
 }
 void MarkdownEditor::check_svg_completer() {	//	SVGブロック補完
