@@ -348,6 +348,7 @@ protected:
     void	onAction_Replace();
     void	onAction_Grep();
     void	onAction_DiffMode(bool);
+    void	onAction_DiffWithFile();
     void	onAction_KeisenMode(bool);
     void	onAction_ThinKeisen(bool);
     void	onAction_ThickKeisen(bool);

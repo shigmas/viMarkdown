@@ -715,6 +715,7 @@ void MainWindow::setup_connections() {
 	connect(ui->action_Replace, &QAction::triggered, this, &MainWindow::onAction_Replace);
 	connect(ui->action_Grep, &QAction::triggered, this, &MainWindow::onAction_Grep);
 	connect(ui->action_DiffMode, &QAction::toggled, this, &MainWindow::onAction_DiffMode);
+	connect(ui->action_DiffWithFile, &QAction::triggered, this, &MainWindow::onAction_DiffWithFile);
 	connect(ui->action_KeisenMode, &QAction::toggled, this, &MainWindow::onAction_KeisenMode);
 	connect(ui->action_ThinKeisen, &QAction::toggled, this, &MainWindow::onAction_ThinKeisen);
 	connect(ui->action_ThickKeisen, &QAction::toggled, this, &MainWindow::onAction_ThickKeisen);
@@ -1008,31 +1009,6 @@ MarkdownPreview *MainWindow::newPreview(DocWidget *docWidget, QSplitter *splitte
 	connect(preview, &MarkdownPreview::do_viCmd, this, &MainWindow::do_viCmd);
 
 	return preview;
-}
-void MainWindow::diffview_open() {
-	DocWidget *docWidget = getCurDocWidget();
-	if( docWidget == nullptr || !docWidget->m_diffMode )
-		return;
-	QString fullPath = QFileDialog::getOpenFileName(
-		this,
-		"select diff file",			// ダイアログのタイトル
-		QDir::currentPath(),		// 初期ディレクトリ
-		"markdown file (*.md *.markdown);;text file(*.txt);;all(*.*)"	// フィルター
-	);
-	if( fullPath.isEmpty() ) return;
-	QFile file(fullPath);
-	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-		QMessageBox::warning(this, tr("エラー"), tr("ファイルが開けません:\n%1").arg(fullPath));
-		return;
-	}
-	QTextStream in(&file);
-	in.setAutoDetectUnicode(true); 
-    QString content = in.readAll();
-    //auto encoding = in.encoding();
-    file.close();
-    QFileInfo fi2(fullPath);
-    m_diffviewLabel->setText(fi2.fileName());
-	docWidget->m_diffview->setPlainText(content);
 }
 #if 0
 void MainWindow::syncPreviewCursorWithEditor() {		//	MarkdownEditor でカーソルが移動した

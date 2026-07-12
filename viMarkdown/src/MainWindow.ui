@@ -212,6 +212,7 @@
      <string>&amp;Tool</string>
     </property>
     <addaction name="action_DiffMode"/>
+    <addaction name="action_DiffWithFile"/>
     <addaction name="separator"/>
     <addaction name="action_KeisenMode"/>
     <addaction name="action_ThinKeisen"/>
@@ -1200,6 +1201,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+D</string>
+   </property>
+  </action>
+  <action name="action_DiffWithFile">
+   <property name="text">
+    <string>Diff with file...</string>
    </property>
   </action>
  </widget>

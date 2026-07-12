@@ -9,6 +9,9 @@
 
 #include <QTextDocument>
 #include <QTextBlock>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QLabel>
 #include "dtl/dtl.hpp"
 #include "MainWindow.h"
 #include "DocWidget.h"
@@ -152,6 +155,65 @@ std::vector<QString> extractLinesFromDocument(const QTextDocument *doc) {
         lines.push_back(block.text());
     }
     return lines;
+}
+void MainWindow::diffview_open() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr || !docWidget->m_diffMode )
+		return;
+	QString fullPath = QFileDialog::getOpenFileName(
+		this,
+		"select diff file",			// ダイアログのタイトル
+		QDir::currentPath(),		// 初期ディレクトリ
+		"markdown file (*.md *.markdown);;text file(*.txt);;all(*.*)"	// フィルター
+	);
+	if( fullPath.isEmpty() ) return;
+	QFile file(fullPath);
+	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		QMessageBox::warning(this, tr("エラー"), tr("ファイルが開けません:\n%1").arg(fullPath));
+		return;
+	}
+	QTextStream in(&file);
+	in.setAutoDetectUnicode(true); 
+    QString content = in.readAll();
+    //auto encoding = in.encoding();
+    file.close();
+    QFileInfo fi2(fullPath);
+    m_diffviewLabel->setText(fi2.fileName());
+	docWidget->m_diffview->setPlainText(content);
+}
+void MainWindow::onAction_DiffWithFile() {
+	DocWidget *docWidget = getCurDocWidget();
+	if( docWidget == nullptr ) return;
+	QString fullPath = QFileDialog::getOpenFileName(
+		this,
+		"select diff file",			// ダイアログのタイトル
+		QDir::currentPath(),		// 初期ディレクトリ
+		"markdown file (*.md *.markdown);;text file(*.txt);;all(*.*)"	// フィルター
+	);
+	if( fullPath.isEmpty() ) return;
+	QFile file(fullPath);
+	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		QMessageBox::warning(this, tr("エラー"), tr("ファイルが開けません:\n%1").arg(fullPath));
+		return;
+	}
+	QTextStream in(&file);
+	in.setAutoDetectUnicode(true); 
+    QString content = in.readAll();
+    //auto encoding = in.encoding();
+    file.close();
+    QFileInfo fi2(fullPath);
+    m_diffviewLabel->setText(fi2.fileName());
+	docWidget->m_diffview->setPlainText(content);
+	//
+	docWidget->m_diffMode = true;
+	docWidget->m_editor->setDiffMode(true);
+	docWidget->m_editor->expandAll();
+	docWidget->m_editor->setHighlightDiff(true);
+	docWidget->m_diffview->setHighlightDiff(true);
+	docWidget->m_editor->setHighlightMarkdown(false);
+	docWidget->m_editor->setLineWrapMode(QPlainTextEdit::NoWrap);
+	docWidget->m_editor->rehighlight();
+	docWidget->updatePanes();
 }
 void MainWindow::onAction_DiffMode(bool checked) {
 	DocWidget *docWidget = getCurDocWidget();
