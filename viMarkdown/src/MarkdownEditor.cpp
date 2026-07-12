@@ -2218,13 +2218,16 @@ void MarkdownEditor::syncPreviewCursorFromEditor() {
 	m_processing = false;
 }
 void MarkdownEditor::syncDiffViewCursorFromEditor() {
-	m_processing = true;
+	if( m_processing ) return;
 	MarkdownEditor *peerView = this == m_docWidget->m_editor ? m_docWidget->m_diffview : m_docWidget->m_editor;
+	m_processing = true;
+	peerView->m_processing = true;
 	QTextCursor cursor = textCursor();
 	QTextBlock block = peerView->document()->findBlockByNumber(cursor.block().blockNumber());
 	QTextCursor cur2 = peerView->textCursor();
-	cur2.setPosition(block.position());
+	cur2.setPosition(block.position() + cursor.position() - cursor.block().position());
 	peerView->setTextCursor(cur2);
+	peerView->m_processing = false;
 	m_processing = false;
 }
 void MarkdownEditor::check_svg_completer() {	//	SVGブロック補完
