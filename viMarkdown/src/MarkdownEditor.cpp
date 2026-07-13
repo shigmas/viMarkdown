@@ -2226,11 +2226,57 @@ void MarkdownEditor::syncDiffViewCursorFromEditor() {
 	MarkdownEditor *peerView = this == m_docWidget->m_editor ? m_docWidget->m_diffview : m_docWidget->m_editor;
 	m_processing = true;
 	peerView->m_processing = true;
-	QTextCursor cursor = textCursor();
-	QTextBlock block = peerView->document()->findBlockByNumber(cursor.block().blockNumber());
+	QTextCursor cur1 = textCursor();
+	QTextBlock block1 = cur1.block();
+	QTextBlock block2 = peerView->document()->findBlockByNumber(block1.blockNumber());
 	QTextCursor cur2 = peerView->textCursor();
-	int offset = isDummyLine(block) ? 0 : cursor.position() - cursor.block().position();
-	cur2.setPosition(block.position() + offset);
+	int offset = isDummyLine(block2) ? 0 : cur1.position() - block1.position();
+	if( offset != 0 ) {
+		const auto *userData1 = dynamic_cast<const DiffBlockUserData*>(block1.userData());
+		const auto *userData2 = dynamic_cast<const DiffBlockUserData*>(block2.userData());
+		//	undone: offset を修正
+		if (userData1 && userData2) {
+			const auto &ranges1 = userData1->ranges;
+			const auto &ranges2 = userData2->ranges;
+			int numRanges = qMin(ranges1.size(), ranges2.size());
+			if (numRanges > 0) {
+				int srcTarget = offset;
+				bool mapped = false;
+				int lastR1End = 0;
+				int lastR2End = 0;
+				for (int i = 0; i < numRanges; ++i) {
+					const auto &r1 = ranges1[i];
+					const auto &r2 = ranges2[i];
+					if (srcTarget < r1.start) {
+						// 1:1で一致する領域（前回の範囲の末尾から、今回の範囲の手前まで）
+						offset = lastR2End + (srcTarget - lastR1End);
+						mapped = true;
+						break;
+					}
+					else if (srcTarget <= r1.start + r1.length) {
+						// 変更領域（ranges1[i] の内部）
+						if (r1.length > 0) {
+							// 比率で位置をマッピング（文字数の異なる置換に対応）
+							double ratio = static_cast<double>(srcTarget - r1.start) / r1.length;
+							offset = r2.start + qRound(ratio * r2.length);
+						} else {
+							// 0文字の挿入・削除箇所の場合
+							offset = r2.start;
+						}
+						mapped = true;
+						break;
+					}
+					lastR1End = r1.start + r1.length;
+					lastR2End = r2.start + r2.length;
+				}
+				if (!mapped) {	// 最後の変更範囲よりも後ろにある、1:1で一致する領域
+					offset = lastR2End + (srcTarget - lastR1End);
+				}
+			}
+			offset = qBound(0, offset, block2.text().length());
+		}
+	}
+	cur2.setPosition(block2.position() + offset);
 	peerView->setTextCursor(cur2);
 	peerView->m_processing = false;
 	m_processing = false;
