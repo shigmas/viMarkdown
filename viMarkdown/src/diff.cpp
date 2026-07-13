@@ -234,10 +234,18 @@ void MainWindow::onAction_DiffMode(bool checked) {
 		docWidget->m_editor->setLineWrapMode(QPlainTextEdit::WidgetWidth);
 		QTextDocument *doc1 = docWidget->m_editor->document();
 		QTextDocument *doc2 = docWidget->m_diffview->document();
-		removeAllDummyLines(doc1);
-		removeAllDummyLines(doc2);
+		bool modified1 = doc1->isModified();
+		bool modified2 = doc2->isModified();
+		if( docWidget->m_editor->dummyInserted() )
+			doc1->undo();
+		if( docWidget->m_diffview->dummyInserted() )
+			doc2->undo();
+		//removeAllDummyLines(doc1);
+		//removeAllDummyLines(doc2);
 	    docWidget->m_editor->setDummyInserted(false);
 	    docWidget->m_diffview->setDummyInserted(false);
+		doc1->setModified(modified1);
+		doc2->setModified(modified2);
 	}
 	docWidget->m_editor->rehighlight();
 	docWidget->updatePanes();
