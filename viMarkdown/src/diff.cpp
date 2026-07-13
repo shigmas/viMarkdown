@@ -14,6 +14,7 @@
 #include <QLabel>
 #include "dtl/dtl.hpp"
 #include "MainWindow.h"
+#include "ui_MainWindow.h"
 #include "DocWidget.h"
 #include "MarkdownEditor.h"
 #include "MarkdownPreview.h"
@@ -205,6 +206,7 @@ void MainWindow::onAction_DiffWithFile() {
     m_diffviewLabel->setText(fi2.fileName());
 	docWidget->m_diffview->setPlainText(content);
 	//
+	ui->action_DiffMode->setChecked(true);
 	docWidget->m_diffMode = true;
 	docWidget->m_editor->setDiffMode(true);
 	docWidget->m_editor->expandAll();
