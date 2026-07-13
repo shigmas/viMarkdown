@@ -456,6 +456,8 @@ void MainWindow::do_diff() {
 	m_processing = true;
 	QTextDocument *doc1 = docWidget->m_editor->document();
 	QTextDocument *doc2 = docWidget->m_diffview->document();
+	bool modified1 = doc1->isModified();
+	bool modified2 = doc2->isModified();
 	if( docWidget->m_editor->dummyInserted() )
 		removeAllDummyLines(doc1);
 	if( docWidget->m_diffview->dummyInserted() )
@@ -600,6 +602,8 @@ void MainWindow::do_diff() {
     docWidget->m_minimap->updateMap(doc1, doc2);
 	docWidget->m_editor->rehighlight();
 	docWidget->m_diffview->rehighlight();
+	doc1->setModified(modified1);
+	doc2->setModified(modified2);
     //
 	m_processing = false;
 }
