@@ -632,8 +632,8 @@ SPR# 状 P Open Close ver     Type  概要
 0628 ◎ C 07/13 07/13 03035│ToDo│MarkdownEditor::syncDiffViewCursorFromEditor()：peerView を使って、よりシンプルに記述
 0629 ◎ C 07/13 07/13 03035│ToDo│ダミー行一括削除のために、ダミー行挿入処理中は {Begin|End}EditBlock() しておく
 0630 ● C 07/13            │問題│Ctrl + \：diff モードの場合は editor、diffview を切り替えた方がよい
-0631 ● C 07/13            │ToDo│
-0632 ● C 07/13            │ToDo│
+0631 ● C 07/13            │ToDo│diff表示中：文字挿入直前に undo() でダミー行を消す？
+0632 ◎ C 07/13 07/13 03035│問題│diff表示中カーソル位置同期：片方がダミー行の場合は、オフセットを無視した方がよい
 0633 ● C 07/13            │ToDo│
 0634 ● C 07/13            │ToDo│
 0635 ● C 07/13            │ToDo│

@@ -875,7 +875,7 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	qDebug() << "e->text() = " << e->text();
 	if( !txt.isEmpty() ) {
 		if( (e->modifiers() & Qt::ControlModifier) == 0 ) {
-			if( gvi.m_currentMode == ViMode::Normal ) {
+			if( gvi.m_currentMode == ViMode::Normal ) {		//	vi コマンドモード
 				emit do_viCmd(txt[0], cursor);
 				setTextCursor(cursor);
 				viewport()->update();
@@ -953,6 +953,10 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 		return; // イベント処理をここで終了
 	}
 #endif
+	if( !txt.isEmpty() && (e->modifiers() & Qt::ControlModifier) == 0 && m_dummyInserted ) {
+		document()->undo();		//	ダミー行削除
+		m_dummyInserted = false;
+	}
 	MarkdownBaseEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
 	qApp->inputMethod()->update(Qt::ImCursorRectangle);
 	qDebug() << "cursorRect = " << cursorRect();
@@ -2225,7 +2229,8 @@ void MarkdownEditor::syncDiffViewCursorFromEditor() {
 	QTextCursor cursor = textCursor();
 	QTextBlock block = peerView->document()->findBlockByNumber(cursor.block().blockNumber());
 	QTextCursor cur2 = peerView->textCursor();
-	cur2.setPosition(block.position() + cursor.position() - cursor.block().position());
+	int offset = isDummyLine(block) ? 0 : cursor.position() - cursor.block().position();
+	cur2.setPosition(block.position() + offset);
 	peerView->setTextCursor(cur2);
 	peerView->m_processing = false;
 	m_processing = false;
