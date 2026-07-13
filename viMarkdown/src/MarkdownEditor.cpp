@@ -2693,6 +2693,7 @@ void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
 	    }
 	    painter.drawPolygon(poly);
 	};
+	bool isDiffView = this == m_docWidget->m_diffview;
 	while (block.isValid() && top <= event->rect().bottom()) {
 		if (block.isVisible() && bottom >= event->rect().top()) {
 			if( !m_diffMode || !isDummyLine(block) ) {
@@ -2714,6 +2715,23 @@ void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
 					//painter.drawText(m_lnAreaWidget->width() - (charWidth+charWidth/2), top,
 	                //                 charWidth, lineHeight, Qt::AlignLeft, "v");
 				}
+			} else {	//	diff 表示モード
+#if 0
+				if( (isDummyLine(block) || hasDiff(block)) &&
+					(!block.previous().isValid() || !isDummyLine(block.previous()) || !hasDiff(block.previous())) )
+				{
+					painter.drawText(0, top, m_lnAreaWidget->width(), lineHeight,
+								 Qt::AlignLeft, isDiffView ? "≪" : "≫");
+				}
+#else
+				if( isDummyLine(block) && (!block.previous().isValid() || !isDummyLine(block.previous())) ) {
+					painter.drawText(0, top, m_lnAreaWidget->width(), lineHeight,
+								 Qt::AlignLeft, isDiffView ? "≪" : "≫");
+				} else if( hasDiff(block) && (!block.previous().isValid() || !hasDiff(block.previous())) ) {
+					painter.drawText(0, top, m_lnAreaWidget->width(), lineHeight,
+								 Qt::AlignLeft, isDiffView ? "≪" : "≫");
+				}
+#endif
 			}
 		}
 
