@@ -353,6 +353,23 @@ void DocWidget::updatePanes() {
 		}
 	}
 }
+void DocWidget::removeDummyBlocks() {
+	if( !m_diffMode ) return;
+	if( m_editor->dummyInserted() ) {
+		m_editor->setProcessing(true);
+		bool modified = m_editor->document()->isModified();
+		m_editor->document()->undo();
+		m_editor->document()->setModified(modified);
+		m_editor->setProcessing(false);
+	}
+	if( m_diffview->dummyInserted() ) {
+		m_diffview->setProcessing(true);
+		bool modified = m_diffview->document()->isModified();
+		m_diffview->document()->undo();
+		m_diffview->document()->setModified(modified);
+		m_diffview->setProcessing(false);
+	}
+}
 bool DocWidget::isModified() const {
 	return m_editor->document()->isModified();
 }

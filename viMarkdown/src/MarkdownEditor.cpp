@@ -2757,7 +2757,15 @@ void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
 void MarkdownEditor::lnAreaMousePressEvent(QMouseEvent *event) {
 	auto pos = event->position();
 	QTextCursor cursor = cursorForPosition(QPoint(0, (int)pos.y()));
-	if( pos.x() < m_lnAreaWidget->width() - 24 ) {
+	QTextBlock block = cursor.block();
+	if( m_diffMode && isDummyLine(block) && (!block.previous().isValid() || !isDummyLine(block.previous())) ) {
+		int bn = block.blockNumber();
+		MarkdownEditor *peer = this == m_docWidget->m_editor ? m_docWidget->m_diffview : m_docWidget->m_editor;
+		QTextDocument *doc = document();
+		QTextDocument *doc2 = peer->document();
+		QTextBlock block2 = doc2->findBlockByNumber(bn);
+	}
+	else if( pos.x() < m_lnAreaWidget->width() - 24 ) {			//	非折り畳みマークより左をクリック
 		cursor.movePosition(QTextCursor::StartOfBlock);			 // 行頭へ移動
 		m_anchorStartPosition = cursor.position();
 		cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor); // 次行先頭まで選択
@@ -2768,7 +2776,6 @@ void MarkdownEditor::lnAreaMousePressEvent(QMouseEvent *event) {
 		m_isCursorAboveAnchor = false;
 		m_lnAreaPressed = true;
 	} else if( !m_diffMode ) {
-		QTextBlock block = cursor.block();
 		if( block.isValid() ) {
 			if( is_folded(block) )
 				do_unfold(block);

@@ -1164,17 +1164,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 			do_join(cursor, rcnt);
 			break;
 		case 'u': {
-			if( docWidget->m_editor->dummyInserted() ) {
-				docWidget->m_editor->setProcessing(true);
-				docWidget->m_editor->document()->undo();
-				docWidget->m_editor->setProcessing(false);
-			}
-			if( docWidget->m_diffview->dummyInserted() ) {
-				docWidget->m_diffview->setProcessing(true);
-				docWidget->m_diffview->document()->undo();
-				docWidget->m_diffview->setProcessing(false);
-			}
-			docWidget->m_editor->undo();
+			docWidget->removeDummyBlocks();
 			cursor = docWidget->m_editor->textCursor();
 			moveLeftIfAtEol(cursor);
 			break;

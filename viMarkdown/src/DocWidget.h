@@ -110,6 +110,7 @@ public:
     int		srcToPrvHeading(int blockNum);		//	エディタの見出し行番号（0 org.）をプレビューのそれに変換
     void	setEditorCurPos(int pos);
     void	updatePanes();						//	スプリッター下の各ペインの表示・非表示設定
+    void	removeDummyBlocks();
 
 public:
 	DocType		m_docType = DocType::Markdown;
