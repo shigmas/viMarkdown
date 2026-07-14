@@ -1085,6 +1085,15 @@ void MarkdownEditor::wheelEvent(QWheelEvent *event) {
 	} else
 		MarkdownBaseEdit::wheelEvent(event);
 }
+void MarkdownEditor::applyStyle(const QFont &font) {
+	setFont(font);
+	updateViewportMargines();
+	//setBoldColor(g.m_boldColor);
+	updateInlineColors();
+	rehighlight();				//	再ハイライト
+	highlightSearchText(g.m_lastSearchedPat);				//	再ハイライト
+	viewport()->update();		//	再表示
+}
 void MarkdownEditor::jumpToHeading(const QString& name) {
 	QTextBlock block = document()->begin();
 	while( block.isValid() ) {

@@ -1196,6 +1196,9 @@ void MainWindow::updateEditorFontSize(int sz) {
 		QFont font = docWidget->m_editor->font();
 		font.setPointSize(g.m_editorFontSize);
 		font.setFixedPitch(true);	// 明示的に固定幅として扱う設定
+		docWidget->m_editor->applyStyle(font);
+		docWidget->m_diffview->applyStyle(font);
+#if 0
 		docWidget->m_editor->setFont(font);
 		docWidget->m_editor->updateViewportMargines();
 		//docWidget->m_editor->setBoldColor(g.m_boldColor);
@@ -1203,6 +1206,7 @@ void MainWindow::updateEditorFontSize(int sz) {
 		docWidget->m_editor->rehighlight();				//	再ハイライト
 		docWidget->m_editor->highlightSearchText(g.m_lastSearchedPat);				//	再ハイライト
 		docWidget->m_editor->viewport()->update();		//	再表示
+#endif
 	}
 }
 void MainWindow::updatePreviewFontSize(int sz) {

@@ -225,6 +225,7 @@ public:
     void	setHighlightDiff(bool b) { m_diffHighlighter->m_highlightDiff = b; }
     bool	dummyInserted() const { return m_dummyInserted; }
     void	setDummyInserted(bool b) { m_dummyInserted = b; }
+    void	applyStyle(const QFont &font);
 
 signals:
     void	tab_pressed();
