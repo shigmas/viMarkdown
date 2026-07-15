@@ -273,6 +273,7 @@ protected:
 	bool	isInLinkURL(int pos, int& openIX, int& closeIX) const;
 	void	svg_enter_pressed();
 	void	svg_esc_pressed();
+	void	applyDiffBlock(QTextBlock block);
 
 private:
 	bool	m_ignoreContentsChanged = false;
@@ -288,6 +289,7 @@ private:
 	int		m_selStart = 0;
 	int		m_selEnd = 0;
 	int		m_linkClickedPos = -1;			//	リンククリック位置
+	int		m_charWidth = 0;
 	//QTimer	*m_blinkTimer;
     //bool	m_cursorVisible = true;
 	QString	m_lastCurBlockText;				//	事前のカーソルブロックテキスト

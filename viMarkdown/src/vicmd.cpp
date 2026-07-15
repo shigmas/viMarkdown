@@ -1165,6 +1165,7 @@ void MainWindow::do_viCmd(QChar cmd, QTextCursor& cursor) {
 			break;
 		case 'u': {
 			docWidget->removeDummyBlocks();
+			docWidget->m_editor->undo();
 			cursor = docWidget->m_editor->textCursor();
 			moveLeftIfAtEol(cursor);
 			break;

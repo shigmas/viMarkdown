@@ -572,8 +572,6 @@ void MainWindow::do_diff() {
         nDelete = nAdd = 0;
         diffLn1 = diffLn2 = INT_MAX;
     };
-    docWidget->m_editor->setTextCursor(cur1);
-    docWidget->m_diffview->setTextCursor(cur2);
     for (const auto& item : ses) {
         const QString& line = item.first;
         dtl::elemInfo info = item.second;
@@ -599,6 +597,8 @@ void MainWindow::do_diff() {
         }
     }
     flushPending(doc1->blockCount() + 1, doc2->blockCount() + 1);
+    docWidget->m_editor->setTextCursor(cur1);
+    docWidget->m_diffview->setTextCursor(cur2);
     cur1.endEditBlock();
     cur2.endEditBlock();
     docWidget->m_editor->setDummyInserted(true);

@@ -209,6 +209,7 @@ public:
     void	onChangeEditorFontSize(int);
     void	onChangePreviewFontSize(int);
     void	exitInsertMode(QTextCursor& cursor);
+    void	do_diff();
 
 protected:
     void	load_settings();
@@ -224,7 +225,6 @@ protected:
     //void	updatePanes(DocWidget*);						//	スプリッター下の各ペインの表示・非表示設定
     void	onMDTextChanged();
     void	onDiffViewChanged();
-    void	do_diff();
     void	invertActionIcons(QMenuBar*);
     void	invertActionIcons(QMenu*);
     QSplitter	*getCurTabSplitter();

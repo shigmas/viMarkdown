@@ -954,8 +954,9 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	}
 #endif
 	if( !txt.isEmpty() && (e->modifiers() & Qt::ControlModifier) == 0 && m_dummyInserted ) {
-		document()->undo();		//	ダミー行削除
-		m_dummyInserted = false;
+		//document()->undo();		//	ダミー行削除
+		//m_dummyInserted = false;
+		m_docWidget->removeDummyBlocks();
 	}
 	MarkdownBaseEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
 	qApp->inputMethod()->update(Qt::ImCursorRectangle);
@@ -2667,7 +2668,7 @@ void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
 	// ブロックの表示上の位置（Y座標）を取得
 	int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
 	int bottom = top + (int) blockBoundingRect(block).height();
-	int charWidth = fontMetrics().horizontalAdvance('9');
+	int charWidth = m_charWidth = fontMetrics().horizontalAdvance('9');
 	int lineHeight = fontMetrics().height();
 
 	// 画面内に見える範囲のブロックをループして描画
@@ -2763,18 +2764,69 @@ void MarkdownEditor::lnAreaPaintEvent(QPaintEvent *event) {
 		painter.drawLine(left, y, right, y);
 	}
 }
+void MarkdownEditor::applyDiffBlock(QTextBlock block) {
+	int bn = block.blockNumber();
+	MarkdownEditor *peer = this == m_docWidget->m_editor ? m_docWidget->m_diffview : m_docWidget->m_editor;
+	QTextDocument *doc = document();
+	QTextDocument *doc2 = peer->document();
+	QTextBlock block2 = doc2->findBlockByNumber(bn);
+	QTextCursor cur2(block2);
+	//	undone: 差分ブロックテキストを peerの対応ブロックにコピー
+	m_docWidget->m_editor->setProcessing(true);
+	m_docWidget->m_diffview->setProcessing(true);
+	QTextBlock b1 = block;
+	int count1 = 0;		//	差分・ダミーブロック行数
+	while (b1.isValid() && (isDummyLine(b1) || hasDiff(b1))) {
+		count1++;
+		b1 = b1.next();
+	}
+	QTextBlock b2 = block2;
+	int count2 = 0;		//	差分・ダミーブロック行数
+	while (b2.isValid() && (isDummyLine(b2) || hasDiff(b2))) {
+		count2++;
+		b2 = b2.next();
+	}
+	QStringList sourceTexts;	//	差分・ダミーブロックテキスト
+    b1 = block;
+    for (int i = 0; i < count1; ++i) {
+        if (!isDummyLine(b1)) {
+            sourceTexts.append(b1.text());
+        }
+        b1 = b1.next();
+    }
+    cur2.beginEditBlock();
+    cur2.movePosition(QTextCursor::StartOfBlock);
+    
+    bool moved = false;
+    for (int i = 0; i < count2; ++i) {
+        moved = cur2.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor);
+        if (!moved) {
+            cur2.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+            break;
+        }
+    }
+    QString newText = sourceTexts.join('\n');
+    if (moved && !sourceTexts.isEmpty()) {
+        newText += '\n';
+    }
+    cur2.insertText(newText);
+    cur2.endEditBlock();
+    m_docWidget->m_editor->setProcessing(false);
+    m_docWidget->m_diffview->setProcessing(false);
+    ((MainWindow*)m_mainWindow)->do_diff();
+}
 void MarkdownEditor::lnAreaMousePressEvent(QMouseEvent *event) {
 	auto pos = event->position();
 	QTextCursor cursor = cursorForPosition(QPoint(0, (int)pos.y()));
 	QTextBlock block = cursor.block();
-	if( m_diffMode && isDummyLine(block) && (!block.previous().isValid() || !isDummyLine(block.previous())) ) {
-		int bn = block.blockNumber();
-		MarkdownEditor *peer = this == m_docWidget->m_editor ? m_docWidget->m_diffview : m_docWidget->m_editor;
-		QTextDocument *doc = document();
-		QTextDocument *doc2 = peer->document();
-		QTextBlock block2 = doc2->findBlockByNumber(bn);
+	if( m_diffMode && pos.x() < m_charWidth*2 &&
+		(isDummyLine(block) && (!block.previous().isValid() || !isDummyLine(block.previous()))) ||
+		(hasDiff(block) && (!block.previous().isValid() || !hasDiff(block.previous()))) )
+	{
+		applyDiffBlock(block);
+		return;
 	}
-	else if( pos.x() < m_lnAreaWidget->width() - 24 ) {			//	非折り畳みマークより左をクリック
+	if( pos.x() < m_lnAreaWidget->width() - m_charWidth*2 ) {			//	非折り畳みマークより左をクリック
 		cursor.movePosition(QTextCursor::StartOfBlock);			 // 行頭へ移動
 		m_anchorStartPosition = cursor.position();
 		cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor); // 次行先頭まで選択
