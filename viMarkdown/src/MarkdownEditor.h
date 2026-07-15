@@ -248,6 +248,8 @@ protected:
     void	inputMethodEvent(QInputMethodEvent *event) override;
     void	insertFromMimeData(const QMimeData *source) override;
     QVariant	inputMethodQuery(Qt::InputMethodQuery query) const ;
+    void	contextMenuEvent(QContextMenuEvent *event);
+    void	reflectWordToPeer(const QTextBlock &block, int start, int length, const QString &wordText);
 #if 0
     void	dragEnterEvent(QDragEnterEvent *e) override {
         e->acceptProposedAction();

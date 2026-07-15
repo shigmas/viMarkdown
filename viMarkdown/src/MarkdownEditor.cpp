@@ -14,6 +14,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QStatusBar>
+#include <QMenu>
 #include "MarkdownEditor.h"
 #include "MainWindow.h"
 #include "DocWidget.h"
@@ -1085,6 +1086,100 @@ void MarkdownEditor::wheelEvent(QWheelEvent *event) {
 		event->accept();
 	} else
 		MarkdownBaseEdit::wheelEvent(event);
+}
+void MarkdownEditor::contextMenuEvent(QContextMenuEvent *event) {
+	if (!m_diffMode) {
+        QPlainTextEdit::contextMenuEvent(event);    // diffモードでなければ通常のメニューを表示
+        return;
+    }
+	QPoint clickPos = event->pos();
+    QTextCursor cursor = cursorForPosition(clickPos);
+    QTextBlock block = cursor.block();
+    int posInBlock = cursor.positionInBlock();
+    // 標準のコンテキストメニューを生成 (コピー、ペーストなどのアクションが既に入ったメニュー)
+    QMenu *menu = createStandardContextMenu(clickPos); //
+    bool isOnInsertedWord = false;
+    int wordStart = -1;
+    int wordLength = -1;
+    QString clickedWordText;
+    // 2. カーソル位置が「インライン差分の単語（挿入/変更単語）」の上かどうかを判定
+    if (auto *userData = dynamic_cast<DiffBlockUserData*>(block.userData())) {
+        const auto &ranges = userData->ranges; 
+        for (const auto &range : ranges) {
+            // 右クリックした文字位置が、インライン差分の範囲内に収まっているか？
+            if (posInBlock >= range.start && posInBlock < (range.start + range.length)) {
+                isOnInsertedWord = true;
+                wordStart = range.start;
+                wordLength = range.length;
+                clickedWordText = block.text().mid(range.start, range.length);
+                break;
+            }
+        }
+    }
+    if (isOnInsertedWord && !clickedWordText.isEmpty()) {
+        // メニューの区切り線を最初に追加
+        if (!menu->actions().isEmpty()) {
+            menu->insertSeparator(menu->actions().first());
+        }
+
+        // カスタムアクションを生成し、先頭に挿入
+        QAction *reflectAct = new QAction(QString("Refrect Word '%1' to Peer View").arg(clickedWordText), menu);
+        menu->insertAction(menu->actions().first(), reflectAct);
+
+        // ラムダ式を使い、アクションクリック時に反映処理を呼び出す
+        connect(reflectAct, &QAction::triggered, this, [this, block, wordStart, wordLength, clickedWordText]() {
+            //qDebug() << "reflectWordToPeer";
+            reflectWordToPeer(block, wordStart, wordLength, clickedWordText);
+        });
+    }
+    menu->exec(event->globalPos());    // メニューをイベント発生位置にポップアップ表示
+    delete menu;	//	標準メニュー（QMenu*）は呼び出し側で明示的に delete する必要がある
+}
+void MarkdownEditor::reflectWordToPeer(const QTextBlock &block, int start, int length, const QString &wordText) {
+    MarkdownEditor *peer = this == m_docWidget->m_editor ? m_docWidget->m_diffview : m_docWidget->m_editor;
+    QTextDocument *doc2 = peer->document();
+    QTextBlock block2 = doc2->findBlockByNumber(block.blockNumber());
+    m_docWidget->m_editor->setProcessing(true);
+    m_docWidget->m_diffview->setProcessing(true);
+    int peerStart = start;
+    int peerLength = length;
+
+    if (auto *myUserData = dynamic_cast<DiffBlockUserData*>(block.userData())) {
+        const auto &myRanges = myUserData->ranges;
+        int diffIndex = -1;
+        // 自分が「何番目のインライン差分か」を特定
+        for (int i = 0; i < myRanges.size(); ++i) {
+            if (myRanges[i].start == start) {
+                diffIndex = i;
+                break;
+            }
+        }
+        // 相手側にも同じインデックス（順番）のインライン差分があれば、
+        // その範囲（peerStart, peerLength）を置換対象として採用
+        if (diffIndex != -1) {
+            if (auto *peerUserData = dynamic_cast<DiffBlockUserData*>(block2.userData())) {
+                const auto &peerRanges = peerUserData->ranges;
+                if (diffIndex < peerRanges.size()) {
+                    peerStart = peerRanges[diffIndex].start;
+                    peerLength = peerRanges[diffIndex].length;
+                }
+            }
+        }
+    }
+    // 相手側のエディタ（peer）のカーソルをターゲット部分に動かして置換
+    QTextCursor cur2(block2);
+    cur2.beginEditBlock(); // ★Undo履歴を1ステップにまとめる
+
+    // 相手の置換ターゲット範囲を選択
+    cur2.setPosition(block2.position() + peerStart);
+    cur2.setPosition(block2.position() + peerStart + peerLength, QTextCursor::KeepAnchor);
+    // 選択された範囲を指定単語に置換
+    cur2.insertText(wordText);
+    cur2.endEditBlock();
+
+    m_docWidget->m_editor->setProcessing(false);
+    m_docWidget->m_diffview->setProcessing(false);
+    ((MainWindow*)m_mainWindow)->do_diff();
 }
 void MarkdownEditor::applyStyle(const QFont &font) {
 	setFont(font);
