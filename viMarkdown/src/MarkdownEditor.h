@@ -250,6 +250,7 @@ protected:
     QVariant	inputMethodQuery(Qt::InputMethodQuery query) const ;
     void	contextMenuEvent(QContextMenuEvent *event);
     void	reflectWordToPeer(const QTextBlock &block, int start, int length, const QString &wordText);
+    void	do_insertText(const QString&);		//	Undo/Redo 対象の挿入関数
 #if 0
     void	dragEnterEvent(QDragEnterEvent *e) override {
         e->acceptProposedAction();

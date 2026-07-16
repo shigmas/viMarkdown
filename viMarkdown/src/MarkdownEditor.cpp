@@ -488,7 +488,17 @@ void MarkdownEditor::setLineSpacing(int percentage) {
 }
 void MarkdownEditor::inputMethodEvent(QInputMethodEvent *event) {
 	m_isComposing = !event->preeditString().isEmpty();
+	QString commit = event->commitString();		//	確定文字列
+	if( !commit.isEmpty() ) {
+		if( g.m_viKeybindings && gvi.m_currentMode != ViMode::Insert ) {
+			gvi.m_currentMode = ViMode::Insert;
+		}
+	}
 	MarkdownBaseEdit::inputMethodEvent(event);
+	if( !commit.isEmpty() ) {
+		//do_insertText(commit);
+		return;
+	}
 }
 void MarkdownEditor::insertFromMimeData(const QMimeData *source) {
 	qDebug() << "MarkdownEditor::insertFromMimeData()";
@@ -962,9 +972,18 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 		removeAllDummyLines(m_docWidget->m_editor->document());
 		removeAllDummyLines(m_docWidget->m_diffview->document());
 	}
+	if( !txt.isEmpty() && (e->modifiers() & Qt::ControlModifier) == 0 ) {
+		do_insertText(txt);
+		return;
+	}
 	MarkdownBaseEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
 	qApp->inputMethod()->update(Qt::ImCursorRectangle);
 	qDebug() << "cursorRect = " << cursorRect();
+}
+void MarkdownEditor::do_insertText(const QString &txt) {
+	QTextCursor cursor = textCursor();
+	cursor.insertText(txt);
+	setTextCursor(cursor);
 }
 int indexOfNotEsc(const QString &text, QChar ch, int ix) {
 	for(;;) {
