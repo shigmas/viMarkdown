@@ -427,7 +427,7 @@ protected:
     void	do_cdy_moved(QTextCursor& cursor);
 
 private:
-    bool	m_processing = false;
+    int		m_processing = 0;
     //bool	m_ignoreContentsChanged = false;
     mutable bool	m_isCursorSyncing = false;		//	カーソル同期処理中
     bool	m_opening_file = false;

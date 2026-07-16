@@ -425,7 +425,7 @@ void MainWindow::onAction_NaviBack() {
 	if( docWidget != nullptr )
 		m_docLocHist[m_docLocIX].m_position = docWidget->m_editor->textCursor().position();
 	const auto &item = m_docLocHist[--m_docLocIX];
-	m_processing = true;
+	++m_processing;
 	do_open(item.m_title, item.m_fullPath, item.m_title);
 	if( item.m_position >= 0 ) {
 		DocWidget *docWidget = getCurDocWidget();
@@ -433,7 +433,7 @@ void MainWindow::onAction_NaviBack() {
 			docWidget->setEditorCurPos(item.m_position);
 		}
 	}
-	m_processing = false;
+	--m_processing;
 	printDocLocHist();
 }
 void MainWindow::onAction_NaviForward() {
@@ -442,7 +442,7 @@ void MainWindow::onAction_NaviForward() {
 	if( docWidget != nullptr )
 		m_docLocHist[m_docLocIX].m_position = docWidget->m_editor->textCursor().position();
 	const auto &item = m_docLocHist[++m_docLocIX];
-	m_processing = true;
+	++m_processing;
 	do_open(item.m_title, item.m_fullPath, item.m_title);
 	if( item.m_position >= 0 ) {
 		DocWidget *docWidget = getCurDocWidget();
@@ -450,7 +450,7 @@ void MainWindow::onAction_NaviForward() {
 			docWidget->setEditorCurPos(item.m_position);
 		}
 	}
-	m_processing = false;
+	--m_processing;
 	printDocLocHist();
 }
 void MainWindow::onAction_Replace() {
@@ -790,9 +790,10 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 	event->accept();
 }
 void MainWindow::onCurrentTabChanged(int ix) {
-	if( m_processing ) return;		//	再入禁止
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
+	if( m_processing != 0 ) return;		//	再入禁止
+	++m_processing;
 	qDebug() << "MainWindow::onCurrentTabChanged()";
 	ui->action_DiffMode->setChecked(docWidget->m_diffMode);
 	m_altFullPath = m_curFullPath;
@@ -831,6 +832,7 @@ void MainWindow::onCurrentTabChanged(int ix) {
 	//statusBar()->showMessage(mess);
 	m_encLabel->setText(mess);
 #endif
+	--m_processing;
 }
 void MainWindow::removeHistoryEntries(const QString& title, const QString& fullPath, int pos) {
 	for(int i = m_docLocHist.size(); --i >= 0; ) {		//	重複削除
@@ -1104,12 +1106,12 @@ void MainWindow::onPrvPosContextChanged(const PosContext& context, const PosCont
 }
 //	ビューワ → エディタ カーソル位置同期
 void MainWindow::onPreviewCurPosChanged() {		//	MarkdownPreview でカーソルが移動した
-	if( m_processing ) return;		//	再入禁止
+	if( m_processing != 0 ) return;		//	再入禁止
 	qDebug() << "MainWindow::onPreviewCurPosChanged()";
 	DocWidget *docWidget = getCurDocWidget();
 	if( docWidget == nullptr ) return;
 	if( docWidget->m_preview->isProcessing() ) return;
-	m_processing = true;
+	++m_processing;
 	QTextCursor cursor = docWidget->m_preview->textCursor();		//	ビューワカーソル
 	QTextBlock b0 = cursor.block();
 	while( blockType(b0) != BT_HEADING ) {		//	見出し行まで移動
@@ -1148,7 +1150,7 @@ void MainWindow::onPreviewCurPosChanged() {		//	MarkdownPreview でカーソル�
 		}
 	}
 	docWidget->m_editor->setCursorAtNthPat(cursor.blockNumber(), pat, nth, tail);
-	m_processing = false;
+	--m_processing;
 }
 void MainWindow::zoomIn() {
 	DocWidget *docWidget = getCurDocWidget();
@@ -2621,8 +2623,8 @@ void MainWindow::onMDTextChanged() {
 	//qDebug() << "docWidget = " << docWidget;
 	MarkdownEditor *mdEditor = docWidget->m_editor;
 	//m_plainText = mdEditor->toPlainText();
-	if( docWidget->m_diffMode )
-		do_diff();
+	//##if( docWidget->m_diffMode )
+	//##	do_diff();
 #if 1
 	if( !mdEditor->isComposing() && !docWidget->m_diffMode ) {
 		int scrollPos = docWidget->m_preview->verticalScrollBar()->value();

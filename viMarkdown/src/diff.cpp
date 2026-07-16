@@ -153,8 +153,9 @@ std::vector<QString> extractLinesFromDocument(const QTextDocument *doc) {
 
     // QTextBlock を走査することで、巨大なテキストでも分割時のメモリ消費を最小限に抑えます
     for (QTextBlock block = doc->begin(); block.isValid(); block = block.next()) {
-        lines.push_back(block.text());
+        lines.push_back(block.text() /*+u'\n'*/);
     }
+    lines.back() += QChar(0xffff);
     return lines;
 }
 void MainWindow::diffview_open() {
@@ -216,6 +217,7 @@ void MainWindow::onAction_DiffWithFile() {
 	docWidget->m_editor->setLineWrapMode(QPlainTextEdit::NoWrap);
 	docWidget->m_editor->rehighlight();
 	docWidget->updatePanes();
+	do_diff();
 }
 void MainWindow::onAction_DiffMode(bool checked) {
 	DocWidget *docWidget = getCurDocWidget();
@@ -228,6 +230,7 @@ void MainWindow::onAction_DiffMode(bool checked) {
 		docWidget->m_diffview->setHighlightDiff(true);
 		docWidget->m_editor->setHighlightMarkdown(false);
 		docWidget->m_editor->setLineWrapMode(QPlainTextEdit::NoWrap);
+		do_diff();
 	} else {
 		if( docWidget->m_docType == DocType::Markdown )
 			docWidget->m_editor->setHighlightMarkdown(true);
@@ -259,8 +262,10 @@ void MainWindow::onAction_DiffMode(bool checked) {
 }
 void MainWindow::onDiffViewChanged() {
 	qDebug() << "MainWindow::onDiffViewChanged()";
-    if (m_processing) return;
+    if (m_processing!=0) return;
+    ++m_processing;
     do_diff();
+    --m_processing;
 }
 #if 0
 void applyInlineHighlight(QTextBlock &block, const DiffBlockUserData *userData, bool isLeft = true) {
@@ -464,11 +469,13 @@ void calculateAndSetCharDiff(QTextBlock block1, QTextBlock block2, const QString
     }
 }
 void MainWindow::do_diff() {
-	if( m_processing ) return;
+	if( m_processing!=0 ) return;
 	DocWidget *docWidget = getCurDocWidget();
 	if (docWidget == nullptr || !docWidget->m_diffMode)
 		return;
-	m_processing = true;
+	++m_processing;
+	//##disconnect(docWidget->m_editor, &MarkdownEditor::textChanged, this, &MainWindow::onMDTextChanged);
+	//##disconnect(docWidget->m_diffview, &MarkdownEditor::textChanged, this, &MainWindow::onMDTextChanged);
 	QTextDocument *doc1 = docWidget->m_editor->document();
 	QTextDocument *doc2 = docWidget->m_diffview->document();
 	bool modified1 = doc1->isModified();
@@ -479,7 +486,20 @@ void MainWindow::do_diff() {
 		removeAllDummyLines(doc2);
 	std::vector<QString> lines1 = extractLinesFromDocument(doc1);
     std::vector<QString> lines2 = extractLinesFromDocument(doc2);
-
+#if 0
+    if( lines1.back() == lines2.back() ) {
+    	lines1.pop_back();
+    	lines2.pop_back();
+    	if( lines1.empty() && lines2.empty() ) {
+    		QTextBlock block1 = doc1->begin();
+    		setPhysicalLine(block1, 1, 0);
+    		QTextBlock block2 = doc2->begin();
+    		setPhysicalLine(block2, 1, 0);
+    		--m_processing;
+    		return;
+    	}
+    }
+#endif
     dtl::Diff<QString, std::vector<QString>> d(lines1, lines2);
     d.compose();
 
@@ -505,9 +525,19 @@ void MainWindow::do_diff() {
 	        	block1 = block1.next();
 	        	cur2.setPosition(block2.position()); 
                 cur2.insertText("\n");
+#if 0
+                block2 = cur2.block();
+                assert( block2.isValid() );
+                int bn = block2.blockNumber();
+                QTextBlock dummyBlock = block2.previous();
+                assert( dummyBlock.isValid() );
+                setDummyLine(dummyBlock);
+                dummyBlock.setUserData(nullptr);
+#else
                 setDummyLine(block2);   // 空になった現在のブロック（行）をダミーに設定
 	        	block2.setUserData(nullptr);		//	clear userData
                 block2 = block2.next();  // 下に押し出されたテキストが入っているブロックへ進む
+#endif
             }
         } else if (nDelete == 0) { // 右側（doc2）で新しく追加された場合のみ
             for (int ln = diffLn2; ln < endLn2; ++ln) {
@@ -518,9 +548,16 @@ void MainWindow::do_diff() {
 	        	block2 = block2.next();
 	        	cur1.setPosition(block1.position());
                 cur1.insertText("\n");
+#if 0
+                block1 = cur1.block();
+                QTextBlock dummyBlock = block1.previous();
+                setDummyLine(dummyBlock);
+                dummyBlock.setUserData(nullptr);
+#else
                 setDummyLine(block1);   // 空になった現在のブロック（行）をダミーに設定
 	        	block1.setUserData(nullptr);		//	clear userData
                 block1 = block1.next();  // 下に押し出されたテキストが入っているブロックへ進む
+#endif
             }
         } else {	//	変更行
 			//std::vector<QChar> text1, text2;
@@ -563,15 +600,27 @@ void MainWindow::do_diff() {
             	for(int i = 0; i < d; ++i) {
 		        	cur2.setPosition(block2.position());
                     cur2.insertText("\n");
+#if 0
+	                block2 = cur2.block();
+                    QTextBlock dummyBlock = block2.previous();
+                    setDummyLine(dummyBlock);
+#else
                     setDummyLine(block2);
                     block2 = block2.next();
+#endif
             	}
             } else if( d < 0 ) {
             	for(int i = 0; i < -d; ++i) {
 		        	cur1.setPosition(block1.position());
                     cur1.insertText("\n");
+#if 0
+	                block1 = cur1.block();
+                    QTextBlock dummyBlock = block1.previous();
+                    setDummyLine(dummyBlock);
+#else
                     setDummyLine(block1);
                     block1 = block1.next();
+#endif
             	}
             }
         }
@@ -621,5 +670,7 @@ void MainWindow::do_diff() {
 	doc1->setModified(modified1);
 	doc2->setModified(modified2);
     //
-	m_processing = false;
+	//##connect(docWidget->m_editor, &MarkdownEditor::textChanged, this, &MainWindow::onMDTextChanged);
+	//##connect(docWidget->m_diffview, &MarkdownEditor::textChanged, this, &MainWindow::onMDTextChanged);
+	--m_processing;
 }
