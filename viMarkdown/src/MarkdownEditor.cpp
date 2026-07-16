@@ -496,7 +496,7 @@ void MarkdownEditor::inputMethodEvent(QInputMethodEvent *event) {
 	}
 	MarkdownBaseEdit::inputMethodEvent(event);
 	if( !commit.isEmpty() ) {
-		//do_insertText(commit);
+		do_insertText(QString());
 		return;
 	}
 }
@@ -981,9 +981,14 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	qDebug() << "cursorRect = " << cursorRect();
 }
 void MarkdownEditor::do_insertText(const QString &txt) {
-	QTextCursor cursor = textCursor();
-	cursor.insertText(txt);
-	setTextCursor(cursor);
+	if( !txt.isEmpty() ) {
+		QTextCursor cursor = textCursor();
+		cursor.insertText(txt);
+		setTextCursor(cursor);
+	}
+	if( m_diffMode ) {
+		((MainWindow*)m_mainWindow)->do_diff();
+	}
 }
 int indexOfNotEsc(const QString &text, QChar ch, int ix) {
 	for(;;) {
