@@ -32,6 +32,7 @@ bool isDummyLine(const QTextBlock &block);
 int lineNumber(const QTextBlock &block);
 bool hasDiff(const QTextBlock &block);
 int getDiff(const QTextBlock &block);
+void removeAllDummyLines(QTextDocument *doc);
 
 //extern bool parseCsvLine(QStringList &fields, const QString &line, bool inQuotes, bool &inComment, bool &commented);
 //extern bool isTableLine(const QString& lnStr, QList<QStringView> &tableTokens);
@@ -957,7 +958,9 @@ void MarkdownEditor::keyPressEvent(QKeyEvent *e) {
 	if( !txt.isEmpty() && (e->modifiers() & Qt::ControlModifier) == 0 && m_dummyInserted ) {
 		//document()->undo();		//	ダミー行削除
 		//m_dummyInserted = false;
-		m_docWidget->removeDummyBlocks();
+		//m_docWidget->removeDummyBlocks();
+		removeAllDummyLines(m_docWidget->m_editor->document());
+		removeAllDummyLines(m_docWidget->m_diffview->document());
 	}
 	MarkdownBaseEdit::keyPressEvent(e);	// 通常キーは通常通りの処理
 	qApp->inputMethod()->update(Qt::ImCursorRectangle);

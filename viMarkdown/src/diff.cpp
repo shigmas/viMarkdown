@@ -238,12 +238,17 @@ void MainWindow::onAction_DiffMode(bool checked) {
 		QTextDocument *doc2 = docWidget->m_diffview->document();
 		bool modified1 = doc1->isModified();
 		bool modified2 = doc2->isModified();
+#if 0
 		if( docWidget->m_editor->dummyInserted() )
 			doc1->undo();
 		if( docWidget->m_diffview->dummyInserted() )
 			doc2->undo();
-		//removeAllDummyLines(doc1);
-		//removeAllDummyLines(doc2);
+#else
+		if( docWidget->m_editor->dummyInserted() )
+			removeAllDummyLines(doc1);
+		if( docWidget->m_diffview->dummyInserted() )
+			removeAllDummyLines(doc2);
+#endif
 	    docWidget->m_editor->setDummyInserted(false);
 	    docWidget->m_diffview->setDummyInserted(false);
 		doc1->setModified(modified1);
